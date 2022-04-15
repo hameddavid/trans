@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ApplicantionController extends Controller
 {
@@ -27,7 +28,11 @@ class ApplicantionController extends Controller
     public function store(Request $request)
     {
         //
-        $request->validate([ "email" => "required" ]);
+        $request->validate([ "userid" => "required", ]);
+        $pin = DB::select("SELECT rrr FROM payment_transaction 
+        WHERE user_id =:user_id AND status_code =:status_code LIMIT 1",
+        ['user_id'=>$request->userid, 'status_code'=>'00']);
+        return $pin ;
     }
 
     /**

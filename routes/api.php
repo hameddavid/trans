@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('app/register', [ApplicantAuthController::class, 'applicant_register']);
 Route::post('app/login', [ApplicantAuthController::class, 'applicant_login']);
 
+Route::post('app/save', [ApplicantionController::class, 'store']);
+
 Route::group(["middleware" => ['auth:sanctum']], function(){
     Route::get('app', [ApplicantAuthController::class, 'index']);
    

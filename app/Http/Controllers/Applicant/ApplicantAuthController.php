@@ -87,6 +87,8 @@ class ApplicantAuthController extends Controller
     }
 
 
+    
+
     static function create_applicant($request,$student,$auto_pass){
            try {
             $app = new Applicant();
