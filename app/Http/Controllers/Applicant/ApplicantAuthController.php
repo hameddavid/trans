@@ -26,7 +26,7 @@ class ApplicantAuthController extends Controller
             $student  = Student::where('matric_number',$request->matno)->first();
             if (!$applicant || !Hash::check($request->password, $applicant->password)) {
     
-              return response(['status'=>'failed','msg' => 'The provided credentials are incorrect'], 401);
+              return response(['status'=>'failed','message' => 'The provided credentials are incorrect'], 401);
           }
             $token = $applicant->createToken('applicantToken')->plainTextToken;
             unset($applicant->password);
@@ -37,7 +37,7 @@ class ApplicantAuthController extends Controller
              'transactions'=> app('App\Http\Controllers\Applicant\ApplicantionController')->show($applicant->id)['payment'],
             ], 200);
         } catch (\Throwable $th) {
-            return response(['status'=>'failed','msg'=>'Catch, Error loggin...'], 401);
+            return response(['status'=>'failed','message'=>'Catch, Error loggin...'], 401);
 
         }
 
@@ -71,26 +71,20 @@ class ApplicantAuthController extends Controller
                 $HTML_type = true;
                 $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
                if($resp->ok()){
-                return response(['status'=>'success','msg'=>'applicant created'], 201);
+                return response(['status'=>'success','message'=>'applicant created'], 201);
                }
-               return response(['status'=>'failed','msg'=>'applicant created but email failed!'], 201);
+               return response(['status'=>'failed','message'=>'applicant created but email failed!'], 201);
             }
-            return response(['status'=>'failed','msg'=>'...Error creating applicant!'], 401);
+            return response(['status'=>'failed','message'=>'...Error creating applicant!'], 401);
              
         }else{
             return 'No Student ';}
         
         } catch (\Throwable $th) {
-            return response(['status'=>'failed','msg'=>'catch main, Error creating applicant...'], 401);
+            return response(['status'=>'failed','message'=>'catch main, Error creating applicant...'], 401);
         }
         
     }
-
-
-
-
-
-
 
 
     static function create_applicant($request,$student,$auto_pass){
@@ -104,10 +98,10 @@ class ApplicantAuthController extends Controller
             $app->mobile  = $request->phone;
             $app->type = 'TRANSCRIPT';
             $save_app = $app->save();
-            if($save_app){ return ['status'=>'success','msg'=>'applicant created!'];}
+            if($save_app){ return ['status'=>'success','message'=>'applicant created!'];}
             return false;
            } catch (\Throwable $th) {
-            return response(['status'=>'failed','msg'=>'catch, Error creating applicant!']);
+            return response(['status'=>'failed','message'=>'catch, Error creating applicant!']);
 
            }
     }
@@ -129,7 +123,7 @@ class ApplicantAuthController extends Controller
             return false;
         } catch (\Throwable $th) {
 
-            return response(['status'=>'failed','msg'=>'catch, Error getting student given matric number!']);
+            return response(['status'=>'failed','message'=>'catch, Error getting student given matric number!']);
         }
     }
 
