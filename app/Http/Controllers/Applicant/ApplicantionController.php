@@ -124,4 +124,18 @@ class ApplicantionController extends Controller
             return response(['status'=>'failed',' message'=>'catch, verify_student_result!']); 
         }
     }
+
+    public function get_transcript_destination_and_amount(){
+
+        $dest_amt = [
+            ['value'=>'wes','desc'=>'World Education Services (₦12,000)','amount'=>'12000'],
+            ['value'=>'nigeria','desc'=>'Nigeria (₦12,000)','amount'=>'12000'],
+            ['value'=>'africa','desc'=>'Africa (₦20,000)','amount'=>'20000'],
+            ['value'=>'America','desc'=>'America (₦25,000)','amount'=>'25000'],
+            ['value'=>'Asia','desc'=>'Asia (₦25,000)','amount'=>'25000'],
+            ['value'=>'Australia','desc'=>'Australia (₦25,000)','amount'=>'25000'],
+            ['value'=>'Europe','desc'=>'Europe (₦25,000)','amount'=>'25000']
+        ];
+        return $dest_amt;
+    }
 }

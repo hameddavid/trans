@@ -87,7 +87,7 @@ class ApplicantAuthController extends Controller
     }
 
 
-    
+
 
     static function create_applicant($request,$student,$auto_pass){
            try {
@@ -126,6 +126,18 @@ class ApplicantAuthController extends Controller
         } catch (\Throwable $th) {
 
             return response(['status'=>'failed','message'=>'catch, Error getting student given matric number!']);
+        }
+    }
+    
+
+    static function get_applicant_given_userid($userid){
+        try {
+            $applicant = Applicant::where('id',$userid)->first();
+            if($applicant){ unset($applicant->password); return $applicant;}
+            return false;
+        } catch (\Throwable $th) {
+
+            return response(['status'=>'failed','message'=>'catch, Error getting Applicant given User ID!']);
         }
     }
 
