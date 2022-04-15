@@ -44,13 +44,14 @@ class ApplicantionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function get_applicant_stat(Request $request)
     {
+        $request->validate(['userid'=>'required']); 
         try {
-            $success_app = Application::where(['app_status'=>'10','applicant_id'=>$id])->get();
-            $pend_app = Application::where(['app_status'=>'20','applicant_id'=>$id])->get();
-            $failed_app = Application::where(['app_status'=>'30','applicant_id'=>$id])->get();
-            $payment = Payment::where(['user_id'=>$id])->get();
+            $success_app = Application::where(['app_status'=>'10','applicant_id'=>$userid])->get();
+            $pend_app = Application::where(['app_status'=>'20','applicant_id'=>$userid])->get();
+            $failed_app = Application::where(['app_status'=>'30','applicant_id'=>$userid])->get();
+            $payment = Payment::where(['user_id'=>$userid])->get();
             return ['success_app'=>$success_app,'pend_app'=>$pend_app,'failed_app'=>$failed_app,'payment'=>$payment];
             
         } catch (\Throwable $th) {
@@ -138,4 +139,24 @@ class ApplicantionController extends Controller
         ];
         return $dest_amt;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // class
+
 }

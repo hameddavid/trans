@@ -30,12 +30,7 @@ class ApplicantAuthController extends Controller
           }
             $token = $applicant->createToken('applicantToken')->plainTextToken;
             unset($applicant->password);
-             return response(['status'=>'success','token'=> $token,'applicant'=>$applicant,'student'=>$student ,
-             'success_app'=> app('App\Http\Controllers\Applicant\ApplicantionController')->show($applicant->id)['success_app'],
-             'pend_app'=> app('App\Http\Controllers\Applicant\ApplicantionController')->show($applicant->id)['pend_app'],
-             'failed_app'=> app('App\Http\Controllers\Applicant\ApplicantionController')->show($applicant->id)['failed_app'],
-             'transactions'=> app('App\Http\Controllers\Applicant\ApplicantionController')->show($applicant->id)['payment'],
-            ], 200);
+             return response(['status'=>'success','token'=> $token,'applicant'=>$applicant,'student'=>$student ,], 200);
         } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'Catch, Error loggin...'], 401);
 

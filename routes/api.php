@@ -19,6 +19,8 @@ Route::get('app/get_transcript_destination_and_amount', [ApplicantionController:
 
 Route::post('app/log_new_rrr_trans_ref', [PaymentController::class, 'log_new_rrr_trans_ref']);
 
+Route::get('app/get_applicant_stat', [ApplicantionController::class, 'get_applicant_stat']);
+
 
 
 Route::group(["middleware" => ['auth:sanctum']], function(){
