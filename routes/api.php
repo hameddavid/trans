@@ -12,6 +12,9 @@ Route::post('app/login', [ApplicantAuthController::class, 'applicant_login']);
 
 Route::post('app/save', [ApplicantionController::class, 'store']);
 
+Route::get('app/check_request_availability', [ApplicantionController::class, 'check_request_availability']);
+
+
 Route::group(["middleware" => ['auth:sanctum']], function(){
     Route::get('app', [ApplicantAuthController::class, 'index']);
    
