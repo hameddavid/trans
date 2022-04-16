@@ -5,8 +5,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Student;
 use App\Models\Payment;
+use App\Models\Applicant;
 use App\Models\RegistrationResult;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 
 class ApplicantionController extends Controller
@@ -21,21 +23,65 @@ class ApplicantionController extends Controller
         //
     }
 
+    public function summit_app(Request $request){
+
+        $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,'used_token'=>'required']);
+       
+        if($request->transcript_type == 'official'){
+            $request->validate([ "mode" => "required","address"=>"required"]); 
+        }
+        try { 
+            if($this->validate_pin($request->userid,$request->matno) == $request->used_token){
+           $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
+           if($applicant){
+            $new_application = new Application();
+            $new_application->matric_number   = $request->matno;
+            $new_application->applicant_id  = $request->userid;
+            $new_application->delivery_mode = $request->mode ? $request->mode : 'soft';
+            $new_application->transcript_type = $request->transcript_type;
+            $new_application->address = $request->address ? $request->address : $applicant->email;
+            $new_application->destination = $request->destination ? $request->destination : $applicant->email;
+            $new_application->app_status = 10; // default status
+            $new_application->used_token = $request->used_token;
+            $save_app = $new_application->save();
+            if($save_app ){
+               if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
+                return response(['status'=>'success',' message'=>'Application successfully created'],201);   
+                   } 
+                   else{ return response(['status'=>'success',' message'=>'Application successfully created but email failed sending', 201]);  }
+                // Notify applicant through email  $applicant->email
+                // Notify admin
+            }
+           }else{ return response(['status'=>'failed',' message'=>'No applicant with matric number '. $request->matno . ' found']);   }
+        }else{ return response(['status'=>'failed',' message'=>'Invalid application payment pin!']);    }
+          
+        } catch (\Throwable $th) {
+            return response(['status'=>'failed',' message'=>'catch, Error summit_app !']);
+
+        }
+        
+}
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    static function validate_pin($userid,$matno)
     {
-        $request->validate([ "userid" => "required","matno"=>"required" ]);
+        try {
+             $pin = DB::table('payment_transaction')->select('rrr')
+           ->where(['user_id'=> $userid,'matric_number'=> $matno,'status_code'=>'00'])
+            ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('applications'); })->first();
+            if(!empty($pin)){return $pin->rrr ;}
+            return 'null';
+            // return ['status'=> 'success','pin'=>$pin->rrr ];
+        } catch (\Throwable $th) {
+            return response(['status'=>'failed',' message'=>'catch, Error validate_pin !']);
+
+        }
       
-        $pin = DB::table('payment_transaction')->select('rrr')->where(['user_id'=>$request->userid, 'status_code'=>'00'])
-        ->whereNOTIn('rrr',function($query){
-            $query->select('used_token')->from('applications');
-            })->first();
-        return $pin->rrr ;
     }
 
     /**
@@ -148,12 +194,47 @@ class ApplicantionController extends Controller
 
 
 
+static function send_email_notification($applicant,$Subject,$Msg){
+    $From = "transcript@run.edu.ng";
+    $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
+    // $Msg =  '
+    // ------------------------<br>
+    // Dear ' .$student->surname.' '. $student->firstname.',
+    // We have successfully received your : <span color="red"> </span>, new transcript application request, 
+    // kindly excercise  patient while your request is being process.<br>
+    // <br>
+    // OUR REDEEMER IS STRONG!
+    // <br>
+    // Thank you.<br>
+    // ------------------------
+    //     ';  
+     
+    //$Subject = "AUTO GENERATED PASSWORD";
+    $HTML_type = true;
+    $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+   if($resp->ok()){
+    return ['status'=>'success','message'=>'applicant created'];
+   }
+   return ['status'=>'failed','message'=>'applicant created but email failed!'];
+}
 
 
 
 
-
-
+static function get_msg($applicant){
+  return  $Msg =  '
+    ------------------------<br>
+    Dear ' .$applicant->surname.' '. $applicant->firstname.',
+    We have successfully received your  new transcript application request, 
+    kindly excercise  patient while your request is being process.<br>
+    <br>
+    Thank you.<br>
+    <br>
+    OUR REDEEMER IS STRONG!
+   
+    ------------------------
+        ';  
+}
 
 
 
