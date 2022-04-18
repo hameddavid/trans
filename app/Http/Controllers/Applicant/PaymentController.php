@@ -32,7 +32,7 @@ class PaymentController extends Controller
 
         }
         else{
-            return response(['status'=>'Nok','message'=>$rtMsg,], 200);
+            return response(['status'=>'Nok','message'=>$rtMsg, 'new_orderid'=> $this->remita_generate_trans_ID()], 200);
 
         } 
 

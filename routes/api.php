@@ -30,6 +30,14 @@ Route::post('app/remita_bank_payment', [PaymentController::class, 'remita_bank_p
 
 
 
+
+
+
+// let it be web route
+
+Route::post('get_student_result', [ApplicantionController::class, 'get_student_result']);
+
+
 Route::group(["middleware" => ['auth:sanctum']], function(){
     Route::get('app', [ApplicantAuthController::class, 'index']);
    

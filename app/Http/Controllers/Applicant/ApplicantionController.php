@@ -28,7 +28,7 @@ class ApplicantionController extends Controller
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,'used_token'=>'required']);
        
         if($request->transcript_type == 'official'){
-            $request->validate([ "mode" => "required","address"=>"required"]); 
+            $request->validate([ "mode" => "required","address"=>"required","recipient"=>"required"]); 
         }
         try { 
             if($this->validate_pin($request->userid,$request->matno) == $request->used_token){
@@ -41,6 +41,7 @@ class ApplicantionController extends Controller
             $new_application->transcript_type = $request->transcript_type;
             $new_application->address = $request->address ? $request->address : $applicant->email;
             $new_application->destination = $request->destination ? $request->destination : $applicant->email;
+            $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
             $new_application->app_status = 10; // default status
             $new_application->used_token = $request->used_token;
             $save_app = $new_application->save();
@@ -238,6 +239,146 @@ static function get_msg($applicant){
 
 
 
+
+public function get_student_result(Request $request){
+    $request->validate(['userid'=>'required','matno'=>'required','used_token'=>'required']);
+    $matno = str_replace(' ', '', $request->matno);
+    if($this->get_student_result_session_given_matno($matno,$sessions)){
+        $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
+        $application  = Application::where(['matric_number'=> $matno, 'used_token'=>$request->used_token,'applicant_id'=>$request->userid,'app_status'=>'10'])->first(); //Get the real application
+        $student  = Student::where('matric_number',$matno)->first();
+        $response = "";
+        $cumm_sum_point_unit = 0.0;
+        $cumm_sum_unit = 0.0;
+        $page_no = 0;
+        $this->get_prog_code_given_matno($matno, $prog_code);
+        // $this->get_dept_given_prog_code($prog_code,$prog_name, $dept , $fac); another function for prog_dept_fac
+        $this->prog_dept_fac($prog_code, $prog_name, $dept , $fac);
+        foreach($sessions as $index => $session){
+            $page_no += 1;
+            $response .= $this->get_result_table_header($student,$applicant,$application,$prog_name, $dept , $fac,$page_no);
+            
+            $results =  '';
+            $semester = 0;
+            $sum_point_unit = 0.0;
+            $sum_unit = 0.0;
+            return "Working ...";
+        }
+        
+    }else{
+        return "empty student session";}
+   
+}
+
+
+
+
+
+
+static function get_prog_code_given_matno($matno, &$prog_code){
+    try {
+        $student = Student::where('matric_number',$matno)->first();
+        if($student->count() > 0){$prog_code = $student->PROG_CODE; return true;}
+        return false;
+    } catch (\Throwable $th) {
+
+        return response(['status'=>'failed','message'=>'catch, Error getting prog_code given matric number!']);
+    }
+
+}
+
+static function get_dept_given_prog_code($prog_code,&$prog_name, &$dept , &$fac){
+    try {
+        $prog_sql = DB::table('t_programmes')->where('programme_id',$prog_code)->select('department_id_FK','programme')->get();
+        if($prog_sql->count() > 0) {
+            $prog_name = $prog_sql[0]->programme;
+            $dpt_sql = DB::table('t_departments')->where('department_id',$prog_sql[0]->department_id_FK)->select('department','college_id_FK')->get();
+            $dept =$dpt_sql[0]->department;
+            $fac_sql = DB::table('t_colleges')->where('college_id',$dpt_sql[0]->college_id_FK)->select('college')->get();
+            $fac = $fac_sql[0]->college;
+        }
+      
+    } catch (\Throwable $th) {
+
+        return response(['status'=>'failed','message'=>'catch, Error getting programme, department, and faculty!']);
+    }
+
+}
+// t_college_dept
+static function prog_dept_fac($prog_code,&$prog_name, &$dept , &$fac){
+    try {
+        $sql = DB::table('t_college_dept')->where('prog_code',$prog_code)->select('*')->get();
+        if($sql->count() > 0) {
+            $prog_name = $sql[0]->programme;
+            $dept = $sql[0]->department;
+            $fac = $sql[0]->college;
+        }
+      
+    } catch (\Throwable $th) {
+
+        return response(['status'=>'failed','message'=>'catch, Error getting programme, department, and faculty!']);
+    }
+
+}
+
+
+static function get_result_table_header($student,$applicant,$application,$prog_name, $dept , $fac,$page_no){
+   $trans_type = 'Student\'s';
+    if(strtoupper($application->transcript_type) == "OFFICIAL"){
+        $trans_type = 'Official';
+   }
+    return ' <div class="page">
+            <div class="header">
+                <img src="../img/run_logo_big.png" class="logo"/>
+		<h1>REDEEMER\'S UNIVERSITY</h1>
+		<h5>P.M.B. 230, Ede, Osun State, Nigeria</h5>
+		<h5>Tel: '. $applicant->mobile . ', Website: run.edu.ng, Email: ' . $applicant->email.' </h5><br>
+		<h2> '. $trans_type  .' Transcript</h2>
+		<h5 id="recipient_h">Intended Recipient:'. $application->recipient .'   </h5>
+		<h6>Page ' . strval($page_no) . ' of pageno </h6>
+	    </div>
+	    <div class="golden_streak"></div>
+            <div class="header2">
+                <table>
+                    <tr>
+                        <td>Name: <strong> '. $applicant->surname. ' '. $applicant->firstname . '</strong></td>
+			<td></td>
+			<td>Matriculation Number: <strong> ' . $applicant->matric_number .' </strong></td>
+		    </tr>
+		    <tr> 
+			<td>College: <strong> ' . $fac .' </strong></td>
+			<td>Department: <strong> ' . $dept .  ' </strong></td>
+			<td>Programme: <strong> ' . $prog_name .  ' </strong></td>
+		    </tr>
+		</table>
+	    </div>';
+}
+static function get_student_result_session_given_matno($matno,&$sessions){
+   try {
+    $sessions = DB::table('registrations')->distinct()->where(["matric_number"=>$matno , "deleted"=>"N"])->pluck('session_id');
+    if($sessions->count() > 0){ $sessions = $sessions; return true;}
+    return false;
+   } catch (\Throwable $th) {
+    return response(['status'=>'failed','message'=>'catch, Error getting get_student_result_session_given_matno!']);
+   }
+}
+
+
+static function get_correct_application_for_this_request($matno,$delivery_mode,$transcript_type){
+    try {
+        $application = DB::table('applications')->select('*')
+         ->where(['matric_number'=> $matno,'delivery_mode'=>$delivery_mode,'transcript_type'=>$transcript_type,'app_status'=>'10'])->get();
+    //     $pin = DB::table('payment_transaction')->select('rrr')
+    //   ->where(['matric_number'=> $matno,'status_code'=>'00'])
+    //    ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('applications'); })->first();
+    //    if(!empty($pin)){return $pin->rrr ;}
+    //    return 'null';
+       
+   } catch (\Throwable $th) {
+       return response(['status'=>'failed',' message'=>'catch, Error get_correct_application_for_this_request !']);
+
+   }
+}
     // class
 
 }
