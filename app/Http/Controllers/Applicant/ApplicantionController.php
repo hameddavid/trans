@@ -262,7 +262,7 @@ public function get_student_result(Request $request){
             $semester = 0;
             $sum_point_unit = 0.0;
             $sum_unit = 0.0;
-            return "Working ...";
+            
         }
         
     }else{
@@ -272,6 +272,13 @@ public function get_student_result(Request $request){
 
 
 
+static function fetch_student_result_from_registration(){
+   $result = DB::table('t_course')
+    ->join('t_registration', 'users.id', '=', 'contacts.user_id')
+    ->select('users.*', 'contacts.phone', 'orders.price')
+    ->get();
+    return $result;
+}
 
 
 

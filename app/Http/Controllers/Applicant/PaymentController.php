@@ -243,11 +243,11 @@ class PaymentController extends Controller
         $data->status_msg = "success";
         $save_date = $data->save();
         if( $save_date){ 
-            $rtMsg = response(['status'=>'ok','msg'=>'Payment successful','rsp'=>''], 200);
+            $rtMsg = response(['status'=>'ok','message'=>'Payment successful','rsp'=>''], 200);
             return true;
         }
        }else{
-        $rtMsg = response(['status'=>'ok','msg'=>'Record updated already!','rsp'=>''], 200);
+        $rtMsg = response(['status'=>'ok','message'=>'Record updated already!','rsp'=>''], 200);
         return true;
        }
           
@@ -261,7 +261,7 @@ class PaymentController extends Controller
 
     public function update_payment(Request $request){
        
-        $request->validate([ 'matno' => 'required|string', 'paymentReference' => 'required|string', 'desc' => 'required|string',]);
+        $request->validate([ 'matno' => 'required|string', 'paymentReference' => 'required|string',]);
         try {
             if($request->has('transactionId') && !empty($request->input('transactionId'))) {
                 if($this->update_payment_in_db($rrr=$request->paymentReference,$transactionId=$request->transactionId,$rtMsg)){
