@@ -88,45 +88,6 @@ class ApplicantionController extends Controller
         
 }
 
-//     public function submit_student_app(Request $request){
-
-//         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ]);
-       
-//         if($request->transcript_type == 'official'){
-//             $request->validate([ "mode" => "required","address"=>"required","recipient"=>"required"]); 
-//         }
-//         try { 
-//             if($this->validate_pin($request->userid,$request->matno) == $request->used_token){
-//            $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
-//            if($applicant){
-//             $new_application = new Application();
-//             $new_application->matric_number   = $request->matno;
-//             $new_application->applicant_id  = $request->userid;
-//             $new_application->delivery_mode = $request->mode ? $request->mode : 'soft';
-//             $new_application->transcript_type = $request->transcript_type;
-//             $new_application->address = $request->address ? $request->address : $applicant->email;
-//             $new_application->destination = $request->destination ? $request->destination : $applicant->email;
-//             $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
-//             $new_application->app_status = 10; // default status
-//             $new_application->used_token = $request->used_token;
-//             $save_app = $new_application->save();
-//             if($save_app ){
-//                if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
-//                 return response(['status'=>'success',' message'=>'Application successfully created'],201);   
-//                    } 
-//                    else{ return response(['status'=>'success',' message'=>'Application successfully created but email failed sending', 201]);  }
-//                 // Notify applicant through email  $applicant->email
-//                 // Notify admin
-//             }
-//            }else{ return response(['status'=>'failed',' message'=>'No applicant with matric number '. $request->matno . ' found']);   }
-//         }else{ return response(['status'=>'failed',' message'=>'Invalid application payment pin!']);    }
-          
-//         } catch (\Throwable $th) {
-//             return response(['status'=>'failed',' message'=>'catch, Error summit_app !']);
-
-//         }
-        
-// }
 
     /**
      * Store a newly created resource in storage.
@@ -160,14 +121,29 @@ class ApplicantionController extends Controller
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
-            $success_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'10','applicant_id'=>$request->userid])->get();
-            $pend_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'20','applicant_id'=>$request->userid])->get();
-            $failed_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'30','applicant_id'=>$request->userid])->get();
+            $success_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'10','applicant_id'=>$request->userid])->count();
+            $pend_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'20','applicant_id'=>$request->userid])->count();
+            $failed_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'30','applicant_id'=>$request->userid])->count();
             $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->get();
             return ['success_app'=>$success_app,'pend_app'=>$pend_app,'failed_app'=>$failed_app,'payment'=>$payment];
             
         } catch (\Throwable $th) {
             return response(['status'=>'failed',' message'=>'catch, Error fetching success_app, pend_app, failed_app and payment!']);
+        }
+
+
+    }
+
+    
+    public function my_applications(Request $request)
+    {
+        $request->validate(['userid'=>'required','matno'=>'required']); 
+        try {
+            $apps = Application::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])->get(); 
+            return ['success_app'=>$apps,];
+            
+        } catch (\Throwable $th) {
+            return response(['status'=>'failed',' message'=>'catch, Error fetching my apps!']);
         }
 
 
