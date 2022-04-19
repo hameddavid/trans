@@ -23,45 +23,110 @@ class ApplicantionController extends Controller
         //
     }
 
-    public function summit_app(Request $request){
+    public function submit_app(Request $request){
 
-        $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,'used_token'=>'required']);
+        $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
        
-        if($request->transcript_type == 'official'){
-            $request->validate([ "mode" => "required","address"=>"required","recipient"=>"required"]); 
-        }
-        try { 
-            if($this->validate_pin($request->userid,$request->matno) == $request->used_token){
-           $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
-           if($applicant){
-            $new_application = new Application();
-            $new_application->matric_number   = $request->matno;
-            $new_application->applicant_id  = $request->userid;
-            $new_application->delivery_mode = $request->mode ? $request->mode : 'soft';
-            $new_application->transcript_type = $request->transcript_type;
-            $new_application->address = $request->address ? $request->address : $applicant->email;
-            $new_application->destination = $request->destination ? $request->destination : $applicant->email;
-            $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
-            $new_application->app_status = 10; // default status
-            $new_application->used_token = $request->used_token;
-            $save_app = $new_application->save();
-            if($save_app ){
-               if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
-                return response(['status'=>'success',' message'=>'Application successfully created'],201);   
-                   } 
-                   else{ return response(['status'=>'success',' message'=>'Application successfully created but email failed sending', 201]);  }
-                // Notify applicant through email  $applicant->email
-                // Notify admin
-            }
-           }else{ return response(['status'=>'failed',' message'=>'No applicant with matric number '. $request->matno . ' found']);   }
-        }else{ return response(['status'=>'failed',' message'=>'Invalid application payment pin!']);    }
-          
+        try {   
+            $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
+            if($applicant->count() != 0){
+                $type = strtoupper($request->transcript_type);
+            if($type == 'OFFICIAL'){
+                $request->validate([ "mode" => "required","address"=>"required","recipient"=>"required",'used_token'=>'required']); 
+                if($this->validate_pin($request->userid,$request->matno) == $request->used_token){
+                     $new_application = new Application();
+                     $new_application->matric_number   = $request->matno;
+                     $new_application->applicant_id  = $request->userid;
+                     $new_application->delivery_mode = $request->mode ? $request->mode : 'soft';
+                     $new_application->transcript_type = $type;
+                     $new_application->address = $request->address ? $request->address : $applicant->email;
+                     $new_application->destination = $request->destination ? $request->destination : $applicant->email;
+                     $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
+                     $new_application->app_status = 10; // default status
+                     $new_application->used_token = $request->used_token;
+                     $save_app = $new_application->save();
+                     if($save_app ){
+                        //  Generate the transacript HTML here and save temprary
+                        if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
+                         return response(['status'=>'success',' message'=>'Application successfully created'],201);   
+                            } 
+                            else{ return response(['status'=>'success',' message'=>'Application successfully created but email failed sending', 201]);  }
+                         // Notify applicant through email  $applicant->email
+                         // Notify admin
+                     } 
+                 }else{ return response(['status'=>'failed',' message'=>'Invalid application payment pin!']);    }
+                
+                }elseif($type == 'STUDENT'){
+                    $new_application = new Application();
+                    $new_application->matric_number   = $request->matno;
+                    $new_application->applicant_id  = $request->userid;
+                    $new_application->delivery_mode = $request->mode ? $request->mode : 'soft';
+                    $new_application->transcript_type = $type;
+                    $new_application->address = $request->address ? $request->address : $applicant->email;
+                    $new_application->destination = $request->destination ? $request->destination : $applicant->email;
+                    $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
+                    $new_application->app_status = 10; // default status
+                    //$new_application->used_token = $request->used_token ? $request->used_token : 'STUDENT';
+                    $save_app = $new_application->save();
+                    if($save_app ){
+                       //  Generate the transacript HTML here and save temprary
+                       if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
+                        return response(['status'=>'success',' message'=>'Application successfully created'],201);   
+                           } 
+                           else{ return response(['status'=>'success',' message'=>'Application successfully created but email failed sending', 201]);  }
+                        // Notify applicant through email  $applicant->email
+                        // Notify admin
+                    } 
+                }else{
+                    return response(['status'=>'failed',' message'=>'Error in transcript type supplied']);
+                }
+            }else{ return response(['status'=>'failed',' message'=>'No applicant with matric number '. $request->matno . ' found']);   }
         } catch (\Throwable $th) {
-            return response(['status'=>'failed',' message'=>'catch, Error summit_app !']);
-
+            return response(['status'=>'failed',' message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)']);
+            
         }
         
 }
+
+//     public function submit_student_app(Request $request){
+
+//         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ]);
+       
+//         if($request->transcript_type == 'official'){
+//             $request->validate([ "mode" => "required","address"=>"required","recipient"=>"required"]); 
+//         }
+//         try { 
+//             if($this->validate_pin($request->userid,$request->matno) == $request->used_token){
+//            $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
+//            if($applicant){
+//             $new_application = new Application();
+//             $new_application->matric_number   = $request->matno;
+//             $new_application->applicant_id  = $request->userid;
+//             $new_application->delivery_mode = $request->mode ? $request->mode : 'soft';
+//             $new_application->transcript_type = $request->transcript_type;
+//             $new_application->address = $request->address ? $request->address : $applicant->email;
+//             $new_application->destination = $request->destination ? $request->destination : $applicant->email;
+//             $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
+//             $new_application->app_status = 10; // default status
+//             $new_application->used_token = $request->used_token;
+//             $save_app = $new_application->save();
+//             if($save_app ){
+//                if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
+//                 return response(['status'=>'success',' message'=>'Application successfully created'],201);   
+//                    } 
+//                    else{ return response(['status'=>'success',' message'=>'Application successfully created but email failed sending', 201]);  }
+//                 // Notify applicant through email  $applicant->email
+//                 // Notify admin
+//             }
+//            }else{ return response(['status'=>'failed',' message'=>'No applicant with matric number '. $request->matno . ' found']);   }
+//         }else{ return response(['status'=>'failed',' message'=>'Invalid application payment pin!']);    }
+          
+//         } catch (\Throwable $th) {
+//             return response(['status'=>'failed',' message'=>'catch, Error summit_app !']);
+
+//         }
+        
+// }
 
     /**
      * Store a newly created resource in storage.
@@ -93,12 +158,12 @@ class ApplicantionController extends Controller
      */
     public function get_applicant_stat(Request $request)
     {
-        $request->validate(['userid'=>'required']); 
+        $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
-            $success_app = Application::where(['app_status'=>'10','applicant_id'=>$request->userid])->get();
-            $pend_app = Application::where(['app_status'=>'20','applicant_id'=>$request->userid])->get();
-            $failed_app = Application::where(['app_status'=>'30','applicant_id'=>$request->userid])->get();
-            $payment = Payment::where(['user_id'=>$request->userid])->get();
+            $success_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'10','applicant_id'=>$request->userid])->get();
+            $pend_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'20','applicant_id'=>$request->userid])->get();
+            $failed_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'30','applicant_id'=>$request->userid])->get();
+            $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->get();
             return ['success_app'=>$success_app,'pend_app'=>$pend_app,'failed_app'=>$failed_app,'payment'=>$payment];
             
         } catch (\Throwable $th) {
@@ -437,11 +502,26 @@ public function get_student_result(Request $request){
     </div> ';
 
     $response = str_replace("pageno", $page_no, $response);
+
+    $From = "transcript@run.edu.ng";
+    $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
+    $Msg = $response;  
+    $Subject = "GENERATED TRANSCRIPT";
+    $HTML_type = true;
+    $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+   if($resp->ok()){
+    return $response; //return response(['status'=>'success','message'=>'applicant created'], 201);
+   }
 		
-    return $response;
+    
    
 }else{ return "empty student session";}
 }
+
+
+
+
+
 
 
 static function fetch_status($status){

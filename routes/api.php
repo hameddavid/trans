@@ -21,7 +21,8 @@ Route::get('app/get_applicant_stat', [ApplicantionController::class, 'get_applic
 Route::post('app/check_pend_rrr', [PaymentController::class, 'check_pend_rrr']);
 Route::post('app/log_new_rrr_trans_ref', [PaymentController::class, 'log_new_rrr_trans_ref']);
 
-Route::post('app/summit_app', [ApplicantionController::class, 'summit_app']);
+Route::post('app/submit_app', [ApplicantionController::class, 'submit_app']);
+
 Route::get('app/get_gateway_config', [PaymentController::class, 'get_gateway_config']);
 Route::post('app/update_payment', [PaymentController::class, 'update_payment']);
 Route::post('app/re_query_transaction', [PaymentController::class, 're_query_transaction']);
@@ -33,9 +34,16 @@ Route::post('app/remita_bank_payment', [PaymentController::class, 'remita_bank_p
 
 
 
+
+
+
+
+
 // let it be web route
 
 Route::post('get_student_result', [ApplicantionController::class, 'get_student_result']);
+
+
 
 
 Route::group(["middleware" => ['auth:sanctum']], function(){
