@@ -103,7 +103,7 @@ class PaymentController extends Controller
 
     public function get_gateway_config(Request $request){
 
-        $request->validate(  [ 'gateway' => 'required|string',"userid" => "required",'matno' => 'required|string',] );
+        $request->validate(  [ 'mode'=>'required|string', 'gateway' => 'required|string',"userid" => "required",'matno' => 'required|string',] );
         if(strtoupper($request->mode) == "HARD"){$request->validate(['destination' => 'required|string']); } 
         try {
             $destination = strtoupper($request->destination);
