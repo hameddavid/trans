@@ -254,28 +254,222 @@ public function get_student_result(Request $request){
         $this->get_prog_code_given_matno($matno, $prog_code);
         // $this->get_dept_given_prog_code($prog_code,$prog_name, $dept , $fac); another function for prog_dept_fac
         $this->prog_dept_fac($prog_code, $prog_name, $dept , $fac);
-        foreach($sessions as $index => $session){
+        foreach($sessions as $sessionIndex => $session){
             $page_no += 1;
             $response .= $this->get_result_table_header($student,$applicant,$application,$prog_name, $dept , $fac,$page_no);
-            
-            $results =  '';
+            $results = $this->fetch_student_result_from_registration($matno,$session);
             $semester = 0;
             $sum_point_unit = 0.0;
             $sum_unit = 0.0;
-            
-        }
+            foreach($results as $resultIndex => $result){
         
-    }else{
-        return "empty student session";}
+                if (($semester != $result->semester) && ($semester == 0)) {
+					
+                    $response = $response . '
+            <table class="result_table">
+                        <caption>Session: ' . $session . ', Semester: ' .  $this->format_semester($result->semester) . '</caption>
+                <tr>
+                <th>Course Code</th>
+                <th>Course Title</th>
+                <th>Status</th>
+                <th>Unit</th>
+                <th>Score</th>
+                <th>Grade</th>
+                <th>Grade Point</th>
+                </tr>'; }
+                        
+                if(($semester != $result->semester) && ($semester != 0)) {
+                        
+                    $cumm_sum_point_unit += $sum_point_unit;
+            $cumm_sum_unit += $sum_unit;
+                        
+            $gpa = $sum_point_unit / floatval($sum_unit);
+            $cgpa = $cumm_sum_point_unit / floatval($cumm_sum_unit);
+             
+            $response = $response . '
+            </table>
+            <table class="result_table2">
+                        <tr>
+                            <td><strong>Semester</strong></td>
+                <td>TU: <strong> '. strval($sum_unit) . '</strong></td>
+                <td>TGP: <strong> '. strval($sum_point_unit) . '</strong></td>
+                <td>GPA: <strong> '. strval(round($gpa, 2)) . '</strong></td>
+                </tr>
+                <tr>
+                <td><strong>Cummulative</strong></td>
+                <td>CTU: <strong> '. strval($cumm_sum_unit) . '</strong></td>
+                <td>CTGP: <strong> '. strval($cumm_sum_point_unit) . '</strong></td>
+                <td>CGPA: <strong> '. strval(round($cgpa, 2)) . '</strong></td>
+                </tr>
+            </table>'; 
+            
+
+            $response = $response .'
+            <table class="result_table">
+                        <caption>Session: ' . $session .', Semester: ' . $this->format_semester($result->semester) .'</caption>
+                <tr>
+                <th>Course Code</th>
+                <th>Course Title</th>
+                <th>Status</th>
+                <th>Unit</th>
+                <th>Score</th>
+                <th>Grade</th>
+                <th>Grade Point</th>
+                </tr>';
+        
+    }        
+            $sum_point_unit = 0.0;
+            $sum_unit = 0.0;
+            
+            $response = $response .'
+                <tr>
+                    <td>' . strval($result->course_code) .'</td>
+                    <td>' . strval($result->course_title) .'</td>
+                    <td>' . $this->fetch_status($result->status) .'</td>
+                    <td align="center">' . strval($result->unit) .'</td>
+                    <td align="center">' . strval($result->score) .'</td>
+                    <td align="center">' . strval($result->grade) .'</td>
+                    <td align="center">' .  strval($this->get_position_given_grade(strtoupper($result->grade)) * $result->unit) .'</td>
+                </tr>';
+                    
+            $sum_unit += $result->unit;
+            $sum_point_unit += ($this->get_position_given_grade(strtoupper($result->grade)) * $result->unit);
+             
+            $semester = $result->semester;
+        }      
+        $cumm_sum_point_unit += $sum_point_unit;
+        $cumm_sum_unit += $sum_unit;
+                        
+        $gpa = $sum_point_unit / floatval($sum_unit);
+        $cgpa = $cumm_sum_point_unit / floatval($cumm_sum_unit);
+
+        $response = $response .'
+	    </table>
+	    <table class="result_table2">
+            <tr>
+		<td><strong>Semester</strong></td>
+		<td>TU: <strong> ' . strval($sum_unit) .'</strong></td>
+		<td>TGP: <strong> ' . strval($sum_point_unit) .'</strong></td>
+		<td>GPA: <strong> ' . strval(round($gpa, 2)) .'</strong></td>
+	    </tr>
+	    <tr>
+		<td><strong>Cummulative</strong></td>
+		<td>CTU: <strong> ' . strval($cumm_sum_unit) .'</strong></td>
+		<td>CTGP: <strong> ' . strval($cumm_sum_point_unit) .'</strong></td>
+		<td>CGPA: <strong> ' . strval(round($cgpa, 2)) .'</strong></td>
+	    </tr>
+	</table>';
+			
+	$response = $response .'
+	</div>';
+        
+    } 
+
+    // response = response[0: len(response) - len('</div>')]
+    $this->get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
+    $response = $response .'
+    <table class="result_table2">
+        <caption>Overall Academic Summary</caption>
+	<tr>
+            <td><strong>Status</strong></td>
+	    <td> ' . $student->status.' </td>
+	</tr>
+	<tr>
+	    <td><strong>Qualification Obtained</strong></td>
+	    <td> ' . $qualification .' </td>
+	</tr> ';
+				
+    if (strtoupper($student->status) == strtoupper("Graduated")) {
+
+        $response = $response .'<tr>
+                <td><strong>Class of Degree</strong></td>
+                <td> ' . $this->class_of_degree($cgpa).' </td>
+        </tr> ';
+                    
+    }
+	$signatory = 'Toyo_OJ_Teewhy';
+    $designation = 'Toyo_OJ_Teewhy';
+    $date = date("d-M-y");
+    $response = $response .'</table>
+        <table class="result_table2">
+            <caption>Key</caption>
+            <tr>
+                <td>A => 100 - 70 => 5</td>
+                <td>4.50 - 5.00 => Excellent</td>
+                <td>TU: Total Units</td>
+            </tr>
+            <tr>
+                <td>B => 69 - 60 => 4</td>
+                <td>3.50 - 4.49 => Very Good</td>
+                <td>TGP: Total Grade Point</td>
+            </tr>
+            <tr>
+                <td>C => 59 - 50 => 3</td>
+                <td>2.50 - 3.49 => Good</td>
+                <td>GPA: Grade Point Average</td>
+            </tr>
+            <tr>
+                <td>D => 49 - 45 => 2</td>
+                <td>1.50 - 2.49 => Average</td>
+                <td>CTU: Cummulative Total Units</td>
+            </tr>
+            <tr>
+                <td>E => 44 - 40 => 1</td>
+                <td>1.00 - 1.49 => Fair</td>
+                <td>CTGP: Cummulative Total Grade Point</td>
+            </tr>
+            <tr>
+                <td>F => 39 - 0 => 0</td>
+                <td>0.00 - 0.99 => Poor</td>
+                <td>CGPA: Cummulative Grade Point Average</td>
+            </tr>
+        </table>
+        <div class="footer_">
+            ________________________________<br>
+             ' . $signatory .'<br>
+             ' . $designation.'<br>
+            For: Registrar
+        </div>
+        <div class="print_footer">
+            Any alteration renders this transcript invalid<br>
+            Generated on the  ' . $date .'<br>
+        </div>
+    </div> ';
+
+    $response = str_replace("pageno", $page_no, $response);
+		
+    return $response;
    
+}else{ return "empty student session";}
 }
 
 
+static function fetch_status($status){
+    if(strtoupper($status) == "C"){return "Compulsory";}
+    elseif(strtoupper($status) == "E"){return "Elective";}
+    else{return "";}
+}
 
-static function fetch_student_result_from_registration(){
-   $result = DB::table('t_course')
-    ->join('t_registration', 'users.id', '=', 'contacts.user_id')
-    ->select('users.*', 'contacts.phone', 'orders.price')
+static function get_position_given_grade($grade){
+    return strpos("FEDCBA",$grade);
+}
+static function format_semester($semester){
+    if($semester == 1){return "First";}
+    elseif($semester == 2){return "Second";}
+    else{return "";}
+
+}
+
+static function fetch_student_result_from_registration($matno,$session){
+   $result = DB::table('t_course')->join('registrations', 't_course.unit_id', '=', 'registrations.unit_id')
+    ->select('registrations.session_id', 'registrations.semester', 'registrations.course_code','registrations.status','registrations.score','registrations.grade','t_course.course_title','t_course.unit')
+    ->where(DB::raw("CONCAT(registrations.course_code,registrations.unit_id)"), DB::raw("CONCAT(t_course.course_code,t_course.unit_id)"))
+    ->where('registrations.session_id',$session)
+    ->where('registrations.matric_number',$matno)
+    ->where('registrations.deleted', 'N')
+    ->orderBy('registrations.session_id', 'ASC')
+    ->orderBy('registrations.semester', 'ASC')
+    ->orderBy('registrations.course_code', 'ASC')
     ->get();
     return $result;
 }
@@ -386,6 +580,79 @@ static function get_correct_application_for_this_request($matno,$delivery_mode,$
 
    }
 }
+
+
+
+
+
+
+static function class_of_degree($cgpa) {
+
+    if($cgpa >= 4.5)
+        
+        return "First Class (Honours)";
+    
+    elseif (cgpa >= 3.5 )
+        
+	    return "Second Class (Honours) Upper Division";
+		
+    elseif (cgpa >= 2.4)
+        
+	    return "Second Class (Honours) Lower Division";
+		
+    elseif (cgpa >= 1.5)
+        
+	    return "Third Class (Honours)";
+		
+    elseif (cgpa >= 1.0 )
+
+	    return "Pass";
+		
+    else {return "";}
+		
+}
+
+static function get_programme_details($student,$prog_name, $dept ,$fac,&$qualification) {
+
+	$qualification = '';
+    if ($student->status == "GRADUATED") {
+        
+        if ($this->stringEndsWith(strtoupper($fac), "SCIENCES") ) { $qualification = "Bachelor of Science in " . $this->find_and_replace_string($prog_name);
+                
+        }elseif(str_contains(strtoupper($fac),"LAW")){  $qualification = "Bachelor of Laws in " . $this->find_and_replace_string($prog_name) ;}
+                   
+	else{ $qualification = "Bachelor of Arts in " . $this->find_and_replace_string($prog_name);}
+  
+    }
+		
+    return true;
+
+}
+
+
+static function find_and_replace_string($string){
+   $string  = str_replace("&amp;", "&#38;",$string);
+   $string  = str_replace("&amp;", "&#38;",$string);
+   return $string;
+}
+
+static function stringEndsWith($haystack,$needle,$case=true) {
+    $expectedPosition = strlen($haystack) - strlen($needle);
+    if ($case){
+        return strrpos($haystack, $needle, 0) === $expectedPosition;
+    }
+    return strripos($haystack, $needle, 0) === $expectedPosition;
+}
+
+
+
+
+
+
+
+
+
+
     // class
 
 }

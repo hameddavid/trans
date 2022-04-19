@@ -14,7 +14,7 @@ class PaymentController extends Controller
 {
     public function check_pend_rrr(Request $request){
 
-        $request->valiadte([  'gateway' => 'required|string',  'matno' => 'required|string', 'userid'=>'required', 'destination'=>'required']) ;
+        $request->validate([  'gateway' => 'required|string',  'matno' => 'required|string', 'userid'=>'required', 'destination'=>'required']) ;
 
         $destination_r = trim(strtoupper($request->destination));
         $matno_r = $request->matno;
