@@ -139,8 +139,9 @@ class ApplicantionController extends Controller
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
-            $apps = Application::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])->get(); 
-            return ['success_app'=>$apps,];
+            $apps = Application::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])
+            ->select('transcript_type','created_at','app_status','destination','recipient')->get(); 
+            return $apps;
             
         } catch (\Throwable $th) {
             return response(['status'=>'failed',' message'=>'catch, Error fetching my apps!']);
@@ -152,8 +153,9 @@ class ApplicantionController extends Controller
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
-            $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->get();
-            return ['success_app'=>$payment,];
+            $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])
+            ->select('amount','rrr','destination','status_msg','created_at')->get();
+            return $payment;
             
         } catch (\Throwable $th) {
             return response(['status'=>'failed',' message'=>'catch, Error fetching my apps!']);
