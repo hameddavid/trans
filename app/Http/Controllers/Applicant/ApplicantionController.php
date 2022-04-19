@@ -134,7 +134,7 @@ class ApplicantionController extends Controller
 
     }
 
-    
+
     public function my_applications(Request $request)
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
@@ -146,6 +146,18 @@ class ApplicantionController extends Controller
             return response(['status'=>'failed',' message'=>'catch, Error fetching my apps!']);
         }
 
+
+    }
+    public function my_payments(Request $request)
+    {
+        $request->validate(['userid'=>'required','matno'=>'required']); 
+        try {
+            $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->get();
+            return ['success_app'=>$payment,];
+            
+        } catch (\Throwable $th) {
+            return response(['status'=>'failed',' message'=>'catch, Error fetching my apps!']);
+        }
 
     }
 
