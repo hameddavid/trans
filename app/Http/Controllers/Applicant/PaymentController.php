@@ -103,13 +103,15 @@ class PaymentController extends Controller
 
     public function get_gateway_config(Request $request){
 
-        $request->validate(  [ 'mode'=>'required|string', 'gateway' => 'required|string',"userid" => "required",'matno' => 'required|string',] );
+        $request->validate([ 'mode'=>'required|string', 'gateway' => 'required|string',"userid" => "required",'matno' => 'required|string',] );
         if(strtoupper($request->mode) == "HARD"){$request->validate(['destination' => 'required|string']); } 
         try {
             $destination = strtoupper($request->destination);
             $gateway = strtoupper($request->gateway);
+            $mode = strtoupper($request->mode);
+            if($mode == "SOFT"){ $destination ="SOFT";}
             $orderID = $this->remita_generate_trans_ID();
-            if(strtoupper($request->gateway) == strtoupper('REMITA')){
+            if($gateway  == 'REMITA'){
 
                if($this->get_payment_config2($serviceTypeID,$merchantId, $apiKey ,$destination,$gateway)){
                     $applicant =  Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();;
@@ -124,7 +126,7 @@ class PaymentController extends Controller
         
                 return response(['status'=>'Nok','message'=>'Error getting serviceTypeID, Line ... Payment Controller','rsp'=>''], 400);
                 
-            }elseif(strtoupper($request->gateway) == strtoupper('FLUTTER')){
+            }elseif($gateway == 'FLUTTER'){
                 return "yet to be implemented...";
             }
             else{
@@ -141,10 +143,9 @@ class PaymentController extends Controller
 
 
     public function get_payment_config2(&$serviceTypeID,&$merchantId, &$apiKey ,$destination,$gateway) {
-    
         $serviceTypeID = $this->get_service_id_given_destination($destination);
         $merchantId = "4161150426";
-        $apiKey = "258341";  
+        $apiKey = "258341";
         if(!is_null($serviceTypeID)){
             return true;
         }  
@@ -178,6 +179,9 @@ class PaymentController extends Controller
             return "8201462144";
         }
         else if($destination == "EUROPE"){
+            return "8201462144";
+        }
+        else if($destination == "SOFT"){
             return "8201462144";
         }
         
