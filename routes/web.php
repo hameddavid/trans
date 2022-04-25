@@ -15,11 +15,11 @@ use App\Http\Controllers\Applicant\ApplicantionController;
 
 
 
-Route::get('/', function () {
+// Route::get('/', function () {
     // return view('welcome');
-    $pdf = App::make('dompdf.wrapper');
-    $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
-    return $pdf->stream();
+    // $pdf = App::make('dompdf.wrapper');
+    // $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
+    // return $pdf->stream();
     
     
     // Or use the facade:
@@ -40,4 +40,20 @@ Route::get('/', function () {
     // <div class="page-break"> </div>
     // <h1> Page 2 </h1>
 
+//});
+
+Route::get('/', function () {
+    return view('auth/login');
+});
+Route::get('/dashboard', function () {
+    return view('pages/dashboard');
+});
+Route::get('/payments', function () {
+    return view('pages/payments');
+});
+Route::get('/approved_applications', function () {
+    return view('pages/approved_requests');
+});
+Route::get('/pending_applications', function () {
+    return view('pages/pending_requests');
 });
