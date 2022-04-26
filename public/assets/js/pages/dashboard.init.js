@@ -59,16 +59,16 @@ options = {
                 16.34, 12.88,
             ],
         },
-        {
-            name: "Loss",
-            data: [
-                -11.45, -15.42, -7.9, -12.42, -12.6, -18.1, -18.2, -14.16,
-                -11.1, -7.09, -15.34, -11.88,
-            ],
-        },
+        // {
+        //     name: "Loss",
+        //     data: [
+        //         -11.45, -15.42, -7.9, -12.42, -12.6, -18.1, -18.2, -14.16,
+        //         -11.1, -7.09, -15.34, -11.88,
+        //     ],
+        // },
     ],
     chart: { type: "bar", height: 400, stacked: !0, toolbar: { show: !1 } },
-    plotOptions: { bar: { columnWidth: "20%" } },
+    plotOptions: { bar: { columnWidth: "20" } },
     colors: (barchartColors = getChartColorsArray("#market-overview")),
     fill: { opacity: 1 },
     dataLabels: { enabled: !1 },
@@ -76,7 +76,7 @@ options = {
     yaxis: {
         labels: {
             formatter: function (r) {
-                return r.toFixed(0) + "%";
+                return r.toFixed(0);
             },
         },
     },
