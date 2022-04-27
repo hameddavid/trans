@@ -11,6 +11,12 @@
         <!-- App favicon -->
         <link rel="shortcut icon" href="assets/images/run_logo.png">
 
+        <!-- alertifyjs Css -->
+        <link href="assets/libs/alertifyjs/build/css/alertify.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- alertifyjs default themes  Css -->
+        <link href="assets/libs/alertifyjs/build/css/themes/default.min.css" rel="stylesheet" type="text/css" />
+
         <!-- preloader css -->
         <link rel="stylesheet" href="assets/css/preloader.min.css" type="text/css" />
 
@@ -22,6 +28,12 @@
         <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
 
     </head>
+
+    <style>
+      .invalid {
+        color:#ff0000;
+      }
+    </style>
 
     <body data-topbar="dark">
 
@@ -41,11 +53,12 @@
                                     <div class="auth-content my-auto">
                                         <div class="text-center">
                                             <h5 class="mb-0">Transcript Admin Dashboard</h5>
-                                            <p class="text-muted mt-2">Sign in to continue to Dason.</p>
+                                            <p class="text-muted mt-2">Sign in to continue to your account.</p>
                                         </div>
-                                        <form class="mt-4 pt-2">
+                                        <form method="POST" id="loginForm" class="mt-4 pt-2">
+                                            @csrf
                                             <div class="form-floating form-floating-custom mb-4">
-                                                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                                                <input type="email" class="form-control" name="email" id="email" required>
                                                 <label for="email">Email</label>
                                                 <div class="form-floating-icon">
                                                    <i data-feather="users"></i>
@@ -53,7 +66,7 @@
                                             </div>
 
                                             <div class="form-floating form-floating-custom mb-4 auth-pass-inputgroup">
-                                                <input type="password" class="form-control pe-5" id="password" placeholder="Enter Password">
+                                                <input type="password" class="form-control pe-5" name="password" id="password" required>
                                                 
                                                 <button type="button" class="btn btn-link position-absolute h-100 end-0 top-0" id="password-addon">
                                                     <i class="mdi mdi-eye-outline font-size-18 text-muted"></i>
@@ -76,7 +89,7 @@
                                                 
                                             </div>
                                             <div class="mb-3">
-                                                <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Log In</button>
+                                                <button id="btnLogin" class="btn btn-primary w-100 waves-effect waves-light" type="submit">Log In</button>
                                             </div>
                                         </form>
                                     </div>
@@ -105,26 +118,7 @@
                                 <li></li>
                             </ul>
                             <!-- end bubble effect -->
-                            <div class="row justify-content-center align-items-end">
-                                <div class="col-xl-7">
-                                    <div class="p-0 p-sm-4 px-xl-0">
-                                        <div id="reviewcarouselIndicators" class="carousel slide" data-bs-ride="carousel">
-                                            <div class="carousel-indicators auth-carousel carousel-indicators-rounded justify-content-center mb-0">
-                                                <button type="button" data-bs-target="#reviewcarouselIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1">
-                                                    <img src="assets/images/users/avatar-1.jpg" class="avatar-md img-fluid rounded-circle d-block" alt="...">
-                                                </button>
-                                                <button type="button" data-bs-target="#reviewcarouselIndicators" data-bs-slide-to="1" aria-label="Slide 2">
-                                                    <img src="assets/images/users/avatar-2.jpg" class="avatar-md img-fluid rounded-circle d-block" alt="...">
-                                                </button>
-                                                <button type="button" data-bs-target="#reviewcarouselIndicators" data-bs-slide-to="2" aria-label="Slide 3">
-                                                    <img src="assets/images/users/avatar-3.jpg" class="avatar-md img-fluid rounded-circle d-block" alt="...">
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <!-- end review carousel -->
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                     <!-- end col -->
@@ -143,11 +137,19 @@
         <script src="assets/libs/node-waves/waves.min.js"></script>
         <script src="assets/libs/feather-icons/feather.min.js"></script>
         <!-- pace js -->
+
+        <!-- alertifyjs js -->
+        <script src="assets/libs/alertifyjs/build/alertify.min.js"></script>
+        <!-- notification init -->
+        <script src="assets/js/pages/notification.init.js"></script>
+
         <script src="assets/libs/pace-js/pace.min.js"></script>
 
         <script src="assets/js/pages/pass-addon.init.js"></script>
 
         <script src="assets/js/pages/feather-icon.init.js"></script>
+        <script src="assets/js/validation.min.js"></script>
+        <script src="assets/js/login.js"></script>
 
     </body>
 </html>

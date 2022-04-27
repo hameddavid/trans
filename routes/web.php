@@ -45,6 +45,9 @@ use App\Http\Controllers\Applicant\ApplicantionController;
 Route::get('/', function () {
     return view('auth/login');
 });
+
+Route::post('admin_login_auth',[AdminAuthController::class,'login']);
+
 Route::get('/dashboard', function () {
     return view('pages/dashboard');
 });

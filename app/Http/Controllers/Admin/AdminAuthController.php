@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class AdminAuthController extends Controller
@@ -19,7 +20,6 @@ class AdminAuthController extends Controller
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
     }
-
 
 
     public function auth_login(){
