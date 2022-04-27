@@ -371,10 +371,11 @@ public function get_student_result(Request $request){
                 <th>Grade</th>
                 <th>Grade Point</th>
                 </tr>';
-        
-    }        
             $sum_point_unit = 0.0;
             $sum_unit = 0.0;
+        
+    }        
+            
             
             $response = $response .'
                 <tr>
@@ -514,11 +515,14 @@ public function get_student_result(Request $request){
 
 
 
+
 static function fetch_status($status){
     if(strtoupper($status) == "C"){return "Compulsory";}
     elseif(strtoupper($status) == "E"){return "Elective";}
     else{return "";}
 }
+
+
 
 static function get_position_given_grade($grade){
     return strpos("FEDCBA",$grade);
@@ -531,17 +535,22 @@ static function format_semester($semester){
 }
 
 static function fetch_student_result_from_registration($matno,$session){
-   $result = DB::table('t_course')->join('registrations', 't_course.unit_id', '=', 'registrations.unit_id')
-    ->select('registrations.session_id', 'registrations.semester', 'registrations.course_code','registrations.status','registrations.score','registrations.grade','t_course.course_title','t_course.unit')
-    ->where(DB::raw("CONCAT(registrations.course_code,registrations.unit_id)"), DB::raw("CONCAT(t_course.course_code,t_course.unit_id)"))
-    ->where('registrations.session_id',$session)
-    ->where('registrations.matric_number',$matno)
-    ->where('registrations.deleted', 'N')
-    ->orderBy('registrations.session_id', 'ASC')
-    ->orderBy('registrations.semester', 'ASC')
-    ->orderBy('registrations.course_code', 'ASC')
-    ->get();
-    return $result;
+    try {
+        $result = DB::table('t_course')->join('registrations', 't_course.unit_id', '=', 'registrations.unit_id')
+        ->select('registrations.session_id', 'registrations.semester', 'registrations.course_code','registrations.status','registrations.score','registrations.grade','t_course.course_title','t_course.unit')
+        ->where(DB::raw("CONCAT(registrations.course_code,registrations.unit_id)"), DB::raw("CONCAT(t_course.course_code,t_course.unit_id)"))
+        ->where('registrations.session_id',$session)
+        ->where('registrations.matric_number',$matno)
+        ->where('registrations.deleted', 'N')
+        ->orderBy('registrations.session_id', 'ASC')
+        ->orderBy('registrations.semester', 'ASC')
+        ->orderBy('registrations.course_code', 'ASC')
+        ->get();
+        return $result;
+    } catch (\Throwable $th) {
+        return response(['status'=>'failed','message'=>'catch, fetch_student_result_from_registration']);
+
+    }
 }
 
 
@@ -594,7 +603,8 @@ static function prog_dept_fac($prog_code,&$prog_name, &$dept , &$fac){
 
 
 static function get_result_table_header($student,$applicant,$application,$prog_name, $dept , $fac,$page_no){
-   $trans_type = 'Student\'s';
+   try {
+    $trans_type = 'Student\'s';
     if(strtoupper($application->transcript_type) == "OFFICIAL"){
         $trans_type = 'Official';
    }
@@ -623,7 +633,13 @@ static function get_result_table_header($student,$applicant,$application,$prog_n
 		    </tr>
 		</table>
 	    </div>';
+   } catch (\Throwable $th) {
+    return response(['status'=>'failed','message'=>'catch, get_result_table_header']);
+
+   }
 }
+
+
 static function get_student_result_session_given_matno($matno,&$sessions){
    try {
     $sessions = DB::table('registrations')->distinct()->where(["matric_number"=>$matno , "deleted"=>"N"])->pluck('session_id');
