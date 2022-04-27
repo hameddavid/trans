@@ -21,6 +21,9 @@ class AdminAuthController extends Controller
        // $this->middleware('subscribed')->except('store');
     }
 
+    public function login(Request $request){
+        dd($request->all());
+    }
 
     public function auth_login(){
         return view('auth.login');

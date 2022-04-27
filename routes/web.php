@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Applicant\ApplicantionController;
+use App\Http\Controllers\Admin\AdminAuthController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
