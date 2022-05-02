@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Applicant\ApplicantionController;
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,5 @@ Route::get('/payments', function () {
 Route::get('/approved_applications', function () {
     return view('pages/approved_requests');
 });
-Route::get('/pending_applications', function () {
-    return view('pages/pending_requests');
-});
+
+Route::get('/pending_applications',[AdminController::class,'viewPendingApplications']);
