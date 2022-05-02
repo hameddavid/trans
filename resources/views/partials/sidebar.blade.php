@@ -1,0 +1,37 @@
+<div class="vertical-menu">
+    <div data-simplebar class="h-100">
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">
+                <li class="menu-title" data-key="t-menu">Menu</li>
+                <li>
+                    <a href="dashboard">
+                        <i data-feather="home"></i>
+                        <span class="badge rounded-pill bg-soft-success text-success float-end">9+</span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="file-text"></i>
+                        <span>Requests</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="pending_applications">Pending</a></li>
+                        <li><a href="approved_applications">Approved</a></li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="payments">
+                        <i data-feather="dollar-sign"></i>
+                        <span>Payments</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>
