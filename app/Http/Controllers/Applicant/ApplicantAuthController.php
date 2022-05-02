@@ -82,6 +82,48 @@ class ApplicantAuthController extends Controller
     }
 
 
+    public function send_att(Request $request){
+
+        $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]); 
+       
+        try {
+        if(!is_bool($this->get_student_given_matno($request->matno))){
+            $student = $this->get_student_given_matno($request->matno);
+            $auto_pass = $this->RandomString(10); 
+            if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
+                $From = "transcript@run.edu.ng";
+                $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
+                $Msg =  '
+                ------------------------<br>
+                Dear ' .$student->SURNAME.' '. $student->FIRSTNAME.',
+                kindly use: <span color="red"> ' .$auto_pass. '</span>, as your password to login to your transcript portal. <br>
+                <br>
+                Remember to reset your password!
+                <br>
+                Thank you.<br>
+                ------------------------
+                    ';  
+                $file = $_FILES['doc']['tmp_name'];
+                $Subject = "AUTO GENERATED PASSWORD";
+                $HTML_type = true;
+                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,"file"=>$file, ]);     
+               if($resp->ok()){
+                return response(['status'=>'success','message'=>'applicant created'], 201);
+               }
+               return response(['status'=>'failed','message'=>'applicant created but email failed!'], 201);
+            }
+            return response(['status'=>'failed','message'=>'...Error creating applicant!'], 401);
+             
+        }else{
+            return 'No Student ';}
+        
+        } catch (\Throwable $th) {
+            return response(['status'=>'failed','message'=>'catch main, Error creating applicant...'], 401);
+        }
+        
+    }
+
+
 
 
     static function create_applicant($request,$student,$auto_pass){
@@ -98,7 +140,7 @@ class ApplicantAuthController extends Controller
             if($save_app){ return ['status'=>'success','message'=>'applicant created!'];}
             return false;
            } catch (\Throwable $th) {
-            return response(['status'=>'failed','message'=>'catch, Error creating applicant!']);
+            return ['status'=>'failed','message'=>'catch, Error creating applicant!'];
 
            }
     }

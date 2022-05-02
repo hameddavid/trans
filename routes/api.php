@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 
 
+Route::post('app/send_att', [ApplicantAuthController::class, 'send_att']);
+
 Route::post('app/register', [ApplicantAuthController::class, 'applicant_register']);
 Route::post('app/login', [ApplicantAuthController::class, 'applicant_login']);
 

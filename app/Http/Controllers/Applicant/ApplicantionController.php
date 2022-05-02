@@ -10,6 +10,8 @@ use App\Models\RegistrationResult;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use PDF;
 
 class ApplicantionController extends Controller
 {
@@ -494,14 +496,36 @@ public function get_student_result(Request $request){
 
     $response = str_replace("pageno", $page_no, $response);
 
+    // $pdf = PDF::loadView('pdf.invoice', $data);
+    // return $pdf->download('invoice.pdf');
+    // $pdf = PDF::make('dompdf.wrapper');
+    // return view('result')->with('data',$response);
+     PDF::loadHTML($response)->setPaper('a4', 'landscape')->setWarnings(false)->save($applicant->email.'.pdf');
+    
+    // return Storage::download(public_path($applicant->email.'.pdf'));
+
     $From = "transcript@run.edu.ng";
     $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
     $Msg = $response;  
     $Subject = "GENERATED TRANSCRIPT";
     $HTML_type = true;
-    $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
-   if($resp->ok()){
-    return $response; //return response(['status'=>'success','message'=>'applicant created'], 201);
+    // Http::attach('csv_file', $contents->post($url, $post_data);
+    // ->attach()
+    
+     $response = Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
+    ->post('http://adms.run.edu.ng/codebehind/trans_email.php');
+    dd($response->body());
+    if($response->ok()){
+        return  response(['status'=>'success','message'=>''], 201); // return $response;
+       }
+    
+    // $resp = Http::attach('file',file_get_contents(public_path($applicant->email.'.pdf')))
+    // ->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+    // dd($resp);
+    // $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+   return ;
+    if($resp->ok()){
+    return  response(['status'=>'success','message'=>''], 201); // return $response;
    }
 		
     

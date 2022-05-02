@@ -17,6 +17,7 @@ use App\Http\Controllers\Applicant\ApplicantionController;
 
 Route::get('/', function () {
     // return view('welcome');
+    return view('result');
     $pdf = App::make('dompdf.wrapper');
     $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
     return $pdf->stream();
