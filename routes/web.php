@@ -61,8 +61,6 @@ Route::get('/dashboard', function () {
 Route::get('/payments', function () {
     return view('pages/payments');
 });
-Route::get('/approved_applications', function () {
-    return view('pages/approved_requests');
-});
 
+Route::get('/approved_applications',[AdminController::class,'viewApprovedApplications']);
 Route::get('/pending_applications',[AdminController::class,'viewPendingApplications']);
