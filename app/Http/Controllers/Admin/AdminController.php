@@ -11,7 +11,7 @@ class AdminController extends Controller
 {
     public function viewPendingApplications(Request $request){
         $data = [];
-        $apps = Application::where('app_status','pending')->select('*')->get(); 
+        $apps = Application::where('app_status','10')->select('*')->get(); 
         return view('pages.pending_requests',['data'=>$data,'apps'=>$apps]);
     }
 }

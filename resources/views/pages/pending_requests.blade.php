@@ -25,9 +25,11 @@
                                         <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
                                             <thead>
                                                 <tr>
+                                                    <th>S/N</th>
                                                     <th>Name</th>
                                                     <th>Matric Number</th>
                                                     <th>Recipient</th>
+                                                    <th>Destination</th>
                                                     <th>Type</th>
                                                     <th>Status</th>
                                                     <th>Date</th>
@@ -35,16 +37,21 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @php $i = 1; @endphp
+                                                @foreach($apps as $app)
                                                 <tr>
-                                                    <td>Adekunle Sam</td>
-                                                    <td>RUN/MCM/17/9872</td>
-                                                    <td>Transcript to Havard</td>
-                                                    <td>Official</td>
-                                                    <td><span class="badge badge-soft-warning">PENDING</span></td>
-                                                    <td>10th Apr 2022</td>
+                                                    <td>{{$i}} @php $i++@endphp</td>
+                                                    <td>{{$app->recipient}}</td>
+                                                    <td>{{$app->matric_number}}</td>
+                                                    <td>{{$app->recipient}}</td>
+                                                    <td>{{$app->destination}}</td>
+                                                    <td>{{$app->transcript_type}}</td>
+                                                    <td><span class="badge badge-soft-warning">{{$app->app_status}}</span></td>
+                                                    <td>{{ date("d M Y", strtotime($app->created_at)) }}</td>
                                                     <td>
                                                         <div class="btn-group btn-group-example mb-3" role="group">
-                                                            <button type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</button>
+                                                        <button type="button" title="View" class="btn btn-secondary w-xs"><i class="mdi mdi-eye-check-outline"></i></button>
+                                                            <button type="button" title="Regenerate" class="btn btn-info w-xs"><i class="mdi mdi-refresh"></i></button>
                                                         </div>
                                                         <div class="btn-group btn-group-example mb-3" role="group">
                                                             <button type="button" title="Approve" class="btn btn-success w-xs"><i class="mdi mdi-thumb-up"></i></button>
@@ -52,6 +59,7 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
