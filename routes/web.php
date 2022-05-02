@@ -19,16 +19,13 @@ use App\Http\Controllers\Admin\AdminAuthController;
 
 // Route::get('/', function () {
     // return view('welcome');
-<<<<<<< HEAD
-    return view('result');
-    $pdf = App::make('dompdf.wrapper');
-    $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
-    return $pdf->stream();
-=======
+    // return view('result');
     // $pdf = App::make('dompdf.wrapper');
     // $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
     // return $pdf->stream();
->>>>>>> e3de7996cf984fe1f2b66103b6f809d67c890eed
+    // $pdf = App::make('dompdf.wrapper');
+    // $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
+    // return $pdf->stream();
     
     
     // Or use the facade:
