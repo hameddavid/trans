@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Applicant\ApplicantionController;
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,16 +20,9 @@ use App\Http\Controllers\Admin\AdminAuthController;
 
 // Route::get('/', function () {
     // return view('welcome');
-<<<<<<< HEAD
-    return view('result');
-    $pdf = App::make('dompdf.wrapper');
-    $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
-    return $pdf->stream();
-=======
     // $pdf = App::make('dompdf.wrapper');
     // $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
     // return $pdf->stream();
->>>>>>> e3de7996cf984fe1f2b66103b6f809d67c890eed
     
     
     // Or use the facade:
@@ -66,6 +60,5 @@ Route::get('/payments', function () {
 Route::get('/approved_applications', function () {
     return view('pages/approved_requests');
 });
-Route::get('/pending_applications', function () {
-    return view('pages/pending_requests');
-});
+
+Route::get('/pending_applications',[AdminController::class,'viewPendingApplications']);
