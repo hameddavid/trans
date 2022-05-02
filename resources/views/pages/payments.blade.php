@@ -25,6 +25,7 @@
                                         <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
                                             <thead>
                                                 <tr>
+                                                    <th>S/N</th>
                                                     <th>Name</th>
                                                     <th>Matric Number</th>
                                                     <th>Description</th>
@@ -34,14 +35,18 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @php $i = 1; @endphp
+                                                @foreach($payments as $payment)
                                                 <tr>
-                                                    <td>Adekunle Sam</td>
-                                                    <td>RUN/MCM/17/9872</td>
-                                                    <td>Payment for Official Transcript</td>
-                                                    <td>20000</td>
-                                                    <td><span class="badge badge-soft-success">SUCCESSFUL</span></td>
-                                                    <td>10th Apr 2022</td>
+                                                    <td>{{$i}} @php $i++@endphp</td>
+                                                    <td>{{$payment->names}}</td>
+                                                    <td>{{$payment->matric_number}}</td>
+                                                    <td>{{$payment->destination}}</td>
+                                                    <td>{{$payment->amount}}</td>
+                                                    <td><span class="badge badge-soft-success">{{$payment->status_msg}}</span></td>
+                                                    <td>{{ date("d M Y", strtotime($payment->created_at)) }}</td>
                                                 </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>

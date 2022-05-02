@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Application;
+use App\Models\Payment;
 
 class AdminController extends Controller
 {
@@ -19,5 +20,11 @@ class AdminController extends Controller
         $data = [];
         $apps = Application::where('app_status','10')->select('*')->get(); 
         return view('pages.approved_requests',['data'=>$data,'apps'=>$apps]);
+    }
+
+    public function viewPayments(Request $request){
+        $data = [];
+        $payments = Payment::select('*')->get(); 
+        return view('pages.payments',['data'=>$data,'payments'=>$payments]);
     }
 }
