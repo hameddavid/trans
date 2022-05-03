@@ -30,7 +30,7 @@
                                             <div class="flex-grow-1">
                                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Requests</span>
                                                 <h4 class="mb-3">
-                                                    <span class="counter-value" data-target="0">0</span>
+                                                    <span class="counter-value" data-target="{{count($total)}}">0</span>
                                                 </h4>
                                             </div>
         
@@ -51,7 +51,7 @@
                                             <div class="flex-grow-1">
                                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Approved Requests</span>
                                                 <h4 class="mb-3">
-                                                    <span class="counter-value" data-target="0">0</span>
+                                                    <span class="counter-value" data-target="{{$approved}}">0</span>
                                                 </h4>
                                             </div>
                                             <div class="flex-shrink-0 text-end dash-widget">
@@ -71,7 +71,7 @@
                                             <div class="flex-grow-1">
                                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Pending Requests</span>
                                                 <h4 class="mb-3">
-                                                    <span class="counter-value" data-target="0">0</span>
+                                                    <span class="counter-value" data-target="{{$pending}}">0</span>
                                                 </h4>
                                             </div>
                                             <div class="flex-shrink-0 text-end dash-widget">
@@ -91,7 +91,7 @@
                                             <div class="flex-grow-1">
                                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Payments</span>
                                                 <h4 class="mb-3">
-                                                ₦ <span class="counter-value" data-target="0">0</span>
+                                                ₦ <span class="counter-value" data-target="{{$payments}}">0</span>
                                                 </h4>
                                             </div>
                                             <div class="flex-shrink-0 text-end dash-widget">
@@ -183,8 +183,8 @@
                         
                                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
                                                     <a class="dropdown-item" href="#">View all</a>
-                                                    <a class="dropdown-item" href="#">View Pending Requests</a>
-                                                    <a class="dropdown-item" href="#">View Approved Requests</a>
+                                                    <a class="dropdown-item" href="pending_applications">View Pending Requests</a>
+                                                    <a class="dropdown-item" href="approved_applications">View Approved Requests</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -204,15 +204,18 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @php $i = 1 @endphp
+                                                    @foreach($total as $app)
                                                     <tr>
-                                                        <th scope="row">1</th>
-                                                        <td>Adekunle Sam</td>
-                                                        <td>RUN/MCM/17/9872</td>
-                                                        <td><span class="badge badge-soft-warning">PENDING</span></td>
+                                                        <th scope="row">{{$i}} @php $i++ @endphp</th>
+                                                        <td>{{$app->recipient}}</td>
+                                                        <td>{{$app->matric_number}}</td>
+                                                        <td><span class="badge badge-soft-info">{{$app->app_status}}</span></td>
                                                         <td>
                                                             <button type="button" class="btn btn-light btn-sm">View</button>
                                                         </td>
                                                     </tr>
+                                                    @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
@@ -249,12 +252,15 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @php $i = 1 @endphp
+                                                    @foreach($recent_payments as $payment)
                                                     <tr>
-                                                        <th scope="row">1</th>
-                                                        <td>Adekunle Sam</td>
-                                                        <td>20000</td>
-                                                        <td><span class="badge badge-soft-success">SUCCESSFUL</span></td>
+                                                        <th scope="row">{{$i}} @php $i++ @endphp</th>
+                                                        <td>{{$payment->names}}</td>
+                                                        <td>{{$payment->amount}}</td>
+                                                        <td><span class="badge badge-soft-success">{{$payment->status_msg}}</span></td>
                                                     </tr>
+                                                    @endforeach
                                                 </tbody>
                                             </table>
                                         </div>

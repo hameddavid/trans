@@ -11,6 +11,17 @@ use App\Models\Applicant;
 
 class AdminController extends Controller
 {
+    public function adminDashboard(Request $request){
+        $data = [];
+        $total = Application::select('*')->orderBy('created_at', 'desc')->take(5)->get(); 
+        $recent_payments = Payment::select('*')->orderBy('created_at', 'desc')->take(5)->get(); 
+        $pending = Application::where('app_status','10')->count(); 
+        $approved = Application::where('app_status','10')->count(); 
+        $payments = Payment::sum('amount'); 
+        $payment_format = number_format($payments);
+        return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,'approved'=>$approved,'payments'=>$payment_format]);
+    }
+
     public function viewPendingApplications(Request $request){
         $data = [];
         $apps = Application::where('app_status','10')->select('*')->get(); 
