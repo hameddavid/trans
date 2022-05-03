@@ -122,8 +122,8 @@ $("#sales-by-locations").vectorMap({
     },
     backgroundColor: "transparent",
     markers: [
-        { latLng: [41.9, 12.45], name: "AFRICA" },
+        { latLng: [8.7832, 34.5085], name: "AFRICA" },
         { latLng: [12.05, -61.75], name: "AMERICA" },
-        { latLng: [1.3, 103.8], name: "EUROPE" },
+        { latLng: [54.526, 15.2551], name: "EUROPE" },
     ],
 });
