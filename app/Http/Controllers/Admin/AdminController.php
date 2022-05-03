@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Application;
 use App\Models\Payment;
+use App\Models\Applicant;
 
 class AdminController extends Controller
 {
@@ -26,5 +27,11 @@ class AdminController extends Controller
         $data = [];
         $payments = Payment::select('*')->get(); 
         return view('pages.payments',['data'=>$data,'payments'=>$payments]);
+    }
+
+    public function viewApplicants(Request $request){
+        $data = [];
+        $applicants = Applicant::select('*')->get(); 
+        return view('pages.applicants',['data'=>$data,'applicants'=>$applicants]);
     }
 }

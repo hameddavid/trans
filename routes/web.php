@@ -63,3 +63,4 @@ Route::get('/dashboard', function () {
 Route::get('/approved_applications',[AdminController::class,'viewApprovedApplications']);
 Route::get('/pending_applications',[AdminController::class,'viewPendingApplications']);
 Route::get('/payments',[AdminController::class,'viewPayments']);
+Route::get('/applicants',[AdminController::class,'viewApplicants']);
