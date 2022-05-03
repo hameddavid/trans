@@ -13,13 +13,19 @@ class AdminController extends Controller
 {
     public function adminDashboard(Request $request){
         $data = [];
-        $total = Application::select('*')->orderBy('created_at', 'desc')->take(5)->get(); 
-        $recent_payments = Payment::select('*')->orderBy('created_at', 'desc')->take(5)->get(); 
+        $total = Application::select('*')->latest()->take(5)->get(); 
+        $recent_payments = Payment::select('*')->latest()->take(5)->get(); 
         $pending = Application::where('app_status','10')->count(); 
         $approved = Application::where('app_status','10')->count(); 
         $payments = Payment::sum('amount'); 
         $payment_format = number_format($payments);
         return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,'approved'=>$approved,'payments'=>$payment_format]);
+    }
+
+    public function transcriptLocation(){
+        $location = DB::table('applications')->select('destination', DB::raw('COUNT(destination) as number'))
+            ->groupBy('destination')->orderByRaw('COUNT(destination) DESC')->get();
+        return $location;
     }
 
     public function viewPendingApplications(Request $request){
