@@ -30,7 +30,7 @@
                                             <div class="flex-grow-1">
                                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Requests</span>
                                                 <h4 class="mb-3">
-                                                    <span class="counter-value" data-target="0">0</span>
+                                                    <span class="counter-value" data-target="{{count($total)}}">0</span>
                                                 </h4>
                                             </div>
         
@@ -51,7 +51,7 @@
                                             <div class="flex-grow-1">
                                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Approved Requests</span>
                                                 <h4 class="mb-3">
-                                                    <span class="counter-value" data-target="0">0</span>
+                                                    <span class="counter-value" data-target="{{$approved}}">0</span>
                                                 </h4>
                                             </div>
                                             <div class="flex-shrink-0 text-end dash-widget">
@@ -71,7 +71,7 @@
                                             <div class="flex-grow-1">
                                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Pending Requests</span>
                                                 <h4 class="mb-3">
-                                                    <span class="counter-value" data-target="0">0</span>
+                                                    <span class="counter-value" data-target="{{$pending}}">0</span>
                                                 </h4>
                                             </div>
                                             <div class="flex-shrink-0 text-end dash-widget">
@@ -91,7 +91,7 @@
                                             <div class="flex-grow-1">
                                                 <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Payments</span>
                                                 <h4 class="mb-3">
-                                                ₦ <span class="counter-value" data-target="0">0</span>
+                                                ₦ <span class="counter-value" data-target="{{$payments}}">0</span>
                                                 </h4>
                                             </div>
                                             <div class="flex-shrink-0 text-end dash-widget">
@@ -139,26 +139,22 @@
                                         <div id="sales-by-locations" data-colors='["#33c38e"]' style="height: 253px"></div>
 
                                         <div class="px-2 py-2">
-                                            <p class="mb-1">EUROPE <span class="float-end">15%</span></p>
+                                            @php 
+                                                use App\Http\Controllers\Admin\AdminController; 
+                                                $data = new AdminController();
+                                                $location = $data->transcriptLocation(); 
+                                            @endphp
+                                            @foreach($location as $val)
+                                            @if($val->number != 0)
+                                            @php $percentage = round($val->number / count($total) * 100); @endphp
+                                            <p class="mb-1">{{$val->destination}} <span class="float-end">{{$percentage}}%</span></p>
                                             <div class="progress mt-2" style="height: 6px;">
                                                 <div class="progress-bar progress-bar-striped bg-primary" role="progressbar"
-                                                    style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="15">
+                                                    style="width: {{$percentage}}%" aria-valuenow="{{$percentage}}" aria-valuemin="0" aria-valuemax="100">
                                                 </div>
                                             </div>
-
-                                            <p class="mt-3 mb-1">AFRICA <span class="float-end">25%</span></p>
-                                            <div class="progress mt-2" style="height: 6px;">
-                                                <div class="progress-bar progress-bar-striped bg-primary" role="progressbar"
-                                                    style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="25">
-                                                </div>
-                                            </div>
-
-                                            <p class="mt-3 mb-1">NIGERIA <span class="float-end">60%</span></p>
-                                            <div class="progress mt-2" style="height: 6px;">
-                                                <div class="progress-bar progress-bar-striped bg-primary" role="progressbar"
-                                                    style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="60">
-                                                </div>
-                                            </div>
+                                            @endif
+                                            @endforeach                                            
                                         </div>
                                     </div>
                                     <!-- end card body -->
@@ -183,8 +179,8 @@
                         
                                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton2">
                                                     <a class="dropdown-item" href="#">View all</a>
-                                                    <a class="dropdown-item" href="#">View Pending Requests</a>
-                                                    <a class="dropdown-item" href="#">View Approved Requests</a>
+                                                    <a class="dropdown-item" href="pending_applications">View Pending Requests</a>
+                                                    <a class="dropdown-item" href="approved_applications">View Approved Requests</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -204,15 +200,18 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @php $i = 1 @endphp
+                                                    @foreach($total as $app)
                                                     <tr>
-                                                        <th scope="row">1</th>
-                                                        <td>Adekunle Sam</td>
-                                                        <td>RUN/MCM/17/9872</td>
-                                                        <td><span class="badge badge-soft-warning">PENDING</span></td>
+                                                        <th scope="row">{{$i}} @php $i++ @endphp</th>
+                                                        <td>{{$app->recipient}}</td>
+                                                        <td>{{$app->matric_number}}</td>
+                                                        <td><span class="badge badge-soft-info">{{$app->app_status}}</span></td>
                                                         <td>
                                                             <button type="button" class="btn btn-light btn-sm">View</button>
                                                         </td>
                                                     </tr>
+                                                    @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
@@ -249,12 +248,15 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @php $i = 1 @endphp
+                                                    @foreach($recent_payments as $payment)
                                                     <tr>
-                                                        <th scope="row">1</th>
-                                                        <td>Adekunle Sam</td>
-                                                        <td>20000</td>
-                                                        <td><span class="badge badge-soft-success">SUCCESSFUL</span></td>
+                                                        <th scope="row">{{$i}} @php $i++ @endphp</th>
+                                                        <td>{{$payment->names}}</td>
+                                                        <td>{{$payment->amount}}</td>
+                                                        <td><span class="badge badge-soft-success">{{$payment->status_msg}}</span></td>
                                                     </tr>
+                                                    @endforeach
                                                 </tbody>
                                             </table>
                                         </div>

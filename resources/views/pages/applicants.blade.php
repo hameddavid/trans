@@ -1,7 +1,7 @@
 @extends("layout.master") 
 
     @section("title")
-      Payments
+      Applicants
     @endsection
 
     @section("content")
@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Payments</h4>
+                                    <h4 class="mb-sm-0 font-size-18">Applicants</h4>
                                 </div>
                             </div>
                         </div>
@@ -28,23 +28,27 @@
                                                     <th>S/N</th>
                                                     <th>Name</th>
                                                     <th>Matric Number</th>
-                                                    <th>Description</th>
-                                                    <th>Amount</th>
-                                                    <th>Status</th>
+                                                    <th>Email</th>
+                                                    <th>Phone number</th>
                                                     <th>Date</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @php $i = 1; @endphp
-                                                @foreach($payments as $payment)
+                                                @foreach($applicants as $applicant)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td>{{$payment->names}}</td>
-                                                    <td>{{$payment->matric_number}}</td>
-                                                    <td>{{$payment->destination}}</td>
-                                                    <td>{{$payment->amount}}</td>
-                                                    <td><span class="badge badge-soft-success">{{$payment->status_msg}}</span></td>
-                                                    <td>{{ date("d M Y", strtotime($payment->created_at)) }}</td>
+                                                    <td>{{$applicant->surname.' '.$applicant->firstname}}</td>
+                                                    <td>{{$applicant->matric_number}}</td>
+                                                    <td>{{$applicant->email}}</td>
+                                                    <td>{{$applicant->mobile}}</td>
+                                                    <td>{{ date("d M Y", strtotime($applicant->created_at)) }}</td>
+                                                    <td>
+                                                        <div class="btn-group btn-group-example mb-3" role="group">
+                                                            <button type="button" title="View" class="btn btn-secondary w-xs"><i class="bx bx-edit-alt"></i> Edit</button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>

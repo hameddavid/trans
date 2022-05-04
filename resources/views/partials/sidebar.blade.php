@@ -8,15 +8,21 @@
                 <li>
                     <a href="dashboard">
                         <i data-feather="home"></i>
-                        <span class="badge rounded-pill bg-soft-success text-success float-end">9+</span>
                         <span>Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="applicants">
+                        <i data-feather="users"></i>
+                        <span>Applicants</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="file-text"></i>
-                        <span>Requests</span>
+                        <span>Transcript Requests</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="pending_applications">Pending</a></li>
