@@ -62,3 +62,4 @@ Route::get('/pending_applications',[AdminController::class,'viewPendingApplicati
 Route::get('/payments',[AdminController::class,'viewPayments']);
 Route::get('/applicants',[AdminController::class,'viewApplicants']);
 Route::get('/dashboard',[AdminController::class,'adminDashboard']);
+Route::get('/getTranscriptActivities',[AdminController::class,'getTranscriptActivities']);

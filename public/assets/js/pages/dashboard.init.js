@@ -50,6 +50,18 @@ options = {
     document.querySelector("#mini-chart4"),
     options
 )).render();
+$.ajax({
+    url: "getTranscriptActivities",
+    method: "GET",
+    dataType: "json",
+    success: function (response) {
+        transcriptData = response;
+        console.log(transcriptData);
+    },
+    error: function (XMLHttpRequest, textStatus, errorThrown) {
+        console.log(response);
+    },
+});
 options = {
     series: [
         {
@@ -59,13 +71,6 @@ options = {
                 16.34, 12.88,
             ],
         },
-        // {
-        //     name: "Loss",
-        //     data: [
-        //         -11.45, -15.42, -7.9, -12.42, -12.6, -18.1, -18.2, -14.16,
-        //         -11.1, -7.09, -15.34, -11.88,
-        //     ],
-        // },
     ],
     chart: { type: "bar", height: 400, stacked: !0, toolbar: { show: !1 } },
     plotOptions: { bar: { columnWidth: "20" } },

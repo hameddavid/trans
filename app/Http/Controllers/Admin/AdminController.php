@@ -28,6 +28,14 @@ class AdminController extends Controller
         return $location;
     }
 
+    public function getTranscriptActivities(){
+        for ($i=1; $i <= 12 ; $i++) { 
+            $count = DB::table('applications')->whereMonth('created_at', $i)->count();
+            $store[] = $count;
+        }
+        return json_encode($store);
+    }
+
     public function viewPendingApplications(Request $request){
         $data = [];
         $apps = Application::where('app_status','10')->select('*')->get(); 
