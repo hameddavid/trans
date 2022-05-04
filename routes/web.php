@@ -50,17 +50,17 @@ use App\Http\Controllers\Admin\AdminController;
 //});
 
 Route::get('/', function () {
-    return "Welcome";
-    //return view('auth/login');
+    return view('auth/login');
 });
 
 Route::post('admin_login_auth',[AdminAuthController::class,'login']);
 
-
+Route::get('/dashboard', function () {
+    return view('pages/dashboard');
+});
+Route::get('/payments', function () {
+    return view('pages/payments');
+});
 
 Route::get('/approved_applications',[AdminController::class,'viewApprovedApplications']);
 Route::get('/pending_applications',[AdminController::class,'viewPendingApplications']);
-Route::get('/payments',[AdminController::class,'viewPayments']);
-Route::get('/applicants',[AdminController::class,'viewApplicants']);
-Route::get('/dashboard',[AdminController::class,'adminDashboard']);
-Route::get('/getTranscriptActivities',[AdminController::class,'getTranscriptActivities']);
