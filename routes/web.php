@@ -50,8 +50,7 @@ use App\Http\Controllers\Admin\AdminController;
 //});
 
 Route::get('/', function () {
-    return "Welcome";
-    //return view('auth/login');
+    return view('auth/login');
 });
 
 Route::post('admin_login_auth',[AdminAuthController::class,'login']);
