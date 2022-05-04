@@ -496,6 +496,7 @@ public function get_student_result(Request $request){
 
     $response = str_replace("pageno", $page_no, $response);
 
+    return $response;
     // $pdf = PDF::loadView('pdf.invoice', $data);
     // return $pdf->download('invoice.pdf');
     // $pdf = PDF::make('dompdf.wrapper');
