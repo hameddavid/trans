@@ -61,3 +61,4 @@ Route::get('/pending_applications',[AdminController::class,'viewPendingApplicati
 Route::get('/dashboard',[AdminController::class,'adminDashboard']);
 Route::get('/payments',[AdminController::class,'viewPayments']);
 Route::get('/applicants',[AdminController::class,'viewApplicants']);
+Route::post('/edit_applicant',[AdminController::class,'editApplicant']);

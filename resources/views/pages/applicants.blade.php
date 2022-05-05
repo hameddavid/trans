@@ -46,7 +46,7 @@
                                                     <td>{{ date("d M Y", strtotime($applicant->created_at)) }}</td>
                                                     <td>
                                                         <div class="btn-group btn-group-example mb-3" role="group">
-                                                            <button type="button" data-email="{{$applicant->email}}" data-matric="{{$applicant->matric_number}}" data-phone="{{$applicant->mobile}}" data-name="{{$applicant->surname.' '.$applicant->firstname}}" title="Edit" class="btn btn-secondary w-xs edit">
+                                                            <button type="button" data-email="{{$applicant->email}}" data-matric="{{$applicant->matric_number}}" data-phone="{{$applicant->mobile}}" data-othernames="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="Edit" class="btn btn-secondary w-xs edit">
                                                                 <i class="bx bx-edit-alt"></i> Edit
                                                             </button>
                                                         </div>
@@ -76,30 +76,35 @@
                             <h5 class="modal-title" id="applicantModalLabel"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <form id="editApplicantForm">
+                        <form method="POST" id="editApplicantForm">
+                            @csrf
+                            <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="fullname" class="col-form-label">Name:</label>
-                                    <input type="text" class="form-control" id="fullname">
+                                    <label for="surname" class="col-form-label">Surname:</label>
+                                    <input type="text" class="form-control" name="surname" id="surname" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="othernames" class="col-form-label">Othernames:</label>
+                                    <input type="text" class="form-control" name="othernames" id="othernames" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="matric" class="col-form-label">Matric number:</label>
-                                    <input type="text" class="form-control" id="matric">
+                                    <input type="text" class="form-control" name="matric" id="matric" readonly required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="email" class="col-form-label">Email:</label>
-                                    <input type="email" class="form-control" id="email">
+                                    <input type="email" class="form-control" name="email" id="email" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="phone" class="col-form-label">Phone number:</label>
-                                    <input type="tel" class="form-control" id="phone">
+                                    <input type="tel" class="form-control" name="phone" id="phone" required>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-danger">Update</button>
-                        </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" id="btnEdit" class="btn btn-danger">Update</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -125,6 +130,7 @@
         <!-- Datatable init js -->
         <script src="assets/js/pages/datatables.init.js"></script>   
         <script src="assets/js/pages/modal.init.js"></script> 
+        <script src="assets/js/validation.min.js"></script>
         <script src="assets/js/utils.js"></script> 
     @endsection
 

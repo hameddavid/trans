@@ -59,4 +59,15 @@ class AdminController extends Controller
         $applicants = Applicant::select('*')->get(); 
         return view('pages.applicants',['data'=>$data,'applicants'=>$applicants]);
     }
+
+    public function editApplicant(Request $request){
+        try{
+            Applicant::where('matric_number', $request->matric)
+            ->update(['surname' => $request->surname,'firstname' => $request->othernames,'email' => $request->email, 'mobile' => $request->phone]);
+            return response()->json(['status'=>'ok','message'=>$request->surname. 's data updated'], 200);
+        }
+        catch (\Throwable $th) {
+            return response()->json(['status'=>'Nok','message'=>'Error updating data'], 500);
+        }  
+    }
 }
