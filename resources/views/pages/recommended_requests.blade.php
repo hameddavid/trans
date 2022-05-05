@@ -1,10 +1,16 @@
 @extends("layout.master") 
 
     @section("title")
-      Pending Transcript Requests
+      Recommended Transcript Requests
     @endsection
 
     @section("content")
+            <style>
+                .btnJustify{
+                    display: flex;
+                    justify-content: space-around;
+                }
+            </style>
             <div class="main-content">
                 <div class="page-content">
                     <div class="container-fluid">
@@ -13,7 +19,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Pending Transcript Requests</h4>
+                                    <h4 class="mb-sm-0 font-size-18">Recommended Transcript Requests</h4>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +52,7 @@
                                                     <td>{{$app->recipient}}</td>
                                                     <td>{{$app->destination}}</td>
                                                     <td>{{$app->transcript_type}}</td>
-                                                    <td><span class="badge badge-soft-warning">{{$app->app_status}}</span></td>
+                                                    <td><span class="badge badge-soft-success">{{$app->app_status}}</span></td>
                                                     <td>{{ date("d M Y", strtotime($app->created_at)) }}</td>
                                                     <td>
                                                         <div class="dropdown align-self-start">
@@ -54,14 +60,10 @@
                                                                 <i class="bx bx-dots-horizontal-rounded font-size-18 text-dark"></i>
                                                             </a>
                                                             <div class="dropdown-menu">
-                                                                <div class="btn-group btn-group-example mb-3" role="group">
-                                                                    <button type="button" title="View" class="btn btn-secondary w-xs"><i class="mdi mdi-eye-check-outline"></i></button>
-                                                                    <button type="button" title="Regenerate" class="btn btn-info w-xs"><i class="mdi mdi-refresh"></i></button>
-                                                                </div>
-                                                                <div class="btn-group btn-group-example mb-3" role="group">
-                                                                    <button type="button" title="Recommend" class="btn btn-success w-xs"><i class="mdi mdi-thumb-up"></i></button>
-                                                                    <button type="button" title="Disapprove" class="btn btn-danger w-xs"><i class="mdi mdi-thumb-down"></i></button>
-                                                                </div> 
+                                                                <div class="btnJustify">
+                                                                    <button type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</button>
+                                                                    <button type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</button>
+                                                                </div>                                                                
                                                             </div>
                                                         </div>                                                        
                                                     </td>

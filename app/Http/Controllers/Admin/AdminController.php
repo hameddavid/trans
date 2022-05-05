@@ -50,6 +50,13 @@ class AdminController extends Controller
         return view('pages.approved_requests',['data'=>$data,'apps'=>$apps]);
     }
 
+    public function viewRecommendedApplications(Request $request){
+        $data = [];
+        $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
+            ->where('app_status','10')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
+        return view('pages.recommended_requests',['data'=>$data,'apps'=>$apps]);
+    }
+
     public function viewPayments(Request $request){
         $data = [];
         $payments = Payment::select('*')->get(); 

@@ -58,6 +58,7 @@ Route::post('admin_login_auth',[AdminAuthController::class,'login']);
 
 Route::get('/approved_applications',[AdminController::class,'viewApprovedApplications']);
 Route::get('/pending_applications',[AdminController::class,'viewPendingApplications']);
+Route::get('/recommended_applications',[AdminController::class,'viewRecommendedApplications']);
 Route::get('/dashboard',[AdminController::class,'adminDashboard']);
 Route::get('/payments',[AdminController::class,'viewPayments']);
 Route::get('/applicants',[AdminController::class,'viewApplicants']);
