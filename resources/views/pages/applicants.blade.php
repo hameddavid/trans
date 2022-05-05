@@ -46,7 +46,9 @@
                                                     <td>{{ date("d M Y", strtotime($applicant->created_at)) }}</td>
                                                     <td>
                                                         <div class="btn-group btn-group-example mb-3" role="group">
-                                                            <button type="button" title="View" class="btn btn-secondary w-xs"><i class="bx bx-edit-alt"></i> Edit</button>
+                                                            <button type="button" data-email="{{$applicant->email}}" data-matric="{{$applicant->matric_number}}" data-phone="{{$applicant->mobile}}" data-name="{{$applicant->surname.' '.$applicant->firstname}}" title="Edit" class="btn btn-secondary w-xs edit">
+                                                                <i class="bx bx-edit-alt"></i> Edit
+                                                            </button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -67,6 +69,41 @@
             </div>
             <!-- end main content-->
 
+            <div class="modal fade" id="applicantModal" tabindex="-1" aria-labelledby="applicantModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="applicantModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editApplicantForm">
+                                <div class="mb-3">
+                                    <label for="fullname" class="col-form-label">Name:</label>
+                                    <input type="text" class="form-control" id="fullname">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="matric" class="col-form-label">Matric number:</label>
+                                    <input type="text" class="form-control" id="matric">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="col-form-label">Email:</label>
+                                    <input type="email" class="form-control" id="email">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="phone" class="col-form-label">Phone number:</label>
+                                    <input type="tel" class="form-control" id="phone">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         
         <!-- Required datatable js -->
         <script src="assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -86,7 +123,9 @@
         <script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
         <!-- Datatable init js -->
-        <script src="assets/js/pages/datatables.init.js"></script>    
+        <script src="assets/js/pages/datatables.init.js"></script>   
+        <script src="assets/js/pages/modal.init.js"></script> 
+        <script src="assets/js/utils.js"></script> 
     @endsection
 
         
