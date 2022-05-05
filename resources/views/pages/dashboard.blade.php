@@ -254,7 +254,8 @@
                                                         <th scope="row">{{$i}} @php $i++ @endphp</th>
                                                         <td>{{$payment->names}}</td>
                                                         <td>{{$payment->amount}}</td>
-                                                        <td><span class="badge badge-soft-success">{{$payment->status_msg}}</span></td>
+                                                        <!-- <td><span class="badge badge-soft-success">{{$payment->status_msg}}</span></td> -->
+                                                        <td>@php echo ($payment->status_msg == 'success') ? '<span class="badge badge-soft-success">'.$payment->status_msg.'</span>' : '<span class="badge badge-soft-danger">'.$payment->status_msg.'</span>'@endphp</td>
                                                     </tr>
                                                     @endforeach
                                                 </tbody>

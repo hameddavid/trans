@@ -43,7 +43,7 @@
                                                     <td>{{$payment->matric_number}}</td>
                                                     <td>{{$payment->destination}}</td>
                                                     <td>{{$payment->amount}}</td>
-                                                    <td><span class="badge badge-soft-success">{{$payment->status_msg}}</span></td>
+                                                    <td>@php echo ($payment->status_msg == 'success') ? '<span class="badge badge-soft-success">'.$payment->status_msg.'</span>' : '<span class="badge badge-soft-danger">'.$payment->status_msg.'</span>'@endphp</td>
                                                     <td>{{ date("d M Y", strtotime($payment->created_at)) }}</td>
                                                 </tr>
                                                 @endforeach

@@ -18,8 +18,8 @@ class AdminController extends Controller
         $pending = Application::where('app_status','10')->count(); 
         $approved = Application::where('app_status','10')->count(); 
         $payments = Payment::sum('amount'); 
-        $payment_format = number_format($payments);
-        return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,'approved'=>$approved,'payments'=>$payment_format]);
+        //$payment_format = number_format($payments);
+        return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,'approved'=>$approved,'payments'=>$payments]);
     }
 
     public function transcriptLocation(){
