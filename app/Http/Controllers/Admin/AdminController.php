@@ -38,13 +38,15 @@ class AdminController extends Controller
 
     public function viewPendingApplications(Request $request){
         $data = [];
-        $apps = Application::where('app_status','10')->select('*')->get(); 
+        $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
+            ->where('app_status','10')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.pending_requests',['data'=>$data,'apps'=>$apps]);
     }
 
     public function viewApprovedApplications(Request $request){
         $data = [];
-        $apps = Application::where('app_status','10')->select('*')->get(); 
+        $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
+            ->where('app_status','10')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.approved_requests',['data'=>$data,'apps'=>$apps]);
     }
 
