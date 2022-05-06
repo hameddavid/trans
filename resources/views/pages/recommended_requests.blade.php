@@ -8,7 +8,13 @@
             <style>
                 .btnJustify{
                     display: flex;
+                    justify-content: space-between;
+                    width: 230px;
+                }
+                .btnJustify2{
+                    display: flex;
                     justify-content: space-around;
+                    width: 300px;
                 }
             </style>
             <div class="main-content">
@@ -60,10 +66,14 @@
                                                                 <i class="bx bx-dots-horizontal-rounded font-size-18 text-dark"></i>
                                                             </a>
                                                             <div class="dropdown-menu">
-                                                                <div class="btnJustify">
-                                                                    <button type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</button>
-                                                                    <button type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</button>
-                                                                </div>                                                                
+                                                                <div class="btnJustify2">
+                                                                    <button type="button" class="btn btn-secondary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</button>
+                                                                    <button type="button" class="btn btn-info waves-effect btn-label waves-light"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
+                                                                </div> 
+                                                                <div class="btnJustify2 p-3">
+                                                                    <button type="button" class="btn btn-success waves-effect btn-label waves-light"><i class="bx bx-check label-icon"></i>Approve</button>
+                                                                    <button type="button" class="btn btn-danger waves-effect btn-label waves-light"><i class="bx bx-x label-icon"></i>Disapprove</button>
+                                                                </div>
                                                             </div>
                                                         </div>                                                        
                                                     </td>
