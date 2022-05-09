@@ -18,8 +18,8 @@ class AdminController extends Controller
         $pending = Application::where('app_status','10')->count(); 
         $approved = Application::where('app_status','10')->count(); 
         $payments = Payment::sum('amount'); 
-        $payment_format = number_format($payments);
-        return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,'approved'=>$approved,'payments'=>$payment_format]);
+        //$payment_format = number_format($payments);
+        return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,'approved'=>$approved,'payments'=>$payments]);
     }
 
     public function transcriptLocation(){
@@ -38,14 +38,23 @@ class AdminController extends Controller
 
     public function viewPendingApplications(Request $request){
         $data = [];
-        $apps = Application::where('app_status','10')->select('*')->get(); 
+        $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
+            ->where('app_status','10')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.pending_requests',['data'=>$data,'apps'=>$apps]);
     }
 
     public function viewApprovedApplications(Request $request){
         $data = [];
-        $apps = Application::where('app_status','10')->select('*')->get(); 
+        $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
+            ->where('app_status','10')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.approved_requests',['data'=>$data,'apps'=>$apps]);
+    }
+
+    public function viewRecommendedApplications(Request $request){
+        $data = [];
+        $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
+            ->where('app_status','10')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
+        return view('pages.recommended_requests',['data'=>$data,'apps'=>$apps]);
     }
 
     public function viewPayments(Request $request){
@@ -58,5 +67,16 @@ class AdminController extends Controller
         $data = [];
         $applicants = Applicant::select('*')->get(); 
         return view('pages.applicants',['data'=>$data,'applicants'=>$applicants]);
+    }
+
+    public function editApplicant(Request $request){
+        try{
+            Applicant::where('matric_number', $request->matric)
+            ->update(['surname' => $request->surname,'firstname' => $request->othernames,'email' => $request->email, 'mobile' => $request->phone]);
+            return response()->json(['status'=>'ok','message'=>$request->surname. 's data updated'], 200);
+        }
+        catch (\Throwable $th) {
+            return response()->json(['status'=>'Nok','message'=>'Error updating data'], 500);
+        }  
     }
 }

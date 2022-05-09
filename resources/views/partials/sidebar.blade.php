@@ -26,6 +26,7 @@
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
                         <li><a href="pending_applications">Pending</a></li>
+                        <li><a href="recommended_applications">Recommended</a></li>
                         <li><a href="approved_applications">Approved</a></li>
                     </ul>
                 </li>

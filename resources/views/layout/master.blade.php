@@ -10,6 +10,12 @@
         <!-- App favicon -->
         <link rel="shortcut icon" href="assets/images/run_logo.png">
 
+         <!-- alertifyjs Css -->
+         <link href="assets/libs/alertifyjs/build/css/alertify.min.css" rel="stylesheet" type="text/css" />
+
+        <!-- alertifyjs default themes  Css -->
+        <link href="assets/libs/alertifyjs/build/css/themes/default.min.css" rel="stylesheet" type="text/css" />
+
         <!-- plugin css -->
         <link href="assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
 
@@ -30,6 +36,12 @@
         <script src="assets/libs/simplebar/simplebar.min.js"></script>
         <script src="assets/libs/node-waves/waves.min.js"></script>
         <script src="assets/libs/feather-icons/feather.min.js"></script>
+
+        <!-- alertifyjs js -->
+        <script src="assets/libs/alertifyjs/build/alertify.min.js"></script>
+        <!-- notification init -->
+        <script src="assets/js/pages/notification.init.js"></script>
+        
         <!-- pace js -->
         <script src="assets/libs/pace-js/pace.min.js"></script>
     </head>
