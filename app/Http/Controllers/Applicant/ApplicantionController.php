@@ -496,12 +496,12 @@ public function get_student_result(Request $request){
 
     $response = str_replace("pageno", $page_no, $response);
 
-    return $response;
+    //return $response;
     // $pdf = PDF::loadView('pdf.invoice', $data);
     // return $pdf->download('invoice.pdf');
     // $pdf = PDF::make('dompdf.wrapper');
     // return view('result')->with('data',$response);
-     PDF::loadHTML($response)->setPaper('a4', 'landscape')->setWarnings(false)->save($applicant->email.'.pdf');
+     //PDF::loadHTML($response)->setPaper('a4', 'landscape')->setWarnings(false)->save($applicant->email.'.pdf');
     
     // return Storage::download(public_path($applicant->email.'.pdf'));
 
@@ -510,11 +510,17 @@ public function get_student_result(Request $request){
     $Msg = $response;  
     $Subject = "GENERATED TRANSCRIPT";
     $HTML_type = true;
+    
     // Http::attach('csv_file', $contents->post($url, $post_data);
     // ->attach()
     
-     $response = Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
-    ->post('http://adms.run.edu.ng/codebehind/trans_email.php');
+     //$response = Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
+     $response =  Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )->asForm()
+     ->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,])
+     ;     
+
+    //   Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
+    // ->post('http://adms.run.edu.ng/codebehind/trans_email.php');
     dd($response->body());
     if($response->ok()){
         return  response(['status'=>'success','message'=>''], 201); // return $response;
