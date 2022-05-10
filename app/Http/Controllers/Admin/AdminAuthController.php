@@ -27,12 +27,12 @@ class AdminAuthController extends Controller
         $request->validate([ "email" => "required","password"=>"required"]); 
     
        $app = Admin::where('email',$request->email)->first();
-       if(!$app){return response(['status'=>'fail',' message'=>'We do not recognize the supplied email'],401); }
+       if(!$app){return response(['status'=>'fail','message'=>'We do not recognize the supplied email'],401); }
        else{
              if(Hash::check($request->password,$app->password)){
             //$request->session()->put('user',$app->email);
-            return response(['status'=>'success',' message'=>'Login successfully'],201);
-           }else{return response(['status'=>'fail',' message'=>'incorrect email/password!'],401); }
+            return response(['status'=>'success','message'=>'Login successfully'],201);
+           }else{return response(['status'=>'fail','message'=>'incorrect email/password!'],401); }
            
        }
     }
