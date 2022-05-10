@@ -80,11 +80,11 @@ class ApplicantionController extends Controller
                         // Notify admin
                     } 
                 }else{
-                    return response(['status'=>'failed',' message'=>'Error in transcript type supplied']);
+                    return response(['status'=>'failed','message'=>'Error in transcript type supplied']);
                 }
-            }else{ return response(['status'=>'failed',' message'=>'No applicant with matric number '. $request->matno . ' found']);   }
+            }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found']);   }
         } catch (\Throwable $th) {
-            return response(['status'=>'failed',' message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)']);
+            return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)']);
             
         }
         
