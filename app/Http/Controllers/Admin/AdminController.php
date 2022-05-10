@@ -11,6 +11,13 @@ use App\Models\Applicant;
 
 class AdminController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('AdminAuth',['only' => ['password_reset','applicant_dashboard']]);
+       // $this->middleware('log')->only('index');
+       // $this->middleware('subscribed')->except('store');
+    }
+    
     public function adminDashboard(Request $request){
         $data = [];
         $total = Application::select('*')->latest()->take(5)->get(); 
