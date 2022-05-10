@@ -34,7 +34,8 @@ class ApplicantionController extends Controller
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
             if($type == 'OFFICIAL'){
-                $request->validate([ "mode" => "required","address"=>"required","recipient"=>"required",'used_token'=>'required']); 
+                $request->validate(["mode" => "required","recipient"=>"required",'used_token'=>'required']); 
+                if($request->mode != "soft"){ $request->validate(["address"=>"required", "destination"=>"required"]);  }
                 if($this->validate_pin($request->userid,$request->matno) == $request->used_token){
                      $new_application = new Application();
                      $new_application->matric_number   = $request->matno;
@@ -65,7 +66,7 @@ class ApplicantionController extends Controller
                     $new_application->delivery_mode = $request->mode ? $request->mode : 'soft';
                     $new_application->transcript_type = $type;
                     $new_application->address = $request->address ? $request->address : $applicant->email;
-                    $new_application->destination = $request->destination ? $request->destination : $applicant->email;
+                    $new_application->destination = "Student Transcript";
                     $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
                     $new_application->app_status = 10; // default status
                     //$new_application->used_token = $request->used_token ? $request->used_token : 'STUDENT';

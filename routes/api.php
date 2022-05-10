@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use Illuminate\Support\Facades\Route;
 
 
+Route::post('regester',[AdminAuthController::class,'save_new_account']);
 
 Route::post('app/send_att', [ApplicantAuthController::class, 'send_att']);
 

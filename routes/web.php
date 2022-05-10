@@ -43,7 +43,7 @@ Route::get('/',[AdminAuthController::class,'auth_login']);
 
 
 Route::post('admin_login_auth',[AdminAuthController::class,'login']);
-Route::post('regester',[AdminAuthController::class,'save_new_account']);
+
 
 Route::get('/approved_applications',[AdminController::class,'viewApprovedApplications']);
 Route::get('/pending_applications',[AdminController::class,'viewPendingApplications']);
