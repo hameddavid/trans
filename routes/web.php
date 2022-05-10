@@ -5,18 +5,6 @@ use App\Http\Controllers\Applicant\ApplicantionController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-
 
 // Route::get('/', function () {
     // return view('welcome');
@@ -49,12 +37,13 @@ use App\Http\Controllers\Admin\AdminController;
 
 //});
 
-Route::get('/', function () {
-    return view('auth/login');
-});
+
+
+Route::get('/',[AdminAuthController::class,'auth_login']);
+
 
 Route::post('admin_login_auth',[AdminAuthController::class,'login']);
-
+Route::post('regester',[AdminAuthController::class,'save_new_account']);
 
 Route::get('/approved_applications',[AdminController::class,'viewApprovedApplications']);
 Route::get('/pending_applications',[AdminController::class,'viewPendingApplications']);

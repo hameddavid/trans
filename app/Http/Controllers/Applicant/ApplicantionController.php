@@ -284,7 +284,7 @@ static function get_msg($applicant){
     ------------------------<br>
     Dear ' .$applicant->surname.' '. $applicant->firstname.',
     We have successfully received your  new transcript application request, 
-    kindly excercise  patient while your request is being process.<br>
+    kindly excercise  patient while your request is being processed.<br>
     <br>
     Thank you.<br>
     <br>

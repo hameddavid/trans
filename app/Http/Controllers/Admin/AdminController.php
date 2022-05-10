@@ -13,11 +13,12 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('AdminAuth',['only' => ['password_reset','applicant_dashboard']]);
+        //$this->middleware('adminauth');
+        // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
     }
-    
+
     public function adminDashboard(Request $request){
         $data = [];
         $total = Application::select('*')->latest()->take(5)->get(); 
@@ -34,6 +35,7 @@ class AdminController extends Controller
             ->groupBy('destination')->orderByRaw('COUNT(destination) DESC')->get();
         return $location;
     }
+
 
     public function getTranscriptActivities(){
         for ($i=1; $i <= 12 ; $i++) { 

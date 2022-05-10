@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Applicant\ApplicantionController;
 use App\Http\Controllers\Applicant\ApplicantAuthController;
 use App\Http\Controllers\Applicant\PaymentController;
+
+use App\Http\Controllers\Admin\AdminAuthController;
+
 use Illuminate\Support\Facades\Route;
 
 

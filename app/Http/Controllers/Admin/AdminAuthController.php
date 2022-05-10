@@ -21,8 +21,20 @@ class AdminAuthController extends Controller
        // $this->middleware('subscribed')->except('store');
     }
 
+
     public function login(Request $request){
-        dd($request->all());
+        
+        $request->validate([ "email" => "required","password"=>"required"]); 
+    
+       $app = Admin::where('email',$request->email)->first();
+       if(!$app){return response(['status'=>'fail',' message'=>'We do not recognize the supplied email'],401); }
+       else{
+             if(Hash::check($request->password,$app->password)){
+            //$request->session()->put('user',$app->email);
+            return response(['status'=>'success',' message'=>'Login successfully'],201);
+           }else{return response(['status'=>'fail',' message'=>'incorrect email/password!'],401); }
+           
+       }
     }
 
     public function auth_login(){
@@ -36,40 +48,43 @@ class AdminAuthController extends Controller
 
     public function save_new_account(Request $request){
             
+        
         $request->validate([
             'surname'=>'required|string',
             'firstname'=>'required|string',
             'othername'=>'required|string',
-            'phone'=>'required|string|min:8|max:15|unique:applicants,phone',
-            'email'=>'required|email|unique:applicants,email',
-            'password'=>'required|confirmed|min:4|max:8',
-            'gender'=>'required|size:1',
+            'phone'=>'required|string|min:8|max:15|unique:admin,phone',
+            'email'=>'required|email|unique:admin,email',
+            'password'=>'required',
+            'title'=>'required',
+        
         ]) ;
-        $num_str = sprintf("%06d", mt_rand(1, 999999));
-        $app = new Applicant;
+        //$num_str = sprintf("%06d", mt_rand(1, 999999));
+        $app = new Admin;
         $app->surname = $request->surname;
-        $app->first_name = $request->firstname;
-        $app->other_name = $request->othername;
+        $app->firstname = $request->firstname;
+        $app->othername = $request->othername;
         $app->phone = $request->phone;
         $app->email = $request->email;
-        $app->gender = $request->gender;
         $app->password = Hash::make($request->password);
-        $app->otp = $num_str;
+        $app->role = 200;
+        $app->title = $request->title;
         $save = $app->save();
         if($save){
             //setcookie(name, value, expire, path, domain, secure, httponly);
            setcookie('email',$request->email,time()+(84000*30),'/');
            $From = "ict@run.edu.ng";
            $FromName = "DEST@REDEEMER's UNIVERSITY";
-           $Msg = app('App\Http\Controllers\ConfigController')->email_msg($code=$num_str);
+           $Msg = "Message from transcript server";
            $Subject = "Email Verification";
            $HTML_type = true;
           // $res = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email,"Recipient_names"=>$request->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);
            Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email,"Recipient_names"=>$request->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);
-           return redirect('account_activate_view')->with('account_created','Account created successfully, Kindly get OTP sent to your email for account activation!');
+           return response(['status'=> 'success', 'message'=>'Account created successfully']);
         
        }else{
-            return back()->with('fail','Issue creating account');
+            return response(['status'=> 'failed', 'message'=>'Issue creating account']);
+
         }
    }
 
