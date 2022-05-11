@@ -56,13 +56,13 @@ class ApplicantionController extends Controller
                         $update_payment_table->app_id = $new_application->id;
                         $update_payment_table->save();
                         if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
-                         return response(['status'=>'success',' message'=>'Application successfully created'],201);   
+                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
                             } 
-                            else{ return response(['status'=>'success',' message'=>'Application successfully created but email failed sending', 201]);  }
+                            else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
                          // Notify applicant through email  $applicant->email
                          // Notify admin
                      } 
-                 }else{ return response(['status'=>'failed',' message'=>'Invalid application payment pin!']);    }
+                 }else{ return response(['status'=>'failed','message'=>'Invalid application payment pin!']);    }
                 
                 }elseif($type == 'STUDENT'){
                     $new_application = new Application();
@@ -80,9 +80,9 @@ class ApplicantionController extends Controller
                     if($save_app ){
                        //  Generate the transacript HTML here and save temprary
                        if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
-                        return response(['status'=>'success',' message'=>'Application successfully created'],201);   
+                        return response(['status'=>'success','message'=>'Application successfully created'],201);   
                            } 
-                           else{ return response(['status'=>'success',' message'=>'Application successfully created but email failed sending', 201]);  }
+                           else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
                         // Notify applicant through email  $applicant->email
                         // Notify admin
                     } 
@@ -114,7 +114,7 @@ class ApplicantionController extends Controller
             return 'null';
             // return ['status'=> 'success','pin'=>$pin->rrr ];
         } catch (\Throwable $th) {
-            return response(['status'=>'failed',' message'=>'catch, Error validate_pin !']);
+            return response(['status'=>'failed','message'=>'catch, Error validate_pin !']);
 
         }
       
@@ -137,7 +137,7 @@ class ApplicantionController extends Controller
             return ['success_app'=>$success_app,'pend_app'=>$pend_app,'failed_app'=>$failed_app,'payment'=>$payment];
             
         } catch (\Throwable $th) {
-            return response(['status'=>'failed',' message'=>'catch, Error fetching success_app, pend_app, failed_app and payment!']);
+            return response(['status'=>'failed','message'=>'catch, Error fetching success_app, pend_app, failed_app and payment!']);
         }
 
 
@@ -153,7 +153,7 @@ class ApplicantionController extends Controller
             return $apps;
             
         } catch (\Throwable $th) {
-            return response(['status'=>'failed',' message'=>'catch, Error fetching my apps!']);
+            return response(['status'=>'failed','message'=>'catch, Error fetching my apps!']);
         }
 
 
@@ -167,7 +167,7 @@ class ApplicantionController extends Controller
             return $payment;
             
         } catch (\Throwable $th) {
-            return response(['status'=>'failed',' message'=>'catch, Error fetching my apps!']);
+            return response(['status'=>'failed','message'=>'catch, Error fetching my apps!']);
         }
 
     }
@@ -200,15 +200,15 @@ class ApplicantionController extends Controller
         try {
         if($this->verify_student_status($request->userid, $request->matno)){
              if($this->verify_student_result($request->userid, $request->matno)['status']== 'success' && $this->verify_student_result($request->userid, $request->matno)['data'] > 0){
-                return response(['status'=>'success',' message'=>'Applicant, '.$request->matno.' proceed with your request ']);   
+                return response(['status'=>'success','message'=>'Applicant, '.$request->matno.' proceed with your request ']);   
              }
-             return response(['status'=>'failed',' message'=>'Like you have NO result for now, kindly contact ACAD']);
+             return response(['status'=>'failed','message'=>'Like you have NO result for now, kindly contact ACAD']);
         } else{
-            return response(['status'=>'failed',' message'=>'Failed to process transcript with your bad student status ']);   
+            return response(['status'=>'failed','message'=>'Failed to process transcript with your bad student status ']);   
 
         }
         } catch (\Throwable $th) {
-            return response(['status'=>'failed',' message'=>'Catch Main, check_request_availability']);   
+            return response(['status'=>'failed','message'=>'Catch Main, check_request_availability']);   
 
         }
     }
@@ -222,7 +222,7 @@ class ApplicantionController extends Controller
             if(!in_array($student->STATUS,$student_status)){return true;}
             return false;
         } catch (\Throwable $th) {
-            return response(['status'=>'failed',' message'=>'catch, verify_student_status!']);
+            return response(['status'=>'failed','message'=>'catch, verify_student_status!']);
 
         }
     }
@@ -233,7 +233,7 @@ class ApplicantionController extends Controller
             if($result){return ['status'=>'success','data'=>$result];}
             return false;  
         } catch (\Throwable $th) {
-            return response(['status'=>'failed',' message'=>'catch, verify_student_result!']); 
+            return response(['status'=>'failed','message'=>'catch, verify_student_result!']); 
         }
     }
 
@@ -702,7 +702,7 @@ static function get_correct_application_for_this_request($matno,$delivery_mode,$
     //    return 'null';
        
    } catch (\Throwable $th) {
-       return response(['status'=>'failed',' message'=>'catch, Error get_correct_application_for_this_request !']);
+       return response(['status'=>'failed','message'=>'catch, Error get_correct_application_for_this_request !']);
 
    }
 }
