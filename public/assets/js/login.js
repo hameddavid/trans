@@ -30,7 +30,7 @@ $(document).ready(function ($) {
                     console.log(response);
                     alertify.success(response.message);
                     setTimeout(function () {
-                        window.location.href = "admin/dashboard";
+                        window.location.href = "dashboard";
                     }, 2800);
                 },
                 error: function (response) {
