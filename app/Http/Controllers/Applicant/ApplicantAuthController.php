@@ -66,17 +66,17 @@ class ApplicantAuthController extends Controller
                 $HTML_type = true;
                 $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
                if($resp->ok()){
-                return response(['status'=>'success','message'=>'applicant created'], 201);
+                return response(['status'=>'success','message'=>'Account successfully created, kindly check your email address for password'], 201);
                }
-               return response(['status'=>'failed','message'=>'applicant created but email failed!'], 201);
+               return response(['status'=>'failed','message'=>'Account created but unable to send activation email to you, please contact Admin!'], 201);
             }
-            return response(['status'=>'failed','message'=>'...Error creating applicant!'], 401);
+            return response(['status'=>'failed','message'=>'Error creating your account!'], 401);
              
         }else{
             return response(['status'=>'failed','message'=>'Oops... we could not find your matric number'], 401);}
         
         } catch (\Throwable $th) {
-            return response(['status'=>'failed','message'=>'catch main, Error creating applicant...'], 401);
+            return response(['status'=>'failed','message'=>'catch main, Error creating account...'], 401);
         }
         
     }
