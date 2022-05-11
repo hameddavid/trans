@@ -73,7 +73,7 @@ class ApplicantAuthController extends Controller
             return response(['status'=>'failed','message'=>'...Error creating applicant!'], 401);
              
         }else{
-            return 'No Student ';}
+            return response(['status'=>'failed','message'=>'Oops... we could not find your matric number'], 401);}
         
         } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'catch main, Error creating applicant...'], 401);
@@ -127,7 +127,7 @@ class ApplicantAuthController extends Controller
 
 
     static function create_applicant($request,$student,$auto_pass){
-           try {
+           try { 
             $app = new Applicant();
             $app->matric_number = $request->matno ;
             $app->surname = $student->SURNAME ;
