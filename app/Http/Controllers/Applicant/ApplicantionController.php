@@ -29,10 +29,11 @@ class ApplicantionController extends Controller
 
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
        
-        try {   
+        // try {   
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
+                $trans_raw =  $this->get_student_result($request);
             if($type == 'OFFICIAL'){
                 $request->validate(["mode" => "required","recipient"=>"required",'used_token'=>'required']); 
                 if($request->mode != "soft"){ $request->validate(["address"=>"required", "destination"=>"required"]);  }
@@ -47,9 +48,13 @@ class ApplicantionController extends Controller
                      $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
                      $new_application->app_status = 10; // default status
                      $new_application->used_token = $request->used_token;
+                     $new_application->transcript_raw = view('pages.trans', ['data'=>$trans_raw]);
                      $save_app = $new_application->save();
                      if($save_app ){
                         //  Generate the transacript HTML here and save temprary
+                        $update_payment_table = Payment::where('rrr', $request->used_token)->first();
+                        $update_payment_table->app_id = $new_application->id;
+                        $update_payment_table->save();
                         if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
                          return response(['status'=>'success',' message'=>'Application successfully created'],201);   
                             } 
@@ -69,6 +74,7 @@ class ApplicantionController extends Controller
                     $new_application->destination = "Student Transcript";
                     $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
                     $new_application->app_status = 10; // default status
+                    $new_application->transcript_raw = view('pages.trans', ['data'=>$trans_raw]);
                     //$new_application->used_token = $request->used_token ? $request->used_token : 'STUDENT';
                     $save_app = $new_application->save();
                     if($save_app ){
@@ -84,10 +90,10 @@ class ApplicantionController extends Controller
                     return response(['status'=>'failed','message'=>'Error in transcript type supplied']);
                 }
             }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found']);   }
-        } catch (\Throwable $th) {
+        // } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)']);
             
-        }
+        // }
         
 }
 
@@ -298,8 +304,8 @@ static function get_msg($applicant){
 
 
 
-public function get_student_result(Request $request){
-    $request->validate(['userid'=>'required','matno'=>'required','used_token'=>'required']);
+public function get_student_result($request){
+    //$request->validate(['userid'=>'required','matno'=>'required','used_token'=>'required']);
     $matno = str_replace(' ', '', $request->matno);
     if($this->get_student_result_session_given_matno($matno,$sessions)){
         $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
@@ -497,7 +503,7 @@ public function get_student_result(Request $request){
 
     $response = str_replace("pageno", $page_no, $response);
 
-    //return $response;
+    return $response;
     // $pdf = PDF::loadView('pdf.invoice', $data);
     // return $pdf->download('invoice.pdf');
     // $pdf = PDF::make('dompdf.wrapper');
@@ -619,7 +625,7 @@ static function get_dept_given_prog_code($prog_code,&$prog_name, &$dept , &$fac)
 // t_college_dept
 static function prog_dept_fac($prog_code,&$prog_name, &$dept , &$fac){
     try {
-        $sql = DB::table('t_college_dept')->where('prog_code',$prog_code)->select('*')->get();
+        $sql = DB::table('t_college_dept')->where('prog_code',$prog_code)->select('programme','department','college')->get();
         if($sql->count() > 0) {
             $prog_name = $sql[0]->programme;
             $dept = $sql[0]->department;
@@ -636,16 +642,18 @@ static function prog_dept_fac($prog_code,&$prog_name, &$dept , &$fac){
 
 static function get_result_table_header($student,$applicant,$application,$prog_name, $dept , $fac,$page_no){
    try {
-    $trans_type = 'Student\'s';
+       $transcript_email = 'transcripts@run.edu.ng';
+       $transcript_mobile = '+234 902 859 5221';
+       $trans_type = 'Student\'s';
     if(strtoupper($application->transcript_type) == "OFFICIAL"){
         $trans_type = 'Official';
    }
     return ' <div class="page">
             <div class="header">
-                <img src="../img/run_logo_big.png" class="logo"/>
+                <img src="run_logo_big.png" class="logo"/>
 		<h1>REDEEMER\'S UNIVERSITY</h1>
 		<h5>P.M.B. 230, Ede, Osun State, Nigeria</h5>
-		<h5>Tel: '. $applicant->mobile . ', Website: run.edu.ng, Email: ' . $applicant->email.' </h5><br>
+		<h5>Tel: '. $transcript_mobile . ', Website: run.edu.ng, Email: ' . $transcript_email.' </h5><br>
 		<h2> '. $trans_type  .' Transcript</h2>
 		<h5 id="recipient_h">Intended Recipient:'. $application->recipient .'   </h5>
 		<h6>Page ' . strval($page_no) . ' of pageno </h6>
@@ -710,19 +718,19 @@ static function class_of_degree($cgpa) {
         
         return "First Class (Honours)";
     
-    elseif (cgpa >= 3.5 )
+    elseif ($cgpa >= 3.5 )
         
 	    return "Second Class (Honours) Upper Division";
 		
-    elseif (cgpa >= 2.4)
+    elseif ($cgpa >= 2.4)
         
 	    return "Second Class (Honours) Lower Division";
 		
-    elseif (cgpa >= 1.5)
+    elseif ($cgpa >= 1.5)
         
 	    return "Third Class (Honours)";
 		
-    elseif (cgpa >= 1.0 )
+    elseif ($cgpa >= 1.0 )
 
 	    return "Pass";
 		
@@ -733,13 +741,13 @@ static function class_of_degree($cgpa) {
 static function get_programme_details($student,$prog_name, $dept ,$fac,&$qualification) {
 
 	$qualification = '';
-    if ($student->status == "GRADUATED") {
+    if (strtoupper($student->status ) == "GRADUATED") {
         
-        if ($this->stringEndsWith(strtoupper($fac), "SCIENCES") ) { $qualification = "Bachelor of Science in " . $this->find_and_replace_string($prog_name);
+        if (app('App\Http\Controllers\Applicant\ConfigController')::stringEndsWith(strtoupper($fac), "SCIENCES") ) { $qualification = "Bachelor of Science in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);
                 
-        }elseif(str_contains(strtoupper($fac),"LAW")){  $qualification = "Bachelor of Laws in " . $this->find_and_replace_string($prog_name) ;}
+        }elseif(str_contains(strtoupper($fac),"LAW")){  $qualification = "Bachelor of Laws in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name) ;}
                    
-	else{ $qualification = "Bachelor of Arts in " . $this->find_and_replace_string($prog_name);}
+	else{ $qualification = "Bachelor of Arts in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);}
   
     }
 		
@@ -748,19 +756,7 @@ static function get_programme_details($student,$prog_name, $dept ,$fac,&$qualifi
 }
 
 
-static function find_and_replace_string($string){
-   $string  = str_replace("&amp;", "&#38;",$string);
-   $string  = str_replace("&amp;", "&#38;",$string);
-   return $string;
-}
 
-static function stringEndsWith($haystack,$needle,$case=true) {
-    $expectedPosition = strlen($haystack) - strlen($needle);
-    if ($case){
-        return strrpos($haystack, $needle, 0) === $expectedPosition;
-    }
-    return strripos($haystack, $needle, 0) === $expectedPosition;
-}
 
 
 
