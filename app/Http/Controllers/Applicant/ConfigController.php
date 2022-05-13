@@ -23,5 +23,21 @@ static function find_and_replace_string($string){
      }
      return strripos($haystack, $needle, 0) === $expectedPosition;
  }
+
+
+ public function get_mail_params($request, &$From, &$FromName, &$Msg,&$Subject,&$HTML_type){
+    $From = $request->email;
+    $FromName = "@". $request->surname ." ".$request->firstname ." ". $request->othername;
+    $Msg =  '
+    ------------------------<br>
+    Dear admin user, kindly attend to this forgot matric number request from '.
+     $request->surname . ' ' .$request->firstname .'. <br>
+    <br>
+    Thank you.<br>
+    ------------------------
+        ';  
+    $Subject = "FORGOT MATRIC NUMBER ";
+    $HTML_type = true;
+ }
  
 }

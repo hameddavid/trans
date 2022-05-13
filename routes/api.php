@@ -17,6 +17,8 @@ Route::post('app/send_att', [ApplicantAuthController::class, 'send_att']);
 Route::post('app/register', [ApplicantAuthController::class, 'applicant_register']);
 Route::post('app/login', [ApplicantAuthController::class, 'applicant_login']);
 
+Route::post('app/save_forgot_matno', [ApplicantAuthController::class, 'save_forgot_matno']);
+
 Route::post('app/save', [ApplicantionController::class, 'store']);
 
 Route::get('app/check_request_availability', [ApplicantionController::class, 'check_request_availability']);

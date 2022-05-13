@@ -88,4 +88,9 @@ class AdminController extends Controller
             return response()->json(['status'=>'Nok','message'=>'Error updating data'], 500);
         }  
     }
+
+
+    public function notify_admin_by_email($admin){
+        return "Yes";
+    }
 }

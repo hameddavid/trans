@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Applicant;
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
 use App\Models\Student;
+use App\Models\ForgotMatno;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
@@ -177,5 +178,44 @@ class ApplicantAuthController extends Controller
             return response(['status'=>'failed','message'=>'catch, Error getting Applicant given User ID!']);
         }
     }
+
+
+
+    public function save_forgot_matno(Request $request){
+
+        try {
+            
+        $request->validate([ 'surname'=>'required', 'firstname'=>'required', 'othername'=>'required', 'email'=>'required|email|unique:forgot_matno', 'phone'=>'required' , 'program'=>'required', 'date_left'=>'required', ]); 
+        $get_mat = new ForgotMatno();
+        $get_mat->surname = $request->surname;
+        $get_mat->firstname = $request->firstname;
+        $get_mat->othername = $request->othername;
+        $get_mat->email = $request->email;
+        $get_mat->phone = $request->phone;
+        $get_mat->program = $request->program;
+        $get_mat->date_left = $request->date_left;
+        $get_mat->status = "PENDING";  //PENDING or TREATED
+        if($get_mat->save()){
+            //Notify admin user(s)  // app('App\Http\Controllers\Admin\AdminController')->notify_admin_by_email($admin_data);
+           app('App\Http\Controllers\Applicant\ConfigController')->get_mail_params($request, $From, $FromName, $Msg,$Subject,$HTML_type); 
+           $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From, "FromName"=>$FromName,"To"=>'reganalyst@yahoo.com', "Recipient_names"=>"ADMIN","Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+           if($resp->ok()){
+            return response(['status'=>'success','message'=>'request successfully save'], 201);
+           }
+          
+        } return response(['status'=>'failed','message'=>'Error saving forgot matric number request'], 400);
+    } catch (\Throwable $th) {
+        return response(['status'=>'failed','message'=>'Error ...maybe you have this request before'], 400);
+    }
+
+    }
+
+
+
+
+
+
+
+
 
 }

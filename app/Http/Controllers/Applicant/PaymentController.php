@@ -14,13 +14,14 @@ class PaymentController extends Controller
 {
     public function check_pend_rrr(Request $request){
 
-        $request->validate([  'gateway' => 'required|string',  'matno' => 'required|string', 'userid'=>'required', 'destination'=>'required']) ;
+        $request->validate([ 'mode'=>'required|string' ,'gateway' => 'required|string',  'matno' => 'required|string', 'userid'=>'required', 'destination'=>'required']) ;
 
         $destination_r = trim(strtoupper($request->destination));
+        $mode = trim(strtoupper($request->mode));
         $matno_r = $request->matno;
         $userid = $request->userid;
         $gateway = strtoupper($request->gateway);
-        if(!$this->get_payment_config2($serviceTypeID,$merchantId, $apiKey ,$destination_r,$gateway)){
+        if(!$this->get_payment_config2($serviceTypeID,$merchantId, $apiKey ,$destination_r,$gateway,$mode)){
            
             return response(['status'=>'failed','message'=>'Error getting serviceTypeID, Line ... RemitaSpecialPayment Controller','rsp'=>''], 400);
 
@@ -113,7 +114,7 @@ class PaymentController extends Controller
             $orderID = $this->remita_generate_trans_ID();
             if($gateway  == 'REMITA'){
 
-               if($this->get_payment_config2($serviceTypeID,$merchantId, $apiKey ,$destination,$gateway)){
+               if($this->get_payment_config2($serviceTypeID,$merchantId, $apiKey ,$destination,$gateway,$mode)){
                     $applicant =  Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();;
                     return response(['status'=>'ok','message'=>'success',
                    'data'=>[ 'serviceTypeID'=>$serviceTypeID,
@@ -142,8 +143,8 @@ class PaymentController extends Controller
     }
 
 
-    public function get_payment_config2(&$serviceTypeID,&$merchantId, &$apiKey ,$destination,$gateway) {
-        $serviceTypeID = $this->get_service_id_given_destination($destination);
+    public function get_payment_config2(&$serviceTypeID,&$merchantId, &$apiKey ,$destination,$gateway,$mode) {
+        $serviceTypeID = $this->get_service_id_given_destination($destination,$mode);
         $merchantId = "4161150426";
         $apiKey = "258341";
         if(!is_null($serviceTypeID)){
@@ -157,9 +158,13 @@ class PaymentController extends Controller
      }
      
      
-     public function get_service_id_given_destination($destination){
+     public function get_service_id_given_destination($destination,$mode){
       
         $destination = strtoupper($destination);
+        if(strtoupper($mode) == "SOFT" ){
+            return "8201449890";  //Temporary SERVICE TYPE
+        }
+        
       if($destination == "AFRICA"){
             return "8201449890";
         }
