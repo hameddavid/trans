@@ -146,7 +146,7 @@
                                             @endphp
                                             @foreach($location as $val)
                                             @if($val->number != 0)
-                                            @php $percentage = round($val->number / count($total) * 100); @endphp
+                                            @php $percentage = round(($val->number / count($total) * 100)); @endphp
                                             <p class="mb-1">{{$val->destination}} <span class="float-end">{{$percentage}}%</span></p>
                                             <div class="progress mt-2" style="height: 6px;">
                                                 <div class="progress-bar progress-bar-striped bg-primary" role="progressbar"

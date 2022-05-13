@@ -25,7 +25,7 @@ class AdminController extends Controller
         $recent_payments = Payment::select('*')->latest()->take(5)->get(); 
         $pending = Application::where('app_status','10')->count(); 
         $approved = Application::where('app_status','10')->count(); 
-        $payments = Payment::sum('amount'); 
+        $payments = Payment::where('status_msg','success')->sum('amount'); 
         //$payment_format = number_format($payments);
         return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,'approved'=>$approved,'payments'=>$payments]);
     }

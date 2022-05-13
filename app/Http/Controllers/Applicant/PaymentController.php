@@ -316,7 +316,7 @@ class PaymentController extends Controller
             return response(['status' => 'Nok', 'message' => 'Catch Error requerying transaction: re_query_transaction()'], 401);
         }
       
-        return response(['status' => 'Nok', 'message' => 'Transaction pending','data'=>$data], 200);
+        return response(['status' => 'Nok', 'message' => 'Transaction pending','data'=>$data], 401);
 
     }
 
