@@ -45,7 +45,6 @@ Route::post('app/forgot_password', [ApplicantAuthController::class, 'forgot_pass
 Route::post('app/reset_password', [ApplicantAuthController::class, 'reset_password']);
 
 
-
 // Admin api routes
 Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
 Route::post('regester',[AdminAuthController::class,'save_new_account']);

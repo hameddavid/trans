@@ -15,7 +15,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('adminauth');
+        // $this->middleware('adminauth');
         // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
@@ -25,11 +25,13 @@ class AdminController extends Controller
         $data = [];
         $total = Application::select('*')->latest()->take(5)->get(); 
         $recent_payments = Payment::select('*')->latest()->take(5)->get(); 
-        $pending = Application::where('app_status','10')->count(); 
-        $approved = Application::where('app_status','10')->count(); 
+        $pending = Application::where('app_status','PENDING')->count(); 
+        $recommeded = Application::where('app_status','RECOMMEDED')->count(); 
+        $approved = Application::where('app_status','APPROVED')->count(); 
         $payments = Payment::where('status_msg','success')->sum('amount'); 
         //$payment_format = number_format($payments);
-        return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,'approved'=>$approved,'payments'=>$payments]);
+        return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,
+        'approved'=>$approved,'payments'=>$payments,'recommeded'=>$recommeded]);
     }
 
     public function transcriptLocation(){
@@ -50,21 +52,21 @@ class AdminController extends Controller
     public function viewPendingApplications(Request $request){
         $data = [];
         $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
-            ->where('app_status','10')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
+            ->where('app_status','PENDING')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.pending_requests',['data'=>$data,'apps'=>$apps]);
     }
 
     public function viewApprovedApplications(Request $request){
         $data = [];
         $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
-            ->where('app_status','10')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
+            ->where('app_status','APPROVED')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.approved_requests',['data'=>$data,'apps'=>$apps]);
     }
 
     public function viewRecommendedApplications(Request $request){
         $data = [];
         $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
-            ->where('app_status','10')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
+            ->where('app_status','RECOMMENDED')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.recommended_requests',['data'=>$data,'apps'=>$apps]);
     }
 
