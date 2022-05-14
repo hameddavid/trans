@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Application;
 use App\Models\Payment;
+use App\Models\ForgotMatno;
 use App\Models\Applicant;
+use Illuminate\Support\Facades\Http;
 
 class AdminController extends Controller
 {
@@ -93,4 +95,87 @@ class AdminController extends Controller
     public function notify_admin_by_email($admin){
         return "Yes";
     }
+
+    public function get_list_of_forgot_matno_request_pending(){
+        $pending_req = ForgotMatno::where("status","PENDING")->select('*')->orderBy('created_at', 'DESC')->get(); 
+        return $pending_req;
+    }
+
+    public function get_list_of_forgot_matno_request_treated(){
+        $pending_req = ForgotMatno::where("status","TREATED")->select('*')->orderBy('created_at', 'DESC')->get(); 
+        return $pending_req;
+    }
+
+
+    public function treat_forgot_matno_request(Request $request){
+
+        $request->validate([ 'email'=>'required|string', 'retrieve_matno' => 'required|string',] );
+        $applicant = ForgotMatno::where(['email'=> $request->email, "status"=>"PENDING"])->first();
+        if($applicant){
+            //send matno to applicant
+            $From = "transcript@run.edu.ng";
+            $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
+            $Msg =  '
+            ------------------------<br>
+            Dear ' .$applicant->surname.' '. $applicant->firstname.' ,
+            Sequel to the FORGOT MATRIC NUMBER request you made on '. $applicant->created_at.', 
+            it is hereby resolved and this is your Matric Number : '. $request->retrieve_matno .' <br><br>
+            Further complaint, send email to transcript@run.edu.ng .<br>
+            <br>
+            OUR REDEEMER IS STRONG!
+            <br>
+            Thank you.<br>
+            ------------------------
+                ';  
+             
+            $Subject = "FORGOT MATRIC NUMBER RESPONSE";
+            $HTML_type = true;
+            $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From, "FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+            if($resp->ok()){
+                $applicant->status = "TREATED";
+                if($applicant->save()){
+                    return response(["status"=>"success","message"=>"Done!"]);
+                } else{return response(["status"=>"failed","message"=>"Error updating records!"]);}
+            }
+        }else{
+            return response(["status"=>"failed","message"=>"Invalid email supplied"]);
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

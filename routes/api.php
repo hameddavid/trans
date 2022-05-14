@@ -6,9 +6,11 @@ use App\Http\Controllers\Applicant\ApplicantAuthController;
 use App\Http\Controllers\Applicant\PaymentController;
 
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Admin\AdminController;
 
 use Illuminate\Support\Facades\Route;
 
+Route::post('/treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
 
 Route::post('regester',[AdminAuthController::class,'save_new_account']);
 
@@ -38,6 +40,17 @@ Route::post('app/update_payment', [PaymentController::class, 'update_payment']);
 Route::post('app/re_query_transaction', [PaymentController::class, 're_query_transaction']);
 Route::post('app/test_remita_bank', [PaymentController::class, 'test_remita_bank']);
 Route::post('app/remita_bank_payment', [PaymentController::class, 'remita_bank_payment']);
+
+
+
+Route::post('app/forgot_password', [ApplicantAuthController::class, 'forgot_password']);
+Route::post('app/reset_password', [ApplicantAuthController::class, 'reset_password']);
+
+
+
+
+
+
 
 
 

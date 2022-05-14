@@ -304,7 +304,7 @@ static function get_msg($applicant){
 
 
 
-public function get_student_result($request){
+public function get_student_result(Request $request){
     //$request->validate(['userid'=>'required','matno'=>'required','used_token'=>'required']);
     $matno = str_replace(' ', '', $request->matno);
     if($this->get_student_result_session_given_matno($matno,$sessions)){

@@ -30,7 +30,7 @@ static function find_and_replace_string($string){
     $FromName = "@". $request->surname ." ".$request->firstname ." ". $request->othername;
     $Msg =  '
     ------------------------<br>
-    Dear admin user, kindly attend to this forgot matric number request from '.
+    Dear admin, kindly find on your dashboard, forgot matric number request from '.
      $request->surname . ' ' .$request->firstname .'. <br>
     <br>
     Thank you.<br>

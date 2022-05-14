@@ -182,9 +182,7 @@ class ApplicantAuthController extends Controller
 
 
     public function save_forgot_matno(Request $request){
-
-        try {
-            
+        try {     
         $request->validate([ 'surname'=>'required', 'firstname'=>'required', 'othername'=>'required', 'email'=>'required|email|unique:forgot_matno', 'phone'=>'required' , 'program'=>'required', 'date_left'=>'required', ]); 
         $get_mat = new ForgotMatno();
         $get_mat->surname = $request->surname;
@@ -195,11 +193,14 @@ class ApplicantAuthController extends Controller
         $get_mat->program = $request->program;
         $get_mat->date_left = $request->date_left;
         $get_mat->status = "PENDING";  //PENDING or TREATED
-        if($get_mat->save()){
+        if($get_mat->save()){ 
             //Notify admin user(s)  // app('App\Http\Controllers\Admin\AdminController')->notify_admin_by_email($admin_data);
            app('App\Http\Controllers\Applicant\ConfigController')->get_mail_params($request, $From, $FromName, $Msg,$Subject,$HTML_type); 
-           $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From, "FromName"=>$FromName,"To"=>'reganalyst@yahoo.com', "Recipient_names"=>"ADMIN","Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+           $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',
+           ["From"=>$From, "FromName"=>$FromName,"To"=>"reganalyst@yahoo.com",
+            "Recipient_names"=>"ADMIN","Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
            if($resp->ok()){
+               return $resp->body();
             return response(['status'=>'success','message'=>'request successfully save'], 201);
            }
           
@@ -209,6 +210,73 @@ class ApplicantAuthController extends Controller
     }
 
     }
+
+
+
+
+    public function forgot_password(Request $request){
+        $request->validate(['email'=>'required']);
+        try {
+        $app = Applicant::where("email", $request->email)->first();
+        if($app){
+                $auto_pass = $this->RandomString(10);
+                $app->password =  bcrypt($auto_pass);
+                if($app->save()){
+                $From = "transcript@run.edu.ng";
+                $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
+                $Msg =  '
+                ------------------------<br>
+                Dear ' .$app->surname.' '. $app->firstname.',
+                kindly use: <span color="red"> ' . $auto_pass . '</span>, as your mew password to login to your transcript portal. <br>
+                <br>
+                Remember to reset your password!
+                <br>
+                Thank you.<br>
+                ------------------------
+                    ';  
+                $Subject = "AUTO GENERATED PASSWORD";
+                $HTML_type = true;
+                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$app->email, "Recipient_names"=>$app->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type, ]);     
+               if($resp->ok()){
+                return response(['status'=>'success','message'=>'New password successfully sent to your registered email'], 200);
+               }
+            }else{return response(['status'=>'failed','message'=>'Error updating record!'], 400);}
+        }else{
+            return response(['status'=>'failed','message'=>'Invalid email supplied'], 400);
+ 
+        }
+    } catch (\Throwable $th) {
+        return response(['status'=>'failed','message'=>'Error from catch'], 400);
+    }
+
+    }
+
+
+    public function reset_password(Request $request){
+        $request->validate(['email'=>'required','old_pass'=>'required', 'password'=>'required',]);
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+        $app = Applicant::where('email',$request->email)->first();
+        if($app){
+          if(!Hash::check($request->old_pass, $app->password)) {return response(['status'=>'failed','message' => 'Old password NOT match!'], 401);}
+          $app->password =  bcrypt($request->password);
+          if($app->save()){
+            return response(['status'=>'success','message'=>'Password successfully updated'], 200);
+
+          }
+        }else{  return response(['status'=>'failed','message'=>'Invalid email supplied'], 400); }
+
+
+    }
+
+
+
+
+
+
 
 
 

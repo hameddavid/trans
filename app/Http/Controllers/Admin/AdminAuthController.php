@@ -74,7 +74,7 @@ class AdminAuthController extends Controller
             //setcookie(name, value, expire, path, domain, secure, httponly);
            setcookie('email',$request->email,time()+(84000*30),'/');
            $From = "ict@run.edu.ng";
-           $FromName = "DEST@REDEEMER's UNIVERSITY";
+           $FromName = "ICT@REDEEMER's UNIVERSITY";
            $Msg = "Message from transcript server";
            $Subject = "Email Verification";
            $HTML_type = true;
