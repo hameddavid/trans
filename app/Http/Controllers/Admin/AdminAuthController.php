@@ -47,44 +47,48 @@ class AdminAuthController extends Controller
 
 
     public function save_new_account(Request $request){
-            
-        
+             
         $request->validate([
-            'surname'=>'required|string',
-            'firstname'=>'required|string',
-            'othername'=>'required|string',
-            'phone'=>'required|string|min:8|max:15|unique:admin,phone',
-            'email'=>'required|email|unique:admin,email',
-            'password'=>'required',
-            'title'=>'required',
-        
-        ]) ;
-        //$num_str = sprintf("%06d", mt_rand(1, 999999));
-        $app = new Admin;
-        $app->surname = $request->surname;
-        $app->firstname = $request->firstname;
-        $app->othername = $request->othername;
-        $app->phone = $request->phone;
-        $app->email = $request->email;
-        $app->password = Hash::make($request->password);
-        $app->role = 200;
-        $app->title = $request->title;
-        $save = $app->save();
-        if($save){
-            //setcookie(name, value, expire, path, domain, secure, httponly);
-           setcookie('email',$request->email,time()+(84000*30),'/');
-           $From = "ict@run.edu.ng";
-           $FromName = "ICT@REDEEMER's UNIVERSITY";
-           $Msg = "Message from transcript server";
-           $Subject = "Email Verification";
-           $HTML_type = true;
-          // $res = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email,"Recipient_names"=>$request->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);
-           Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email,"Recipient_names"=>$request->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);
-           return response(['status'=> 'success', 'message'=>'Account created successfully']);
-        
-       }else{
-            return response(['status'=> 'failed', 'message'=>'Issue creating account']);
-
+            'surname'=>'required|string', 'firstname'=>'required|string','othername'=>'required|string',
+            'phone'=>'required|string|min:8|max:15|unique:admin,phone','email'=>'required|email|unique:admin,email','title'=>'required', 'role'=>'required', ]) ;
+       
+        try {
+            $auto_pass = app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(10);
+            $app = new Admin;
+            $app->surname = $request->surname;
+            $app->firstname = $request->firstname;
+            $app->othername = $request->othername;
+            $app->phone = $request->phone;
+            $app->email = $request->email;
+            $app->password = Hash::make($auto_pass);
+            $app->role = $request->role;
+            $app->title = $request->title;
+            $save = $app->save();
+            if($save){
+                $From = "transcript@run.edu.ng";
+                $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
+                $Msg =  '
+                ------------------------<br>
+                Dear ' .$request->surname.' '. $request->firstname.',
+                kindly use: <span color="red"> ' .$auto_pass. '</span>, as your password to login to the transcript admin portal. <br>
+                <br>
+                Remember to reset your password!
+                <br>
+                Thank you.<br>
+                ------------------------
+                    ';  
+                 
+                $Subject = "AUTO GENERATED PASSWORD";
+                $HTML_type = true;
+               Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email,"Recipient_names"=>$request->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);
+               return response(['status'=> 'success', 'message'=>'Account created successfully']);
+            
+           }else{
+                return response(['status'=> 'failed', 'message'=>'Issue creating account']);
+    
+            }
+        } catch (\Throwable $th) {
+            return response(['status'=> 'failed', 'message'=>'Catch Issue creating account']);
         }
    }
 
@@ -242,7 +246,25 @@ class AdminAuthController extends Controller
 
 
 
+   public function admin_reset_password(Request $request){
+    $request->validate(['email'=>'required','old_pass'=>'required', 'password'=>'required',]);
+    try {
+  
+    $app = Admin::where('email',$request->email)->first();
+    if($app){
+      if(!Hash::check($request->old_pass, $app->password)) {return response(['status'=>'failed','message' => 'Old password NOT match!'], 401);}
+      $app->password =  bcrypt($request->password);
+      if($app->save()){
+        return response(['status'=>'success','message'=>'Password successfully updated'], 200);
 
+      }
+    }else{  return response(['status'=>'failed','message'=>'Invalid email supplied'], 400); }
+
+  
+} catch (\Throwable $th) {
+    //throw $th;
+}
+}
 
 
 

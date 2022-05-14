@@ -255,10 +255,7 @@ class ApplicantAuthController extends Controller
     public function reset_password(Request $request){
         $request->validate(['email'=>'required','old_pass'=>'required', 'password'=>'required',]);
         try {
-            //code...
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+      
         $app = Applicant::where('email',$request->email)->first();
         if($app){
           if(!Hash::check($request->old_pass, $app->password)) {return response(['status'=>'failed','message' => 'Old password NOT match!'], 401);}
@@ -269,7 +266,10 @@ class ApplicantAuthController extends Controller
           }
         }else{  return response(['status'=>'failed','message'=>'Invalid email supplied'], 400); }
 
-
+      
+    } catch (\Throwable $th) {
+        //throw $th;
+    }
     }
 
 
