@@ -78,7 +78,7 @@
                             <h5 class="modal-title" id="forgotMatricLabel"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-12">
                             <div class="card border border-primary">
                                 <div class="card-header bg-transparent border-primary">
                                     <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Primary outline Card</h5>
