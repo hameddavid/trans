@@ -36,6 +36,9 @@ $(document).ready(function ($) {
                         console.log(response);
                         $("#btnEdit").html("Update");
                         alertify.success(response.message);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2800);
                     },
                     error: function (response) {
                         console.log(response);
@@ -95,6 +98,9 @@ $(document).ready(function ($) {
                         console.log(response);
                         $("#btnSendMatric").html("Send");
                         alertify.success(response.message);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2800);
                     },
                     error: function (response) {
                         console.log(response);

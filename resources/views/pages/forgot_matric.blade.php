@@ -48,9 +48,15 @@
                                                     <td>@php echo ($applicant->status == 'TREATED') ? '<span class="badge badge-soft-success">'.$applicant->status.'</span>' : '<span class="badge badge-soft-danger">'.$applicant->status.'</span>'@endphp</td>
                                                     <td>
                                                         <div class="btn-group btn-group-example mb-3" role="group">
+                                                            @if($applicant->status == 'PENDING')
                                                             <button type="button" data-date_left="{{$applicant->date_left}}" data-program="{{$applicant->program}}" data-email="{{$applicant->email}}" data-othername="{{$applicant->othername}}" data-phone="{{$applicant->phone}}" data-firstname="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="View" class="btn btn-secondary w-xs viewForgotMatric">
                                                                 <i class="bx bx-show-alt"></i> View
                                                             </button>
+                                                            @else
+                                                            <button type="button" disabled class="btn btn-secondary w-xs">
+                                                                <i class="bx bx-show-alt"></i> View
+                                                            </button>
+                                                            @endif
                                                         </div>
                                                     </td>
                                                 </tr>
