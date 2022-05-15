@@ -58,7 +58,6 @@ $(document).ready(function ($) {
 
         $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
             console.log(data);
-            //$(".showHTML").html(data);
         });
     });
 
@@ -116,5 +115,60 @@ $(document).ready(function ($) {
                 });
             }
         });
+    });
+
+    $("#btnResetPassword").click(function () {
+        $("#resetPasswordForm").validate({
+            rules: {
+                password: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 15,
+                },
+                confirm_password: {
+                    required: true,
+                    equalTo: "#password",
+                },
+            },
+            messages: {
+                password: {
+                    required: "please enter password",
+                    minlength: "password must have at least 8 characters",
+                },
+                confirm_password: {
+                    required: "please retype your password",
+                    equalTo: "password doesn't match!",
+                },
+            },
+            submitHandler: submitResetPasswordForm,
+        });
+
+        function submitResetPasswordForm() {
+            var formData = $("#resetPasswordForm").serialize();
+            var type = "POST";
+            var ajaxurl = "admin_reset_password";
+
+            $.ajax({
+                type: type,
+                url: ajaxurl,
+                data: formData,
+                dataType: "json",
+                beforeSend: function () {
+                    $("#btnResetPassword").html(
+                        '<i class="fa fa-spinner fa-spin"></i>'
+                    );
+                },
+                success: function (response) {
+                    console.log(response);
+                    $("#btnResetPassword").html("Update Password");
+                    alertify.success(response.message);
+                },
+                error: function (response) {
+                    console.log(response);
+                    $("#btnResetPassword").html("Update Password");
+                    alertify.error(response.responseJSON.message);
+                },
+            });
+        }
     });
 });
