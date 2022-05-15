@@ -81,11 +81,11 @@
                         <div class="col-lg-12">
                             <div class="card border border-primary">
                                 <div class="card-header bg-transparent border-primary">
-                                    <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Primary outline Card</h5>
+                                    <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Applicant's Details</h5>
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title">card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <h5 class="card-title">Send his matric number</h5>
+                                    <p class="card-text">Enter the correct matric number for this applicant and click on the send button.</p>
                                 </div>
                             </div>
                         </div>
