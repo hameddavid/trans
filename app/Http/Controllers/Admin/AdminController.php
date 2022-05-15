@@ -23,7 +23,8 @@ class AdminController extends Controller
 
     public function adminDashboard(Request $request){
         $data = [];
-        $total = Application::select('*')->get(); 
+        $total = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
+            ->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         $recent_payments = Payment::select('*')->latest()->take(5)->get(); 
         $pending = Application::where('app_status','PENDING')->count(); 
         $recommeded = Application::where('app_status','RECOMMEDED')->count(); 

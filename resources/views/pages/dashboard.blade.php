@@ -204,11 +204,11 @@
                                                     @foreach($total as $app)
                                                     <tr>
                                                         <th scope="row">{{$i}} @php $i++ @endphp</th>
-                                                        <td>{{$app->recipient}}</td>
+                                                        <td>{{$app->surname.' '.$app->firstname}}</td>
                                                         <td>{{$app->matric_number}}</td>
                                                         <td>@php echo ($app->app_status == 'APPROVED') ? '<span class="badge badge-soft-success">'.$app->app_status.'</span>' : '<span class="badge badge-soft-danger">'.$app->app_status.'</span>'@endphp</td>
                                                         <td>
-                                                            <button type="button" class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">View</button>
+                                                            <button type="button" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-light btn-sm view_transcript">View</button>
                                                         </td>
                                                     </tr>
                                                     @if ($i > 5)
@@ -280,53 +280,26 @@
             </div>
             <!-- end main content-->     
             
-            <!-- sample modal content -->
-            <div id="exampleModalFullscreen" class="modal fade" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel" aria-hidden="true">
+            <!-- Transcript modal -->
+            <div id="transcriptModal" class="modal fade" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-fullscreen">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalFullscreenLabel">Fullscreen Modal</h5>
+                            <h5 class="modal-title" id="transcriptModalLabel"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <h5>Overflowing text to show scroll behavior</h5>
-                            <p>Cras mattis consectetur purus sit amet fermentum.
-                                Cras justo odio, dapibus ac facilisis in,
-                                egestas eget quam. Morbi leo risus, porta ac
-                                consectetur ac, vestibulum at eros.</p>
-                            <p>Praesent commodo cursus magna, vel scelerisque
-                                nisl consectetur et. Vivamus sagittis lacus vel
-                                augue laoreet rutrum faucibus dolor auctor.</p>
-                            <p>Aenean lacinia bibendum nulla sed consectetur.
-                                Praesent commodo cursus magna, vel scelerisque
-                                nisl consectetur et. Donec sed odio dui. Donec
-                                ullamcorper nulla non metus auctor
-                                fringilla.</p>
-                            <p>Cras mattis consectetur purus sit amet fermentum.
-                                Cras justo odio, dapibus ac facilisis in,
-                                egestas eget quam. Morbi leo risus, porta ac
-                                consectetur ac, vestibulum at eros.</p>
-                            <p>Praesent commodo cursus magna, vel scelerisque
-                                nisl consectetur et. Vivamus sagittis lacus vel
-                                augue laoreet rutrum faucibus dolor auctor.</p>
-                            <p>Aenean lacinia bibendum nulla sed consectetur.
-                                Praesent commodo cursus magna, vel scelerisque
-                                nisl consectetur et. Donec sed odio dui. Donec
-                                ullamcorper nulla non metus auctor
-                                fringilla.</p>
-                            <p>Cras mattis consectetur purus sit amet fermentum.
-                                Cras justo odio, dapibus ac facilisis in,
-                                egestas eget quam. Morbi leo risus, porta ac
-                                consectetur ac, vestibulum at eros.</p>
+                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
                         </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
+                    </div>
+                </div>
             </div>
-            <!-- /.modal -->
+            <!-- /modal -->
 
         <!-- apexcharts -->
         <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
@@ -337,6 +310,8 @@
         <!-- dashboard init -->
         <script src="assets/js/pages/dashboard.init.js"></script>
         <script src="assets/js/pages/modal.init.js"></script>
+        <script src="assets/js/validation.min.js"></script>
+        <script src="assets/js/utils.js"></script>
     @endsection
 
         
