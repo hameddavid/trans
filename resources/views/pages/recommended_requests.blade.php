@@ -71,7 +71,7 @@
                                                                     <button type="button" class="btn btn-info waves-effect btn-label waves-light"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
                                                                 </div> 
                                                                 <div class="btnJustify2 p-3">
-                                                                    <button type="button" data-id="{{$app->application_id}}" class="btn btn-success waves-effect btn-label waves-light approve"><i class="bx bx-check label-icon"></i>Approve</button>
+                                                                    @if($data->role == 300)<button type="button" data-id="{{$app->application_id}}" class="btn btn-success waves-effect btn-label waves-light approve"><i class="bx bx-check label-icon"></i>Approve</button>@endif
                                                                     <button type="button" class="btn btn-danger waves-effect btn-label waves-light"><i class="bx bx-x label-icon"></i>Disapprove</button>
                                                                 </div>
                                                             </div>
@@ -94,6 +94,25 @@
                 @include("partials.footer")
             </div>
             <!-- end main content-->
+
+            <!-- Transcript modal -->
+            <div id="transcriptModal" class="modal fade" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="transcriptModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body showHTML">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                            @if($data->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /modal -->
 
         
         <!-- Required datatable js -->
