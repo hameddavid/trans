@@ -74,7 +74,7 @@ $(document).ready(function ($) {
             //dataType: "html",
             success: function (response) {
                 console.log(response);
-                $(".showHTML").text(response.transcript_raw);
+                $(".showHTML").html(response.transcript_raw);
             },
         });
     });
