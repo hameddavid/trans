@@ -181,6 +181,11 @@ $(document).ready(function ($) {
         recommendTranscript(id);
     });
 
+    $(".approve").click(function () {
+        id = $(this).data("id");
+        recommendTranscript(id);
+    });
+
     const recommendTranscript = (id) => {
         $.ajax({
             type: "POST",
