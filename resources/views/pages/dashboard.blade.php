@@ -5,6 +5,7 @@
     @endsection
 
     @section("content")
+    {{dd($data)}}
             <div class="main-content">
 
                 <div class="page-content">
