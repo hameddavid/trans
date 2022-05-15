@@ -1,7 +1,7 @@
 @extends("layout.master") 
 
     @section("title")
-      Profile
+      Account Settings
     @endsection
 
     @section("content")
@@ -22,8 +22,22 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="card-body">
-                                            ssss
-
+                                        <form method="POST" id="resetPasswordForm">
+                                            @csrf
+                                            <div class="mb-3">
+                                                <label for="old_pass" class="col-form-label">Current Password:</label>
+                                                <input type="password" class="form-control" name="old_pass" id="old_pass" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="password" class="col-form-label">New Password:</label>
+                                                <input type="password" class="form-control" name="password" id="password" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="confirm_password" class="col-form-label">Confirm New Password:</label>
+                                                <input type="password" class="form-control" name="confirm_password" id="confirm_password" required>
+                                            </div>
+                                            <button type="submit" id="btnResetPassword" class="btn btn-secondary">Update Password</button>
+                                        </form>
                                     </div>
                                 </div>
                                 <!-- end cardaa -->
@@ -38,7 +52,7 @@
             </div>
             <!-- end main content-->
         
-        
+        <script src="assets/js/validation.min.js"></script>
         <script src="assets/js/utils.js"></script>   
     @endsection
 
