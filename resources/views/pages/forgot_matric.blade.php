@@ -80,9 +80,6 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="card border border-primary">
-                                <!-- <div class="card-header bg-transparent border-primary">
-                                    <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Send Matric Number</h5>
-                                </div> -->
                                 <div class="card-body">
                                     <p class="card-text">Enter the correct matric number for this applicant and click on the send button.</p>
                                     <label for="name" class="col-form-label">Fullname: <span id="name"></span></label><hr>

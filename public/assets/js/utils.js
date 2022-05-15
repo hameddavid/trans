@@ -55,7 +55,7 @@ $(document).ready(function ($) {
 
     $(".viewForgotMatric").click(function () {
         $("#forgotMatric").modal("show");
-
+        email = $(this).data("email");
         $("#name").html(
             $(this).data("surname") +
                 " " +
@@ -74,14 +74,16 @@ $(document).ready(function ($) {
             });
 
             function submitMatricForm() {
-                var formData = $("#sendMatricForm").serialize();
                 var type = "POST";
                 var ajaxurl = "api/treat_forgot_matno_request";
 
                 $.ajax({
                     type: type,
                     url: ajaxurl,
-                    data: formData,
+                    data: {
+                        retrieve_matno: $("#matric_number").val,
+                        email: email,
+                    },
                     dataType: "json",
                     beforeSend: function () {
                         $("#btnSendMatric").html(
