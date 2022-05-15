@@ -55,7 +55,7 @@
                                                             </a>
                                                             <div class="dropdown-menu">
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
-                                                                    <button type="button" title="View" class="btn btn-secondary w-xs"><i class="mdi mdi-eye-check-outline"></i></button>
+                                                                    <button type="button" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" title="View" class="btn btn-secondary w-xs view_transcript"><i class="mdi mdi-eye-check-outline"></i></button>
                                                                     <button type="button" title="Regenerate" class="btn btn-info w-xs"><i class="mdi mdi-refresh"></i></button>
                                                                 </div>
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
@@ -83,6 +83,25 @@
             </div>
             <!-- end main content-->
 
+            <!-- Transcript modal -->
+            <div id="transcriptModal" class="modal fade" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="transcriptModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body showHTML">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary waves-effect waves-light">Reccommend</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /modal -->
+
         
         <!-- Required datatable js -->
         <script src="assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -102,7 +121,9 @@
         <script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
         <!-- Datatable init js -->
-        <script src="assets/js/pages/datatables.init.js"></script>    
+        <script src="assets/js/pages/datatables.init.js"></script> 
+        <script src="assets/js/pages/modal.init.js"></script>
+        <script src="assets/js/utils.js"></script>   
     @endsection
 
         

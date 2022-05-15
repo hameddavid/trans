@@ -291,7 +291,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                            <button type="button" class="btn btn-primary waves-effect waves-light">Reccommend</button>
                         </div>
                     </div>
                 </div>
