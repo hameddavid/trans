@@ -56,27 +56,10 @@ $(document).ready(function ($) {
         $("#transcriptModalLabel").html($(this).data("name") + "'s Transcript");
         var id = $(this).data("id");
 
-        // $.get('/getTranscript', { id: id }, function (data, textStatus, jqXHR) {
-        //     console.log("status: " + textStatus + ", data:" + data);
-        //     $(".showHTML").html(data.transcript_raw);
-        //     $(".showHTML").html("<code>" + data.transcript_raw + "</code>");
-        // });
-
         $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
             console.log(data);
-            $(".showHTML").html(data);
+            //$(".showHTML").html(data);
         });
-
-        // $.ajax({
-        //     url: "getTranscript",
-        //     method: "GET",
-        //     data: { id: id },
-        //     //dataType: "html",
-        //     success: function (response) {
-        //         console.log(response);
-        //         $(".showHTML").html("<pre>" + response + "</pre>");
-        //     },
-        // });
     });
 
     $(".viewForgotMatric").click(function () {
