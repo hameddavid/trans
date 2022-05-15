@@ -59,7 +59,9 @@ $(document).ready(function ($) {
 
         $("#name").html(
             $(this).data("surname") +
+                " " +
                 $(this).data("firstname") +
+                " " +
                 $(this).data("othername")
         );
         $("#email").html($(this).data("email"));

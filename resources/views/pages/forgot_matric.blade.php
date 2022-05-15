@@ -75,7 +75,8 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="forgotMatricLabel"></h5>
+                            <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Send Matric Number</h5>
+                            <!-- <h5 class="modal-title" id="forgotMatricLabel"></h5> -->
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="col-lg-12">
@@ -98,7 +99,7 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="matric_number" class="col-form-label">Matric Number:</label>
-                                    <input type="text" class="form-control" name="matric_number" id="matric_number" required>
+                                    <input type="text" class="form-control" name="matric_number" id="matric_number" placeholder="Enter matric number" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
