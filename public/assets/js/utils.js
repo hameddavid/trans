@@ -183,7 +183,7 @@ $(document).ready(function ($) {
 
     $(".approve").click(function () {
         id = $(this).data("id");
-        recommendTranscript(id);
+        approveTranscript(id);
     });
 
     const recommendTranscript = (id) => {
