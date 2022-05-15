@@ -71,7 +71,7 @@ $(document).ready(function ($) {
             url: "getTranscript",
             method: "GET",
             data: { id: id },
-            dataType: "html",
+            //dataType: "html",
             success: function (response) {
                 console.log(response);
                 $(".showHTML").text(response.transcript_raw);
