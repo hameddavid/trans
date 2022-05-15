@@ -1,4 +1,5 @@
 $(document).ready(function ($) {
+    $("#btnApprove").hide();
     $(".editApplicant").click(function () {
         $("#editApplicantForm").trigger("reset");
         $("#applicantModal").modal("show");
@@ -55,6 +56,14 @@ $(document).ready(function ($) {
         $("#transcriptModal").modal("show");
         $("#transcriptModalLabel").html($(this).data("name") + "'s Transcript");
         id = $(this).data("id");
+        stat = $(this).data("status");
+        if (stat === "APPROVED") {
+            $("#btnRecommend").hide();
+        }
+        if (stat === "RECOMMENDED") {
+            $("#btnApprove").show();
+            $("#btnRecommend").hide();
+        }
 
         $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
             console.log(data);
@@ -62,6 +71,10 @@ $(document).ready(function ($) {
 
         $("#btnRecommend").click(function () {
             recommendTranscript(id);
+        });
+
+        $("#btnApprove").click(function () {
+            approveTranscript(id);
         });
     });
 
@@ -196,15 +209,20 @@ $(document).ready(function ($) {
                 $("#btnRecommend").html(
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
+                $("#btnRecommend").prop("disabled", true);
             },
             success: function (response) {
                 console.log(response);
                 $("#btnRecommend").html("Recommended");
                 alertify.success(response.message);
+                setTimeout(function () {
+                    location.reload();
+                }, 2800);
             },
             error: function (response) {
                 console.log(response);
                 $("#btnRecommend").html("Recommend");
+                $("#btnRecommend").prop("disabled", false);
                 alertify.error(response.responseJSON.message);
             },
         });
@@ -218,15 +236,20 @@ $(document).ready(function ($) {
             dataType: "json",
             beforeSend: function () {
                 $("#btnApprove").html('<i class="fa fa-spinner fa-spin"></i>');
+                $("#btnApprove").prop("disabled", true);
             },
             success: function (response) {
                 console.log(response);
                 $("#btnApprove").html("Approved");
                 alertify.success(response.message);
+                setTimeout(function () {
+                    location.reload();
+                }, 2800);
             },
             error: function (response) {
                 console.log(response);
                 $("#btnApprove").html("Approve");
+                $("#btnApprove").prop("disabled", false);
                 alertify.error(response.responseJSON.message);
             },
         });
