@@ -53,5 +53,6 @@ Route::get('/forgot_matric_num',[AdminController::class,'get_list_of_forgot_matn
 Route::get('/get_list_of_forgot_matno_request_treated',[AdminController::class,'get_list_of_forgot_matno_request_treated']);
 Route::get('/transcript/{id}',[AdminController::class,'getHtmlTranscript']);
 Route::get('/getTranscript',[AdminController::class,'getHtmlTranscript']);
+Route::get('/logout',[AdminAuthController::class,'logout']);
 
 
