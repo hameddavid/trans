@@ -73,7 +73,7 @@ $(document).ready(function ($) {
 
         $.ajax({
             url: "getTranscript",
-            method: "POST",
+            method: "GET",
             data: { id: id },
             dataType: "html",
             success: function (response) {
