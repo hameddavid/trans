@@ -114,7 +114,7 @@ class AdminController extends Controller
         $apps = Application::where('application_id', $request->id)
             ->select('transcript_raw')->first();
         //$decoded_transcript = html_entity_decode($apps);
-        $decoded_transcript = htmlspecialchars_decode($apps);
+        $decoded_transcript = htmlentities($apps->transcript_raw);
         return $decoded_transcript;
     }
 
