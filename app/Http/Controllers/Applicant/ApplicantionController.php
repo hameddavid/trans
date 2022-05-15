@@ -650,7 +650,7 @@ static function get_result_table_header($student,$applicant,$application,$prog_n
    }
     return ' <div class="page">
             <div class="header">
-                <img src="run_logo_big.png" class="logo"/>
+                <img src="/assets/images/run_logo_big.png" class="logo"/>
 		<h1>REDEEMER\'S UNIVERSITY</h1>
 		<h5>P.M.B. 230, Ede, Osun State, Nigeria</h5>
 		<h5>Tel: '. $transcript_mobile . ', Website: run.edu.ng, Email: ' . $transcript_email.' </h5><br>

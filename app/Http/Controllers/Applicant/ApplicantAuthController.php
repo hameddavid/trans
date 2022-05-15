@@ -194,13 +194,12 @@ class ApplicantAuthController extends Controller
         $get_mat->date_left = $request->date_left;
         $get_mat->status = "PENDING";  //PENDING or TREATED
         if($get_mat->save()){ 
-            //Notify admin user(s)  // app('App\Http\Controllers\Admin\AdminController')->notify_admin_by_email($admin_data);
            app('App\Http\Controllers\Applicant\ConfigController')->get_mail_params($request, $From, $FromName, $Msg,$Subject,$HTML_type); 
            $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',
            ["From"=>$From, "FromName"=>$FromName,"To"=>"reganalyst@yahoo.com",
             "Recipient_names"=>"ADMIN","Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
            if($resp->ok()){
-               return $resp->body();
+            //    return $resp->body();
             return response(['status'=>'success','message'=>'request successfully save'], 201);
            }
           
