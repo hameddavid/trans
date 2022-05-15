@@ -62,14 +62,9 @@ $(document).ready(function ($) {
         //     $(".showHTML").html("<code>" + data.transcript_raw + "</code>");
         // });
 
-        $(".showHTML").load(
-            "getTranscript", // url
-            { id: id }, // data
-            function (data, status, jqXGR) {
-                // callback function
-                console.log(data.transcript_raw);
-            }
-        );
+        $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
+            console.log(data.transcript_raw);
+        });
 
         // $.ajax({
         //     url: "getTranscript",
