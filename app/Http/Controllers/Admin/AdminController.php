@@ -117,6 +117,11 @@ class AdminController extends Controller
         return $decoded_transcript;
     }
 
+    public function viewSettings(Request $request){
+        $data = [];
+        return view('pages.settings',['data'=>$data]);
+    }
+
 
     public function treat_forgot_matno_request(Request $request){
 
