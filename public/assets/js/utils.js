@@ -146,7 +146,7 @@ $(document).ready(function ($) {
         function submitResetPasswordForm() {
             var formData = $("#resetPasswordForm").serialize();
             var type = "POST";
-            var ajaxurl = "admin_reset_password";
+            var ajaxurl = "api/admin_reset_password";
 
             $.ajax({
                 type: type,
