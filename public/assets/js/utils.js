@@ -53,10 +53,8 @@ $(document).ready(function ($) {
         $("#transcriptModalLabel").html($(this).data("name") + "s Transcript");
     });
 
-    $(".editApplicant").click(function () {
+    $(".viewForgotMatric").click(function () {
         $("#forgotMatric").modal("show");
-        $("#forgotMatricLabel").html($(this).data("name"));
-
         $("#forgotMatricLabel").html($(this).data("name"));
 
         $("#btnSendMatric").click(function () {
