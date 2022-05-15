@@ -86,10 +86,10 @@
                                 <div class="card-body">
                                     <h5 class="card-title">Send his matric number</h5>
                                     <p class="card-text">Enter the correct matric number for this applicant and click on the send button.</p>
-                                    <label for="name" class="col-form-label">Fullname: <span id="name"></span></label>
-                                    <label for="email" class="col-form-label">Email: <span id="email"></span></label>
-                                    <label for="phone" class="col-form-label">Phone number: <span id="phone"></span></label>
-                                    <label for="program" class="col-form-label">Programme: <span id="program"></span></label>
+                                    <label for="name" class="col-form-label">Fullname: <span id="name"></span></label><hr>
+                                    <label for="email" class="col-form-label">Email: <span id="email"></span></label><hr>
+                                    <label for="phone" class="col-form-label">Phone number: <span id="phone"></span></label><hr>
+                                    <label for="program" class="col-form-label">Programme: <span id="program"></span></label><hr>
                                     <label for="graduation" class="col-form-label">Year of Graduation: <span id="graduation"></span></label>
                                 </div>
                             </div>
