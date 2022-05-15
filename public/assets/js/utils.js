@@ -62,20 +62,21 @@ $(document).ready(function ($) {
         //     $(".showHTML").html("<code>" + data.transcript_raw + "</code>");
         // });
 
-        $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
-            console.log(data.transcript_raw);
-        });
-
-        // $.ajax({
-        //     url: "getTranscript",
-        //     method: "GET",
-        //     data: { id: id },
-        //     dataType: "html",
-        //     success: function (response) {
-        //         console.log(response);
-        //         $(".showHTML").html(response.transcript_raw);
-        //     },
+        // $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
+        //     console.log(data.transcript_raw);
+        //     $(".showHTML").html(data.transcript_raw);
         // });
+
+        $.ajax({
+            url: "getTranscript",
+            method: "GET",
+            data: { id: id },
+            dataType: "html",
+            success: function (response) {
+                console.log(response);
+                $(".showHTML").html(response.transcript_raw);
+            },
+        });
     });
 
     $(".viewForgotMatric").click(function () {
