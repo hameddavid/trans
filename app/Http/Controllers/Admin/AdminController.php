@@ -15,14 +15,15 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('adminauth');
+         $this->middleware('adminauth');
         // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
     }
 
     public function adminDashboard(Request $request){
-        $data = [];
+
+        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $total = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
             ->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         $recent_payments = Payment::select('*')->latest()->take(5)->get(); 
@@ -51,34 +52,34 @@ class AdminController extends Controller
     }
 
     public function viewPendingApplications(Request $request){
-        $data = [];
+       $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
             ->where('app_status','PENDING')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.pending_requests',['data'=>$data,'apps'=>$apps]);
     }
 
     public function viewApprovedApplications(Request $request){
-        $data = [];
+       $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
             ->where('app_status','APPROVED')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.approved_requests',['data'=>$data,'apps'=>$apps]);
     }
 
     public function viewRecommendedApplications(Request $request){
-        $data = [];
+       $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $apps = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
             ->where('app_status','RECOMMENDED')->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         return view('pages.recommended_requests',['data'=>$data,'apps'=>$apps]);
     }
 
     public function viewPayments(Request $request){
-        $data = [];
+       $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $payments = Payment::select('*')->get(); 
         return view('pages.payments',['data'=>$data,'payments'=>$payments]);
     }
 
     public function viewApplicants(Request $request){
-        $data = [];
+       $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $applicants = Applicant::select('*')->get(); 
         return view('pages.applicants',['data'=>$data,'applicants'=>$applicants]);
     }
@@ -100,7 +101,7 @@ class AdminController extends Controller
     }
 
     public function get_list_of_forgot_matno_request(){
-        $data = [];
+       $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $applicants = ForgotMatno::select('*')->orderBy('created_at', 'DESC')->get(); 
         return view('pages.forgot_matric',['data'=>$data,'applicants'=>$applicants]);
     }
@@ -118,7 +119,7 @@ class AdminController extends Controller
     }
 
     public function viewSettings(Request $request){
-        $data = [];
+        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         return view('pages.settings',['data'=>$data]);
     }
 
@@ -161,7 +162,7 @@ class AdminController extends Controller
 
 
     public function recommend_app(Request $request){
-        
+
     }
 
 

@@ -232,13 +232,10 @@ class AdminAuthController extends Controller
 
 
    public function logout(){
-        return redirect('/');
-
-    //    if(session()->has('user')){
-    //        session()->pull('user');
-           
-    //        return redirect('/');
-    //    }
+       if(session()->has('user')){
+           session()->pull('user');
+           return redirect('/');
+       }
    }
 
 
@@ -266,7 +263,7 @@ class AdminAuthController extends Controller
 
 
 
-public function auth_user($email = "rafiua@run.edu.ng"){
+public function auth_user($email){
     try {
        $data =  DB::table('admin')
        ->select('id','email',
