@@ -57,7 +57,7 @@ $(document).ready(function ($) {
         var id = $(this).data("id");
         $.get(`/transcript/${id}`, function (data, textStatus, jqXHR) {
             console.log("status: " + textStatus + ", data:" + data);
-            $(".showHTML").html(data.transcript_raw);
+            $(".showHTML").text(data.transcript_raw);
         });
     });
 
