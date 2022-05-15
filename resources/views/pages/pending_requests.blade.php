@@ -59,7 +59,7 @@
                                                                     <button type="button" title="Regenerate" class="btn btn-info w-xs"><i class="mdi mdi-refresh"></i></button>
                                                                 </div>
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
-                                                                    <button type="button" data-id="{{$app->application_id}}" title="Reccommend" class="btn btn-success w-xs reccommend"><i class="mdi mdi-thumb-up"></i></button>
+                                                                    <button type="button" data-id="{{$app->application_id}}" title="Recommend" class="btn btn-success w-xs recommend"><i class="mdi mdi-thumb-up"></i></button>
                                                                     <button type="button" title="Disapprove" class="btn btn-danger w-xs"><i class="mdi mdi-thumb-down"></i></button>
                                                                 </div> 
                                                             </div>
@@ -95,7 +95,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                            <button id="btnReccommend" type="button" class="btn btn-primary waves-effect waves-light">Reccommend</button>
+                            <button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button>
                         </div>
                     </div>
                 </div>
