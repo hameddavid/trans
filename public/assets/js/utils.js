@@ -50,7 +50,7 @@ $(document).ready(function ($) {
     $(".view_transcript").click(function () {
         //$("#editApplicantForm").trigger("reset");
         $("#transcriptModal").modal("show");
-        $("#transcriptModalLabel").html($(this).data("name"));
+        $("#transcriptModalLabel").html($(this).data("name") + "s Transcript");
 
         $("#btnEdit").click(function () {
             $("#editApplicantForm").validate({

@@ -289,7 +289,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <h5>Overflowing text to show scroll behavior</h5>
+                            <h5>...</h5>
                             
                         </div>
                         <div class="modal-footer">

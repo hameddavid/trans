@@ -49,7 +49,6 @@ Route::get('/recommended_applications',[AdminController::class,'viewRecommendedA
 Route::get('/dashboard',[AdminController::class,'adminDashboard']);
 Route::get('/payments',[AdminController::class,'viewPayments']);
 Route::get('/applicants',[AdminController::class,'viewApplicants']);
-Route::get('/applicants',[AdminController::class,'viewApplicants']);
-Route::get('/get_list_of_forgot_matno_request_pending',[AdminController::class,'get_list_of_forgot_matno_request_pending']);
+Route::get('/forgot_matric_num',[AdminController::class,'get_list_of_forgot_matno_request']);
 Route::get('/get_list_of_forgot_matno_request_treated',[AdminController::class,'get_list_of_forgot_matno_request_treated']);
 

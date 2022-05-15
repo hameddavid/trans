@@ -99,9 +99,10 @@ class AdminController extends Controller
         return "Yes";
     }
 
-    public function get_list_of_forgot_matno_request_pending(){
-        $pending_req = ForgotMatno::where("status","PENDING")->select('*')->orderBy('created_at', 'DESC')->get(); 
-        return $pending_req;
+    public function get_list_of_forgot_matno_request(){
+        $data = [];
+        $applicants = ForgotMatno::select('*')->orderBy('created_at', 'DESC')->get(); 
+        return view('pages.forgot_matric',['data'=>$data,'applicants'=>$applicants]);
     }
 
     public function get_list_of_forgot_matno_request_treated(){
