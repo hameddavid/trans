@@ -75,7 +75,7 @@ $(document).ready(function ($) {
             success: function (response) {
                 console.log(response);
                 $(".showHTML").html(
-                    "<textarea>" + response.transcript_raw + "</textarea>"
+                    "<pre>" + response.transcript_raw + "</pre>"
                 );
             },
         });
