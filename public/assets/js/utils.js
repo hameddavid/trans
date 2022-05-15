@@ -74,7 +74,7 @@ $(document).ready(function ($) {
             //dataType: "html",
             success: function (response) {
                 console.log(response);
-                $(".showHTML").text(
+                $(".showHTML").html(
                     "<pre>" + response.transcript_raw + "</pre>"
                 );
             },
