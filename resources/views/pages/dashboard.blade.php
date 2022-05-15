@@ -206,12 +206,12 @@
                                                         <th scope="row">{{$i}} @php $i++ @endphp</th>
                                                         <td>{{$app->recipient}}</td>
                                                         <td>{{$app->matric_number}}</td>
-                                                        <td><span class="badge badge-soft-info">{{$app->app_status}}</span></td>
+                                                        <td>@php echo ($app->app_status == 'APPROVED') ? '<span class="badge badge-soft-success">'.$app->app_status.'</span>' : '<span class="badge badge-soft-danger">'.$app->app_status.'</span>'@endphp</td>
                                                         <td>
                                                             <button type="button" class="btn btn-light btn-sm">View</button>
                                                         </td>
                                                     </tr>
-                                                    @if ($i == 5)
+                                                    @if ($i > 5)
                                                         @break
                                                     @endif
                                                     @endforeach
