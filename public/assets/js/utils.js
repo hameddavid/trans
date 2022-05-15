@@ -55,7 +55,17 @@ $(document).ready(function ($) {
 
     $(".viewForgotMatric").click(function () {
         $("#forgotMatric").modal("show");
-        $("#forgotMatricLabel").html($(this).data("name"));
+        $("#forgotMatricLabel").html($(this).data("firstname") + "'s details");
+
+        $("#name").html(
+            $(this).data("surname") +
+                $(this).data("firstname") +
+                $(this).data("othername")
+        );
+        $("#email").html($(this).data("email"));
+        $("#phone").html($(this).data("phone"));
+        $("#program").html($(this).data("program"));
+        $("#graduation").html($(this).data("date_left"));
 
         $("#btnSendMatric").click(function () {
             $("#sendMatricForm").validate({
