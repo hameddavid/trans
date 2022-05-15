@@ -32,6 +32,7 @@ class AdminController extends Controller
         $approved = Application::where('app_status','APPROVED')->count(); 
         $payments = Payment::where('status_msg','success')->sum('amount'); 
         //$payment_format = number_format($payments);
+        dd($data);
         return view('pages.dashboard',['data'=>$data,'total'=>$total,'recent_payments'=>$recent_payments,'pending'=>$pending,
         'approved'=>$approved,'payments'=>$payments,'recommeded'=>$recommeded]);
     }
