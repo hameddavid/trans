@@ -13,10 +13,14 @@
                 </li>
 
                 <li>
-                    <a href="applicants">
+                    <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="users"></i>
                         <span>Applicants</span>
                     </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="applicants">Registered Users</a></li>
+                        <li><a href="forgot_matric_num">Forgot Matric Number</a></li>
+                    </ul>
                 </li>
 
                 <li>

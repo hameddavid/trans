@@ -48,8 +48,12 @@ Route::get('/pending_applications',[AdminController::class,'viewPendingApplicati
 Route::get('/recommended_applications',[AdminController::class,'viewRecommendedApplications']);
 Route::get('/dashboard',[AdminController::class,'adminDashboard']);
 Route::get('/payments',[AdminController::class,'viewPayments']);
+Route::get('/settings',[AdminController::class,'viewSettings']);
 Route::get('/applicants',[AdminController::class,'viewApplicants']);
-Route::get('/applicants',[AdminController::class,'viewApplicants']);
-Route::get('/get_list_of_forgot_matno_request_pending',[AdminController::class,'get_list_of_forgot_matno_request_pending']);
+Route::get('/forgot_matric_num',[AdminController::class,'get_list_of_forgot_matno_request']);
 Route::get('/get_list_of_forgot_matno_request_treated',[AdminController::class,'get_list_of_forgot_matno_request_treated']);
+Route::get('/transcript/{id}',[AdminController::class,'getHtmlTranscript']);
+Route::get('/getTranscript',[AdminController::class,'getHtmlTranscript']);
+Route::get('/logout',[AdminAuthController::class,'logout']);
+
 

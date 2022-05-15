@@ -23,7 +23,8 @@ class AdminController extends Controller
 
     public function adminDashboard(Request $request){
         $data = [];
-        $total = Application::select('*')->latest()->take(5)->get(); 
+        $total = Application::join('applicants', 'applications.applicant_id', '=', 'applicants.id')
+            ->select('applications.*','applicants.surname','applicants.firstname')->get(); 
         $recent_payments = Payment::select('*')->latest()->take(5)->get(); 
         $pending = Application::where('app_status','PENDING')->count(); 
         $recommeded = Application::where('app_status','RECOMMEDED')->count(); 
@@ -98,14 +99,27 @@ class AdminController extends Controller
         return "Yes";
     }
 
-    public function get_list_of_forgot_matno_request_pending(){
-        $pending_req = ForgotMatno::where("status","PENDING")->select('*')->orderBy('created_at', 'DESC')->get(); 
-        return $pending_req;
+    public function get_list_of_forgot_matno_request(){
+        $data = [];
+        $applicants = ForgotMatno::select('*')->orderBy('created_at', 'DESC')->get(); 
+        return view('pages.forgot_matric',['data'=>$data,'applicants'=>$applicants]);
     }
 
     public function get_list_of_forgot_matno_request_treated(){
         $pending_req = ForgotMatno::where("status","TREATED")->select('*')->orderBy('created_at', 'DESC')->get(); 
         return $pending_req;
+    }
+
+    public function getHtmlTranscript(Request $request, $id){
+        $apps = Application::where('application_id', $id)
+            ->select('transcript_raw')->first();
+        $decoded_transcript = html_entity_decode($apps->transcript_raw);
+        return $decoded_transcript;
+    }
+
+    public function viewSettings(Request $request){
+        $data = [];
+        return view('pages.settings',['data'=>$data]);
     }
 
 
@@ -122,7 +136,7 @@ class AdminController extends Controller
             Dear ' .$applicant->surname.' '. $applicant->firstname.' ,
             Sequel to the FORGOT MATRIC NUMBER request you made on '. $applicant->created_at.', 
             it is hereby resolved and this is your Matric Number : '. $request->retrieve_matno .' <br><br>
-            Further complaint, send email to transcript@run.edu.ng .<br>
+            For further complaint, send email to transcript@run.edu.ng or chat with us via the Transcript Portal.<br>
             <br>
             OUR REDEEMER IS STRONG!
             <br>

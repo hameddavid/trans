@@ -41,12 +41,12 @@ class ApplicantionController extends Controller
                      $new_application = new Application();
                      $new_application->matric_number   = $request->matno;
                      $new_application->applicant_id  = $request->userid;
-                     $new_application->delivery_mode = $request->mode ? $request->mode : 'soft';
+                     $new_application->delivery_mode = $request->mode;
                      $new_application->transcript_type = $type;
-                     $new_application->address = $request->address ? $request->address : $applicant->email;
-                     $new_application->destination = $request->destination ? $request->destination : $applicant->email;
-                     $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
-                     $new_application->app_status = 10; // default status
+                     $new_application->address = $request->address ? $request->address : $request->email; //use email that was entered not applicant email
+                     $new_application->destination = $request->destination ? $request->destination : 'Official Soft Copy';
+                     $new_application->recipient = $request->recipient;
+                     $new_application->app_status = 'PENDING'; // default status
                      $new_application->used_token = $request->used_token;
                      $new_application->transcript_raw = view('pages.trans', ['data'=>$trans_raw]);
                      $save_app = $new_application->save();
@@ -130,9 +130,9 @@ class ApplicantionController extends Controller
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
-            $success_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'10','applicant_id'=>$request->userid])->count();
-            $pend_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'20','applicant_id'=>$request->userid])->count();
-            $failed_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'30','applicant_id'=>$request->userid])->count();
+            $success_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'success','applicant_id'=>$request->userid])->count();
+            $pend_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
+            $failed_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
             $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->get();
             return ['success_app'=>$success_app,'pend_app'=>$pend_app,'failed_app'=>$failed_app,'payment'=>$payment];
             

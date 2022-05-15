@@ -37,6 +37,7 @@ class AdminAuthController extends Controller
        }
     }
 
+
     public function auth_login(){
         return view('auth.login');
     }
@@ -232,15 +233,13 @@ class AdminAuthController extends Controller
 
 
    public function logout(){
-       if(session()->has('user')){
-           session()->pull('user');
-           if (isset($_COOKIE['pin']) && isset($_COOKIE['app_type'])) {
-               unset($_COOKIE['pin']); setcookie('pin', '', time() - 3600, '/');
-               unset($_COOKIE['app_type']); setcookie('app_type', '', time() - 3600, '/');
-              // setcookie('key', '', time() - 3600, '/'); // empty value and old timestamp
-           }
-           return redirect('/');
-       }
+        return redirect('/');
+
+    //    if(session()->has('user')){
+    //        session()->pull('user');
+           
+    //        return redirect('/');
+    //    }
    }
 
 

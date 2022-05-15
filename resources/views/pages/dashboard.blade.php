@@ -204,13 +204,16 @@
                                                     @foreach($total as $app)
                                                     <tr>
                                                         <th scope="row">{{$i}} @php $i++ @endphp</th>
-                                                        <td>{{$app->recipient}}</td>
+                                                        <td>{{$app->surname.' '.$app->firstname}}</td>
                                                         <td>{{$app->matric_number}}</td>
-                                                        <td><span class="badge badge-soft-info">{{$app->app_status}}</span></td>
+                                                        <td>@php echo ($app->app_status == 'APPROVED') ? '<span class="badge badge-soft-success">'.$app->app_status.'</span>' : '<span class="badge badge-soft-danger">'.$app->app_status.'</span>'@endphp</td>
                                                         <td>
-                                                            <button type="button" class="btn btn-light btn-sm">View</button>
+                                                            <button type="button" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-light btn-sm view_transcript">View</button>
                                                         </td>
                                                     </tr>
+                                                    @if ($i > 5)
+                                                        @break
+                                                    @endif
                                                     @endforeach
                                                 </tbody>
                                             </table>
@@ -254,7 +257,6 @@
                                                         <th scope="row">{{$i}} @php $i++ @endphp</th>
                                                         <td>{{$payment->names}}</td>
                                                         <td>{{$payment->amount}}</td>
-                                                        <!-- <td><span class="badge badge-soft-success">{{$payment->status_msg}}</span></td> -->
                                                         <td>@php echo ($payment->status_msg == 'success') ? '<span class="badge badge-soft-success">'.$payment->status_msg.'</span>' : '<span class="badge badge-soft-danger">'.$payment->status_msg.'</span>'@endphp</td>
                                                     </tr>
                                                     @endforeach
@@ -275,7 +277,26 @@
 
                 @include("partials.footer")
             </div>
-            <!-- end main content-->        
+            <!-- end main content-->     
+            
+            <!-- Transcript modal -->
+            <div id="transcriptModal" class="modal fade" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="transcriptModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body showHTML">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary waves-effect waves-light">Reccommend</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /modal -->
 
         <!-- apexcharts -->
         <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
@@ -285,6 +306,9 @@
         <script src="assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js"></script>
         <!-- dashboard init -->
         <script src="assets/js/pages/dashboard.init.js"></script>
+        <script src="assets/js/pages/modal.init.js"></script>
+        <script src="assets/js/validation.min.js"></script>
+        <script src="assets/js/utils.js"></script>
     @endsection
 
         

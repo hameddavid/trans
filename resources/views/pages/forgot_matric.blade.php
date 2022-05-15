@@ -1,7 +1,7 @@
 @extends("layout.master") 
 
     @section("title")
-      Applicants
+      Forgot Matric Number
     @endsection
 
     @section("content")
@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Applicants</h4>
+                                    <h4 class="mb-sm-0 font-size-18">Applicants (Forgot Matric Number)</h4>
                                 </div>
                             </div>
                         </div>
@@ -26,11 +26,12 @@
                                             <thead>
                                                 <tr>
                                                     <th>S/N</th>
-                                                    <th>Name</th>
-                                                    <th>Matric Number</th>
-                                                    <th>Email</th>
-                                                    <th>Phone number</th>
-                                                    <th>Date</th>
+                                                    <th>Surname</th>
+                                                    <th>Firstname</th>
+                                                    <th>Othername</th>
+                                                    <th>Programme</th>
+                                                    <th>Graduation Year</th>
+                                                    <th>Status</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -39,16 +40,23 @@
                                                 @foreach($applicants as $applicant)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td>{{$applicant->surname.' '.$applicant->firstname}}</td>
-                                                    <td>{{$applicant->matric_number}}</td>
-                                                    <td>{{$applicant->email}}</td>
-                                                    <td>{{$applicant->mobile}}</td>
-                                                    <td>{{ date("d M Y", strtotime($applicant->created_at)) }}</td>
+                                                    <td>{{$applicant->surname}}</td>
+                                                    <td>{{$applicant->firstname}}</td>
+                                                    <td>{{$applicant->othername}}</td>
+                                                    <td>{{$applicant->program}}</td>
+                                                    <td>{{$applicant->date_left}}</td>
+                                                    <td>@php echo ($applicant->status == 'TREATED') ? '<span class="badge badge-soft-success">'.$applicant->status.'</span>' : '<span class="badge badge-soft-danger">'.$applicant->status.'</span>'@endphp</td>
                                                     <td>
                                                         <div class="btn-group btn-group-example mb-3" role="group">
-                                                            <button type="button" data-email="{{$applicant->email}}" data-matric="{{$applicant->matric_number}}" data-phone="{{$applicant->mobile}}" data-othernames="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="Edit" class="btn btn-secondary w-xs editApplicant">
-                                                                <i class="bx bx-edit-alt"></i> Edit
+                                                            @if($applicant->status == 'PENDING')
+                                                            <button type="button" data-date_left="{{$applicant->date_left}}" data-program="{{$applicant->program}}" data-email="{{$applicant->email}}" data-othername="{{$applicant->othername}}" data-phone="{{$applicant->phone}}" data-firstname="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="View" class="btn btn-secondary w-xs viewForgotMatric">
+                                                                <i class="bx bx-show-alt"></i> View
                                                             </button>
+                                                            @else
+                                                            <button type="button" disabled class="btn btn-secondary w-xs">
+                                                                <i class="bx bx-show-alt"></i> View
+                                                            </button>
+                                                            @endif
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -69,40 +77,36 @@
             </div>
             <!-- end main content-->
 
-            <div class="modal fade" id="applicantModal" tabindex="-1" aria-labelledby="applicantModalLabel" aria-hidden="true">
+            <div class="modal fade" id="forgotMatric" tabindex="-1" aria-labelledby="forgotMatricLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="applicantModalLabel"></h5>
+                        <div class="modal-header border-primary">
+                            <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Send Matric Number</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form method="POST" id="editApplicantForm">
+                        <div class="col-lg-12">
+                            <div class="card border border-primary">
+                                <div class="card-body">
+                                    <p class="card-text">Enter the correct matric number for this applicant and click on the send button.</p>
+                                    <label for="name" class="col-form-label">Fullname: <span id="name"></span></label><hr>
+                                    <label for="email" class="col-form-label">Email: <span id="email"></span></label><hr>
+                                    <label for="phone" class="col-form-label">Phone number: <span id="phone"></span></label><hr>
+                                    <label for="program" class="col-form-label">Programme: <span id="program"></span></label><hr>
+                                    <label for="graduation" class="col-form-label">Year of Graduation: <span id="graduation"></span></label>
+                                </div>
+                            </div>
+                        </div>
+                        <form method="POST" id="sendMatricForm">
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="surname" class="col-form-label">Surname:</label>
-                                    <input type="text" class="form-control" name="surname" id="surname" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="othernames" class="col-form-label">Othernames:</label>
-                                    <input type="text" class="form-control" name="othernames" id="othernames" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="matric" class="col-form-label">Matric number:</label>
-                                    <input type="text" class="form-control" name="matric" id="matric" readonly required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="email" class="col-form-label">Email:</label>
-                                    <input type="email" class="form-control" name="email" id="email" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="phone" class="col-form-label">Phone number:</label>
-                                    <input type="tel" class="form-control" name="phone" id="phone" required>
+                                    <label for="matric_number" class="col-form-label">Matric Number:</label>
+                                    <input type="text" class="form-control" name="matric_number" id="matric_number" placeholder="Enter matric number" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" id="btnEdit" class="btn btn-danger">Update</button>
+                                <button type="submit" id="btnSendMatric" class="btn btn-success">Send</button>
                             </div>
                         </form>
                     </div>
