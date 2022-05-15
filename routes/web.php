@@ -39,7 +39,7 @@ use App\Http\Controllers\Admin\AdminController;
 
 
 
-Route::get('/',[AdminAuthController::class,'auth_login'])->middleware('AdminAuth');
+Route::get('/',[AdminAuthController::class,'auth_login'])->middleware('adminauth');
 Route::post('admin_login_auth',[AdminAuthController::class,'login']);
 
 
