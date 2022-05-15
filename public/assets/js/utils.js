@@ -51,9 +51,12 @@ $(document).ready(function ($) {
     });
 
     $(".view_transcript").click(function () {
-        //$("#editApplicantForm").trigger("reset");
         $("#transcriptModal").modal("show");
-        $("#transcriptModalLabel").html($(this).data("name") + "s Transcript");
+        $("#transcriptModalLabel").html($(this).data("name") + "'s Transcript");
+        var id = $(this).data("id");
+        $.get(`/transcript/${id}`, function (data, textStatus, jqXHR) {
+            console.log("status: " + textStatus + ", data:" + data);
+        });
     });
 
     $(".viewForgotMatric").click(function () {

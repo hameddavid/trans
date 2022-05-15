@@ -110,6 +110,12 @@ class AdminController extends Controller
         return $pending_req;
     }
 
+    public function getHtmlTranscript(Request $request, $id){
+        $apps = Application::where('application_id', $id)
+            ->select('transcript_raw')->get();
+        return $apps;
+    }
+
 
     public function treat_forgot_matno_request(Request $request){
 

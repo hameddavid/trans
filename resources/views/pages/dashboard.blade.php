@@ -208,7 +208,7 @@
                                                         <td>{{$app->matric_number}}</td>
                                                         <td>@php echo ($app->app_status == 'APPROVED') ? '<span class="badge badge-soft-success">'.$app->app_status.'</span>' : '<span class="badge badge-soft-danger">'.$app->app_status.'</span>'@endphp</td>
                                                         <td>
-                                                            <button type="button" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-light btn-sm view_transcript">View</button>
+                                                            <button type="button" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-light btn-sm view_transcript">View</button>
                                                         </td>
                                                     </tr>
                                                     @if ($i > 5)
@@ -257,7 +257,6 @@
                                                         <th scope="row">{{$i}} @php $i++ @endphp</th>
                                                         <td>{{$payment->names}}</td>
                                                         <td>{{$payment->amount}}</td>
-                                                        <!-- <td><span class="badge badge-soft-success">{{$payment->status_msg}}</span></td> -->
                                                         <td>@php echo ($payment->status_msg == 'success') ? '<span class="badge badge-soft-success">'.$payment->status_msg.'</span>' : '<span class="badge badge-soft-danger">'.$payment->status_msg.'</span>'@endphp</td>
                                                     </tr>
                                                     @endforeach
@@ -288,7 +287,7 @@
                             <h5 class="modal-title" id="transcriptModalLabel"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body showHTML">
                             <h5>...</h5>
                             
                         </div>
