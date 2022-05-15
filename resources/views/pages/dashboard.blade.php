@@ -5,7 +5,6 @@
     @endsection
 
     @section("content")
-        {{$data}}
             <div class="main-content">
 
                 <div class="page-content">
