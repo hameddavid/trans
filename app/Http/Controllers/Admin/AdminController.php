@@ -15,7 +15,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-         $this->middleware('adminauth');
+         //$this->middleware('adminauth');
         // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
@@ -169,7 +169,7 @@ class AdminController extends Controller
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if($data->role != '200'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"]);}
-        $app = Application::where(['id'=> $request->id, 'app_status'=>'PENDING'])->first();
+        $app = Application::where(['application_id'=> $request->id, 'app_status'=>'PENDING'])->first();
         if($app){
             $app->app_status = "RECOMMENDED";
             $app->recommended_by = $data->email;
@@ -192,7 +192,7 @@ class AdminController extends Controller
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         
         if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"]);}
-        $app = Application::where(['id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
+        $app = Application::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
         if($app){
             $app->app_status = "PENDING";
             $app->recommended_by = $data->email;
@@ -214,7 +214,7 @@ class AdminController extends Controller
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"]);}
-        $app = Application::where(['id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
+        $app = Application::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
         if($app){
             $app->app_status = "APPROVED";
             $app->approved_by = $data->email;
@@ -225,16 +225,15 @@ class AdminController extends Controller
 
     }
     public function regenerate_transcript(Request $request){
-        return "Yes";
         $request->validate([ 'id'=>'required|string',] );
         try {
             //code...
         } catch (\Throwable $th) {
             //throw $th;
         }
-        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-        if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"]);}
-        $app = Application::where(['id'=> $request->id])->first();
+        // $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+        // if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"]);}
+        $app = Application::where(['application_id'=> $request->id])->first();
         $request->merge(['matno' => $app->matric_number]);
         return $request;
         if($app){
