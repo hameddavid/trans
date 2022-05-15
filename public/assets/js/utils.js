@@ -54,10 +54,14 @@ $(document).ready(function ($) {
         $(".showHTML").html("");
         $("#transcriptModal").modal("show");
         $("#transcriptModalLabel").html($(this).data("name") + "'s Transcript");
-        var id = $(this).data("id");
+        id = $(this).data("id");
 
         $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
             console.log(data);
+        });
+
+        $("#btnReccommend").click(function () {
+            reccommendTranscript(id);
         });
     });
 
@@ -171,4 +175,55 @@ $(document).ready(function ($) {
             });
         }
     });
+
+    $(".reccommend").click(function () {
+        id = $(this).data("id");
+        reccommendTranscript(id);
+    });
+
+    const reccommendTranscript = (id) => {
+        $.ajax({
+            type: "POST",
+            url: "api/reccommend",
+            data: { id: id },
+            dataType: "json",
+            beforeSend: function () {
+                $("#btnReccommend").html(
+                    '<i class="fa fa-spinner fa-spin"></i>'
+                );
+            },
+            success: function (response) {
+                console.log(response);
+                $("#btnReccommend").html("Reccommended");
+                alertify.success(response.message);
+            },
+            error: function (response) {
+                console.log(response);
+                $("#btnReccommend").html("Reccommend");
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
+
+    const approveTranscript = (id) => {
+        $.ajax({
+            type: "POST",
+            url: "api/approve",
+            data: { id: id },
+            dataType: "json",
+            beforeSend: function () {
+                $("#btnApprove").html('<i class="fa fa-spinner fa-spin"></i>');
+            },
+            success: function (response) {
+                console.log(response);
+                $("#btnApprove").html("Approved");
+                alertify.success(response.message);
+            },
+            error: function (response) {
+                console.log(response);
+                $("#btnApprove").html("Approve");
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
 });
