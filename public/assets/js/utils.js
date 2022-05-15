@@ -55,7 +55,6 @@ $(document).ready(function ($) {
 
     $(".viewForgotMatric").click(function () {
         $("#forgotMatric").modal("show");
-        $("#forgotMatricLabel").html($(this).data("firstname") + "'s details");
 
         $("#name").html(
             $(this).data("surname") +

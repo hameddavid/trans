@@ -74,16 +74,15 @@
             <div class="modal fade" id="forgotMatric" tabindex="-1" aria-labelledby="forgotMatricLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header border-primary">
                             <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Send Matric Number</h5>
-                            <!-- <h5 class="modal-title" id="forgotMatricLabel"></h5> -->
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="col-lg-12">
                             <div class="card border border-primary">
-                                <div class="card-header bg-transparent border-primary">
+                                <!-- <div class="card-header bg-transparent border-primary">
                                     <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Send Matric Number</h5>
-                                </div>
+                                </div> -->
                                 <div class="card-body">
                                     <p class="card-text">Enter the correct matric number for this applicant and click on the send button.</p>
                                     <label for="name" class="col-form-label">Fullname: <span id="name"></span></label><hr>
