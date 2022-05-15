@@ -6,7 +6,7 @@
 
     @section("content")
             <div class="main-content">
-                dd($data->role);
+                {{dd($data->role)}}
                 <div class="page-content">
                     <div class="container-fluid">
 
