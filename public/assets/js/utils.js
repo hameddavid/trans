@@ -51,16 +51,23 @@ $(document).ready(function ($) {
         //$("#editApplicantForm").trigger("reset");
         $("#transcriptModal").modal("show");
         $("#transcriptModalLabel").html($(this).data("name") + "s Transcript");
+    });
 
-        $("#btnEdit").click(function () {
-            $("#editApplicantForm").validate({
-                submitHandler: submitForm,
+    $(".editApplicant").click(function () {
+        $("#forgotMatric").modal("show");
+        $("#forgotMatricLabel").html($(this).data("name"));
+
+        $("#forgotMatricLabel").html($(this).data("name"));
+
+        $("#btnSendMatric").click(function () {
+            $("#sendMatricForm").validate({
+                submitHandler: submitMatricForm,
             });
 
-            function submitForm() {
-                var formData = $("#editApplicantForm").serialize();
+            function submitMatricForm() {
+                var formData = $("#sendMatricForm").serialize();
                 var type = "POST";
-                var ajaxurl = "edit_applicant";
+                var ajaxurl = "api/treat_forgot_matno_request";
 
                 $.ajax({
                     type: type,
@@ -68,18 +75,18 @@ $(document).ready(function ($) {
                     data: formData,
                     dataType: "json",
                     beforeSend: function () {
-                        $("#btnEdit").html(
+                        $("#btnSendMatric").html(
                             '<i class="fa fa-spinner fa-spin"></i>'
                         );
                     },
                     success: function (response) {
                         console.log(response);
-                        $("#btnEdit").html("Update");
+                        $("#btnSendMatric").html("Send");
                         alertify.success(response.message);
                     },
                     error: function (response) {
                         console.log(response);
-                        $("#btnEdit").html("Update");
+                        $("#btnSendMatric").html("Send");
                         alertify.error(response.responseJSON.message);
                     },
                 });

@@ -124,7 +124,7 @@ class AdminController extends Controller
             Dear ' .$applicant->surname.' '. $applicant->firstname.' ,
             Sequel to the FORGOT MATRIC NUMBER request you made on '. $applicant->created_at.', 
             it is hereby resolved and this is your Matric Number : '. $request->retrieve_matno .' <br><br>
-            Further complaint, send email to transcript@run.edu.ng .<br>
+            For further complaint, send email to transcript@run.edu.ng or chat with us via the Transcript Portal.<br>
             <br>
             OUR REDEEMER IS STRONG!
             <br>
