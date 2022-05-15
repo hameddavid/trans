@@ -36,7 +36,7 @@ $(document).ready(function ($) {
                 error: function (response) {
                     console.log(response);
                     $("#btnLogin").html("Login");
-                    alertify.warning(response.responseJSON.message);
+                    alertify.error(response.responseJSON.message);
                 },
             });
         }

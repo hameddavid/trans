@@ -60,8 +60,8 @@ $(document).ready(function ($) {
             console.log(data);
         });
 
-        $("#btnReccommend").click(function () {
-            reccommendTranscript(id);
+        $("#btnRecommend").click(function () {
+            recommendTranscript(id);
         });
     });
 
@@ -176,30 +176,35 @@ $(document).ready(function ($) {
         }
     });
 
-    $(".reccommend").click(function () {
+    $(".recommend").click(function () {
         id = $(this).data("id");
-        reccommendTranscript(id);
+        recommendTranscript(id);
     });
 
-    const reccommendTranscript = (id) => {
+    $(".approve").click(function () {
+        id = $(this).data("id");
+        approveTranscript(id);
+    });
+
+    const recommendTranscript = (id) => {
         $.ajax({
             type: "POST",
-            url: "api/reccommend",
+            url: "api/recommend",
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
-                $("#btnReccommend").html(
+                $("#btnRecommend").html(
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
             },
             success: function (response) {
                 console.log(response);
-                $("#btnReccommend").html("Reccommended");
+                $("#btnRecommend").html("Recommended");
                 alertify.success(response.message);
             },
             error: function (response) {
                 console.log(response);
-                $("#btnReccommend").html("Reccommend");
+                $("#btnRecommend").html("Recommend");
                 alertify.error(response.responseJSON.message);
             },
         });
