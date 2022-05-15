@@ -5,9 +5,7 @@
     @endsection
 
     @section("content")
-    @if($data)
         {{$data}}
-    @endif
             <div class="main-content">
 
                 <div class="page-content">
