@@ -130,9 +130,9 @@ class ApplicantionController extends Controller
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
-            $success_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'10','applicant_id'=>$request->userid])->count();
-            $pend_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'20','applicant_id'=>$request->userid])->count();
-            $failed_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'30','applicant_id'=>$request->userid])->count();
+            $success_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'success','applicant_id'=>$request->userid])->count();
+            $pend_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
+            $failed_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
             $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->get();
             return ['success_app'=>$success_app,'pend_app'=>$pend_app,'failed_app'=>$failed_app,'payment'=>$payment];
             
