@@ -258,7 +258,7 @@ class ApplicantAuthController extends Controller
       
         $app = Applicant::where('email',$request->email)->first();
         if($app){
-          if(!Hash::check($request->old_pass, $app->password)) {return response(['status'=>'failed','message' => 'Old password NOT match!'], 401);}
+          if(!Hash::check($request->old_pass, $app->password)) {return response(['status'=>'failed','message' => 'Incorrect current password!'], 401);}
           $app->password =  bcrypt($request->password);
           if($app->save()){
             return response(['status'=>'success','message'=>'Password successfully updated'], 200);
