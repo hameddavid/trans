@@ -29,8 +29,6 @@
                                                     <th>Surname</th>
                                                     <th>Firstname</th>
                                                     <th>Othername</th>
-                                                    <th>Email</th>
-                                                    <th>Phone</th>
                                                     <th>Programme</th>
                                                     <th>Graduation Year</th>
                                                     <th>Status</th>
@@ -45,8 +43,6 @@
                                                     <td>{{$applicant->surname}}</td>
                                                     <td>{{$applicant->firstname}}</td>
                                                     <td>{{$applicant->othername}}</td>
-                                                    <td>{{$applicant->email}}</td>
-                                                    <td>{{$applicant->phone}}</td>
                                                     <td>{{$applicant->program}}</td>
                                                     <td>{{$applicant->date_left}}</td>
                                                     <td>{{$applicant->status}}</td>
