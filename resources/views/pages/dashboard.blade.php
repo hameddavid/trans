@@ -291,8 +291,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                            @if($data->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button>@endif
-                            @if($data->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
+                            @if($data[role] == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button>@endif
+                            @if($data[role] == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
                         </div>
                     </div>
                 </div>
