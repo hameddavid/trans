@@ -55,11 +55,21 @@ $(document).ready(function ($) {
         $("#transcriptModal").modal("show");
         $("#transcriptModalLabel").html($(this).data("name") + "'s Transcript");
         var id = $(this).data("id");
-        $.get(`/transcript/${id}`, function (data, textStatus, jqXHR) {
-            console.log("status: " + textStatus + ", data:" + data);
-            $(".showHTML").html(data.transcript_raw);
-            //$(".showHTML").html("<code>" + data.transcript_raw + "</code>");
-        });
+
+        // $.get(`/transcript/${id}`, function (data, textStatus, jqXHR) {
+        //     console.log("status: " + textStatus + ", data:" + data);
+        //     $(".showHTML").html(data.transcript_raw);
+        //     $(".showHTML").html("<code>" + data.transcript_raw + "</code>");
+        // });
+
+        $(".showHTML").load(
+            "getTranscript", // url
+            { id: id }, // data
+            function (data, status, jqXGR) {
+                // callback function
+                alert("data loaded");
+            }
+        );
     });
 
     $(".viewForgotMatric").click(function () {
