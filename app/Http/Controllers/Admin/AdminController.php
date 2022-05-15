@@ -160,6 +160,9 @@ class AdminController extends Controller
     }
 
 
+    public function recommend_app(Request $request){
+        
+    }
 
 
 
@@ -193,5 +196,5 @@ class AdminController extends Controller
 
 
 
-
+//class 
 }

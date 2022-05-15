@@ -30,7 +30,7 @@ class AdminAuthController extends Controller
        if(!$app){return response(['status'=>'fail','message'=>'We do not recognize the supplied email'],401); }
        else{
              if(Hash::check($request->password,$app->password)){
-            //$request->session()->put('user',$app->email);
+            $request->session()->put('user',$app->email);
             return response(['status'=>'success','message'=>'Login successfully'],201);
            }else{return response(['status'=>'fail','message'=>'incorrect email/password!'],401); }
            
@@ -62,7 +62,7 @@ class AdminAuthController extends Controller
             $app->phone = $request->phone;
             $app->email = $request->email;
             $app->password = Hash::make($auto_pass);
-            $app->role = $request->role;
+            $app->role = $request->role;  // 200 => default,  300 => deputy reg
             $app->title = $request->title;
             $save = $app->save();
             if($save){
