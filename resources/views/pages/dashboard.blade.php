@@ -211,6 +211,9 @@
                                                             <button type="button" class="btn btn-light btn-sm">View</button>
                                                         </td>
                                                     </tr>
+                                                    @if ($i == 5)
+                                                        @break
+                                                    @endif
                                                     @endforeach
                                                 </tbody>
                                             </table>

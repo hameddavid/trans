@@ -23,7 +23,7 @@ class AdminController extends Controller
 
     public function adminDashboard(Request $request){
         $data = [];
-        $total = Application::select('*')->latest()->take(5)->get(); 
+        $total = Application::select('*')->get(); 
         $recent_payments = Payment::select('*')->latest()->take(5)->get(); 
         $pending = Application::where('app_status','PENDING')->count(); 
         $recommeded = Application::where('app_status','RECOMMEDED')->count(); 
