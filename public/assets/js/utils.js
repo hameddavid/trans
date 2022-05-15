@@ -51,12 +51,13 @@ $(document).ready(function ($) {
     });
 
     $(".view_transcript").click(function () {
+        $(".showHTML").html("");
         $("#transcriptModal").modal("show");
         $("#transcriptModalLabel").html($(this).data("name") + "'s Transcript");
         var id = $(this).data("id");
         $.get(`/transcript/${id}`, function (data, textStatus, jqXHR) {
             console.log("status: " + textStatus + ", data:" + data);
-            $(".showHTML").append(data.transcript_raw);
+            $(".showHTML").html(data.transcript_raw);
         });
     });
 
