@@ -113,8 +113,8 @@ class AdminController extends Controller
     public function getHtmlTranscript(Request $request, $id){
         $apps = Application::where('application_id', $id)
             ->select('transcript_raw')->first();
-        //$decoded_transcript = html_entity_decode($apps);
-        $decoded_transcript = htmlentities($apps->transcript_raw);
+        $decoded_transcript = html_entity_decode($apps);
+        //$decoded_transcript = htmlentities($apps->transcript_raw);
         return $decoded_transcript;
     }
 
