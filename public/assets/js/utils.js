@@ -76,12 +76,13 @@ $(document).ready(function ($) {
             function submitMatricForm() {
                 var type = "POST";
                 var ajaxurl = "api/treat_forgot_matno_request";
+                matric = $("#matric_number").val();
 
                 $.ajax({
                     type: type,
                     url: ajaxurl,
                     data: {
-                        retrieve_matno: $("#matric_number").val,
+                        retrieve_matno: matric,
                         email: email,
                     },
                     dataType: "json",
