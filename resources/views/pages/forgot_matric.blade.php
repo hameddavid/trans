@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Applicants</h4>
+                                    <h4 class="mb-sm-0 font-size-18">Applicants (Forgot Matric Number)</h4>
                                 </div>
                             </div>
                         </div>
@@ -45,11 +45,11 @@
                                                     <td>{{$applicant->othername}}</td>
                                                     <td>{{$applicant->program}}</td>
                                                     <td>{{$applicant->date_left}}</td>
-                                                    <td>{{$applicant->status}}</td>
+                                                    <td>@php echo ($applicant->status == 'TREATED') ? '<span class="badge badge-soft-success">'.$applicant->status.'</span>' : '<span class="badge badge-soft-danger">'.$applicant->status.'</span>'@endphp</td>
                                                     <td>
                                                         <div class="btn-group btn-group-example mb-3" role="group">
-                                                            <button type="button" data-email="{{$applicant->email}}" data-matric="{{$applicant->matric_number}}" data-phone="{{$applicant->mobile}}" data-othernames="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="Edit" class="btn btn-secondary w-xs edit">
-                                                                <i class="bx bx-edit-alt"></i> View
+                                                            <button type="button" data-date_left="{{$applicant->date_left}}" data-program="{{$applicant->program}}" data-email="{{$applicant->email}}" data-othername="{{$applicant->othername}}" data-phone="{{$applicant->phone}}" data-firstname="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="View" class="btn btn-secondary w-xs viewForgotMatric">
+                                                                <i class="bx bx-show-alt"></i> View
                                                             </button>
                                                         </div>
                                                     </td>

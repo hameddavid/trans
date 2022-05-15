@@ -46,7 +46,7 @@
                                                     <td>{{ date("d M Y", strtotime($applicant->created_at)) }}</td>
                                                     <td>
                                                         <div class="btn-group btn-group-example mb-3" role="group">
-                                                            <button type="button" data-email="{{$applicant->email}}" data-matric="{{$applicant->matric_number}}" data-phone="{{$applicant->mobile}}" data-othernames="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="Edit" class="btn btn-secondary w-xs edit">
+                                                            <button type="button" data-email="{{$applicant->email}}" data-matric="{{$applicant->matric_number}}" data-phone="{{$applicant->mobile}}" data-othernames="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="Edit" class="btn btn-secondary w-xs editApplicant">
                                                                 <i class="bx bx-edit-alt"></i> Edit
                                                             </button>
                                                         </div>

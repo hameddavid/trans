@@ -1,5 +1,5 @@
 $(document).ready(function ($) {
-    $(".edit").click(function () {
+    $(".editApplicant").click(function () {
         $("#editApplicantForm").trigger("reset");
         $("#applicantModal").modal("show");
         $("#applicantModalLabel").html($(this).data("name"));
