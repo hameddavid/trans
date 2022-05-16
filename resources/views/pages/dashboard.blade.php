@@ -6,7 +6,7 @@
 
     @section("content")
             <div class="main-content">
-
+            {{dd($data->role)}} 
                 <div class="page-content">
                     <div class="container-fluid">
 
@@ -224,7 +224,6 @@
                                 <!-- end card -->
                             </div>
                             <!-- end col -->
-                            {{dd($data->role)}}  
 
                             <div class="col-xl-6">
                                 <div class="card">
