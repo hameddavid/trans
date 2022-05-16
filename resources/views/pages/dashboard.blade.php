@@ -274,11 +274,11 @@
                     <!-- container-fluid -->
                 </div>
                 <!-- End Page-content -->
+                {{dd($data->role)}}  
 
                 @include("partials.footer")
             </div>
             <!-- end main content-->   
-            {{dd($data->role)}}  
             
             <!-- Transcript modal -->
             <div id="transcriptModal" class="modal fade" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
