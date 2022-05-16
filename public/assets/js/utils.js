@@ -57,6 +57,7 @@ $(document).ready(function ($) {
     });
 
     $(".view_transcript").click(function () {
+        $("#btnApprove").hide();
         $(".showHTML").html("");
         $("#transcriptModal").modal("show");
         $("#transcriptModalLabel").html($(this).data("name") + "'s Transcript");
@@ -64,10 +65,11 @@ $(document).ready(function ($) {
         stat = $(this).data("status");
         if (stat === "APPROVED") {
             $("#btnRecommend").hide();
-        }
-        if (stat === "RECOMMENDED") {
+        } else if (stat === "RECOMMENDED") {
             $("#btnApprove").show();
             $("#btnRecommend").hide();
+        } else {
+            console.log(stat);
         }
 
         $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
@@ -204,6 +206,11 @@ $(document).ready(function ($) {
         approveTranscript(id);
     });
 
+    $(".regenerate").click(function () {
+        id = $(this).data("id");
+        regenerateTranscript(id);
+    });
+
     const recommendTranscript = (id) => {
         $.ajax({
             type: "POST",
@@ -255,6 +262,29 @@ $(document).ready(function ($) {
                 console.log(response);
                 $("#btnApprove").html("Approve");
                 $("#btnApprove").prop("disabled", false);
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
+
+    const regenerateTranscript = (id) => {
+        $.ajax({
+            type: "POST",
+            url: "regenerate_transcript  ",
+            data: { id: id },
+            dataType: "json",
+            beforeSend: function () {
+                alert("Regenerate Transcript?");
+            },
+            success: function (response) {
+                console.log(response);
+                alertify.success(response.message);
+                setTimeout(function () {
+                    location.reload();
+                }, 2800);
+            },
+            error: function (response) {
+                console.log(response);
                 alertify.error(response.responseJSON.message);
             },
         });

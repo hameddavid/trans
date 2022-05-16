@@ -67,8 +67,8 @@
                                                             </a>
                                                             <div class="dropdown-menu">
                                                                 <div class="btnJustify2">
-                                                                    <button type="button" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-secondary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
-                                                                    <button type="button" class="btn btn-info waves-effect btn-label waves-light"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
+                                                                    <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-secondary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
+                                                                    <button type="button" data-id="{{$app->application_id}}" class="btn btn-info waves-effect btn-label waves-light regenerate"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
                                                                 </div> 
                                                                 <div class="btnJustify2 p-3">
                                                                     @if($data->role == 300)<button type="button" data-id="{{$app->application_id}}" class="btn btn-success waves-effect btn-label waves-light approve"><i class="bx bx-check label-icon"></i>Approve</button>@endif
@@ -107,6 +107,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                            @if($data->role == 200)<button id="btnDerecommend" type="button" class="btn btn-primary waves-effect waves-light">Cancel Recommendation</button> @endif
                             @if($data->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
                         </div>
                     </div>

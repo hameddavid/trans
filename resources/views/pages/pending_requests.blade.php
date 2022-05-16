@@ -55,11 +55,11 @@
                                                             </a>
                                                             <div class="dropdown-menu">
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
-                                                                    <button type="button" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" title="View" class="btn btn-secondary w-xs view_transcript"><i class="mdi mdi-eye-check-outline"></i></button>
-                                                                    <button type="button" title="Regenerate" class="btn btn-info w-xs"><i class="mdi mdi-refresh"></i></button>
+                                                                    <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" title="View" class="btn btn-secondary w-xs view_transcript"><i class="mdi mdi-eye-check-outline"></i></button>
+                                                                    <button type="button" data-id="{{$app->application_id}}" title="Regenerate" class="btn btn-info w-xs regenerate"><i class="mdi mdi-refresh"></i></button>
                                                                 </div>
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
-                                                                    <button type="button" data-id="{{$app->application_id}}" title="Recommend" class="btn btn-success w-xs recommend"><i class="mdi mdi-thumb-up"></i></button>
+                                                                    @if($data->role == 200)<button type="button" data-id="{{$app->application_id}}" title="Recommend" class="btn btn-success w-xs recommend"><i class="mdi mdi-thumb-up"></i></button>@endif
                                                                     <button type="button" title="Disapprove" class="btn btn-danger w-xs"><i class="mdi mdi-thumb-down"></i></button>
                                                                 </div> 
                                                             </div>
