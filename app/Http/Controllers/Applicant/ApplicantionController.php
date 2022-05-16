@@ -111,7 +111,7 @@ class ApplicantionController extends Controller
            ->where(['user_id'=> $userid,'matric_number'=> $matno,'status_code'=>'00'])
             ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('applications'); })->first();
             if(!empty($pin)){return $pin->rrr ;}
-            return 'null';
+            return $pin->rrr;
             // return ['status'=> 'success','pin'=>$pin->rrr ];
         } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'catch, Error validate_pin !']);
