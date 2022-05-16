@@ -49,7 +49,7 @@
                                                     <td><span class="badge badge-soft-success">{{$app->app_status}}</span></td>
                                                     <td>{{ date("d M Y", strtotime($app->created_at)) }}</td>
                                                     <td>
-                                                        <button type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</button>
+                                                        <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -68,6 +68,24 @@
                 @include("partials.footer")
             </div>
             <!-- end main content-->
+
+            <!-- Transcript modal -->
+            <div id="transcriptModal" class="modal fade" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="transcriptModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body showHTML">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /modal -->
 
         
         <!-- Required datatable js -->
@@ -88,7 +106,9 @@
         <script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
         <!-- Datatable init js -->
-        <script src="assets/js/pages/datatables.init.js"></script>    
+        <script src="assets/js/pages/datatables.init.js"></script>  
+        <script src="assets/js/pages/modal.init.js"></script>
+        <script src="assets/js/utils.js"></script>   
     @endsection
 
         

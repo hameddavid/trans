@@ -73,7 +73,7 @@ $(document).ready(function ($) {
         }
 
         $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
-            console.log(data);
+            console.log("fetched");
         });
 
         $("#btnRecommend").click(function () {
