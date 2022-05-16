@@ -80,6 +80,10 @@ $(document).ready(function ($) {
             recommendTranscript(id);
         });
 
+        $("#btnDerecommend").click(function () {
+            derecommendTranscript(id);
+        });
+
         $("#btnApprove").click(function () {
             approveTranscript(id);
         });
@@ -285,6 +289,36 @@ $(document).ready(function ($) {
             },
             error: function (response) {
                 console.log(response);
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
+
+    const derecommendTranscript = (id) => {
+        $.ajax({
+            type: "POST",
+            url: "de_recommend_app",
+            data: { id: id },
+            dataType: "json",
+            beforeSend: function () {
+                alert("Cancel recommedation?");
+                $("#btnDerecommend").html(
+                    '<i class="fa fa-spinner fa-spin"></i>'
+                );
+                $("#btnDerecommend").prop("disabled", true);
+            },
+            success: function (response) {
+                console.log(response);
+                alertify.success(response.message);
+                $("#btnDerecommend").html("Not Recommended");
+                setTimeout(function () {
+                    location.reload();
+                }, 2800);
+            },
+            error: function (response) {
+                console.log(response);
+                $("#btnDerecommend").html("Cancel Recommendation");
+                $("#btnDerecommend").prop("disabled", false);
                 alertify.error(response.responseJSON.message);
             },
         });
