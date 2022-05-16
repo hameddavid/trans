@@ -222,11 +222,11 @@ $(document).ready(function ($) {
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
+                if (confirm("Recommend Transcript?") == false) return false;
                 $("#btnRecommend").html(
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
                 $("#btnRecommend").prop("disabled", true);
-                confirm("Recommend Transcript?");
             },
             success: function (response) {
                 console.log(response);
@@ -252,9 +252,9 @@ $(document).ready(function ($) {
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
+                if (confirm("Approve Transcript?") == false) return false;
                 $("#btnApprove").html('<i class="fa fa-spinner fa-spin"></i>');
                 $("#btnApprove").prop("disabled", true);
-                confirm("Approve Transcript?");
             },
             success: function (response) {
                 console.log(response);
@@ -280,7 +280,7 @@ $(document).ready(function ($) {
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
-                confirm("Regenerate Transcript?");
+                if (confirm("Regenerate Transcript?") == false) return false;
             },
             success: function (response) {
                 console.log(response);
@@ -303,7 +303,7 @@ $(document).ready(function ($) {
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
-                confirm("Cancel recommedation?");
+                if (confirm("Cancel recommedation?") == false) return false;
                 $("#btnDerecommend").html(
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
