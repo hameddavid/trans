@@ -28,7 +28,7 @@ class ApplicantionController extends Controller
     public function submit_app(Request $request){
 
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
-       
+        //$this->validate_pin($request);
         // try {   
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             if($applicant->count() != 0){
@@ -37,7 +37,7 @@ class ApplicantionController extends Controller
             if($type == 'OFFICIAL'){
                 $request->validate(["mode" => "required","recipient"=>"required",'used_token'=>'required']); 
                 if($request->mode != "soft"){ $request->validate(["address"=>"required", "destination"=>"required"]);  }
-                if($this->validate_pin($request->userid,$request->matno) == $request->used_token){
+                if($this->validate_pin($request) == $request->used_token){
                      $new_application = new Application();
                      $new_application->matric_number   = $request->matno;
                      $new_application->applicant_id  = $request->userid;
@@ -104,14 +104,14 @@ class ApplicantionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    static function validate_pin($userid,$matno)
+    static function validate_pin($request)
     {
         try {
              $pin = DB::table('payment_transaction')->select('rrr')
-           ->where(['user_id'=> '1','matric_number'=> 'RUN0910/2134','status_code'=>'00'])
+           ->where(['user_id'=> $request->userid ,'matric_number'=> $request->matno,'destination'=>$request->destination, 'status_code'=>'00'])
             ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('applications'); })->first();
             if(!empty($pin)){return $pin->rrr ;}
-            return $pin->rrr;
+            return 'null';
             // return ['status'=> 'success','pin'=>$pin->rrr ];
         } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'catch, Error validate_pin !']);
@@ -196,14 +196,14 @@ class ApplicantionController extends Controller
     }
    
     public function check_request_availability(Request $request){
-        $request->validate([ "userid" => "required","matno"=>"required" ]);
+        $request->validate([ "userid" => "required","matno"=>"required","destination"=>"required" ]);
         try {
         if($this->verify_student_status($request->userid, $request->matno)){
              if($this->verify_student_result($request->userid, $request->matno)['status']== 'success' && $this->verify_student_result($request->userid, $request->matno)['data'] > 0){
-                 if($this->validate_pin($request->userid,$request->matno) !== "null"){
-                    return response(['status'=>'pin','message'=>'Applicant, '.$request->matno.' proceed with your request ', 'pin'=>$this->validate_pin($request->userid,$request->matno)]);
+                 if($this->validate_pin($request) !== "null"){
+                    return response(['status'=>'pin','message'=>'Applicant, '.$request->matno.' proceed with your request ', 'pin'=>$this->validate_pin($request)]);
                  }
-                return response(['status'=>'success','message'=>'Applicant, '.$request->matno.' proceed with your request','pin'=>$this->validate_pin($request->userid,$request->matno)]);   
+                return response(['status'=>'success','message'=>'Applicant, '.$request->matno.' proceed with your request','pin'=>$this->validate_pin($request)]);   
              }
              return response(['status'=>'failed','message'=>'Like you have NO result for now, kindly contact ACAD']);
         } else{
