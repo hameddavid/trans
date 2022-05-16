@@ -200,6 +200,9 @@ class ApplicantionController extends Controller
         try {
         if($this->verify_student_status($request->userid, $request->matno)){
              if($this->verify_student_result($request->userid, $request->matno)['status']== 'success' && $this->verify_student_result($request->userid, $request->matno)['data'] > 0){
+                 if($this->validate_pin($request->userid,$request->matno) != "null"){
+                    return response(['status'=>'pin','message'=>'Applicant, '.$request->matno.' proceed with your request ', 'pin'=>$this->validate_pin($request->userid,$request->matno)]);
+                 }
                 return response(['status'=>'success','message'=>'Applicant, '.$request->matno.' proceed with your request ']);   
              }
              return response(['status'=>'failed','message'=>'Like you have NO result for now, kindly contact ACAD']);
