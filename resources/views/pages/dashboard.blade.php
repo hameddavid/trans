@@ -224,7 +224,8 @@
                                 <!-- end card -->
                             </div>
                             <!-- end col -->
-                            
+                            {{dd($data->role)}}  
+
                             <div class="col-xl-6">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
@@ -274,7 +275,6 @@
                     <!-- container-fluid -->
                 </div>
                 <!-- End Page-content -->
-                {{dd($data->role)}}  
 
                 @include("partials.footer")
             </div>
