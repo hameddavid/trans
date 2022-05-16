@@ -45,10 +45,15 @@ Route::post('app/test_remita_bank', [PaymentController::class, 'test_remita_bank
 Route::post('app/remita_bank_payment', [PaymentController::class, 'remita_bank_payment']);
 
 
+
 Route::post('app/forgot_password', [ApplicantAuthController::class, 'forgot_password']);
 Route::post('app/reset_password', [ApplicantAuthController::class, 'reset_password']);
 
 
+// Admin api routes
+Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
+Route::post('register',[AdminAuthController::class,'save_new_account']);
+Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
 
 
 
