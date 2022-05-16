@@ -151,11 +151,11 @@ class AdminController extends Controller
             if($resp->ok()){
                 $applicant->status = "TREATED";
                 if($applicant->save()){
-                    return response(["status"=>"success","message"=>"Done!"]);
-                } else{return response(["status"=>"failed","message"=>"Error updating records!"]);}
+                    return response(["status"=>"success","message"=>"Done!"],200);
+                } else{return response(["status"=>"failed","message"=>"Error updating records!"],401);}
             }
         }else{
-            return response(["status"=>"failed","message"=>"Invalid email supplied"]);
+            return response(["status"=>"failed","message"=>"Invalid email supplied"],401);
         }
 
     }
@@ -169,15 +169,15 @@ class AdminController extends Controller
             //throw $th;
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-        if($data->role != '200'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"]);}
+        if($data->role != '200'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
         $app = Application::where(['application_id'=> $request->id, 'app_status'=>'PENDING'])->first();
         if($app){
             $app->app_status = "RECOMMENDED";
             $app->recommended_by = $data->email;
             $app->recommended_at = date("F j, Y, g:i a");
-            if($app->save()){ return response(["status"=>"success","message"=>"Application successfully recommended for approval"]);  }
-            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"]); }
-        }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"]); }
+            if($app->save()){ return response(["status"=>"success","message"=>"Application successfully recommended for approval"],200);  }
+            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+        }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
 
 
     }
@@ -192,15 +192,15 @@ class AdminController extends Controller
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         
-        if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"]);}
+        if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
         $app = Application::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
         if($app){
             $app->app_status = "PENDING";
             $app->recommended_by = $data->email;
             $app->recommended_at = date("F j, Y, g:i a");
-            if($app->save()){ return response(["status"=>"success","message"=>"Application recommendation reversed successfully!"]);  }
-            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation reverse"]); }
-        }else{ return response(["status"=>"failed","message"=>"No application found for recommendation reverse"]); }
+            if($app->save()){ return response(["status"=>"success","message"=>"Application recommendation reversed successfully!"],200);  }
+            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation reverse"],401); }
+        }else{ return response(["status"=>"failed","message"=>"No application found for recommendation reverse"],401); }
 
 
     }
@@ -223,21 +223,21 @@ class AdminController extends Controller
             //throw $th;
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-        if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"]);}
+        if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
         $app = Application::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
         if($app){
 
-            $trans = ['key'=> $app->transcript_raw];
+            $trans = ['key'=> html_entity_decode($app->transcript_raw)];
             view()->share('trans',$trans);
              $pdf = PDF::loadView('viewpdf',$trans);
-             return $pdf->download('owner.pdf');
+             $pdf->download('owner.pdf');
 
             $app->app_status = "APPROVED";
             $app->approved_by = $data->email;
             $app->approved_at = date("F j, Y, g:i a");
-            if($app->save()){ return response(["status"=>"success","message"=>"Application successfully approval"]);  }
-            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"]); }
-        }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"]); }
+            if($app->save()){ return response(["status"=>"success","message"=>"Application successfully approval"],200);  }
+            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+        }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
 
     }
 
@@ -249,7 +249,7 @@ class AdminController extends Controller
             //throw $th;
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-        if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"]);}
+        if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
         $app = Application::where(['application_id'=> $request->id])->first();
         $request->merge(['matno' => $app->matric_number, 'userid'=>$app->applicant_id,'used_token'=>$app->used_token,'transcript_type'=>$app->transcript_type]);
         if($app){
@@ -258,8 +258,8 @@ class AdminController extends Controller
             $app->approved_at = "";
             $app->transcript_raw = view('pages.trans', ['data'=>app('App\Http\Controllers\Applicant\ApplicantionController')->get_student_result($request)]);
             if($app->save()){ return response(["status"=>"success","message"=>"Transcript successfully regenerated!"]);  }
-            else{return response(["status"=>"failed","message"=>"Error updating transcript regeneration"]); }
-        }else{ return response(["status"=>"failed","message"=>"No transcript found for regeneration"]); }
+            else{return response(["status"=>"failed","message"=>"Error updating transcript regeneration"],200); }
+        }else{ return response(["status"=>"failed","message"=>"No transcript found for regeneration"],401); }
 
     }
 
