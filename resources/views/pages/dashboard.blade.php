@@ -294,7 +294,7 @@
                           
                            @foreach ($data as $datum)
                            @if($datum->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button> @endif
-                           @if($data->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
+                           @if($datum->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
                            @endforeach
                         </div>
                     </div>
