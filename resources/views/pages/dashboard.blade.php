@@ -277,7 +277,8 @@
 
                 @include("partials.footer")
             </div>
-            <!-- end main content-->     
+            <!-- end main content-->   
+            {{dd($data->role)}}  
             
             <!-- Transcript modal -->
             <div id="transcriptModal" class="modal fade" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
@@ -290,7 +291,6 @@
                         <div class="modal-body showHTML">
                         </div>
                         <div class="modal-footer">
-                            {{dd($data->role)}}
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
                             @if($data->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button>@endif
                             @if($data->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
