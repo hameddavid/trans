@@ -47,7 +47,6 @@ class AdminAuthController extends Controller
 
 
     public function save_new_account(Request $request){
-             
         $request->validate([
             'surname'=>'required|string', 'firstname'=>'required|string','othername'=>'required|string',
             'phone'=>'required|string|min:8|max:15|unique:admin,phone','email'=>'required|email|unique:admin,email','title'=>'required', 'role'=>'required', ]) ;
@@ -81,14 +80,18 @@ class AdminAuthController extends Controller
                 $Subject = "AUTO GENERATED PASSWORD";
                 $HTML_type = true;
                Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email,"Recipient_names"=>$request->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);
-               return response(['status'=> 'success', 'message'=>'Account created successfully']);
+               return back()->with('success','Account created successfully, check email for password');
+              // return response(['status'=> 'success', 'message'=>'Account created successfully']);
             
            }else{
-                return response(['status'=> 'failed', 'message'=>'Issue creating account']);
+            return back()->with('fail','Issue creating account');
+
+               // return response(['status'=> 'failed', 'message'=>'Issue creating account']);
     
             }
         } catch (\Throwable $th) {
-            return response(['status'=> 'failed', 'message'=>'Catch Issue creating account']);
+            return back()->with('fail','Catch Issue creating account');
+            //return response(['status'=> 'failed', 'message'=>'Catch Issue creating account']);
         }
    }
 
