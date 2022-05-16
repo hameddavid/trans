@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
+// Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
 
 
 

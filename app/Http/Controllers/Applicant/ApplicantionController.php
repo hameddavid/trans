@@ -304,12 +304,12 @@ static function get_msg($applicant){
 
 
 
-public function get_student_result(Request $request){
+public function get_student_result($request){
     //$request->validate(['userid'=>'required','matno'=>'required','used_token'=>'required']);
     $matno = str_replace(' ', '', $request->matno);
     if($this->get_student_result_session_given_matno($matno,$sessions)){
         $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
-        $application  = Application::where(['matric_number'=> $matno, 'used_token'=>$request->used_token,'applicant_id'=>$request->userid,'app_status'=>'10'])->first(); //Get the real application
+        $application  = Application::where(['matric_number'=> $matno, 'used_token'=>$request->used_token,'applicant_id'=>$request->userid,'app_status'=>'PENDING'])->first(); //Get the real application
         $student  = Student::where('matric_number',$matno)->first();
         $response = "";
         $cumm_sum_point_unit = 0.0;
