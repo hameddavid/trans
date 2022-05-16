@@ -134,6 +134,8 @@
 
         <!-- Datatable init js -->
         <script src="assets/js/pages/datatables.init.js"></script>    
+        <script src="assets/js/pages/modal.init.js"></script>
+        <script src="assets/js/utils.js"></script> 
     @endsection
 
         

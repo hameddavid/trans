@@ -1,5 +1,10 @@
 $(document).ready(function ($) {
     $("#btnApprove").hide();
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+    });
     $(".editApplicant").click(function () {
         $("#editApplicantForm").trigger("reset");
         $("#applicantModal").modal("show");
@@ -202,7 +207,7 @@ $(document).ready(function ($) {
     const recommendTranscript = (id) => {
         $.ajax({
             type: "POST",
-            url: "api/recommend",
+            url: "recommend_app ",
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
@@ -231,7 +236,7 @@ $(document).ready(function ($) {
     const approveTranscript = (id) => {
         $.ajax({
             type: "POST",
-            url: "api/approve",
+            url: "approve_app ",
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
