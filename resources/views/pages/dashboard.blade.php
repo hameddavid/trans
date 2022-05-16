@@ -48,7 +48,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-grow-1">
-                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Approved Requests</span>
+                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">{{$data->role}}Approved Requests</span>
                                                 <h4 class="mb-3">
                                                     <span class="counter-value" data-target="{{$approved}}">0</span>
                                                 </h4>
@@ -289,13 +289,9 @@
                         <div class="modal-body showHTML">
                         </div>
                         <div class="modal-footer">
-                            
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                          
-                           @foreach ($data as $datum)
-                           @if($datum->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button> @endif
-                           @if($datum->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
-                           @endforeach
+                            @if($datum->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button> @endif
+                            @if($datum->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
                         </div>
                     </div>
                 </div>
