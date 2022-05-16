@@ -48,7 +48,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-grow-1">
-                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">{{$data->role}}Approved Requests</span>
+                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Approved Requests</span>
                                                 <h4 class="mb-3">
                                                     <span class="counter-value" data-target="{{$approved}}">0</span>
                                                 </h4>
@@ -140,8 +140,8 @@
                                         <div class="px-2 py-2">
                                             @php 
                                                 use App\Http\Controllers\Admin\AdminController; 
-                                                $data = new AdminController();
-                                                $location = $data->transcriptLocation(); 
+                                                $mydata = new AdminController();
+                                                $location = $mydata->transcriptLocation(); 
                                             @endphp
                                             @foreach($location as $val)
                                             @if($val->number != 0)
@@ -290,8 +290,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                            @if($datum->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button> @endif
-                            @if($datum->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
+                            @if($data->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button> @endif
+                            @if($data->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
                         </div>
                     </div>
                 </div>
