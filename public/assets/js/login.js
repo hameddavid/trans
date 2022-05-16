@@ -25,6 +25,7 @@ $(document).ready(function ($) {
                     $("#btnLogin").html(
                         '<i class="fa fa-spinner fa-spin"></i>'
                     );
+                    $("#btnLogin").prop("disabled", true);
                 },
                 success: function (response) {
                     console.log(response);
@@ -36,6 +37,7 @@ $(document).ready(function ($) {
                 error: function (response) {
                     console.log(response);
                     $("#btnLogin").html("Login");
+                    $("#btnLogin").prop("disabled", false);
                     alertify.error(response.responseJSON.message);
                 },
             });
