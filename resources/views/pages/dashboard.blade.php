@@ -48,7 +48,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-grow-1">
-                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">{{$data->role}}Approved Requests</span>
+                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Approved Requests</span>
                                                 <h4 class="mb-3">
                                                     <span class="counter-value" data-target="{{$approved}}">0</span>
                                                 </h4>
@@ -168,7 +168,7 @@
                             <div class="col-xl-6">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
-                                        <h4 class="card-title mb-0 flex-grow-1">Recent Transcript Requests</h4>
+                                        <h4 class="card-title mb-0 flex-grow-1">Recent Transcript Requests {{$data->role}}</h4>
                                         <div class="flex-shrink-0">
                                             <div class="dropdown">
                                                 <a class=" dropdown-toggle" href="#" id="dropdownMenuButton2"
