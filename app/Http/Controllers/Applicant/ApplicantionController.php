@@ -108,7 +108,7 @@ class ApplicantionController extends Controller
     {
         try {
              $pin = DB::table('payment_transaction')->select('rrr')
-           ->where(['user_id'=> $userid,'matric_number'=> $matno,'status_code'=>'00'])
+           ->where(['user_id'=> '1','matric_number'=> 'RUN0910/2134','status_code'=>'00'])
             ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('applications'); })->first();
             if(!empty($pin)){return $pin->rrr ;}
             return $pin->rrr;
