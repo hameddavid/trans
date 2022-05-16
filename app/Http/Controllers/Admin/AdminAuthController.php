@@ -246,7 +246,7 @@ class AdminAuthController extends Controller
 
    public function admin_reset_password(Request $request){
     $request->validate(['old_pass'=>'required', 'password'=>'required',]);
-    $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    $data =  $this->auth_user(session('user'));
     try {
   
     $app = Admin::where('email',$data->email)->first();
