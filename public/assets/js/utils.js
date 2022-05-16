@@ -226,6 +226,7 @@ $(document).ready(function ($) {
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
                 $("#btnRecommend").prop("disabled", true);
+                confirm("Recommend Transcript?");
             },
             success: function (response) {
                 console.log(response);
@@ -253,6 +254,7 @@ $(document).ready(function ($) {
             beforeSend: function () {
                 $("#btnApprove").html('<i class="fa fa-spinner fa-spin"></i>');
                 $("#btnApprove").prop("disabled", true);
+                confirm("Approve Transcript?");
             },
             success: function (response) {
                 console.log(response);
@@ -278,7 +280,7 @@ $(document).ready(function ($) {
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
-                alert("Regenerate Transcript?");
+                confirm("Regenerate Transcript?");
             },
             success: function (response) {
                 console.log(response);
@@ -301,7 +303,7 @@ $(document).ready(function ($) {
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
-                alert("Cancel recommedation?");
+                confirm("Cancel recommedation?");
                 $("#btnDerecommend").html(
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
