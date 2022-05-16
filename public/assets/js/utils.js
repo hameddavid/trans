@@ -1,5 +1,6 @@
 $(document).ready(function ($) {
     $("#btnApprove").hide();
+    //$(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -227,6 +228,7 @@ $(document).ready(function ($) {
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
                 $("#btnRecommend").prop("disabled", true);
+                $.blockUI();
             },
             success: function (response) {
                 console.log(response);
@@ -240,6 +242,7 @@ $(document).ready(function ($) {
                 console.log(response);
                 $("#btnRecommend").html("Recommend");
                 $("#btnRecommend").prop("disabled", false);
+                $.unblockUI();
                 alertify.error(response.responseJSON.message);
             },
         });
@@ -255,6 +258,7 @@ $(document).ready(function ($) {
                 if (confirm("Approve Transcript?") == false) return false;
                 $("#btnApprove").html('<i class="fa fa-spinner fa-spin"></i>');
                 $("#btnApprove").prop("disabled", true);
+                $.blockUI();
             },
             success: function (response) {
                 console.log(response);
@@ -268,6 +272,7 @@ $(document).ready(function ($) {
                 console.log(response);
                 $("#btnApprove").html("Approve");
                 $("#btnApprove").prop("disabled", false);
+                $.unblockUI();
                 alertify.error(response.responseJSON.message);
             },
         });
@@ -281,6 +286,7 @@ $(document).ready(function ($) {
             dataType: "json",
             beforeSend: function () {
                 if (confirm("Regenerate Transcript?") == false) return false;
+                $.blockUI();
             },
             success: function (response) {
                 console.log(response);
@@ -291,6 +297,7 @@ $(document).ready(function ($) {
             },
             error: function (response) {
                 console.log(response);
+                $.unblockUI();
                 alertify.error(response.responseJSON.message);
             },
         });
@@ -308,6 +315,7 @@ $(document).ready(function ($) {
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
                 $("#btnDerecommend").prop("disabled", true);
+                $.blockUI();
             },
             success: function (response) {
                 console.log(response);
@@ -321,6 +329,7 @@ $(document).ready(function ($) {
                 console.log(response);
                 $("#btnDerecommend").html("Cancel Recommendation");
                 $("#btnDerecommend").prop("disabled", false);
+                $.unblockUI();
                 alertify.error(response.responseJSON.message);
             },
         });
