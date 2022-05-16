@@ -73,7 +73,7 @@ class ApplicantionController extends Controller
                     $new_application->address = $request->address ? $request->address : $applicant->email;
                     $new_application->destination = "Student Transcript";
                     $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
-                    $new_application->app_status = 10; // default status
+                    $new_application->app_status = "PENDING"; // default status
                     $new_application->transcript_raw = view('pages.trans', ['data'=>$trans_raw]);
                     //$new_application->used_token = $request->used_token ? $request->used_token : 'STUDENT';
                     $save_app = $new_application->save();
@@ -694,7 +694,7 @@ static function get_student_result_session_given_matno($matno,&$sessions){
 static function get_correct_application_for_this_request($matno,$delivery_mode,$transcript_type){
     try {
         $application = DB::table('applications')->select('*')
-         ->where(['matric_number'=> $matno,'delivery_mode'=>$delivery_mode,'transcript_type'=>$transcript_type,'app_status'=>'10'])->get();
+         ->where(['matric_number'=> $matno,'delivery_mode'=>$delivery_mode,'transcript_type'=>$transcript_type,'app_status'=>'PENDING'])->get();
     //     $pin = DB::table('payment_transaction')->select('rrr')
     //   ->where(['matric_number'=> $matno,'status_code'=>'00'])
     //    ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('applications'); })->first();
