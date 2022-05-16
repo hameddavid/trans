@@ -265,11 +265,7 @@ class AdminAuthController extends Controller
 
 public function auth_user($email){
     try {
-       $data =  DB::table('admin')
-       ->select('id','email',
-       'surname','firstname','othername',
-       'phone','title','role'
-      )->where('email',$email)->first();
+       $data =  DB::table('admin')->select('id','email','surname','firstname','othername','phone','title','role' )->where('email',$email)->first();
        return $data;
     } catch (\Throwable $th) {
        return response()->json(['status'=>'Nok','msg'=>'Error from catch... auth_user()','rsp'=>''], 401);
