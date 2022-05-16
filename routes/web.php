@@ -42,6 +42,11 @@ Route::get('/pdf',[AdminController::class,'download_pdf']);
 
 Route::get('/',[AdminAuthController::class,'auth_login']);
 Route::post('admin_login_auth',[AdminAuthController::class,'login']);
+// Admin api routes
+
+Route::get('register',[AdminAuthController::class,'register_form']);
+Route::post('register',[AdminAuthController::class,'save_new_account']);
+
 Route::middleware(['adminauth'])->group(function () {
     Route::get('/approved_applications',[AdminController::class,'viewApprovedApplications']);
     Route::get('/pending_applications',[AdminController::class,'viewPendingApplications']);
@@ -58,6 +63,8 @@ Route::middleware(['adminauth'])->group(function () {
     Route::post('/de_recommend_app',[AdminController::class,'de_recommend_app']);
     Route::post('/approve_app',[AdminController::class,'approve_app']);
     Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
+    Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
+    Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
 });
 
