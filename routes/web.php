@@ -56,7 +56,7 @@ Route::middleware(['adminauth'])->group(function () {
     Route::get('/getTranscript',[AdminController::class,'getHtmlTranscript']);
     Route::post('/recommend_app',[AdminController::class,'recommend_app']);
     Route::post('/de_recommend_app',[AdminController::class,'de_recommend_app']);
-    Route::get('/approve_app',[AdminController::class,'approve_app']);
+    Route::post('/approve_app',[AdminController::class,'approve_app']);
     Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
 });

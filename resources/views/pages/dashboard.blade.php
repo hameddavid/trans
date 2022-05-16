@@ -140,8 +140,8 @@
                                         <div class="px-2 py-2">
                                             @php 
                                                 use App\Http\Controllers\Admin\AdminController; 
-                                                $data = new AdminController();
-                                                $location = $data->transcriptLocation(); 
+                                                $mydata = new AdminController();
+                                                $location = $mydata->transcriptLocation(); 
                                             @endphp
                                             @foreach($location as $val)
                                             @if($val->number != 0)
@@ -289,13 +289,9 @@
                         <div class="modal-body showHTML">
                         </div>
                         <div class="modal-footer">
-                            
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                          
-                           @foreach ($data as $datum)
-                           @if($datum->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button> @endif
-                           @if($datum->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
-                           @endforeach
+                            @if($data->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button> @endif
+                            @if($data->role == 300)<button id="btnApprove" type="button" class="btn btn-primary waves-effect waves-light">Approve</button>@endif
                         </div>
                     </div>
                 </div>

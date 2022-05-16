@@ -1,5 +1,10 @@
 $(document).ready(function ($) {
     $("#btnApprove").hide();
+    $.ajaxSetup({
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+    });
     $(".editApplicant").click(function () {
         $("#editApplicantForm").trigger("reset");
         $("#applicantModal").modal("show");
@@ -52,6 +57,7 @@ $(document).ready(function ($) {
     });
 
     $(".view_transcript").click(function () {
+        $("#btnApprove").hide();
         $(".showHTML").html("");
         $("#transcriptModal").modal("show");
         $("#transcriptModalLabel").html($(this).data("name") + "'s Transcript");
@@ -59,10 +65,11 @@ $(document).ready(function ($) {
         stat = $(this).data("status");
         if (stat === "APPROVED") {
             $("#btnRecommend").hide();
-        }
-        if (stat === "RECOMMENDED") {
+        } else if (stat === "RECOMMENDED") {
             $("#btnApprove").show();
             $("#btnRecommend").hide();
+        } else {
+            console.log(stat);
         }
 
         $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
@@ -71,6 +78,10 @@ $(document).ready(function ($) {
 
         $("#btnRecommend").click(function () {
             recommendTranscript(id);
+        });
+
+        $("#btnDerecommend").click(function () {
+            derecommendTranscript(id);
         });
 
         $("#btnApprove").click(function () {
@@ -199,13 +210,19 @@ $(document).ready(function ($) {
         approveTranscript(id);
     });
 
+    $(".regenerate").click(function () {
+        id = $(this).data("id");
+        regenerateTranscript(id);
+    });
+
     const recommendTranscript = (id) => {
         $.ajax({
             type: "POST",
-            url: "api/recommend",
+            url: "recommend_app ",
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
+                if (confirm("Recommend Transcript?") == false) return false;
                 $("#btnRecommend").html(
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
@@ -231,10 +248,11 @@ $(document).ready(function ($) {
     const approveTranscript = (id) => {
         $.ajax({
             type: "POST",
-            url: "api/approve",
+            url: "approve_app ",
             data: { id: id },
             dataType: "json",
             beforeSend: function () {
+                if (confirm("Approve Transcript?") == false) return false;
                 $("#btnApprove").html('<i class="fa fa-spinner fa-spin"></i>');
                 $("#btnApprove").prop("disabled", true);
             },
@@ -250,6 +268,59 @@ $(document).ready(function ($) {
                 console.log(response);
                 $("#btnApprove").html("Approve");
                 $("#btnApprove").prop("disabled", false);
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
+
+    const regenerateTranscript = (id) => {
+        $.ajax({
+            type: "POST",
+            url: "regenerate_transcript  ",
+            data: { id: id },
+            dataType: "json",
+            beforeSend: function () {
+                if (confirm("Regenerate Transcript?") == false) return false;
+            },
+            success: function (response) {
+                console.log(response);
+                alertify.success(response.message);
+                setTimeout(function () {
+                    location.reload();
+                }, 2800);
+            },
+            error: function (response) {
+                console.log(response);
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
+
+    const derecommendTranscript = (id) => {
+        $.ajax({
+            type: "POST",
+            url: "de_recommend_app",
+            data: { id: id },
+            dataType: "json",
+            beforeSend: function () {
+                if (confirm("Cancel recommedation?") == false) return false;
+                $("#btnDerecommend").html(
+                    '<i class="fa fa-spinner fa-spin"></i>'
+                );
+                $("#btnDerecommend").prop("disabled", true);
+            },
+            success: function (response) {
+                console.log(response);
+                alertify.success(response.message);
+                $("#btnDerecommend").html("Not Recommended");
+                setTimeout(function () {
+                    location.reload();
+                }, 2800);
+            },
+            error: function (response) {
+                console.log(response);
+                $("#btnDerecommend").html("Cancel Recommendation");
+                $("#btnDerecommend").prop("disabled", false);
                 alertify.error(response.responseJSON.message);
             },
         });

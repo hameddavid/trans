@@ -5,8 +5,9 @@
         <meta charset="utf-8" />
         <title>@yield('title')</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-        <meta content="Themesbrand" name="author" />
+        <meta content="Admin Dashboard Transcript Portal" name="description" />
+        <meta content="Redeemers University" name="RUN ICT" />
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- App favicon -->
         <link rel="shortcut icon" href="assets/images/run_logo.png">
 
