@@ -147,7 +147,8 @@ class AdminController extends Controller
              
             $Subject = "FORGOT MATRIC NUMBER RESPONSE";
             $HTML_type = true;
-            $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From, "FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+            $to = [$applicant->email => $applicant->surname];
+            $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From, "FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
             if($resp->ok()){
                 $applicant->status = "TREATED";
                 if($applicant->save()){

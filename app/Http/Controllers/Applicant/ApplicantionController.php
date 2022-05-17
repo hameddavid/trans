@@ -26,9 +26,8 @@ class ApplicantionController extends Controller
     }
 
     public function submit_app(Request $request){
-
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
-        //$this->validate_pin($request);
+       return $this->validate_pin($request);
         // try {   
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             if($applicant->count() != 0){
@@ -278,9 +277,26 @@ static function send_email_notification($applicant,$Subject,$Msg){
     //     ';  
      
     //$Subject = "AUTO GENERATED PASSWORD";
+    //Notify applicant";
     $HTML_type = true;
-    $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+    $to = [$applicant->email => $applicant->surname, 'transcript@run.edu.ng'=>'Admin'];
+    $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
    if($resp->ok()){
+    //Notify Admin";
+    $From = $applicant->email;
+    $FromName = "@".$applicant->surname;
+    $Msg =  '
+    ------------------------<br>
+    Dear admin, kindly find on your dashboard, transcript request from '.
+     $applicant->surname . ' ' .$applicant->firstname .' for your urgent attention. <br>
+    <br>
+    Thank you.<br>
+    ------------------------
+        ';  
+    // $Subject = "FORGOT MATRIC NUMBER ";
+    $HTML_type = true;
+    $to = ['transcript@run.edu.ng'=>'Admin'];
+    $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>'Admin',"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);
     return ['status'=>'success','message'=>'applicant created'];
    }
    return ['status'=>'failed','message'=>'applicant created but email failed!'];

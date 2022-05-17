@@ -65,7 +65,8 @@ class ApplicantAuthController extends Controller
                  
                 $Subject = "AUTO GENERATED PASSWORD";
                 $HTML_type = true;
-                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+                $to = [$request->email => $student->SURNAME];
+                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
                if($resp->ok()){
                 return response(['status'=>'success','message'=>'Account successfully created, kindly check your email address for password'], 201);
                }
@@ -107,7 +108,9 @@ class ApplicantAuthController extends Controller
                 $file = $_FILES['doc']['tmp_name'];
                 $Subject = "AUTO GENERATED PASSWORD";
                 $HTML_type = true;
-                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$request->email, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,"file"=>$file, ]);     
+                $to = [$request->email => $student->SURNAME];
+               // $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,"file"=>$file, ]);     
+                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type, ]);     
                if($resp->ok()){
                 return response(['status'=>'success','message'=>'applicant created'], 201);
                }
@@ -195,8 +198,9 @@ class ApplicantAuthController extends Controller
         $get_mat->status = "PENDING";  //PENDING or TREATED
         if($get_mat->save()){ 
            app('App\Http\Controllers\Applicant\ConfigController')->get_mail_params($request, $From, $FromName, $Msg,$Subject,$HTML_type); 
+           $to = ['transcript@run.edu.ng' => 'ADMIN'];
            $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',
-           ["From"=>$From, "FromName"=>$FromName,"To"=>"reganalyst@yahoo.com",
+           ["From"=>$From, "FromName"=>$FromName,"To"=>$to,
             "Recipient_names"=>"ADMIN","Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
            if($resp->ok()){
             //    return $resp->body();
@@ -235,7 +239,8 @@ class ApplicantAuthController extends Controller
                     ';  
                 $Subject = "AUTO GENERATED PASSWORD";
                 $HTML_type = true;
-                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$app->email, "Recipient_names"=>$app->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type, ]);     
+                $to = [$app->email => $app->surname];
+                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$app->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type, ]);     
                if($resp->ok()){
                 return response(['status'=>'success','message'=>'New password successfully sent to your registered email'], 200);
                }
