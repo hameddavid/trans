@@ -27,7 +27,7 @@ class ApplicantionController extends Controller
 
     public function submit_app(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
-       return $this->validate_pin($request);
+       //return $this->validate_pin($request);
         // try {   
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             if($applicant->count() != 0){
