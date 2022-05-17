@@ -27,7 +27,7 @@ class ApplicantionController extends Controller
 
     public function submit_app(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
-       //return $this->validate_pin($request);
+        //return $this->validate_pin($request);
         // try {   
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             if($applicant->count() != 0){
@@ -654,6 +654,16 @@ static function prog_dept_fac($prog_code,&$prog_name, &$dept , &$fac){
     } catch (\Throwable $th) {
 
         return response(['status'=>'failed','message'=>'catch, Error getting programme, department, and faculty!']);
+    }
+
+}
+
+public function available_prog(){
+    try {
+        return DB::table('t_college_dept')->select('programme','department','college')->get();
+    } catch (\Throwable $th) {
+
+        return response(['status'=>'failed','message'=>'catch, Error available_prog!']);
     }
 
 }
