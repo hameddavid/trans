@@ -112,7 +112,7 @@ $(document).ready(function ($) {
 
             function submitMatricForm() {
                 var type = "POST";
-                var ajaxurl = "api/treat_forgot_matno_request";
+                var ajaxurl = "treat_forgot_matno_request";
                 matric = $("#matric_number").val();
 
                 $.ajax({
