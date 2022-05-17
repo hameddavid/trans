@@ -45,6 +45,7 @@
         
         <!-- pace js -->
         <script src="assets/libs/pace-js/pace.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.js" integrity="sha512-QSb5le+VXUEVEQbfljCv8vPnfSbVoBF/iE+c6MqDDqvmzqnr4KL04qdQMCm0fJvC3gCWMpoYhmvKBFqm1Z4c9A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     </head>
     <body data-topbar="dark">
         <!-- Begin page -->
