@@ -16,7 +16,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('adminauth');
+         $this->middleware('adminauth');
         // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');

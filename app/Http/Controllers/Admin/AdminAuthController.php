@@ -26,7 +26,7 @@ class AdminAuthController extends Controller
     }
 
     public function mail(){
-        $emails = ['abayomipaulhenryhill@gmail.com','hamendment@gmail.com'];
+        $emails = ['reganalyst@yahoo.com','rafiua@run.edu.ng'];
         Mail::to($emails)->send(new NotifyMail());
         if (Mail::failures()) {
              return response(['status'=>'Sorry! Please try again latter']);
