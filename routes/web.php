@@ -38,6 +38,7 @@ Route::get('/pdf',[AdminController::class,'download_pdf']);
 
 //});
 
+Route::get('mail',[AdminAuthController::class,'mail']);
 
 
 Route::get('/',[AdminAuthController::class,'auth_login']);

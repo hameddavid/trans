@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Mail;
+use App\Mail\NotifyMail;
+
+
 
 class AdminAuthController extends Controller
 {
@@ -21,7 +25,15 @@ class AdminAuthController extends Controller
        // $this->middleware('subscribed')->except('store');
     }
 
-
+    public function mail(){
+        $emails = ['abayomipaulhenryhill@gmail.com','hamendment@gmail.com'];
+        Mail::to($emails)->send(new NotifyMail());
+        if (Mail::failures()) {
+             return response(['status'=>'Sorry! Please try again latter']);
+        }else{
+             return response(['status'=>'Great! Successfully send in your mail']);
+           }
+    }
     public function login(Request $request){
         $request->validate([ "email" => "required","password"=>"required"]); 
     

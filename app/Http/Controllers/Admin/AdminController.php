@@ -16,7 +16,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-         $this->middleware('adminauth');
+        // $this->middleware('adminauth');
         // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
@@ -208,7 +208,7 @@ class AdminController extends Controller
 
     public function download_pdf(){
         // $projects = Project::all();
-         $trans = ['key'=>'what we do'];
+         $trans = ['key'=>'1'];
         view()->share('trans',$trans);
          $pdf = PDF::loadView('viewpdf',$trans);
          return $pdf->download('owner.pdf');

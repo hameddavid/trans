@@ -12,10 +12,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-// Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
-
-
-
 
 Route::get('app/available_prog', [ApplicantionController::class, 'available_prog']);
 Route::post('app/send_att', [ApplicantAuthController::class, 'send_att']);
@@ -52,9 +48,9 @@ Route::post('app/reset_password', [ApplicantAuthController::class, 'reset_passwo
 
 
 // Admin api routes
-Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
-Route::post('register',[AdminAuthController::class,'save_new_account']);
-Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
+// Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
+// Route::post('register',[AdminAuthController::class,'save_new_account']);
+// Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
 
 
 
