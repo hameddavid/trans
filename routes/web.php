@@ -69,4 +69,6 @@ Route::middleware(['adminauth'])->group(function () {
     Route::get('/logout',[AdminAuthController::class,'logout']);
 });
 
-
+Route::get('template', function () {
+    return view('emails/forgot_matric');
+});

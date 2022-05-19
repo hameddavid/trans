@@ -79,7 +79,7 @@
 <table border="0" cellpadding="0" cellspacing="0" class="image_block" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
 <tr>
 <td style="padding-bottom:10px;width:100%;padding-right:0px;padding-left:0px;margin-top:60px;">
-<div align="center" style="line-height:10px"><img alt="" src="images/awacash design.jpeg" style=" height: auto; max-width: 100%;" title="your-logo" /></div>
+<div align="center" style="line-height:10px"><img alt="" src="https://transcriptapp.run.edu.ng/images/awacashdesign.jpeg" style=" height: auto; max-width: 100%;" title="your-logo" /></div>
 </td>
 </tr>
 </table>
@@ -141,31 +141,28 @@
 <td>
 <div style="font-family: Tahoma, Verdana, sans-serif">
 <div style=" box-shadow: inset; padding:20px; font-size: 12px; font-family: Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 18px; color: #393d47; line-height: 1.5;">
-<p style="margin: 0; font-size: 14px; text-align: center; padding: 10px; mso-line-height-alt: 21px;"><span style="font-size:14px;"><div style="font-size: 14px; color: #666D71;">Dear Customer, </div>
+<p style="margin: 0; font-size: 14px; text-align: center; padding: 10px; mso-line-height-alt: 21px;"><span style="font-size:14px;"><div style="font-size: 14px; color: #666D71;">Dear  </div>
 	<br>
 
-	<span style="font-size: 14px; color: #666D71;"> Thank you for choosing Awacash. 
-	<br>
-		
-	Your Awacash account number is 2011311659.
-	<br>	
-	
-	Thank you for banking with us. </span>
+	<span style="font-size: 14px; color: #666D71;"> We have successfully received your  new transcript application request, 
+    kindly excercise  patience while your request is being processed. 
+	 </span><hr>
 	<br>
 	
 	<div style="font-size: 14px; color: #666D71;">
-	Regards,
+	Thank you.
 	</div> 
 	<br>
-	<div style="font-size: 14px; color: #666D71;"> Aisha.</div>
+	<div style="font-size: 14px; color: #2AAE74;">
+	Transcripts Officer,<br>
+	Redeemer's University,<br>
+	PMB 230, Ede-Osun state.
+	</div> 
 </div>
 </div>
 </td>
 </tr>
 </table>
-<div style="padding:20px ;">
-	Please note that AwacashMFB or its staff will <strong style="color: #2AAE74;"> NEVER ASK</strong> for <strong style="color: #2AAE74;"> YOUR LOGIN PASSWORD and TRANSACTION PASSWORD </strong>.
-</div>
 <table border="0" cellpadding="15" cellspacing="0" class="button_block" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
 <tr>
 <td>
@@ -230,16 +227,16 @@
 <td>
 <div style="font-family: Tahoma, Verdana, sans-serif">
 <div style="font-size: 12px; font-family: Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #393d47; line-height: 1.2;">
-<p style="margin: 0; font-size: 14px; text-align: center;"><span style="font-size:10px;"> If you have any problems</span><br/><span style="font-size:10px;">please feel free to contact us at <a href="csalert@awacash.com" rel="noopener" style="text-decoration: underline; color: #393d47;" target="_blank" title="csalert@awacash.com">csalert@awacash.com</a> or call us at +23416336970 or +234016336971 . <a href="Example.com" rel="noopener" style="text-decoration: underline; color: #393d47;" target="_blank"></a></span></p>
+<p style="margin: 0; font-size: 14px; text-align: center;"><span style="font-size:10px;"> If you have any problems</span><br/><span style="font-size:10px;">please feel free to chat with us via the <a href="https://reg.run.edu.ng/transcript" target="_blank">Transcript Portal</a> or contact us at <a href="mailto:transcript@run.edu.ng" rel="noopener" style="text-decoration: underline; color: #393d47;" title="transcript@run.edu.ng">transcript@run.edu.ng</a> or call us at +2348154740043 <a href="Example.com" rel="noopener" style="text-decoration: underline; color: #393d47;" target="_blank"></a></span></p>
 <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-<div><a href="https://www.twitter.com/awacash"><img src="images/twitter2x.png" alt="" width="40px" ></a></div>
-<div><a href="https://www.instagram.com/awacash"><img src="images/instagram2x.png" alt="" width="40px"></a></div>
-<div><a href="https://www.linkedin.com/company/awacashng/about/"><img src="images/linkedin2x.png" alt="" width="40px"></a></div>	
-<div><a href="https://www.facebook.com/awacash"><img src="images/facebook2x.png" alt="" width="40px"></a></div>
+<div><a href="https://www.twitter.com/awacash"><img src="https://transcriptapp.run.edu.ng/images/twitter2x.png" alt="" width="40px" ></a></div>
+<div><a href="https://www.instagram.com/awacash"><img src="https://transcriptapp.run.edu.ng/images/instagram2x.png" alt="" width="40px"></a></div>
+<div><a href="https://www.linkedin.com/company/awacashng/about/"><img src="https://transcriptapp.run.edu.ng/images/linkedin2x.png" alt="" width="40px"></a></div>	
+<div><a href="https://www.facebook.com/awacash"><img src="https://transcriptapp.run.edu.ng/images/facebook2x.png" alt="" width="40px"></a></div>
 </div>
 </div>
 <div class="banner">
-	<img src="images/awacash social-media header.jpeg" alt="" style="max-width:100% ; height:auto; margin-top: 15px;">
+	<img src="https://transcriptapp.run.edu.ng/images/awacashsocial-mediaheader.jpeg" alt="" style="max-width:100% ; height:auto; margin-top: 15px;">
 </div>
 </div>
 </div>
@@ -296,7 +293,7 @@
 <p style="margin: 0; text-align: center;"></p>
 <p style="margin: 0; text-align: center;"></p>
 <p style="margin: 0; text-align: center; mso-line-height-alt: 14.399999999999999px;"> </p>
-<p style="margin: 0; text-align: center;">Copyright © 2022 Redeemer's Universiry. All rights reserved.<a href="https://reg.run.edu.ng/transcript" style=""></a></p>
+<p style="margin: 0; text-align: center;">Copyright © 2022 Redeemer's University. All rights reserved.<a href="https://run.edu.ng" style=""></a></p>
 <p style="margin: 0; font-size: 12px; text-align: center;"><span style="color:#c0c0c0;"> </span></p>
 </div>
 </div>
