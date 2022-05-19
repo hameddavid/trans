@@ -68,7 +68,3 @@ Route::middleware(['adminauth'])->group(function () {
     Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
 });
-
-Route::get('template', function () {
-    return view('emails/forgot_matric');
-});
