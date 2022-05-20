@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Applicant;
 use App\Http\Controllers\Controller;
-use App\Models\Application;
+use App\Models\OfficialApplication;
+use App\Models\StudentApplication;
 use App\Models\Student;
 use App\Models\Payment;
 use App\Models\Applicant;
@@ -21,23 +22,24 @@ class ApplicantionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    { 
+        $app = OfficialApplication::find(25); //$app->transcript_raw
+        return view('result')->with('data',html_entity_decode($app->transcript_raw));
     }
+
 
     public function submit_app(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
-        //return $this->validate_pin($request);
-        // try {   
+        try {  
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
-                $trans_raw =  $this->get_student_result($request);
+                $trans_raw = $this->get_student_result($request);
             if($type == 'OFFICIAL'){
                 $request->validate(["mode" => "required","recipient"=>"required",'used_token'=>'required']); 
                 if($request->mode != "soft"){ $request->validate(["address"=>"required", "destination"=>"required"]);  }
                 if($this->validate_pin($request) == $request->used_token){
-                     $new_application = new Application();
+                     $new_application = new OfficialApplication();
                      $new_application->matric_number   = $request->matno;
                      $new_application->applicant_id  = $request->userid;
                      $new_application->delivery_mode = $request->mode;
@@ -47,12 +49,11 @@ class ApplicantionController extends Controller
                      $new_application->recipient = $request->recipient;
                      $new_application->app_status = 'PENDING'; // default status
                      $new_application->used_token = $request->used_token;
-                     $new_application->transcript_raw = view('pages.trans', ['data'=>$trans_raw]);
-                     $save_app = $new_application->save();
-                     if($save_app ){
+                     $new_application->transcript_raw = $trans_raw; //view('pages.trans', ['data'=>$trans_raw]);
+                     if($new_application->save()){ 
                         //  Generate the transacript HTML here and save temprary
                         $update_payment_table = Payment::where('rrr', $request->used_token)->first();
-                        $update_payment_table->app_id = $new_application->id;
+                        $update_payment_table->app_id = $new_application->application_id;
                         $update_payment_table->save();
                         if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
                          return response(['status'=>'success','message'=>'Application successfully created'],201);   
@@ -64,19 +65,17 @@ class ApplicantionController extends Controller
                  }else{ return response(['status'=>'failed','message'=>'Invalid application payment pin!']);    }
                 
                 }elseif($type == 'STUDENT'){
-                    $new_application = new Application();
+                    $new_application = new StudentApplication();
                     $new_application->matric_number   = $request->matno;
                     $new_application->applicant_id  = $request->userid;
-                    $new_application->delivery_mode = $request->mode ? $request->mode : 'soft';
+                    $new_application->delivery_mode = 'soft';
                     $new_application->transcript_type = $type;
-                    $new_application->address = $request->address ? $request->address : $applicant->email;
+                    $new_application->address =  $applicant->email;
                     $new_application->destination = "Student Transcript";
-                    $new_application->recipient = $request->recipient ? $request->recipient : $applicant->surname ." ". $applicant->firstname;
+                    $new_application->recipient =  $applicant->surname ." ". $applicant->firstname;
                     $new_application->app_status = "PENDING"; // default status
-                    $new_application->transcript_raw = view('pages.trans', ['data'=>$trans_raw]);
-                    //$new_application->used_token = $request->used_token ? $request->used_token : 'STUDENT';
-                    $save_app = $new_application->save();
-                    if($save_app ){
+                    $new_application->transcript_raw =  $trans_raw;
+                    if($new_application->save() ){  
                        //  Generate the transacript HTML here and save temprary
                        if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
@@ -89,10 +88,10 @@ class ApplicantionController extends Controller
                     return response(['status'=>'failed','message'=>'Error in transcript type supplied']);
                 }
             }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found']);   }
-        // } catch (\Throwable $th) {
-            return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)']);
+        } catch (\Throwable $th) {
+             return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)']);
             
-        // }
+         }
         
 }
 
@@ -104,14 +103,15 @@ class ApplicantionController extends Controller
      * @return \Illuminate\Http\Response
      */
     static function validate_pin($request)
-    {
-        try {
+    { 
+       try { 
+           // DB::enableQueryLog(); // Enable query log
              $pin = DB::table('payment_transaction')->select('rrr')
            ->where(['user_id'=> $request->userid ,'matric_number'=> $request->matno,'destination'=>$request->destination, 'status_code'=>'00'])
-            ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('applications'); })->first();
-            if(!empty($pin)){return $pin->rrr ;}
-            return 'null';
-            // return ['status'=> 'success','pin'=>$pin->rrr ];
+            ->whereNOTIn('rrr', function($query){ $query->select('used_token')->from('official_applications');})->first();
+            // Your Eloquent query executed by using get()
+           // dd(\DB::getQueryLog()); // Show results of log
+            if(!empty($pin)){return $pin->rrr ;} return 'null';
         } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'catch, Error validate_pin !']);
 
@@ -129,9 +129,9 @@ class ApplicantionController extends Controller
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
-            $success_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'success','applicant_id'=>$request->userid])->count();
-            $pend_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
-            $failed_app = Application::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
+            $success_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'success','applicant_id'=>$request->userid])->count();
+            $pend_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
+            $failed_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
             $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->get();
             return ['success_app'=>$success_app,'pend_app'=>$pend_app,'failed_app'=>$failed_app,'payment'=>$payment];
             
@@ -147,7 +147,7 @@ class ApplicantionController extends Controller
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
-            $apps = Application::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])
+            $apps = OfficialApplication::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])
             ->select('transcript_type','created_at','app_status','destination','recipient')->get(); 
             return $apps;
             
@@ -171,28 +171,7 @@ class ApplicantionController extends Controller
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+   
    
     public function check_request_availability(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required","destination"=>"required" ]);
@@ -255,29 +234,9 @@ class ApplicantionController extends Controller
 
 
 
-
-
-
-
-
-
 static function send_email_notification($applicant,$Subject,$Msg){
     $From = "transcript@run.edu.ng";
     $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
-    // $Msg =  '
-    // ------------------------<br>
-    // Dear ' .$student->surname.' '. $student->firstname.',
-    // We have successfully received your : <span color="red"> </span>, new transcript application request, 
-    // kindly excercise  patient while your request is being process.<br>
-    // <br>
-    // OUR REDEEMER IS STRONG!
-    // <br>
-    // Thank you.<br>
-    // ------------------------
-    //     ';  
-     
-    //$Subject = "AUTO GENERATED PASSWORD";
-    //Notify applicant";
     $HTML_type = true;
     $to = [$applicant->email => $applicant->surname, 'transcript@run.edu.ng'=>'Admin'];
     $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
@@ -325,245 +284,251 @@ static function get_msg($applicant){
 
 public function get_student_result($request){
     //$request->validate(['userid'=>'required','matno'=>'required','used_token'=>'required']);
-    $matno = str_replace(' ', '', $request->matno);
-    if($this->get_student_result_session_given_matno($matno,$sessions)){
-        $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
-        $application  = Application::where(['matric_number'=> $matno, 'used_token'=>$request->used_token,'applicant_id'=>$request->userid,'app_status'=>'PENDING'])->first(); //Get the real application
-        $student  = Student::where('matric_number',$matno)->first();
-        $response = "";
-        $cumm_sum_point_unit = 0.0;
-        $cumm_sum_unit = 0.0;
-        $page_no = 0;
-        $this->get_prog_code_given_matno($matno, $prog_code);
-        // $this->get_dept_given_prog_code($prog_code,$prog_name, $dept , $fac); another function for prog_dept_fac
-        $this->prog_dept_fac($prog_code, $prog_name, $dept , $fac);
-        foreach($sessions as $sessionIndex => $session){
-            $page_no += 1;
-            $response .= $this->get_result_table_header($student,$applicant,$application,$prog_name, $dept , $fac,$page_no);
-            $results = $this->fetch_student_result_from_registration($matno,$session);
-            $semester = 0;
-            $sum_point_unit = 0.0;
-            $sum_unit = 0.0;
-            foreach($results as $resultIndex => $result){
-        
-                if (($semester != $result->semester) && ($semester == 0)) {
-					
-                    $response = $response . '
-            <table class="result_table">
-                        <caption>Session: ' . $session . ', Semester: ' .  $this->format_semester($result->semester) . '</caption>
-                <tr>
-                <th>Course Code</th>
-                <th>Course Title</th>
-                <th>Status</th>
-                <th>Unit</th>
-                <th>Score</th>
-                <th>Grade</th>
-                <th>Grade Point</th>
-                </tr>'; }
+    try {
+        $matno = str_replace(' ', '', $request->matno);
+        if($this->get_student_result_session_given_matno($matno,$sessions)){
+            $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
+            //$application  = OfficialApplication::where(['matric_number'=> $matno, 'used_token'=>$request->used_token,'applicant_id'=>$request->userid,'app_status'=>'PENDING'])->first(); //Get the real application
+            $student  = Student::where('matric_number',$matno)->first();
+            $response = "";
+            $cumm_sum_point_unit = 0.0;
+            $cumm_sum_unit = 0.0;
+            $page_no = 0;
+            $this->get_prog_code_given_matno($matno, $prog_code);
+            // $this->get_dept_given_prog_code($prog_code,$prog_name, $dept , $fac); another function for prog_dept_fac
+            $this->prog_dept_fac($prog_code, $prog_name, $dept , $fac);
+            foreach($sessions as $sessionIndex => $session){
+                $page_no += 1;
+                $response .= $this->get_result_table_header($student,$applicant,$request,$prog_name, $dept , $fac,$page_no);
+                $results = $this->fetch_student_result_from_registration($matno,$session);
+                $semester = 0;
+                $sum_point_unit = 0.0;
+                $sum_unit = 0.0;
+                foreach($results as $resultIndex => $result){
+            
+                    if (($semester != $result->semester) && ($semester == 0)) {
                         
-                if(($semester != $result->semester) && ($semester != 0)) {
+                        $response = $response . '
+                <table class="result_table">
+                            <caption>Session: ' . $session . ', Semester: ' .  $this->format_semester($result->semester) . '</caption>
+                    <tr>
+                    <th>Course Code</th>
+                    <th>Course Title</th>
+                    <th>Status</th>
+                    <th>Unit</th>
+                    <th>Score</th>
+                    <th>Grade</th>
+                    <th>Grade Point</th>
+                    </tr>'; }
+                            
+                    if(($semester != $result->semester) && ($semester != 0)) {
+                            
+                        $cumm_sum_point_unit += $sum_point_unit;
+                $cumm_sum_unit += $sum_unit;
+                            
+                $gpa = $sum_point_unit / floatval($sum_unit);
+                $cgpa = $cumm_sum_point_unit / floatval($cumm_sum_unit);
+                 
+                $response = $response . '
+                </table>
+                <table class="result_table2">
+                            <tr>
+                                <td><strong>Semester</strong></td>
+                    <td>TU: <strong> '. strval($sum_unit) . '</strong></td>
+                    <td>TGP: <strong> '. strval($sum_point_unit) . '</strong></td>
+                    <td>GPA: <strong> '. strval(round($gpa, 2)) . '</strong></td>
+                    </tr>
+                    <tr>
+                    <td><strong>Cummulative</strong></td>
+                    <td>CTU: <strong> '. strval($cumm_sum_unit) . '</strong></td>
+                    <td>CTGP: <strong> '. strval($cumm_sum_point_unit) . '</strong></td>
+                    <td>CGPA: <strong> '. strval(round($cgpa, 2)) . '</strong></td>
+                    </tr>
+                </table>'; 
+                
+    
+                $response = $response .'
+                <table class="result_table">
+                            <caption>Session: ' . $session .', Semester: ' . $this->format_semester($result->semester) .'</caption>
+                    <tr>
+                    <th>Course Code</th>
+                    <th>Course Title</th>
+                    <th>Status</th>
+                    <th>Unit</th>
+                    <th>Score</th>
+                    <th>Grade</th>
+                    <th>Grade Point</th>
+                    </tr>';
+                $sum_point_unit = 0.0;
+                $sum_unit = 0.0;
+            
+        }        
+                
+                
+                $response = $response .'
+                    <tr>
+                        <td>' . strval($result->course_code) .'</td>
+                        <td>' . strval($result->course_title) .'</td>
+                        <td>' . $this->fetch_status($result->status) .'</td>
+                        <td align="center">' . strval($result->unit) .'</td>
+                        <td align="center">' . strval($result->score) .'</td>
+                        <td align="center">' . strval($result->grade) .'</td>
+                        <td align="center">' .  strval($this->get_position_given_grade(strtoupper($result->grade)) * $result->unit) .'</td>
+                    </tr>';
                         
-                    $cumm_sum_point_unit += $sum_point_unit;
+                $sum_unit += $result->unit;
+                $sum_point_unit += ($this->get_position_given_grade(strtoupper($result->grade)) * $result->unit);
+                 
+                $semester = $result->semester;
+            }      
+            $cumm_sum_point_unit += $sum_point_unit;
             $cumm_sum_unit += $sum_unit;
-                        
+                            
             $gpa = $sum_point_unit / floatval($sum_unit);
             $cgpa = $cumm_sum_point_unit / floatval($cumm_sum_unit);
-             
-            $response = $response . '
+    
+            $response = $response .'
             </table>
             <table class="result_table2">
-                        <tr>
-                            <td><strong>Semester</strong></td>
-                <td>TU: <strong> '. strval($sum_unit) . '</strong></td>
-                <td>TGP: <strong> '. strval($sum_point_unit) . '</strong></td>
-                <td>GPA: <strong> '. strval(round($gpa, 2)) . '</strong></td>
-                </tr>
                 <tr>
-                <td><strong>Cummulative</strong></td>
-                <td>CTU: <strong> '. strval($cumm_sum_unit) . '</strong></td>
-                <td>CTGP: <strong> '. strval($cumm_sum_point_unit) . '</strong></td>
-                <td>CGPA: <strong> '. strval(round($cgpa, 2)) . '</strong></td>
-                </tr>
-            </table>'; 
-            
-
-            $response = $response .'
-            <table class="result_table">
-                        <caption>Session: ' . $session .', Semester: ' . $this->format_semester($result->semester) .'</caption>
-                <tr>
-                <th>Course Code</th>
-                <th>Course Title</th>
-                <th>Status</th>
-                <th>Unit</th>
-                <th>Score</th>
-                <th>Grade</th>
-                <th>Grade Point</th>
-                </tr>';
-            $sum_point_unit = 0.0;
-            $sum_unit = 0.0;
-        
-    }        
-            
-            
-            $response = $response .'
-                <tr>
-                    <td>' . strval($result->course_code) .'</td>
-                    <td>' . strval($result->course_title) .'</td>
-                    <td>' . $this->fetch_status($result->status) .'</td>
-                    <td align="center">' . strval($result->unit) .'</td>
-                    <td align="center">' . strval($result->score) .'</td>
-                    <td align="center">' . strval($result->grade) .'</td>
-                    <td align="center">' .  strval($this->get_position_given_grade(strtoupper($result->grade)) * $result->unit) .'</td>
-                </tr>';
-                    
-            $sum_unit += $result->unit;
-            $sum_point_unit += ($this->get_position_given_grade(strtoupper($result->grade)) * $result->unit);
-             
-            $semester = $result->semester;
-        }      
-        $cumm_sum_point_unit += $sum_point_unit;
-        $cumm_sum_unit += $sum_unit;
-                        
-        $gpa = $sum_point_unit / floatval($sum_unit);
-        $cgpa = $cumm_sum_point_unit / floatval($cumm_sum_unit);
-
-        $response = $response .'
-	    </table>
-	    <table class="result_table2">
+            <td><strong>Semester</strong></td>
+            <td>TU: <strong> ' . strval($sum_unit) .'</strong></td>
+            <td>TGP: <strong> ' . strval($sum_point_unit) .'</strong></td>
+            <td>GPA: <strong> ' . strval(round($gpa, 2)) .'</strong></td>
+            </tr>
             <tr>
-		<td><strong>Semester</strong></td>
-		<td>TU: <strong> ' . strval($sum_unit) .'</strong></td>
-		<td>TGP: <strong> ' . strval($sum_point_unit) .'</strong></td>
-		<td>GPA: <strong> ' . strval(round($gpa, 2)) .'</strong></td>
-	    </tr>
-	    <tr>
-		<td><strong>Cummulative</strong></td>
-		<td>CTU: <strong> ' . strval($cumm_sum_unit) .'</strong></td>
-		<td>CTGP: <strong> ' . strval($cumm_sum_point_unit) .'</strong></td>
-		<td>CGPA: <strong> ' . strval(round($cgpa, 2)) .'</strong></td>
-	    </tr>
-	</table>';
-			
-	$response = $response .'
-	</div>';
-        
-    } 
-
-    // response = response[0: len(response) - len('</div>')]
-    $this->get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
-    $response = $response .'
-    <table class="result_table2">
-        <caption>Overall Academic Summary</caption>
-	<tr>
-            <td><strong>Status</strong></td>
-	    <td> ' . $student->status.' </td>
-	</tr>
-	<tr>
-	    <td><strong>Qualification Obtained</strong></td>
-	    <td> ' . $qualification .' </td>
-	</tr> ';
-				
-    if (strtoupper($student->status) == strtoupper("Graduated")) {
-
-        $response = $response .'<tr>
-                <td><strong>Class of Degree</strong></td>
-                <td> ' . $this->class_of_degree($cgpa).' </td>
+            <td><strong>Cummulative</strong></td>
+            <td>CTU: <strong> ' . strval($cumm_sum_unit) .'</strong></td>
+            <td>CTGP: <strong> ' . strval($cumm_sum_point_unit) .'</strong></td>
+            <td>CGPA: <strong> ' . strval(round($cgpa, 2)) .'</strong></td>
+            </tr>
+        </table>';
+                
+        $response = $response .'
+        </div>';
+            
+        } 
+    
+        // response = response[0: len(response) - len('</div>')]
+        $this->get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
+        $response = $response .'
+        <table class="result_table2">
+            <caption>Overall Academic Summary</caption>
+        <tr>
+                <td><strong>Status</strong></td>
+            <td> ' . $student->status.' </td>
+        </tr>
+        <tr>
+            <td><strong>Qualification Obtained</strong></td>
+            <td> ' . $qualification .' </td>
         </tr> ';
                     
-    }
-	$signatory = 'Toyo_OJ_Teewhy';
-    $designation = 'Toyo_OJ_Teewhy';
-    $date = date("d-M-y");
-    $response = $response .'</table>
-        <table class="result_table2">
-            <caption>Key</caption>
-            <tr>
-                <td>A => 100 - 70 => 5</td>
-                <td>4.50 - 5.00 => Excellent</td>
-                <td>TU: Total Units</td>
-            </tr>
-            <tr>
-                <td>B => 69 - 60 => 4</td>
-                <td>3.50 - 4.49 => Very Good</td>
-                <td>TGP: Total Grade Point</td>
-            </tr>
-            <tr>
-                <td>C => 59 - 50 => 3</td>
-                <td>2.50 - 3.49 => Good</td>
-                <td>GPA: Grade Point Average</td>
-            </tr>
-            <tr>
-                <td>D => 49 - 45 => 2</td>
-                <td>1.50 - 2.49 => Average</td>
-                <td>CTU: Cummulative Total Units</td>
-            </tr>
-            <tr>
-                <td>E => 44 - 40 => 1</td>
-                <td>1.00 - 1.49 => Fair</td>
-                <td>CTGP: Cummulative Total Grade Point</td>
-            </tr>
-            <tr>
-                <td>F => 39 - 0 => 0</td>
-                <td>0.00 - 0.99 => Poor</td>
-                <td>CGPA: Cummulative Grade Point Average</td>
-            </tr>
-        </table>
-        <div class="footer_">
-            ________________________________<br>
-             ' . $signatory .'<br>
-             ' . $designation.'<br>
-            For: Registrar
-        </div>
-        <div class="print_footer">
-            Any alteration renders this transcript invalid<br>
-            Generated on the  ' . $date .'<br>
-        </div>
-    </div> ';
-
-    $response = str_replace("pageno", $page_no, $response);
-
-    return $response;
-    // $pdf = PDF::loadView('pdf.invoice', $data);
-    // return $pdf->download('invoice.pdf');
-    // $pdf = PDF::make('dompdf.wrapper');
-    // return view('result')->with('data',$response);
-     //PDF::loadHTML($response)->setPaper('a4', 'landscape')->setWarnings(false)->save($applicant->email.'.pdf');
+        if (strtoupper($student->status) == strtoupper("Graduated")) {
     
-    // return Storage::download(public_path($applicant->email.'.pdf'));
-
-    $From = "transcript@run.edu.ng";
-    $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
-    $Msg = $response;  
-    $Subject = "GENERATED TRANSCRIPT";
-    $HTML_type = true;
+            $response = $response .'<tr>
+                    <td><strong>Class of Degree</strong></td>
+                    <td> ' . $this->class_of_degree($cgpa).' </td>
+            </tr> ';
+                        
+        }
+        $signatory = 'Toyo_OJ_Teewhy';
+        $designation = 'Toyo_OJ_Teewhy';
+        $date = date("d-M-y");
+        $response = $response .'</table>
+            <table class="result_table2">
+                <caption>Key</caption>
+                <tr>
+                    <td>A => 100 - 70 => 5</td>
+                    <td>4.50 - 5.00 => Excellent</td>
+                    <td>TU: Total Units</td>
+                </tr>
+                <tr>
+                    <td>B => 69 - 60 => 4</td>
+                    <td>3.50 - 4.49 => Very Good</td>
+                    <td>TGP: Total Grade Point</td>
+                </tr>
+                <tr>
+                    <td>C => 59 - 50 => 3</td>
+                    <td>2.50 - 3.49 => Good</td>
+                    <td>GPA: Grade Point Average</td>
+                </tr>
+                <tr>
+                    <td>D => 49 - 45 => 2</td>
+                    <td>1.50 - 2.49 => Average</td>
+                    <td>CTU: Cummulative Total Units</td>
+                </tr>
+                <tr>
+                    <td>E => 44 - 40 => 1</td>
+                    <td>1.00 - 1.49 => Fair</td>
+                    <td>CTGP: Cummulative Total Grade Point</td>
+                </tr>
+                <tr>
+                    <td>F => 39 - 0 => 0</td>
+                    <td>0.00 - 0.99 => Poor</td>
+                    <td>CGPA: Cummulative Grade Point Average</td>
+                </tr>
+            </table>
+            <div class="footer_">
+                ________________________________<br>
+                 ' . $signatory .'<br>
+                 ' . $designation.'<br>
+                For: Registrar
+            </div>
+            <div class="print_footer">
+                Any alteration renders this transcript invalid<br>
+                Generated on the  ' . $date .'<br>
+            </div>
+        </div> ';
     
-    // Http::attach('csv_file', $contents->post($url, $post_data);
-    // ->attach()
+        $response = str_replace("pageno", $page_no, $response);
     
-     //$response = Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
-     $response =  Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )->asForm()
-     ->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,])
-     ;     
-
-    //   Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
-    // ->post('http://adms.run.edu.ng/codebehind/trans_email.php');
-    dd($response->body());
-    if($response->ok()){
+        return $response;
+        // $pdf = PDF::loadView('pdf.invoice', $data);
+        // return $pdf->download('invoice.pdf');
+        // $pdf = PDF::make('dompdf.wrapper');
+        // return view('result')->with('data',$response);
+         //PDF::loadHTML($response)->setPaper('a4', 'landscape')->setWarnings(false)->save($applicant->email.'.pdf');
+        
+        // return Storage::download(public_path($applicant->email.'.pdf'));
+    
+        $From = "transcript@run.edu.ng";
+        $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
+        $Msg = $response;  
+        $Subject = "GENERATED TRANSCRIPT";
+        $HTML_type = true;
+        
+        // Http::attach('csv_file', $contents->post($url, $post_data);
+        // ->attach()
+        
+         //$response = Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
+         $response =  Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )->asForm()
+         ->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,])
+         ;     
+    
+        //   Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
+        // ->post('http://adms.run.edu.ng/codebehind/trans_email.php');
+        dd($response->body());
+        if($response->ok()){
+            return  response(['status'=>'success','message'=>''], 201); // return $response;
+           }
+        
+        // $resp = Http::attach('file',file_get_contents(public_path($applicant->email.'.pdf')))
+        // ->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+        // dd($resp);
+        // $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
+       return ;
+        if($resp->ok()){
         return  response(['status'=>'success','message'=>''], 201); // return $response;
        }
-    
-    // $resp = Http::attach('file',file_get_contents(public_path($applicant->email.'.pdf')))
-    // ->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
-    // dd($resp);
-    // $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
-   return ;
-    if($resp->ok()){
-    return  response(['status'=>'success','message'=>''], 201); // return $response;
-   }
-		
-    
+            
+        
+       
+    }else{ return "empty student session";}
+        
+    } catch (\Throwable $th) {
+        //throw $th;
+    }
    
-}else{ return "empty student session";}
 }
 
 
@@ -669,29 +634,29 @@ public function available_prog(){
 }
 
 
-static function get_result_table_header($student,$applicant,$application,$prog_name, $dept , $fac,$page_no){
-   try {
+static function get_result_table_header($student,$applicant,$request,$prog_name, $dept , $fac,$page_no){
+   
+    try {
        $transcript_email = 'transcripts@run.edu.ng';
        $transcript_mobile = '+234 902 859 5221';
-       $trans_type = 'Student\'s';
-    if(strtoupper($application->transcript_type) == "OFFICIAL"){
-        $trans_type = 'Official';
-   }
+       $trans_type = 'Student\'s Proof of Result';
+       $recipient = $student->SURNAME . " ". $student->FIRSTNAME;
+    if(strtoupper($request->transcript_type) == "OFFICIAL"){ $trans_type = 'Official Transcript'; $recipient= $request->recipient;}
     return ' <div class="page">
             <div class="header">
                 <img src="/assets/images/run_logo_big.png" class="logo"/>
 		<h1>REDEEMER\'S UNIVERSITY</h1>
 		<h5>P.M.B. 230, Ede, Osun State, Nigeria</h5>
 		<h5>Tel: '. $transcript_mobile . ', Website: run.edu.ng, Email: ' . $transcript_email.' </h5><br>
-		<h2> '. $trans_type  .' Transcript</h2>
-		<h5 id="recipient_h">Intended Recipient:'. $application->recipient .'   </h5>
+		<h2> '. $trans_type  .' </h2>
+		<h5 id="recipient_h">Intended Recipient: '. $recipient .'    </h5>
 		<h6>Page ' . strval($page_no) . ' of pageno </h6>
 	    </div>
 	    <div class="golden_streak"></div>
             <div class="header2">
                 <table>
                     <tr>
-                        <td>Name: <strong> '. $applicant->surname. ' '. $applicant->firstname . '</strong></td>
+                        <td>Name: <strong> '. $student->SURNAME . ' '. $student->FIRSTNAME . '</strong></td>
 			<td></td>
 			<td>Matriculation Number: <strong> ' . $applicant->matric_number .' </strong></td>
 		    </tr>
@@ -703,7 +668,7 @@ static function get_result_table_header($student,$applicant,$application,$prog_n
 		</table>
 	    </div>';
    } catch (\Throwable $th) {
-    return response(['status'=>'failed','message'=>'catch, get_result_table_header']);
+    return "Error from catch ... get_result_table_header()"; 
 
    }
 }
@@ -722,11 +687,11 @@ static function get_student_result_session_given_matno($matno,&$sessions){
 
 static function get_correct_application_for_this_request($matno,$delivery_mode,$transcript_type){
     try {
-        $application = DB::table('applications')->select('*')
+        $application = DB::table('official_applications')->select('*')
          ->where(['matric_number'=> $matno,'delivery_mode'=>$delivery_mode,'transcript_type'=>$transcript_type,'app_status'=>'PENDING'])->get();
     //     $pin = DB::table('payment_transaction')->select('rrr')
     //   ->where(['matric_number'=> $matno,'status_code'=>'00'])
-    //    ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('applications'); })->first();
+    //    ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('official_applications'); })->first();
     //    if(!empty($pin)){return $pin->rrr ;}
     //    return 'null';
        
@@ -783,10 +748,6 @@ static function get_programme_details($student,$prog_name, $dept ,$fac,&$qualifi
     return true;
 
 }
-
-
-
-
 
 
 

@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 
 
+Route::get('ht',[ApplicantionController::class,'index']);
+
 Route::get('/pdf',[AdminController::class,'download_pdf']);
 // Route::get('/', function () {
     // return view('welcome');

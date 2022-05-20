@@ -26,8 +26,16 @@ class AdminAuthController extends Controller
     }
 
     public function mail(){
-        $emails = ['reganalyst@yahoo.com','rafiua@run.edu.ng'];
-        Mail::to($emails)->send(new NotifyMail());
+        $data = [
+            'to' => ['rafiua@run.edu.ng','abayomipaulhenryhill@gmail.com','toyosiayo@icloud.com'],
+            'docs'=> [
+               ['path'=> public_path('cover.pdf'), 'as' => 'AKINTAYO COVER LETTER','mime' => 'application/pdf'],
+               ['path'=> public_path('trans.pdf'),'as' => 'AKINTAYO OFFICIAL TRANSCRIPT', 'mime' => 'application/pdf'],
+               ['path'=> public_path('cert.pdf'),'as' => 'AKINTAYO DEGREE CERTIFICATE','mime' => 'application/pdf'],
+            ]
+        ];
+       // $emails = ['reganalyst@yahoo.com','rafiua@run.edu.ng'];
+        Mail::to($data['to'])->send(new NotifyMail($data));
         if (Mail::failures()) {
              return response(['status'=>'Sorry! Please try again latter']);
         }else{
@@ -128,10 +136,10 @@ class AdminAuthController extends Controller
       
 //            try {
 //                $data = app('App\Http\Controllers\ConfigController')->auth_user(session('user'));
-//                $applications = DB::table('applications')->select('*','first_choice->prog as Programme')
+//                $official_applications = DB::table('official_applications')->select('*','first_choice->prog as Programme')
 //                ->where('submitted_by', $data->email)->get();
-//                $count = count($applications);
-//                return view('pages.home',['apps'=>$applications,'count'=>$count])->with('data', $data);
+//                $count = count($official_applications);
+//                return view('pages.home',['apps'=>$official_applications,'count'=>$count])->with('data', $data);
 //            } catch (\Throwable $th) {
 //                return back()->with('applicant_dashboard','applicant_dashboard');
 //            }  

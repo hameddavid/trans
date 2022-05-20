@@ -211,6 +211,6 @@ p{
   </style>
 </head>
 <body>
-    {{$data}}
+    {!! $data !!}
 </body>
 </html>

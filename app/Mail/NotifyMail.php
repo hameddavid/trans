@@ -16,9 +16,10 @@ class NotifyMail extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    protected $data;
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -28,6 +29,17 @@ class NotifyMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.demo');
+        // return $this->from('transcript@run.edu.ng')->view('emails.demo')
+        // ->attach(public_path('reganalyst@yahoo.com.pdf'));
+       $mail = $this->from('transcript@run.edu.ng')->view('emails.demo');
+       if(!empty($this->data["docs"])){
+        foreach($this->data["docs"] as $k => $v){
+            $mail = $mail->attach($v["path"],[
+            "as" => $v['as'],
+            'mime' => $v['mime'],
+            ]);
+        }
+        }
+        return $mail;
     }
 }
