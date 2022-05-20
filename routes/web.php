@@ -70,5 +70,3 @@ Route::middleware(['adminauth'])->group(function () {
     Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
 });
-
-
