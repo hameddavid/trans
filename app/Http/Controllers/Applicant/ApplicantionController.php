@@ -26,8 +26,8 @@ class ApplicantionController extends Controller
      */
     public function index()
     { 
-        // $app = OfficialApplication::find(25); 
-        // return view('result')->with('data',html_entity_decode($app->transcript_raw));
+        $app = OfficialApplication::find(4); 
+        return view('result')->with('data',html_entity_decode($app->transcript_raw));
         $app = StudentApplication::find(3); 
         return view('result')->with('data',html_entity_decode($app->transcript_raw));
     }

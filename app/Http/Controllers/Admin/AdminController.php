@@ -20,7 +20,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-         $this->middleware('adminauth');
+         //$this->middleware('adminauth');
         // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
@@ -221,28 +221,52 @@ class AdminController extends Controller
     }
 
     public function approve_app(Request $request){
-        $request->validate([ 'id'=>'required|string',] );
+      
+        $request->validate([ 'id'=>'required|string','transcript_type'=>'required|string'] );
         try {
-            //code...
+            
         } catch (\Throwable $th) {
-            //throw $th;
+            
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-        if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
-        $app = OfficialApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
-        if($app){
-
-            $trans = ['key'=> html_entity_decode($app->transcript_raw)];
-            view()->share('trans',$trans);
-             $pdf = PDF::loadView('viewpdf',$trans);
-             $pdf->download('owner.pdf');
-
-            $app->app_status = "APPROVED";
-            $app->approved_by = $data->email;
-            $app->approved_at = date("F j, Y, g:i a");
-            if($app->save()){ return response(["status"=>"success","message"=>"Application successfully approval"],200);  }
-            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
-        }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+        // if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
+        $type = strtoupper($request->transcript_type);
+        if($type == 'OFFICIAL'){
+            $app_official = OfficialApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
+            if($app_official){
+                //$view = view('result')->with('data',$app_official->transcript_raw);
+                $pdf = PDF::loadView('result',['data'=> $app_official->transcript_raw]);
+                return $pdf->download('invoice.pdf');
+                
+                // $trans = ['key'=> html_entity_decode($app->transcript_raw)];
+                // view()->share('trans',$trans);
+                //  $pdf = PDF::loadView('viewpdf',$trans);
+                //  $pdf->download('owner.pdf');
+    
+                $app_official->app_status = "APPROVED";
+                $app_official->approved_by = $data->email;
+                $app_official->approved_at = date("F j, Y, g:i a");
+                if($app_official->save()){ return response(["status"=>"success","message"=>"Application successfully approval"],200);  }
+                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+        }elseif($type == 'STUDENT'){
+            $app_stud = StudentApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
+            if($app_stud){
+                $pdf = PDF::loadView('pdf.invoice', $data);
+                return $pdf->download('invoice.pdf');
+                // $trans = ['key'=> html_entity_decode($app->transcript_raw)];
+                // view()->share('trans',$trans);
+                //  $pdf = PDF::loadView('viewpdf',$trans);
+                //  $pdf->download('owner.pdf');
+    
+                $app_stud->app_status = "APPROVED";
+                $app_stud->approved_by = $data->email;
+                $app_stud->approved_at = date("F j, Y, g:i a");
+                if($app_stud->save()){ return response(["status"=>"success","message"=>"Application successfully approval"],200);  }
+                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+        }else{ return response(['status'=>'failed','message'=>'Error in transcript type supplied']);}
+       
 
     }
 

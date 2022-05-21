@@ -49,17 +49,14 @@ static function find_and_replace_string($string){
     $data = [
         'to' => [$applicant->email],
         'docs'=> [ ],
-        'name' => $applicant->surname,
+        'name' => $applicant->surname ." ". $applicant->firstname,
         'sub' => $Subject,
         'message' => $Msg
          ];
   
     Mail::to($data['to'])->send(new MailingApplicant($data));
-    if (Mail::failures()) {
-         return ['status'=>'nok'];
-    }else{
-         return ['status'=>'ok'];
-       }
+    if (Mail::failures()) {return ['status'=>'nok'];
+    }else{  return ['status'=>'ok']; }
 }
 
 
