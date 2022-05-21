@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Mail;
+use App\Mail\MailingAdmin;
+use App\Mail\MailingApplicant;
 use PDF;
 
 class ApplicantionController extends Controller
@@ -23,7 +26,9 @@ class ApplicantionController extends Controller
      */
     public function index()
     { 
-        $app = OfficialApplication::find(25); //$app->transcript_raw
+        // $app = OfficialApplication::find(25); 
+        // return view('result')->with('data',html_entity_decode($app->transcript_raw));
+        $app = StudentApplication::find(3); 
         return view('result')->with('data',html_entity_decode($app->transcript_raw));
     }
 
@@ -31,6 +36,7 @@ class ApplicantionController extends Controller
     public function submit_app(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
         try {  
+            $mail_data = [];
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
@@ -55,7 +61,7 @@ class ApplicantionController extends Controller
                         $update_payment_table = Payment::where('rrr', $request->used_token)->first();
                         $update_payment_table->app_id = $new_application->application_id;
                         $update_payment_table->save();
-                        if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
+                        if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg())['status'] == 'ok'){
                          return response(['status'=>'success','message'=>'Application successfully created'],201);   
                             } 
                             else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
@@ -77,7 +83,7 @@ class ApplicantionController extends Controller
                     $new_application->transcript_raw =  $trans_raw;
                     if($new_application->save() ){  
                        //  Generate the transacript HTML here and save temprary
-                       if($this->send_email_notification($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg($applicant))['status'] == 'success'){
+                       if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg())['status'] == 'ok'){
                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
                            } 
                            else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
@@ -264,19 +270,21 @@ static function send_email_notification($applicant,$Subject,$Msg){
 
 
 
-static function get_msg($applicant){
-  return  $Msg =  '
-    ------------------------<br>
-    Dear ' .$applicant->surname.' '. $applicant->firstname.',
-    We have successfully received your  new transcript application request, 
-    kindly excercise  patience while your request is being processed.<br>
-    <br>
-    Thank you.<br>
-    <br>
-    OUR REDEEMER IS STRONG!
+static function get_msg(){
+    return 'We have successfully received your  new transcript application request, 
+    kindly excercise  patience while your request is being processed.';
+//   return  $Msg =  '
+//     ------------------------<br>
+//     Dear ' .$applicant->surname.' '. $applicant->firstname.',
+//     We have successfully received your  new transcript application request, 
+//     kindly excercise  patience while your request is being processed.<br>
+//     <br>
+//     Thank you.<br>
+//     <br>
+//     OUR REDEEMER IS STRONG!
    
-    ------------------------
-        ';  
+//     ------------------------
+//         ';  
 }
 
 

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Mail;
+use App\Mail\MailingAdmin;
+use App\Mail\MailingApplicant;
 
 class ConfigController extends Controller
 {
@@ -39,5 +42,61 @@ static function find_and_replace_string($string){
     $Subject = "FORGOT MATRIC NUMBER ";
     $HTML_type = true;
  }
+
+
+ public function applicant_mail($applicant,$Subject,$Msg){
+    
+    $data = [
+        'to' => [$applicant->email],
+        'docs'=> [ ],
+        'name' => $applicant->surname,
+        'sub' => $Subject,
+        'message' => $Msg
+         ];
+  
+    Mail::to($data['to'])->send(new MailingApplicant($data));
+    if (Mail::failures()) {
+         return ['status'=>'nok'];
+    }else{
+         return ['status'=>'ok'];
+       }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  class
  
 }

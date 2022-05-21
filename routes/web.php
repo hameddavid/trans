@@ -6,6 +6,14 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 
 
+
+
+// Route::get('/mailtemp', function () {
+//     $details = ["message" => "What we do ..........", "name"=>"Teewhy Baba"];
+//     return view('emails.notify_student')->with('details',$details);
+// });
+
+
 Route::get('ht',[ApplicantionController::class,'index']);
 
 Route::get('/pdf',[AdminController::class,'download_pdf']);

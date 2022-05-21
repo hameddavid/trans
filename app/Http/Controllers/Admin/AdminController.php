@@ -11,6 +11,9 @@ use App\Models\Payment;
 use App\Models\ForgotMatno;
 use App\Models\Applicant;
 use Illuminate\Support\Facades\Http;
+use Mail;
+use App\Mail\MailingAdmin;
+use App\Mail\MailingApplicant;
 use PDF;
 
 class AdminController extends Controller

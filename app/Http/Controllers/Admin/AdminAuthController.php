@@ -12,7 +12,8 @@ use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Mail;
-use App\Mail\NotifyMail;
+use App\Mail\MailingAdmin;
+use App\Mail\MailingApplicant;
 
 
 
@@ -25,23 +26,7 @@ class AdminAuthController extends Controller
        // $this->middleware('subscribed')->except('store');
     }
 
-    public function mail(){
-        $data = [
-            'to' => ['rafiua@run.edu.ng','abayomipaulhenryhill@gmail.com','toyosiayo@icloud.com'],
-            'docs'=> [
-               ['path'=> public_path('cover.pdf'), 'as' => 'AKINTAYO COVER LETTER','mime' => 'application/pdf'],
-               ['path'=> public_path('trans.pdf'),'as' => 'AKINTAYO OFFICIAL TRANSCRIPT', 'mime' => 'application/pdf'],
-               ['path'=> public_path('cert.pdf'),'as' => 'AKINTAYO DEGREE CERTIFICATE','mime' => 'application/pdf'],
-            ]
-        ];
-       // $emails = ['reganalyst@yahoo.com','rafiua@run.edu.ng'];
-        Mail::to($data['to'])->send(new NotifyMail($data));
-        if (Mail::failures()) {
-             return response(['status'=>'Sorry! Please try again latter']);
-        }else{
-             return response(['status'=>'Great! Successfully send in your mail']);
-           }
-    }
+   
     public function login(Request $request){
         $request->validate([ "email" => "required","password"=>"required"]); 
     
@@ -294,6 +279,29 @@ public function auth_user($email){
    
     }
    }
+
+
+ public function admin_mail($request){
+    // $data = [
+    //     'to' => ['rafiua@run.edu.ng','abayomipaulhenryhill@gmail.com','toyosiayo@icloud.com'],
+    //     'docs'=> [
+    //        ['path'=> public_path('cover.pdf'), 'as' => 'AKINTAYO COVER LETTER','mime' => 'application/pdf'],
+    //        ['path'=> public_path('trans.pdf'),'as' => 'AKINTAYO OFFICIAL TRANSCRIPT', 'mime' => 'application/pdf'],
+    //        ['path'=> public_path('cert.pdf'),'as' => 'AKINTAYO DEGREE CERTIFICATE','mime' => 'application/pdf'],
+    //     ]
+    // ];
+    $data = [
+        'to' => [],
+        'docs'=> [ ]
+         ];
+  
+    Mail::to($data['to'])->send(new NotifyMail($data));
+    if (Mail::failures()) {
+         return response(['status'=>'Sorry! Please try again latter']);
+    }else{
+         return response(['status'=>'Great! Successfully send in your mail']);
+       }
+}
 
 
 

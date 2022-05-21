@@ -144,7 +144,7 @@
 <p style="margin: 0; font-size: 14px; text-align: center; padding: 10px; mso-line-height-alt: 21px;"><span style="font-size:14px;"><div style="font-size: 14px; color: #666D71;">Dear Admin,</div>
 	<br>
 
-	<span style="font-size: 14px; color: #666D71;"> {{$details['message']}}  
+	<span style="font-size: 14px; color: #666D71;"> {{$data['message']}}  
 	 </span><hr>
 	<br>
 	

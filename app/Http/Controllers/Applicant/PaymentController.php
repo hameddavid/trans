@@ -8,6 +8,9 @@ use App\Models\Applicant;
 use App\Models\Payment;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp\Client;
+use Mail;
+use App\Mail\MailingAdmin;
+use App\Mail\MailingApplicant;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
