@@ -90,6 +90,11 @@ $(document).ready(function ($) {
         });
     });
 
+    $(".preview").click(function () {
+        $("#previewModal").modal("show");
+        $("#previewModalLabel").html($(this).data("name") + "'s Details");
+    });
+
     $(".viewForgotMatric").click(function () {
         $("#forgotMatric").modal("show");
         email = $(this).data("email");

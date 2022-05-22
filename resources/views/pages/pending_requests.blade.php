@@ -41,7 +41,7 @@
                                                 @foreach($apps as $app)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td>{{$app->surname.' '.$app->firstname}}</td>
+                                                    <td><button data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
                                                     <td>{{$app->matric_number}}</td>
                                                     <td>{{$app->recipient}}</td>
                                                     <td>{{$app->destination}}</td>
@@ -60,7 +60,7 @@
                                                                 </div>
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
                                                                     @if($data->role == 200)<button type="button" data-id="{{$app->application_id}}" title="Recommend" class="btn btn-success w-xs recommend"><i class="mdi mdi-thumb-up"></i></button>@endif
-                                                                    <button type="button" title="Disapprove" class="btn btn-danger w-xs"><i class="mdi mdi-thumb-down"></i></button>
+                                                                    @if($data->role == 200)<button type="button" title="Disapprove" class="btn btn-danger w-xs"><i class="mdi mdi-thumb-down"></i></button>@endif
                                                                 </div> 
                                                             </div>
                                                         </div>                                                        
@@ -96,6 +96,57 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
                             @if($data->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button>@endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /modal -->
+
+            <!-- Preview modal -->
+            <div id="previewModal" class="modal fade" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="previewModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-check form-check-right">
+                                <input class="form-check-input" type="checkbox" id="recipient"
+                                    checked>
+                                <label class="form-check-label" for="recipient">
+                                    Name of Institution/Organization:Havard
+                                </label>
+                                <input type="text" class="form-control" required>
+                            </div><hr>
+                            <div class="form-check form-check-right">
+                                <input class="form-check-input" type="checkbox" id="refernce"
+                                    checked>
+                                <label class="form-check-label" for="refernce">
+                                    Reference Number:122222
+                                </label>
+                                <input type="text" class="form-control" required>
+                            </div><hr>
+                            <div class="form-check form-check-right">
+                                <input class="form-check-input" type="checkbox" id="email"
+                                    checked>
+                                <label class="form-check-label" for="email">
+                                    Email:test@gmail.com
+                                </label>
+                                <input type="text" class="form-control" required>
+                            </div><hr>
+                            <div class="form-check form-check-right">
+                                <input class="form-check-input" type="checkbox" id="email"
+                                    checked>
+                                <label class="form-check-label" for="email">
+                                    Adress of Institution/Organization:Block 1...
+                                </label>
+                                <textarea class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger waves-effect">Send</button>
                         </div>
                     </div>
                 </div>
