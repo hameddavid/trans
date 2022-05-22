@@ -41,7 +41,7 @@
                                                 @foreach($apps as $app)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td><button data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
+                                                    <td><button data-status="{{$app->app_status}}" data-recipient="{{$app->recipient}}" data-type="{{$app->transcript_type}}" data-address="{{$app->app_address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
                                                     <td>{{$app->matric_number}}</td>
                                                     <td>{{$app->recipient}}</td>
                                                     <td>{{$app->destination}}</td>
@@ -115,7 +115,7 @@
                                 <input class="form-check-input" type="checkbox" id="recipient"
                                     checked>
                                 <label class="form-check-label" for="recipient">
-                                    Name of Institution/Organization:Havard
+                                    Name of Institution/Organization:<span id="show_recipient"></span>
                                 </label>
                                 <input type="text" class="form-control" required>
                             </div><hr>
@@ -123,7 +123,7 @@
                                 <input class="form-check-input" type="checkbox" id="refernce"
                                     checked>
                                 <label class="form-check-label" for="refernce">
-                                    Reference Number:122222
+                                    Reference Number:<span id="show_reference"></span>
                                 </label>
                                 <input type="text" class="form-control" required>
                             </div><hr>
@@ -131,15 +131,15 @@
                                 <input class="form-check-input" type="checkbox" id="email"
                                     checked>
                                 <label class="form-check-label" for="email">
-                                    Email:test@gmail.com
+                                    Email:<span id="show_address"></span>
                                 </label>
                                 <input type="text" class="form-control" required>
                             </div><hr>
                             <div class="form-check form-check-right">
-                                <input class="form-check-input" type="checkbox" id="email"
+                                <input class="form-check-input" type="checkbox" id="address"
                                     checked>
-                                <label class="form-check-label" for="email">
-                                    Adress of Institution/Organization:Block 1...
+                                <label class="form-check-label" for="address">
+                                    Adress of Institution/Organization:<span id="show_address"></span>
                                 </label>
                                 <textarea class="form-control" required></textarea>
                             </div>

@@ -93,6 +93,19 @@ $(document).ready(function ($) {
     $(".preview").click(function () {
         $("#previewModal").modal("show");
         $("#previewModalLabel").html($(this).data("name") + "'s Details");
+        if ($(this).data("type") === "Hard") {
+            $("#email").hide();
+        }
+        if ($(this).data("type") === "Soft") {
+            $("#address").hide();
+        }
+        var id = $(this).data("id");
+        var stat = $(this).data("status");
+        var recipient = $(this).data("recipient");
+        var address = $(this).data("address");
+
+        $("#show_recipient").html(recipient);
+        $("#show_address").html(address);
     });
 
     $(".viewForgotMatric").click(function () {
