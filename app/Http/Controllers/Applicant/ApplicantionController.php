@@ -54,7 +54,7 @@ class ApplicantionController extends Controller
             if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
             $certificate = $this->upload_cert($request);
             }
-            $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id]);
+            $request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id]);
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
                 $trans_raw = $this->get_student_result($request);
