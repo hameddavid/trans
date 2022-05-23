@@ -90,6 +90,25 @@ $(document).ready(function ($) {
         });
     });
 
+    $(".preview").click(function () {
+        $("#previewModal").modal("show");
+        $("#previewModalLabel").html($(this).data("name") + "'s Details");
+        var id = $(this).data("id");
+        var recipient = $(this).data("recipient");
+        var address = $(this).data("address");
+
+        if ($(this).data("mode") === "Hard") {
+            $(".email").hide();
+            $("#show_address").html(address);
+        }
+        if ($(this).data("mode") === "Soft") {
+            $("#show_email").html(address);
+            $(".address").hide();
+        }
+
+        $("#show_recipient").html(recipient);
+    });
+
     $(".viewForgotMatric").click(function () {
         $("#forgotMatric").modal("show");
         email = $(this).data("email");
