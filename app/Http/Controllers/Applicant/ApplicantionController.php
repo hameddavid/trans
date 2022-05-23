@@ -26,10 +26,8 @@ class ApplicantionController extends Controller
      */
 
      public function upload_cert($request){
-        return $request;
         try {
-            $path = Storage::disk('local')->putFileAs('credentials', $request->file('certificate'), 
-            strtoupper($request->surname) ."_". strtoupper($request->firstname)."_". $request->app_id ."_DEGREE_CERTIFICATE.pdf"); 
+            $path = Storage::disk('local')->putFileAs('credentials', $request->file('certificate'), strtoupper($request->surname) ."_". strtoupper($request->firstname)."_". $request->app_id ."_DEGREE_CERTIFICATE.pdf"); 
             return $path;
         } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'Error with upload_cert function']);
@@ -52,11 +50,10 @@ class ApplicantionController extends Controller
             $certificate = "";
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id]);
-            return $request;
             if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
-            return $this->upload_cert($request);
             $certificate = $this->upload_cert($request);
             }
+            return $request;
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
                 $trans_raw = $this->get_student_result($request);
