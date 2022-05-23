@@ -44,7 +44,6 @@ class ApplicantionController extends Controller
 
 
     public function submit_app(Request $request){
-        dd($request->all());
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
        // try {  
             $mail_data = [];
@@ -114,9 +113,9 @@ class ApplicantionController extends Controller
                         // Notify admin
                     } 
                 }else{
-                    return response(['status'=>'failed','message'=>'Error in transcript type supplied']);
+                    return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
                 }
-            }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found']);   }
+            }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found'],401);   }
         // } catch (\Throwable $th) {
         //      return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
             
