@@ -28,7 +28,8 @@ class ApplicantionController extends Controller
      public function upload_cert($request){
         
         try {
-            $path = Storage::disk('local')->putFileAs('credentials', $request->file('certificate'), strtoupper($surname) ."_". strtoupper($firstname)."_". $app_id ."_DEGREE_CERTIFICATE.pdf"); 
+            $path = Storage::disk('local')->putFileAs('credentials', $request->file('certificate'), 
+            strtoupper($request->surname) ."_". strtoupper($request->firstname)."_". $request->app_id ."_DEGREE_CERTIFICATE.pdf"); 
             return $path;
         } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'Error with upload_cert function']);
@@ -46,13 +47,14 @@ class ApplicantionController extends Controller
 
     public function submit_app(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
-        try {  
+       // try {  
             $mail_data = [];
             $certificate = "";
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
             $certificate = $this->upload_cert($request);
             }
+            $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id]);
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
                 $trans_raw = $this->get_student_result($request);
@@ -116,10 +118,10 @@ class ApplicantionController extends Controller
                     return response(['status'=>'failed','message'=>'Error in transcript type supplied']);
                 }
             }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found']);   }
-        } catch (\Throwable $th) {
-             return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)']);
+        // } catch (\Throwable $th) {
+        //      return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
             
-         }
+        //  }
         
 }
 
