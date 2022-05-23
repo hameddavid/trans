@@ -11,6 +11,8 @@ use App\Models\Payment;
 use App\Models\ForgotMatno;
 use App\Models\Applicant;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Mail;
 use App\Mail\MailingAdmin;
 use App\Mail\MailingApplicant;
@@ -229,25 +231,24 @@ class AdminController extends Controller
             
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-        // if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
+         if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
         $type = strtoupper($request->transcript_type);
         if($type == 'OFFICIAL'){
-            $app_official = OfficialApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
+            $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
+            ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','applicants.surname','applicants.firstname','applicants.email')->first(); 
             if($app_official){
-                //$view = view('result')->with('data',$app_official->transcript_raw);
-                $pdf = PDF::loadView('result',['data'=> $app_official->transcript_raw]);
-                return $pdf->download('invoice.pdf');
-                
-                // $trans = ['key'=> html_entity_decode($app->transcript_raw)];
-                // view()->share('trans',$trans);
-                //  $pdf = PDF::loadView('viewpdf',$trans);
-                //  $pdf->download('owner.pdf');
-    
-                $app_official->app_status = "APPROVED";
-                $app_official->approved_by = $data->email;
-                $app_official->approved_at = date("F j, Y, g:i a");
-                if($app_official->save()){ return response(["status"=>"success","message"=>"Application successfully approval"],200);  }
-                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+               PDF::loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
+            if (File::exists($app_official->used_token.'.pdf')) {
+                if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
+                    $app_official->app_status = "APPROVED";
+                    $app_official->approved_by = 'Approvee'; //$data->email;
+                    $app_official->approved_at = date("F j, Y, g:i a");
+                    if($app_official->save()){
+                         File::delete($app_official->used_token.'.pdf');
+                         return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
+                    else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
+                }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
+                }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  } 
             }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
         }elseif($type == 'STUDENT'){
             $app_stud = StudentApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
@@ -293,11 +294,13 @@ class AdminController extends Controller
     }
 
 
-
-
-
-
-
+public function get_delivery_msg($data){
+    try {
+        return "Kindly find attached, transcript for ". $data->surname . " ".$data->firstname ." with matric number ". $data->matric_number;
+    } catch (\Throwable $th) {
+        //throw $th;
+    }
+}
 
 
 

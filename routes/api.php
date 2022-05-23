@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 Route::get('app/available_prog', [ApplicantionController::class, 'available_prog']);
 Route::post('app/send_att', [ApplicantAuthController::class, 'send_att']);
 
@@ -46,12 +47,16 @@ Route::post('app/remita_bank_payment', [PaymentController::class, 'remita_bank_p
 Route::post('app/forgot_password', [ApplicantAuthController::class, 'forgot_password']);
 Route::post('app/reset_password', [ApplicantAuthController::class, 'reset_password']);
 
-
+// Please remove all the routes here before final production
 // Admin api routes
 // Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
 // Route::post('register',[AdminAuthController::class,'save_new_account']);
 // Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
 Route::post('/approve_app',[AdminController::class,'approve_app']);
+Route::post('upload_cert', [ApplicantionController::class, 'upload_cert']);
+
+
+
 
 
 
@@ -70,7 +75,6 @@ Route::post('/approve_app',[AdminController::class,'approve_app']);
 // let it be web route
 
 Route::post('get_student_result', [ApplicantionController::class, 'get_student_result']);
-
 
 
 

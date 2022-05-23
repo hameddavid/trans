@@ -24,6 +24,17 @@ class ApplicantionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function upload_cert($request){
+        
+        try {
+            $path = Storage::disk('local')->putFileAs('credentials', $request->file('certificate'), strtoupper($surname) ."_". strtoupper($firstname)."_". $app_id ."_DEGREE_CERTIFICATE.pdf"); 
+            return $path;
+        } catch (\Throwable $th) {
+            return response(['status'=>'failed','message'=>'Error with upload_cert function']);
+        }
+        
+     }
     public function index()
     { 
         $app = OfficialApplication::find(4); 
@@ -37,7 +48,11 @@ class ApplicantionController extends Controller
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
         try {  
             $mail_data = [];
+            $certificate = "";
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
+            if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
+            $certificate = $this->upload_cert($request);
+            }
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
                 $trans_raw = $this->get_student_result($request);
@@ -55,6 +70,10 @@ class ApplicantionController extends Controller
                      $new_application->recipient = $request->recipient;
                      $new_application->app_status = 'PENDING'; // default status
                      $new_application->used_token = $request->used_token;
+                     $new_application->graduation_year = $request->graduation_year? $request->graduation_year:"";
+                     $new_application->grad_status = $request->grad_status? $request->grad_status:"";
+                     $new_application->reference = $request->reference? $request->reference:"";
+                     $new_application->certificate = $certificate; 
                      $new_application->transcript_raw = $trans_raw; //view('pages.trans', ['data'=>$trans_raw]);
                      if($new_application->save()){ 
                         //  Generate the transacript HTML here and save temprary
@@ -70,7 +89,7 @@ class ApplicantionController extends Controller
                      } 
                  }else{ return response(['status'=>'failed','message'=>'Invalid application payment pin!']);    }
                 
-                }elseif($type == 'STUDENT'){
+                }elseif($type == 'STUDENT' || $type == 'PROFICIENCY'){
                     $new_application = new StudentApplication();
                     $new_application->matric_number   = $request->matno;
                     $new_application->applicant_id  = $request->userid;
@@ -80,6 +99,9 @@ class ApplicantionController extends Controller
                     $new_application->destination = "Student Transcript";
                     $new_application->recipient =  $applicant->surname ." ". $applicant->firstname;
                     $new_application->app_status = "PENDING"; // default status
+                    $new_application->graduation_year = $request->graduation_year? $request->graduation_year:"";
+                    $new_application->grad_status = $request->grad_status? $request->grad_status:"";
+                    $new_application->certificate = $certificate; 
                     $new_application->transcript_raw =  $trans_raw;
                     if($new_application->save() ){  
                        //  Generate the transacript HTML here and save temprary

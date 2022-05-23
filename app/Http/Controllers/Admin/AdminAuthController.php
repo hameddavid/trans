@@ -281,7 +281,7 @@ public function auth_user($email){
    }
 
 
- public function admin_mail($request){
+ public function admin_mail($admin,$Subject,$Msg){
     // $data = [
     //     'to' => ['rafiua@run.edu.ng','abayomipaulhenryhill@gmail.com','toyosiayo@icloud.com'],
     //     'docs'=> [
@@ -290,17 +290,18 @@ public function auth_user($email){
     //        ['path'=> public_path('cert.pdf'),'as' => 'AKINTAYO DEGREE CERTIFICATE','mime' => 'application/pdf'],
     //     ]
     // ];
+   
     $data = [
-        'to' => [],
-        'docs'=> [ ]
+        'to' => [$admin->email],
+        'docs'=> [ ],
+        'name' => $admin->surname ." ". $admin->firstname,
+        'sub' => $Subject,
+        'message' => $Msg
          ];
   
-    Mail::to($data['to'])->send(new NotifyMail($data));
-    if (Mail::failures()) {
-         return response(['status'=>'Sorry! Please try again latter']);
-    }else{
-         return response(['status'=>'Great! Successfully send in your mail']);
-       }
+    Mail::to($data['to'])->send(new MailingApplicant($data));
+    if (Mail::failures()) {return ['status'=>'nok'];
+    }else{  return ['status'=>'ok']; }
 }
 
 
