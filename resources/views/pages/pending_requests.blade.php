@@ -41,7 +41,7 @@
                                                 @foreach($apps as $app)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td><button data-status="{{$app->app_status}}" data-recipient="{{$app->recipient}}" data-type="{{$app->transcript_type}}" data-address="{{$app->app_address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
+                                                    <td><button data-status="{{$app->app_status}}" data-recipient="{{$app->recipient}}" data-mode="{{$app->delivery_mode}}" data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
                                                     <td>{{$app->matric_number}}</td>
                                                     <td>{{$app->recipient}}</td>
                                                     <td>{{$app->destination}}</td>
@@ -127,15 +127,15 @@
                                 </label>
                                 <input type="text" class="form-control" required>
                             </div><hr>
-                            <div class="form-check form-check-right">
+                            <div class="form-check form-check-right email">
                                 <input class="form-check-input" type="checkbox" id="email"
                                     checked>
                                 <label class="form-check-label" for="email">
-                                    Email:<span id="show_address"></span>
+                                    Email:<span id="show_email"></span>
                                 </label>
-                                <input type="text" class="form-control" required>
-                            </div><hr>
-                            <div class="form-check form-check-right">
+                                <input type="text" class="form-control" required><hr>
+                            </div>
+                            <div class="form-check form-check-right address">
                                 <input class="form-check-input" type="checkbox" id="address"
                                     checked>
                                 <label class="form-check-label" for="address">

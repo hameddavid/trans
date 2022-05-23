@@ -93,14 +93,13 @@ $(document).ready(function ($) {
     $(".preview").click(function () {
         $("#previewModal").modal("show");
         $("#previewModalLabel").html($(this).data("name") + "'s Details");
-        if ($(this).data("type") === "Hard") {
-            $("#email").hide();
+        if ($(this).data("mode") === "Hard") {
+            $(".email").hide();
         }
-        if ($(this).data("type") === "Soft") {
-            $("#address").hide();
+        if ($(this).data("mode") === "Soft") {
+            $(".address").hide();
         }
         var id = $(this).data("id");
-        var stat = $(this).data("status");
         var recipient = $(this).data("recipient");
         var address = $(this).data("address");
 
