@@ -93,18 +93,20 @@ $(document).ready(function ($) {
     $(".preview").click(function () {
         $("#previewModal").modal("show");
         $("#previewModalLabel").html($(this).data("name") + "'s Details");
-        if ($(this).data("mode") === "Hard") {
-            $(".email").hide();
-        }
-        if ($(this).data("mode") === "Soft") {
-            $(".address").hide();
-        }
         var id = $(this).data("id");
         var recipient = $(this).data("recipient");
         var address = $(this).data("address");
 
+        if ($(this).data("mode") === "Hard") {
+            $(".email").hide();
+            $("#show_address").html(address);
+        }
+        if ($(this).data("mode") === "Soft") {
+            $("#show_email").html(address);
+            $(".address").hide();
+        }
+
         $("#show_recipient").html(recipient);
-        $("#show_address").html(address);
     });
 
     $(".viewForgotMatric").click(function () {

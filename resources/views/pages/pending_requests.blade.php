@@ -115,7 +115,7 @@
                                 <input class="form-check-input" type="checkbox" id="recipient"
                                     checked>
                                 <label class="form-check-label" for="recipient">
-                                    Name of Institution/Organization:<span id="show_recipient"></span>
+                                    Name of Institution/Organization: <span id="show_recipient"></span>
                                 </label>
                                 <input type="text" class="form-control" required>
                             </div><hr>
@@ -123,7 +123,7 @@
                                 <input class="form-check-input" type="checkbox" id="refernce"
                                     checked>
                                 <label class="form-check-label" for="refernce">
-                                    Reference Number:<span id="show_reference"></span>
+                                    Reference Number: <span id="show_reference"></span>
                                 </label>
                                 <input type="text" class="form-control" required>
                             </div><hr>
@@ -131,7 +131,7 @@
                                 <input class="form-check-input" type="checkbox" id="email"
                                     checked>
                                 <label class="form-check-label" for="email">
-                                    Email:<span id="show_email"></span>
+                                    Email: <span id="show_email"></span>
                                 </label>
                                 <input type="text" class="form-control" required><hr>
                             </div>
@@ -139,7 +139,7 @@
                                 <input class="form-check-input" type="checkbox" id="address"
                                     checked>
                                 <label class="form-check-label" for="address">
-                                    Adress of Institution/Organization:<span id="show_address"></span>
+                                    Adress of Institution/Organization: <span id="show_address"></span>
                                 </label>
                                 <textarea class="form-control" required></textarea>
                             </div>
