@@ -52,6 +52,7 @@ class ApplicantionController extends Controller
             $certificate = "";
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id]);
+            return $request;
             if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
             return $this->upload_cert($request);
             $certificate = $this->upload_cert($request);
