@@ -44,7 +44,7 @@ class ApplicantionController extends Controller
 
 
     public function submit_app(Request $request){
-        dd($request->file('certificate'));
+        dd($request->all());
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
        // try {  
             $mail_data = [];
