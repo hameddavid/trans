@@ -286,7 +286,7 @@ class AdminController extends Controller
             $app->app_status = "PENDING";
             $app->approved_by = "";
             $app->approved_at = "";
-            $app->transcript_raw = view('pages.trans', ['data'=>app('App\Http\Controllers\Applicant\ApplicantionController')->get_student_result($request)]);
+            $app->transcript_raw = view('pages.trans', ['data'=>app('App\Http\Controllers\Applicant\ApplicationController')->get_student_result($request)]);
             if($app->save()){ return response(["status"=>"success","message"=>"Transcript successfully regenerated!"]);  }
             else{return response(["status"=>"failed","message"=>"Error updating transcript regeneration"],200); }
         }else{ return response(["status"=>"failed","message"=>"No transcript found for regeneration"],401); }

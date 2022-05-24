@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Applicant;
 use App\Http\Controllers\Controller;
 use App\Models\OfficialApplication;
 use App\Models\StudentApplication;
+use App\Models\Admin;
 use App\Models\Student;
 use App\Models\Payment;
 use App\Models\Applicant;
@@ -17,7 +18,7 @@ use App\Mail\MailingAdmin;
 use App\Mail\MailingApplicant;
 use PDF;
 
-class ApplicantionController extends Controller
+class ApplicationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -45,17 +46,17 @@ class ApplicantionController extends Controller
 
     public function submit_app(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
-       // try {  
-            $mail_data = [];
+        try {  
             $certificate = "";
+            $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
-            $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id]);
+            $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id,'emails'=>$admin_users]);
             if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
             $certificate = $this->upload_cert($request);
             }
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
-                $trans_raw = $this->get_student_result($request);
+                $trans_raw = $this->get_student_result($request); //  Generate the transacript HTML here
             if($type == 'OFFICIAL'){
                 $request->validate(["mode" => "required","recipient"=>"required",'used_token'=>'required']); 
                 if($request->mode != "soft"){ $request->validate(["address"=>"required", "destination"=>"required"]);  }
@@ -74,18 +75,18 @@ class ApplicantionController extends Controller
                      $new_application->grad_status = $request->grad_status? $request->grad_status:"";
                      $new_application->reference = $request->reference? $request->reference:"";
                      $new_application->certificate = $certificate; 
-                     $new_application->transcript_raw = $trans_raw; //view('pages.trans', ['data'=>$trans_raw]);
+                     $new_application->transcript_raw = $trans_raw; 
                      if($new_application->save()){ 
-                        //  Generate the transacript HTML here and save temprary
                         $update_payment_table = Payment::where('rrr', $request->used_token)->first();
                         $update_payment_table->app_id = $new_application->application_id;
                         $update_payment_table->save();
+                         // Notify applicant through email  $applicant->email and Notify admin
                         if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg())['status'] == 'ok'){
-                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
+                            app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="NEW TRANSCRIPT ($type) REQUEST",$Msg=$this->get_admin_msg($applicant));
+                            return response(['status'=>'success','message'=>'Application successfully created'],201);   
                             } 
                             else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
-                         // Notify applicant through email  $applicant->email
-                         // Notify admin
+                        
                      } 
                  }else{ return response(['status'=>'failed','message'=>'Invalid application payment pin!']);    }
                 
@@ -104,22 +105,21 @@ class ApplicantionController extends Controller
                     $new_application->certificate = $certificate; 
                     $new_application->transcript_raw =  $trans_raw;
                     if($new_application->save() ){  
-                       //  Generate the transacript HTML here and save temprary
+                        // Notify applicant through email  $applicant->email and Notify admin
                        if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg())['status'] == 'ok'){
+                        app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="NEW TRANSCRIPT ($type) REQUEST",$Msg=$this->get_admin_msg($applicant));
                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
                            } 
                            else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
-                        // Notify applicant through email  $applicant->email
-                        // Notify admin
                     } 
                 }else{
                     return response(['status'=>'failed','message'=>'Error in transcript type supplied']);
                 }
             }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found']);   }
-        // } catch (\Throwable $th) {
-        //      return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
+        } catch (\Throwable $th) {
+             return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
             
-        //  }
+         }
         
 }
 
@@ -307,6 +307,11 @@ static function get_msg(){
    
 //     ------------------------
 //         ';  
+}
+static function get_admin_msg($applicant){
+    return 'kindly check the transcript admin dashboard in order to attend to this urgent request from '
+    .$applicant->surname ." ".$applicant->firstname." with matric number: ".$applicant->matric_number;
+
 }
 
 

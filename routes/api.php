@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Applicant\ApplicantionController;
+use App\Http\Controllers\Applicant\ApplicationController;
 use App\Http\Controllers\Applicant\ApplicantAuthController;
 use App\Http\Controllers\Applicant\PaymentController;
 
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('app/available_prog', [ApplicantionController::class, 'available_prog']);
+Route::get('app/available_prog', [ApplicationController::class, 'available_prog']);
 Route::post('app/send_att', [ApplicantAuthController::class, 'send_att']);
 
 Route::post('app/register', [ApplicantAuthController::class, 'applicant_register']);
@@ -22,19 +22,19 @@ Route::post('app/login', [ApplicantAuthController::class, 'applicant_login']);
 
 Route::post('app/save_forgot_matno', [ApplicantAuthController::class, 'save_forgot_matno']);
 
-Route::post('app/save', [ApplicantionController::class, 'store']);
+Route::post('app/save', [ApplicationController::class, 'store']);
 
-Route::get('app/check_request_availability', [ApplicantionController::class, 'check_request_availability']);
+Route::get('app/check_request_availability', [ApplicationController::class, 'check_request_availability']);
 
-Route::get('app/get_transcript_destination_and_amount', [ApplicantionController::class, 'get_transcript_destination_and_amount']);
-Route::get('app/get_applicant_stat', [ApplicantionController::class, 'get_applicant_stat']);
-Route::get('app/my_applications', [ApplicantionController::class, 'my_applications']);
-Route::get('app/my_payments', [ApplicantionController::class, 'my_payments']);
+Route::get('app/get_transcript_destination_and_amount', [ApplicationController::class, 'get_transcript_destination_and_amount']);
+Route::get('app/get_applicant_stat', [ApplicationController::class, 'get_applicant_stat']);
+Route::get('app/my_applications', [ApplicationController::class, 'my_applications']);
+Route::get('app/my_payments', [ApplicationController::class, 'my_payments']);
 
 Route::post('app/check_pend_rrr', [PaymentController::class, 'check_pend_rrr']);
 Route::post('app/log_new_rrr_trans_ref', [PaymentController::class, 'log_new_rrr_trans_ref']);
 
-Route::post('app/submit_app', [ApplicantionController::class, 'submit_app']);
+Route::post('app/submit_app', [ApplicationController::class, 'submit_app']);
 
 Route::get('app/get_gateway_config', [PaymentController::class, 'get_gateway_config']);
 Route::post('app/update_payment', [PaymentController::class, 'update_payment']);
@@ -53,7 +53,7 @@ Route::post('app/reset_password', [ApplicantAuthController::class, 'reset_passwo
 // Route::post('register',[AdminAuthController::class,'save_new_account']);
 // Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
 Route::post('/approve_app',[AdminController::class,'approve_app']);
-Route::post('upload_cert', [ApplicantionController::class, 'upload_cert']);
+Route::post('upload_cert', [ApplicationController::class, 'upload_cert']);
 
 
 
@@ -74,7 +74,7 @@ Route::post('upload_cert', [ApplicantionController::class, 'upload_cert']);
 
 // let it be web route
 
-Route::post('get_student_result', [ApplicantionController::class, 'get_student_result']);
+Route::post('get_student_result', [ApplicationController::class, 'get_student_result']);
 
 
 

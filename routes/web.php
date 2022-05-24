@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Applicant\ApplicantionController;
+use App\Http\Controllers\Applicant\ApplicationController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 
@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\AdminController;
 // });
 
 
-Route::get('ht',[ApplicantionController::class,'index']);
+Route::get('ht',[ApplicationController::class,'index']);
 
 Route::get('/pdf',[AdminController::class,'download_pdf']);
 // Route::get('/', function () {

@@ -28,7 +28,7 @@ class MailingAdmin extends Mailable
      */
     public function build()
     {
-        $mail = $this->from('transcript@run.edu.ng')->view('emails.notify_admin')->with('data', $this->data);
+        $mail = $this->from('transcript@run.edu.ng')->view('emails.notify_admin')->subject($this->data["sub"])->with('data', $this->data);
         if(!empty($this->data["docs"])){
             foreach($this->data["docs"] as $k => $v){
                 $mail = $mail->attach($v["path"],[
