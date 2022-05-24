@@ -114,28 +114,28 @@
                             <div class="form-check form-check-right">
                                 <input class="form-check-input" type="checkbox" id="recipient">
                                 <label class="form-check-label" for="recipient">
-                                    Name of Institution/Organization: <span id="show_recipient"></span>
+                                    Name of Institution/Organization: <span style="color:red" id="show_recipient"></span>
                                 </label>
                                 <input type="text" class="form-control recipient" required>
                             </div><hr>
                             <div class="form-check form-check-right">
                                 <input class="form-check-input" type="checkbox" id="reference">
                                 <label class="form-check-label" for="reference">
-                                    Reference Number: <span id="show_reference"></span>
+                                    Reference Number: <span style="color:red" id="show_reference"></span>
                                 </label>
                                 <input type="text" class="form-control reference" required>
                             </div><hr>
                             <div class="form-check form-check-right email">
                                 <input class="form-check-input" type="checkbox" id="email">
                                 <label class="form-check-label" for="email">
-                                    Email: <span id="show_email"></span>
+                                    Email: <span style="color:red" id="show_email"></span>
                                 </label>
                                 <input type="text" class="form-control email_box" required><hr>
                             </div>
                             <div class="form-check form-check-right address">
                                 <input class="form-check-input" type="checkbox" id="address">
                                 <label class="form-check-label" for="address">
-                                    Adress of Institution/Organization: <span id="show_address"></span>
+                                    Adress of Institution/Organization: <span style="color:red" id="show_address"></span>
                                 </label>
                                 <textarea class="form-control address_box" required></textarea>
                             </div>

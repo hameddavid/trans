@@ -91,26 +91,18 @@ $(document).ready(function ($) {
     });
 
     $('input[type="checkbox"]').click(function () {
-        if ($("#recipient").prop("checked") == true) {
-            $(".recipient").show();
-        } else {
-            $(".recipient").hide();
-        }
-        if ($("#reference").prop("checked") == true) {
-            $(".reference").show();
-        } else {
-            $(".reference").hide();
-        }
-        if ($("#address").prop("checked") == true) {
-            $(".address_box").show();
-        } else {
-            $(".address_box").hide();
-        }
-        if ($("#email").prop("checked") == true) {
-            $(".email_box").show();
-        } else {
-            $(".email_box").hide();
-        }
+        $("#recipient").prop("checked") == true
+            ? $(".recipient").show()
+            : $(".recipient").hide();
+        $("#reference").prop("checked") == true
+            ? $(".reference").show()
+            : $(".reference").hide();
+        $("#address").prop("checked") == true
+            ? $(".address_box").show()
+            : $(".address_box").hide();
+        $("#email").prop("checked") == true
+            ? $(".email_box").show()
+            : $(".email_box").hide();
     });
 
     $(".preview").click(function () {
