@@ -113,7 +113,7 @@ class ApplicationController extends Controller
                            else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
                     } 
                 }else{
-                    return response(['status'=>'failed','message'=>'Error in transcript type supplied']);
+                    return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
                 }
             }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found']);   }
         } catch (\Throwable $th) {
