@@ -22,7 +22,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-         //$this->middleware('adminauth');
+         $this->middleware('adminauth');
         // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
@@ -302,6 +302,42 @@ public function get_delivery_msg($data){
     }
 }
 
+
+public function send_corrections_to_applicant(Request $request){
+    $request->validate(['appid'=>'required',]);
+    try {
+    $form_data = $request->except('appid');
+    $form_array = [];
+    $edit_token = app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(6);
+    $msg ='<span style="color:red"> Use token '.$edit_token. ' to edit your application.<span><br><br>';
+    $msg .= '<pre style="color:black">You are to look into the following for proper correction as requested from the admin in order to complete your transcript request  <br><br>';
+    $msg .=' There are '. sizeof($form_data). ' complaint from admin <br><br>';
+    $counter = 1;  
+    foreach($form_data as $key => $value){
+        $msg .=' Complaint '. $counter.':  '.$key.' => '. $value.'<br><br>';
+        $form_array[$key] =  $value;
+        $counter++;
+    }
+    $msg .='</pre>';
+    $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
+    ->where(['application_id'=> $request->appid])->select('official_applications.*','applicants.surname','applicants.firstname','applicants.email')->first(); 
+    $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+   if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
+   $app_official->app_status = "FAILED";
+   $app_official->form_fields = $form_array;
+   $app_official->edit_token = $edit_token;
+   $app_official->complaint_sent_by = "tee@gmail";
+   $app_official->complaint_sent_at = date("F j, Y, g:i a");
+   if($app_official->save()){
+       if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($app_official,$Subject="TRANSCRIPT APPLICATION CORRECTION",$Msg=$msg)['status'] == 'ok'){
+            return response(['status'=>'success','message'=>'Complaint successfully sent to the applicant'],200);
+       }
+   }else{return response(['status'=>'failed','message'=>'Error saving corrected fields...'],400);
+   }
+} catch (\Throwable $th) {
+    return response(['status'=>'failed','message'=>'Catch , Error saving corrected fields...'],400);
+}
+}
 
 
 

@@ -76,5 +76,6 @@ Route::middleware(['adminauth'])->group(function () {
     Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
     Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
     Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
+    Route::post('send_corrections_to_applicant', [AdminController::class, 'send_corrections_to_applicant']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
 });

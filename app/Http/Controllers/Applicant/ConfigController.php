@@ -45,7 +45,7 @@ static function find_and_replace_string($string){
 
 
  public function applicant_mail($applicant,$Subject,$Msg){
-    
+    // ,'abayomipaulhenryhill@gmail.com','toyosiayo@icloud.com'
     $data = [
         'to' => [$applicant->email],
         'docs'=> [ ],
@@ -59,9 +59,9 @@ static function find_and_replace_string($string){
 }
 
  public function applicant_mail_attachment($applicant,$Subject,$Msg){
-    
+    // ,'abayomipaulhenryhill@gmail.com','toyosiayo@icloud.com'
     $data = [
-        'to' => [$applicant->email,'abayomipaulhenryhill@gmail.com','toyosiayo@icloud.com'],
+        'to' => [$applicant->email],
         'docs'=> [ ['path'=> public_path($applicant->used_token.'.pdf'), 'as' => strtoupper($applicant->surname)."_TRANSCRIPT.pdf",'mime' => 'application/pdf'], ],
         'name' => $applicant->surname ." ". $applicant->firstname,
         'sub' => $Subject,

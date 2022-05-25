@@ -10,4 +10,5 @@ class OfficialApplication extends Model
     use HasFactory;
     protected $table = 'official_applications';
     protected $primaryKey = 'application_id';
+    protected $casts = [ 'form_fields' => 'array', ];
 }

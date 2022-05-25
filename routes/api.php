@@ -52,8 +52,11 @@ Route::post('app/reset_password', [ApplicantAuthController::class, 'reset_passwo
 // Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
 // Route::post('register',[AdminAuthController::class,'save_new_account']);
 // Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
-Route::post('/approve_app',[AdminController::class,'approve_app']);
-Route::post('upload_cert', [ApplicationController::class, 'upload_cert']);
+// Route::post('/approve_app',[AdminController::class,'approve_app']);
+// Route::post('upload_cert', [ApplicationController::class, 'upload_cert']);
+Route::post('edit_app_and_verify_editpin', [ApplicationController::class, 'edit_app_and_verify_editpin']);
+
+
 
 
 

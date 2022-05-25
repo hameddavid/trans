@@ -28,6 +28,7 @@ class ApplicationController extends Controller
 
      public function upload_cert($request){
         try {
+           
             $path = Storage::disk('local')->putFileAs('credentials', $request->file('certificate'), strtoupper($request->surname) ."_". strtoupper($request->firstname)."_". $request->app_id ."_DEGREE_CERTIFICATE.pdf"); 
             return $path;
         } catch (\Throwable $th) {
@@ -72,7 +73,7 @@ class ApplicationController extends Controller
                      $new_application->app_status = 'PENDING'; // default status
                      $new_application->used_token = $request->used_token;
                      $new_application->graduation_year = $request->graduation_year? $request->graduation_year:"";
-                     $new_application->grad_status = $request->grad_status? $request->grad_status:"";
+                     $new_application->grad_status = $request->gradstat? $request->gradstat:"";
                      $new_application->reference = $request->reference? $request->reference:"";
                      $new_application->certificate = $certificate; 
                      $new_application->transcript_raw = $trans_raw; 
@@ -101,7 +102,7 @@ class ApplicationController extends Controller
                     $new_application->recipient =  $applicant->surname ." ". $applicant->firstname;
                     $new_application->app_status = "PENDING"; // default status
                     $new_application->graduation_year = $request->graduation_year? $request->graduation_year:"";
-                    $new_application->grad_status = $request->grad_status? $request->grad_status:"";
+                    $new_application->grad_status = $request->gradstat? $request->gradstat:"";
                     $new_application->certificate = $certificate; 
                     $new_application->transcript_raw =  $trans_raw;
                     if($new_application->save() ){  
@@ -785,10 +786,58 @@ static function get_programme_details($student,$prog_name, $dept ,$fac,&$qualifi
 }
 
 
+public function edit_app_and_verify_editpin(Request $request){
+    $request->validate([ "userid" => "required","matno"=>"required",'token'=>'required' ,'appid'=>'required','requestType'=>'required']);
+    $validate_token =  OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
+    ->where(['edit_token'=>$request->token, 'application_id'=>$request->appid])->select('official_applications.*','applicants.surname','applicants.firstname','applicants.email','applicants.id')->first(); 
+    if(empty($validate_token)){return response(['status'=>'failed','message'=>'Token not match application'],400);}
+    if($request->requestType == "check_token"){
+       return response(['status'=>'success','message'=>'Token match application','data'=>$validate_token->form_fields],200);
+    }
+    elseif($request->requestType == "update"){
+        $form_data = $request->except(['userid','matno','token','appid','requestType']);
+        if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
+        $request->request->add(['surname'=> $validate_token->surname, 'firstname'=>$validate_token->firstname,'app_id'=>$validate_token->id]);
+        if(Storage::exists($validate_token->certificate)){ Storage::delete($validate_token->certificate);}
+        $certificate = $this->upload_cert($request);
+        $validate_token->certificate = $certificate;
+        $form_data = $request->except(['userid','matno','token','appid','requestType','certificate']);
+        }
+        foreach($form_data as $key => $value){
+            $validate_token->$key = $value;
+        }
+        $validate_token->edit_token = "EXPIRED";
+        $validate_token->app_status = "PENDING";
+        if($validate_token->save()){
+            $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
+            $mail_data = (object)[];
+            $mail_data->emails = $admin_users;
+            $mail_data->surname = $validate_token->surname;
+            $mail_data->firstname = $validate_token->firstname;
+            $mail_data->matric_number = $validate_token->matric_number;
+            $mail_data->application_id = $validate_token->application_id;
+            $mail_data->complaint_sent_at = $validate_token->complaint_sent_at;
+            if(app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($mail_data,$Subject="TRANSCRIPT APPLICATION CORRECTION",$Msg=$this->get_correction_msg($mail_data))['status'] == 'ok'){
+                return response(['status'=>'success','message'=>'Application updated successfully!'],201);
+            }else{return response(['status'=>'failed','message'=>'Error mailling Application update '],400);}
+        }
+    }
+    else{return response(['status'=>'failed','message'=>'Unkown request type sent!'],400);}
+}
 
 
 
 
+
+
+static function get_correction_msg($data){
+
+    return ' The correction(s) requested from '.$data->surname ." ".$data->firstname." with matric number:
+     ".$data->matric_number. ' on '.$data->complaint_sent_at.' ,has been reviewed. <br>
+     kindly check the transcript admin dashboard in order to attend to the correction made by the applicant ';
+
+
+}
 
 
 
