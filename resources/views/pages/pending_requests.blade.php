@@ -106,7 +106,7 @@
             <div id="previewModal" class="modal fade" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
-                        <form method="POST">
+                        <form method="POST" id="previewForm">
                         @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="previewModalLabel"></h5>
@@ -114,37 +114,37 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-check form-check-right">
-                                <input class="form-check-input" type="checkbox" id="recipient">
-                                <label class="form-check-label" for="recipient">
+                                <input class="form-check-input" type="checkbox" id="check_recipient">
+                                <label class="form-check-label" for="check_recipient">
                                     Name of Institution/Organization: <span style="color:red" id="show_recipient"></span>
                                 </label>
-                                <input type="text" class="form-control recipient" required>
+                                <input type="text" id="recipient" name="recipient" class="form-control recipient" required>
                             </div><hr>
                             <div class="form-check form-check-right">
-                                <input class="form-check-input" type="checkbox" id="reference">
-                                <label class="form-check-label" for="reference">
+                                <input class="form-check-input" type="checkbox" id="check_reference">
+                                <label class="form-check-label" for="check_reference">
                                     Reference Number: <span style="color:red" id="show_reference"></span>
                                 </label>
-                                <input type="text" class="form-control reference" required>
+                                <input type="text" id="reference" name="reference" class="form-control reference" required>
                             </div><hr>
                             <div class="form-check form-check-right email">
-                                <input class="form-check-input" type="checkbox" id="email">
-                                <label class="form-check-label" for="email">
+                                <input class="form-check-input" type="checkbox" id="check_email">
+                                <label class="form-check-label" for="check_email">
                                     Email: <span style="color:red" id="show_email"></span>
                                 </label>
-                                <input type="text" class="form-control email_box" required><hr>
+                                <input type="email" id="email" name="email" class="form-control email_box" required><hr>
                             </div>
                             <div class="form-check form-check-right address">
-                                <input class="form-check-input" type="checkbox" id="address">
-                                <label class="form-check-label" for="address">
+                                <input class="form-check-input" type="checkbox" id="check_address">
+                                <label class="form-check-label" for="check_address">
                                     Adress of Institution/Organization: <span style="color:red" id="show_address"></span>
                                 </label>
-                                <textarea class="form-control address_box" required></textarea>
+                                <textarea class="form-control address_box" id="address" name="address" required></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-danger waves-effect">Send</button>
+                            <button type="submit" id="btnPreview" class="btn btn-danger waves-effect">Send</button>
                         </div>
                         </form>
                     </div>
@@ -173,6 +173,7 @@
         <!-- Datatable init js -->
         <script src="assets/js/pages/datatables.init.js"></script> 
         <script src="assets/js/pages/modal.init.js"></script>
+        <script src="assets/js/validation.min.js"></script>
         <script src="assets/js/utils.js"></script>   
     @endsection
 

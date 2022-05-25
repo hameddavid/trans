@@ -91,16 +91,16 @@ $(document).ready(function ($) {
     });
 
     $('input[type="checkbox"]').click(function () {
-        $("#recipient").prop("checked") == true
+        $("#check_recipient").prop("checked") == true
             ? $(".recipient").show()
             : $(".recipient").hide();
-        $("#reference").prop("checked") == true
+        $("#check_reference").prop("checked") == true
             ? $(".reference").show()
             : $(".reference").hide();
-        $("#address").prop("checked") == true
+        $("#check_address").prop("checked") == true
             ? $(".address_box").show()
             : $(".address_box").hide();
-        $("#email").prop("checked") == true
+        $("#check_email").prop("checked") == true
             ? $(".email_box").show()
             : $(".email_box").hide();
     });
@@ -128,6 +128,41 @@ $(document).ready(function ($) {
 
         $("#show_recipient").html(recipient);
         $("#show_reference").html(reference);
+
+        $("#btnPreview").click(function () {
+            $("#previewForm").validate({
+                submitHandler: submitpreviewForm,
+            });
+
+            function submitpreviewForm() {
+                var formData = $("#previewForm").serialize();
+                var type = "POST";
+                var ajaxurl =
+                    "api/app/edit_app_and_verify_editpin/send_corrections_to_applicant";
+
+                $.ajax({
+                    type: type,
+                    url: ajaxurl,
+                    data: formData,
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#btnPreview").html(
+                            '<i class="fa fa-spinner fa-spin"></i>'
+                        );
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        $("#btnPreview").html("Send");
+                        alertify.success(response.message);
+                    },
+                    error: function (response) {
+                        console.log(response);
+                        $("#btnPreview").html("Send");
+                        alertify.error(response.responseJSON.message);
+                    },
+                });
+            }
+        });
     });
 
     $(".viewForgotMatric").click(function () {
