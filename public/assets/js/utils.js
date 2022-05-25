@@ -90,12 +90,32 @@ $(document).ready(function ($) {
         });
     });
 
+    $('input[type="checkbox"]').click(function () {
+        $("#recipient").prop("checked") == true
+            ? $(".recipient").show()
+            : $(".recipient").hide();
+        $("#reference").prop("checked") == true
+            ? $(".reference").show()
+            : $(".reference").hide();
+        $("#address").prop("checked") == true
+            ? $(".address_box").show()
+            : $(".address_box").hide();
+        $("#email").prop("checked") == true
+            ? $(".email_box").show()
+            : $(".email_box").hide();
+    });
+
     $(".preview").click(function () {
         $("#previewModal").modal("show");
+        $(".recipient").hide();
+        $(".reference").hide();
+        $(".address_box").hide();
+        $(".email_box").hide();
         $("#previewModalLabel").html($(this).data("name") + "'s Details");
         var id = $(this).data("id");
         var recipient = $(this).data("recipient");
         var address = $(this).data("address");
+        var reference = $(this).data("reference");
 
         if ($(this).data("mode") === "Hard") {
             $(".email").hide();
@@ -107,6 +127,7 @@ $(document).ready(function ($) {
         }
 
         $("#show_recipient").html(recipient);
+        $("#show_reference").html(reference);
     });
 
     $(".viewForgotMatric").click(function () {

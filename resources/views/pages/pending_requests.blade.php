@@ -41,7 +41,7 @@
                                                 @foreach($apps as $app)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td><button data-status="{{$app->app_status}}" data-recipient="{{$app->recipient}}" data-mode="{{$app->delivery_mode}}" data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
+                                                    <td><button data-status="{{$app->app_status}}" data-reference="{{$app->reference}}" data-recipient="{{$app->recipient}}" data-mode="{{$app->delivery_mode}}" data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
                                                     <td>{{$app->matric_number}}</td>
                                                     <td>{{$app->recipient}}</td>
                                                     <td>{{$app->destination}}</td>
@@ -112,36 +112,32 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-check form-check-right">
-                                <input class="form-check-input" type="checkbox" id="recipient"
-                                    checked>
+                                <input class="form-check-input" type="checkbox" id="recipient">
                                 <label class="form-check-label" for="recipient">
-                                    Name of Institution/Organization: <span id="show_recipient"></span>
+                                    Name of Institution/Organization: <span style="color:red" id="show_recipient"></span>
                                 </label>
-                                <input type="text" class="form-control" required>
+                                <input type="text" class="form-control recipient" required>
                             </div><hr>
                             <div class="form-check form-check-right">
-                                <input class="form-check-input" type="checkbox" id="refernce"
-                                    checked>
-                                <label class="form-check-label" for="refernce">
-                                    Reference Number: <span id="show_reference"></span>
+                                <input class="form-check-input" type="checkbox" id="reference">
+                                <label class="form-check-label" for="reference">
+                                    Reference Number: <span style="color:red" id="show_reference"></span>
                                 </label>
-                                <input type="text" class="form-control" required>
+                                <input type="text" class="form-control reference" required>
                             </div><hr>
                             <div class="form-check form-check-right email">
-                                <input class="form-check-input" type="checkbox" id="email"
-                                    checked>
+                                <input class="form-check-input" type="checkbox" id="email">
                                 <label class="form-check-label" for="email">
-                                    Email: <span id="show_email"></span>
+                                    Email: <span style="color:red" id="show_email"></span>
                                 </label>
-                                <input type="text" class="form-control" required><hr>
+                                <input type="text" class="form-control email_box" required><hr>
                             </div>
                             <div class="form-check form-check-right address">
-                                <input class="form-check-input" type="checkbox" id="address"
-                                    checked>
+                                <input class="form-check-input" type="checkbox" id="address">
                                 <label class="form-check-label" for="address">
-                                    Adress of Institution/Organization: <span id="show_address"></span>
+                                    Adress of Institution/Organization: <span style="color:red" id="show_address"></span>
                                 </label>
-                                <textarea class="form-control" required></textarea>
+                                <textarea class="form-control address_box" required></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
