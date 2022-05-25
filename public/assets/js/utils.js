@@ -146,6 +146,7 @@ $(document).ready(function ($) {
                     data: formData,
                     dataType: "json",
                     beforeSend: function () {
+                        if (confirm("Send corrections?") == false) return false;
                         $("#btnPreview").html(
                             '<i class="fa fa-spinner fa-spin"></i>'
                         );
