@@ -304,7 +304,7 @@ public function get_delivery_msg($data){
 
 public function send_corrections_to_applicant(Request $request){
     $request->validate(['appid'=>'required',]);
-    try {
+    //try {
     $form_data = $request->except('appid');
     $form_array = [];
     $edit_token = app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(6);
@@ -333,9 +333,9 @@ public function send_corrections_to_applicant(Request $request){
        }
    }else{return response(['status'=>'failed','message'=>'Error saving corrected fields...'],400);
    }
-} catch (\Throwable $th) {
-    return response(['status'=>'failed','message'=>'Catch , Error saving corrected fields...'],400);
-}
+// } catch (\Throwable $th) {
+//     return response(['status'=>'failed','message'=>'Catch , Error saving corrected fields...'],400);
+// }
 }
 
 

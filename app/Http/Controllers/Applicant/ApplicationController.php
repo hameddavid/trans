@@ -177,7 +177,7 @@ class ApplicationController extends Controller
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
             $apps = OfficialApplication::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])
-            ->select('transcript_type','created_at','app_status','destination','recipient')->get(); 
+            ->select('application_id','transcript_type','created_at','app_status','destination','recipient')->get(); 
             return $apps;
             
         } catch (\Throwable $th) {
