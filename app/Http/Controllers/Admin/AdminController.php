@@ -133,13 +133,10 @@ class AdminController extends Controller
     public function treat_forgot_matno_request(Request $request){
 
         $request->validate([ 'email'=>'required|string', 'retrieve_matno' => 'required|string',] );
+        try {
         $applicant = ForgotMatno::where(['email'=> $request->email, "status"=>"PENDING"])->first();
         if($applicant){
-            //send matno to applicant
-            $From = "transcript@run.edu.ng";
-            $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
             $Msg =  '
-            ------------------------<br>
             Dear ' .$applicant->surname.' '. $applicant->firstname.' ,
             Sequel to the FORGOT MATRIC NUMBER request you made on '. $applicant->created_at.', 
             it is hereby resolved and this is your Matric Number : '. $request->retrieve_matno .' <br><br>
@@ -148,21 +145,23 @@ class AdminController extends Controller
             OUR REDEEMER IS STRONG!
             <br>
             Thank you.<br>
-            ------------------------
-                ';  
-             
+            ------------------------ ';  
             $Subject = "FORGOT MATRIC NUMBER RESPONSE";
-            $HTML_type = true;
-            $to = [$applicant->email => $applicant->surname];
-            $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From, "FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
-            if($resp->ok()){
+            if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject, $Msg)['status'] == 'ok'){
+                $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+                if($data->role != '200'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}        
                 $applicant->status = "TREATED";
+                $applicant->treated_by = $data->email;
+                $applicant->treated_at = date("F j, Y, g:i a");
                 if($applicant->save()){
                     return response(["status"=>"success","message"=>"Done!"],200);
                 } else{return response(["status"=>"failed","message"=>"Error updating records!"],401);}
             }
         }else{
             return response(["status"=>"failed","message"=>"Invalid email supplied"],401);
+        }
+    } catch (\Throwable $th) {
+        return response(["status"=>"failed","message"=>"Error from catch ...treat_forgot_matno_request"],401);
         }
 
     }

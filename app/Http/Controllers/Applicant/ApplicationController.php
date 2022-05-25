@@ -262,61 +262,15 @@ class ApplicationController extends Controller
     }
 
 
-
-static function send_email_notification($applicant,$Subject,$Msg){
-    $From = "transcript@run.edu.ng";
-    $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
-    $HTML_type = true;
-    $to = [$applicant->email => $applicant->surname, 'transcript@run.edu.ng'=>'Admin'];
-    $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
-   if($resp->ok()){
-    //Notify Admin";
-    $From = $applicant->email;
-    $FromName = "@".$applicant->surname;
-    $Msg =  '
-    ------------------------<br>
-    Dear admin, kindly find on your dashboard, transcript request from '.
-     $applicant->surname . ' ' .$applicant->firstname .' for your urgent attention. <br>
-    <br>
-    Thank you.<br>
-    ------------------------
-        ';  
-    // $Subject = "FORGOT MATRIC NUMBER ";
-    $HTML_type = true;
-    $to = ['transcript@run.edu.ng'=>'Admin'];
-    $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>'Admin',"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);
-    return ['status'=>'success','message'=>'applicant created'];
-   }
-   return ['status'=>'failed','message'=>'applicant created but email failed!'];
-}
-
-
-
-
 static function get_msg(){
     return 'We have successfully received your  new transcript application request, 
     kindly excercise  patience while your request is being processed.';
-//   return  $Msg =  '
-//     ------------------------<br>
-//     Dear ' .$applicant->surname.' '. $applicant->firstname.',
-//     We have successfully received your  new transcript application request, 
-//     kindly excercise  patience while your request is being processed.<br>
-//     <br>
-//     Thank you.<br>
-//     <br>
-//     OUR REDEEMER IS STRONG!
-   
-//     ------------------------
-//         ';  
 }
 static function get_admin_msg($applicant){
     return 'kindly check the transcript admin dashboard in order to attend to this urgent request from '
     .$applicant->surname ." ".$applicant->firstname." with matric number: ".$applicant->matric_number;
 
 }
-
-
-
 
 public function get_student_result($request){
     //$request->validate(['userid'=>'required','matno'=>'required','used_token'=>'required']);
@@ -517,47 +471,7 @@ public function get_student_result($request){
         </div> ';
     
         $response = str_replace("pageno", $page_no, $response);
-    
         return $response;
-        // $pdf = PDF::loadView('pdf.invoice', $data);
-        // return $pdf->download('invoice.pdf');
-        // $pdf = PDF::make('dompdf.wrapper');
-        // return view('result')->with('data',$response);
-         //PDF::loadHTML($response)->setPaper('a4', 'landscape')->setWarnings(false)->save($applicant->email.'.pdf');
-        
-        // return Storage::download(public_path($applicant->email.'.pdf'));
-    
-        $From = "transcript@run.edu.ng";
-        $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
-        $Msg = $response;  
-        $Subject = "GENERATED TRANSCRIPT";
-        $HTML_type = true;
-        
-        // Http::attach('csv_file', $contents->post($url, $post_data);
-        // ->attach()
-        
-         //$response = Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
-         $response =  Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )->asForm()
-         ->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,])
-         ;     
-    
-        //   Http::attach( 'file',file_get_contents(public_path($applicant->email.'.pdf')) )
-        // ->post('http://adms.run.edu.ng/codebehind/trans_email.php');
-        dd($response->body());
-        if($response->ok()){
-            return  response(['status'=>'success','message'=>''], 201); // return $response;
-           }
-        
-        // $resp = Http::attach('file',file_get_contents(public_path($applicant->email.'.pdf')))
-        // ->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
-        // dd($resp);
-        // $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$applicant->email, "Recipient_names"=>$applicant->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
-       return ;
-        if($resp->ok()){
-        return  response(['status'=>'success','message'=>''], 201); // return $response;
-       }
-            
-        
        
     }else{ return "empty student session";}
         
@@ -724,12 +638,7 @@ static function get_student_result_session_given_matno($matno,&$sessions){
 static function get_correct_application_for_this_request($matno,$delivery_mode,$transcript_type){
     try {
         $application = DB::table('official_applications')->select('*')
-         ->where(['matric_number'=> $matno,'delivery_mode'=>$delivery_mode,'transcript_type'=>$transcript_type,'app_status'=>'PENDING'])->get();
-    //     $pin = DB::table('payment_transaction')->select('rrr')
-    //   ->where(['matric_number'=> $matno,'status_code'=>'00'])
-    //    ->whereNOTIn('rrr',function($query){ $query->select('used_token')->from('official_applications'); })->first();
-    //    if(!empty($pin)){return $pin->rrr ;}
-    //    return 'null';
+         ->where(['matric_number'=> $matno,'delivery_mode'=>$delivery_mode,'transcript_type'=>$transcript_type,'app_status'=>'PENDING'])->get(); 
        
    } catch (\Throwable $th) {
        return response(['status'=>'failed','message'=>'catch, Error get_correct_application_for_this_request !']);
@@ -838,6 +747,31 @@ static function get_correction_msg($data){
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

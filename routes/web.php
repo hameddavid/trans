@@ -8,48 +8,9 @@ use App\Http\Controllers\Admin\AdminController;
 
 
 
-// Route::get('/mailtemp', function () {
-//     $details = ["message" => "What we do ..........", "name"=>"Teewhy Baba"];
-//     return view('emails.notify_student')->with('details',$details);
-// });
-
-
 Route::get('ht',[ApplicationController::class,'index']);
 
-Route::get('/pdf',[AdminController::class,'download_pdf']);
-// Route::get('/', function () {
-    // return view('welcome');
-    // return view('result');
-    // $pdf = App::make('dompdf.wrapper');
-    // $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
-    // return $pdf->stream();
-    // $pdf = App::make('dompdf.wrapper');
-    // $pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
-    // return $pdf->stream();
-    
-    
-    // Or use the facade:
-
-    // use Barryvdh\DomPDF\Facade\Pdf;
-
-    // $pdf = PDF::loadView('pdf.invoice', $data);
-    // return $pdf->download('invoice.pdf');
-
-    // you can use css properties "page-break-after" or  "page-break-before"
-    // <style>
-    // .page-break {
-    //     page-break-after : always;
-    // }
-    // </style>
-
-    // <h1> Page 1 </h1>
-    // <div class="page-break"> </div>
-    // <h1> Page 2 </h1>
-
-//});
-
 Route::get('mail',[AdminAuthController::class,'mail']);
-
 
 Route::get('/',[AdminAuthController::class,'auth_login']);
 Route::post('admin_login_auth',[AdminAuthController::class,'login']);

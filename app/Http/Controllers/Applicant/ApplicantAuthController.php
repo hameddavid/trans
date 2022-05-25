@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Applicant;
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
 use App\Models\Student;
+use App\Models\Admin;
 use App\Models\ForgotMatno;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Mail;
 use App\Mail\MailingAdmin;
 use App\Mail\MailingApplicant;
@@ -17,11 +19,6 @@ use App\Mail\MailingApplicant;
 class ApplicantAuthController extends Controller
 {
     
-    public function index(){
-        return 'working ...';
-    }
-
-
     public function applicant_login(Request $request){
           
         $request->validate(['matno'=>'required','password'=>'required']); 
@@ -53,26 +50,18 @@ class ApplicantAuthController extends Controller
             $student = $this->get_student_given_matno($request->matno);
             $auto_pass = $this->RandomString(10); 
             if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
-                $From = "transcript@run.edu.ng";
-                $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
-                $Msg =  '
-                ------------------------<br>
-                Dear ' .$student->SURNAME.' '. $student->FIRSTNAME.',
-                kindly use: <span color="red"> ' .$auto_pass. '</span>, as your password to login to your transcript portal. <br>
+                $Msg =  ' ------------------------<br>
+                kindly use: <span color="red"> ' .$auto_pass. '</span> , as your password to login to your transcript portal. <br>
                 <br>
                 Remember to reset your password!
                 <br>
                 Thank you.<br>
-                ------------------------
-                    ';  
-                 
+                ------------------------ ';      
                 $Subject = "AUTO GENERATED PASSWORD";
-                $HTML_type = true;
-                $to = [$request->email => $student->SURNAME];
-                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
-               if($resp->ok()){
-                return response(['status'=>'success','message'=>'Account successfully created, kindly check your email address for password'], 201);
-               }
+                $request->request->add(['surname'=>$student->SURNAME,'firstname'=>$student->FIRSTNAME]);
+                if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($request, $Subject ,$Msg )['status'] == 'ok'){
+                    return response(['status'=>'success','message'=>'Account successfully created, kindly check your email address for password'], 201);
+                }
                return response(['status'=>'failed','message'=>'Account created but unable to send activation email to you, please contact Admin!'], 201);
             }
             return response(['status'=>'failed','message'=>'Error creating your account!'], 401);
@@ -88,35 +77,26 @@ class ApplicantAuthController extends Controller
 
 
     public function send_att(Request $request){
-
-        $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]); 
-       
+        $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]);   
         try {
         if(!is_bool($this->get_student_given_matno($request->matno))){
             $student = $this->get_student_given_matno($request->matno);
             $auto_pass = $this->RandomString(10); 
             if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
-                $From = "transcript@run.edu.ng";
-                $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
-                $Msg =  '
-                ------------------------<br>
-                Dear ' .$student->SURNAME.' '. $student->FIRSTNAME.',
+                $Msg =  ' ------------------------<br>
                 kindly use: <span color="red"> ' .$auto_pass. '</span>, as your password to login to your transcript portal. <br>
                 <br>
                 Remember to reset your password!
                 <br>
                 Thank you.<br>
-                ------------------------
-                    ';  
-                $file = $_FILES['doc']['tmp_name'];
+                ------------------------ ';  
                 $Subject = "AUTO GENERATED PASSWORD";
-                $HTML_type = true;
-                $to = [$request->email => $student->SURNAME];
-               // $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/trans_email.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,"file"=>$file, ]);     
-                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$student->SURNAME,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type, ]);     
-               if($resp->ok()){
-                return response(['status'=>'success','message'=>'applicant created'], 201);
-               }
+                $request->request->add(['surname'=>$student->SURNAME,'firstname'=>$student->FIRSTNAME]);
+                if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($request, $Subject ,$Msg )['status'] == 'ok'){
+                    return response(['status'=>'success','message'=>'applicant created'], 201);
+
+                }
+             
                return response(['status'=>'failed','message'=>'applicant created but email failed!'], 201);
             }
             return response(['status'=>'failed','message'=>'...Error creating applicant!'], 401);
@@ -185,11 +165,27 @@ class ApplicantAuthController extends Controller
         }
     }
 
-
+    static function get_msg_forgot_mat($request){
+        return '
+         Kindly find on your dashboard, forgot matric number request from '.
+          $request->surname . ' ' .$request->firstname .'. <br>
+         <br>
+         Thank you.';  
+       
+      }
+     
 
     public function save_forgot_matno(Request $request){
-        try {     
-        $request->validate([ 'surname'=>'required', 'firstname'=>'required', 'othername'=>'required', 'email'=>'required|email|unique:forgot_matno', 'phone'=>'required' , 'program'=>'required', 'date_left'=>'required', ]); 
+      try {    
+        $request->validate([ 'surname'=>'required', 'firstname'=>'required', 'othername'=>'required', 'email'=>'required|email','phone'=>'required' , 'program'=>'required', 'date_left'=>'required', ]); 
+       $grad_session = intval($request->date_left-1).'/'.intval($request->date_left);
+        $query = DB::table('t_student_test')
+       ->join('registrations','t_student_test.MATRIC_NUMBER','registrations.matric_number')
+       ->where('registrations.session_id', $grad_session)
+       ->where('t_student_test.SURNAME', $request->surname)
+       ->where('t_student_test.FIRSTNAME','LIKE', "%$request->firstname%")
+       ->where('t_student_test.PROG_CODE', $request->program )
+       ->select('registrations.matric_number')->distinct()->get(); 
         $get_mat = new ForgotMatno();
         $get_mat->surname = $request->surname;
         $get_mat->firstname = $request->firstname;
@@ -198,15 +194,12 @@ class ApplicantAuthController extends Controller
         $get_mat->phone = $request->phone;
         $get_mat->program = $request->program;
         $get_mat->date_left = $request->date_left;
+        $get_mat->matno_found = $query;
         $get_mat->status = "PENDING";  //PENDING or TREATED
         if($get_mat->save()){ 
-           app('App\Http\Controllers\Applicant\ConfigController')->get_mail_params($request, $From, $FromName, $Msg,$Subject,$HTML_type); 
-           $to = ['transcript@run.edu.ng' => 'ADMIN'];
-           $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',
-           ["From"=>$From, "FromName"=>$FromName,"To"=>$to,
-            "Recipient_names"=>"ADMIN","Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type,]);     
-           if($resp->ok()){
-            //    return $resp->body();
+            $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
+            $request->request->add(['emails'=> $admin_users]);
+            if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="FORGOT MATRIC NUMBER REQUEST",$Msg=$this->get_msg_forgot_mat($request))['status'] == 'ok' ){
             return response(['status'=>'success','message'=>'request successfully save'], 201);
            }
           
@@ -228,25 +221,17 @@ class ApplicantAuthController extends Controller
                 $auto_pass = $this->RandomString(10);
                 $app->password =  bcrypt($auto_pass);
                 if($app->save()){
-                $From = "transcript@run.edu.ng";
-                $FromName = "@TRANSCRIPT, REDEEMER's UNIVERSITY NIGERIA";
-                $Msg =  '
-                ------------------------<br>
-                Dear ' .$app->surname.' '. $app->firstname.',
+                $Msg =  ' ------------------------<br>
                 kindly use: <span color="red"> ' . $auto_pass . '</span>, as your mew password to login to your transcript portal. <br>
                 <br>
                 Remember to reset your password!
                 <br>
                 Thank you.<br>
-                ------------------------
-                    ';  
+                ------------------------ ';  
                 $Subject = "AUTO GENERATED PASSWORD";
-                $HTML_type = true;
-                $to = [$app->email => $app->surname];
-                $resp = Http::asForm()->post('http://adms.run.edu.ng/codebehind/destEmail.php',["From"=>$From,"FromName"=>$FromName,"To"=>$to, "Recipient_names"=>$app->surname,"Msg"=>$Msg, "Subject"=>$Subject,"HTML_type"=>$HTML_type, ]);     
-               if($resp->ok()){
-                return response(['status'=>'success','message'=>'New password successfully sent to your registered email'], 200);
-               }
+                if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($app, $Subject ,$Msg )['status'] == 'ok'){
+                 return response(['status'=>'success','message'=>'New password successfully sent to your registered email'], 200);
+                }
             }else{return response(['status'=>'failed','message'=>'Error updating record!'], 400);}
         }else{
             return response(['status'=>'failed','message'=>'Invalid email supplied'], 400);

@@ -9,4 +9,5 @@ class ForgotMatno extends Model
 {
     use HasFactory;
     protected $table = 'forgot_matno';
+    protected $casts = [ 'matno_found' => 'array', ];
 }

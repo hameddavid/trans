@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 use Mail;
 use App\Mail\MailingAdmin;
 use App\Mail\MailingApplicant;
-
+use Illuminate\Support\Facades\DB;
 class ConfigController extends Controller
 {
     //
+  
     
 static function find_and_replace_string($string){
     $string  = str_replace("&amp;", "&#38;",$string);
@@ -28,20 +29,6 @@ static function find_and_replace_string($string){
  }
 
 
- public function get_mail_params($request, &$From, &$FromName, &$Msg,&$Subject,&$HTML_type){
-    $From = $request->email;
-    $FromName = "@". $request->surname ." ".$request->firstname ." ". $request->othername;
-    $Msg =  '
-    ------------------------<br>
-    Dear admin, kindly find on your dashboard, forgot matric number request from '.
-     $request->surname . ' ' .$request->firstname .'. <br>
-    <br>
-    Thank you.<br>
-    ------------------------
-        ';  
-    $Subject = "FORGOT MATRIC NUMBER ";
-    $HTML_type = true;
- }
 
 
  public function applicant_mail($applicant,$Subject,$Msg){
@@ -58,8 +45,8 @@ static function find_and_replace_string($string){
     }else{  return ['status'=>'ok']; }
 }
 
+
  public function applicant_mail_attachment($applicant,$Subject,$Msg){
-    // ,'abayomipaulhenryhill@gmail.com','toyosiayo@icloud.com'
     $data = [
         'to' => [$applicant->email],
         'docs'=> [ ['path'=> public_path($applicant->used_token.'.pdf'), 'as' => strtoupper($applicant->surname)."_TRANSCRIPT.pdf",'mime' => 'application/pdf'], ],
@@ -74,7 +61,11 @@ static function find_and_replace_string($string){
 
 
 
-
+public function list_programmes(){
+  return  DB::table('t_college_dept')
+    ->join('t_student_test','t_college_dept.prog_code','t_student_test.prog_code')
+    ->select('t_college_dept.prog_code','t_college_dept.programme')->distinct()->get();
+}
 
 
 
