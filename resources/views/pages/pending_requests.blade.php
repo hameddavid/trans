@@ -106,6 +106,8 @@
             <div id="previewModal" class="modal fade" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
+                        <form method="POST">
+                        @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="previewModalLabel"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -142,8 +144,9 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-danger waves-effect">Send</button>
+                            <button type="submit" class="btn btn-danger waves-effect">Send</button>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
