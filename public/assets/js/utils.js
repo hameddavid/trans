@@ -107,6 +107,7 @@ $(document).ready(function ($) {
 
     $(".preview").click(function () {
         $("#previewModal").modal("show");
+        $("#appid").val("");
         $(".recipient").hide();
         $(".reference").hide();
         $(".address_box").hide();
@@ -116,6 +117,8 @@ $(document).ready(function ($) {
         var recipient = $(this).data("recipient");
         var address = $(this).data("address");
         var reference = $(this).data("reference");
+
+        $("#appid").val($("#appid").val() + id);
 
         if ($(this).data("mode") === "Hard") {
             $(".email").hide();
@@ -137,8 +140,7 @@ $(document).ready(function ($) {
             function submitpreviewForm() {
                 var formData = $("#previewForm").serialize();
                 var type = "POST";
-                var ajaxurl =
-                    "api/app/edit_app_and_verify_editpin/send_corrections_to_applicant";
+                var ajaxurl = "send_corrections_to_applicant";
 
                 $.ajax({
                     type: type,

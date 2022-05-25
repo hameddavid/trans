@@ -108,6 +108,7 @@
                     <div class="modal-content">
                         <form method="POST" id="previewForm">
                         @csrf
+                        <input value="" type="text" id="appid" name="appid" class="form-control">
                         <div class="modal-header">
                             <h5 class="modal-title" id="previewModalLabel"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
