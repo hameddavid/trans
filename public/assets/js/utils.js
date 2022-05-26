@@ -171,7 +171,13 @@ $(document).ready(function ($) {
 
     $(".viewForgotMatric").click(function () {
         $("#forgotMatric").modal("show");
+        $("#sendMatricForm").trigger("reset");
         email = $(this).data("email");
+        var suggestions = $(this).data("suggestions");
+        console.log(suggestions);
+        $("#matric_number").val(
+            $("#matric_number").val() + $(this).data("suggestions")
+        );
         $("#name").html(
             $(this).data("surname") +
                 " " +
