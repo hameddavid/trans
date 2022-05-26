@@ -5,6 +5,7 @@
     @endsection
 
     @section("content")
+    <link href="assets/css/transcript.css" rel="stylesheet" type="text/css" />
             <style>
                 .btnJustify{
                     display: flex;

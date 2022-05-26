@@ -6,6 +6,7 @@ $(document).ready(function ($) {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
     });
+
     $(".editApplicant").click(function () {
         $("#editApplicantForm").trigger("reset");
         $("#applicantModal").modal("show");
