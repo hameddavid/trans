@@ -314,7 +314,7 @@ public function send_corrections_to_applicant(Request $request){
     $counter = 1;  
     foreach($form_data as $key => $value){
         $msg .=' Complaint '. $counter.':  '.$key.' => '. $value.'<br><br>';
-        $form_array[$key] =  $value;
+        $form_array[$counter-1] =  [$key => $value];
         $counter++;
     }
     $msg .='</pre>';
