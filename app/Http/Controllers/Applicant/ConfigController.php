@@ -49,7 +49,7 @@ static function find_and_replace_string($string){
  public function applicant_mail_attachment($applicant,$Subject,$Msg){
     $data = [
         'to' => [$applicant->email],
-        'docs'=> [ ['path'=> public_path($applicant->used_token.'.pdf'), 'as' => strtoupper($applicant->surname)."_TRANSCRIPT.pdf",'mime' => 'application/pdf'], ],
+        'docs'=> [ ['path'=> public_path($applicant->file_path.'.pdf'), 'as' => strtoupper($applicant->surname)."_TRANSCRIPT.pdf",'mime' => 'application/pdf'], ],
         'name' => $applicant->surname ." ". $applicant->firstname,
         'sub' => $Subject,
         'message' => $Msg

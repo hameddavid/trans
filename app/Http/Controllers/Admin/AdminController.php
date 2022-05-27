@@ -22,7 +22,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-         $this->middleware('adminauth');
+        // $this->middleware('adminauth');
         // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
@@ -229,18 +229,18 @@ class AdminController extends Controller
         } catch (\Throwable $th) {
             
         }
-        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-         if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
+       // $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+       //  if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
         $type = strtoupper($request->transcript_type);
-        if($type == 'OFFICIAL'){
+        if($type == 'OFFICIAL'){ 
             $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
-            ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','applicants.surname','applicants.firstname','applicants.email')->first(); 
+            ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email')->first(); 
             if($app_official){
                PDF::loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
             if (File::exists($app_official->used_token.'.pdf')) {
                 if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
                     $app_official->app_status = "APPROVED";
-                    $app_official->approved_by = 'Approvee'; //$data->email;
+                    $app_official->approved_by = 'tee'; //$data->email;
                     $app_official->approved_at = date("F j, Y, g:i a");
                     if($app_official->save()){
                          File::delete($app_official->used_token.'.pdf');
@@ -250,22 +250,42 @@ class AdminController extends Controller
                 }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  } 
             }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
         }elseif($type == 'STUDENT'){
-            $app_stud = StudentApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
+            $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+            ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email')->first(); 
             if($app_stud){
-                $pdf = PDF::loadView('pdf.invoice', $data);
-                return $pdf->download('invoice.pdf');
-                // $trans = ['key'=> html_entity_decode($app->transcript_raw)];
-                // view()->share('trans',$trans);
-                //  $pdf = PDF::loadView('viewpdf',$trans);
-                //  $pdf->download('owner.pdf');
-    
-                $app_stud->app_status = "APPROVED";
-                $app_stud->approved_by = $data->email;
-                $app_stud->approved_at = date("F j, Y, g:i a");
-                if($app_stud->save()){ return response(["status"=>"success","message"=>"Application successfully approval"],200);  }
-                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+                PDF::loadView('result',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                if (File::exists($app_stud->file_path.'.pdf')) {
+                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
+                        $app_stud->app_status = "APPROVED";
+                        $app_stud->approved_by = 'tee';//$data->email;
+                        $app_stud->approved_at = date("F j, Y, g:i a");
+                        if($app_stud->save()){
+                             File::delete($app_stud->address.'.pdf');
+                             return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
+                        else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
+                    }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
+                    }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  }     
             }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
-        }else{ return response(['status'=>'failed','message'=>'Error in transcript type supplied']);}
+        }elseif($type == 'PROFICIENCY'){
+            $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+            ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email')->first(); 
+            if($app_stud){
+                PDF::loadView('proficiency',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                if (File::exists($app_stud->file_path.'.pdf')) {
+                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
+                        $app_stud->app_status = "APPROVED";
+                        $app_stud->approved_by = 'tee';//$data->email;
+                        $app_stud->approved_at = date("F j, Y, g:i a");
+                        if($app_stud->save()){
+                             File::delete($app_stud->address.'.pdf');
+                             return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
+                        else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
+                    }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
+                    }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  }     
+            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+       
+        }
+        else{ return response(['status'=>'failed','message'=>'Error in transcript type supplied']);}
        
 
     }
@@ -325,7 +345,7 @@ public function send_corrections_to_applicant(Request $request){
    $app_official->app_status = "FAILED";
    $app_official->form_fields = $form_array;
    $app_official->edit_token = $edit_token;
-   $app_official->complaint_sent_by = "tee@gmail";
+   $app_official->complaint_sent_by = $data->email;
    $app_official->complaint_sent_at = date("F j, Y, g:i a");
    if($app_official->save()){
        if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($app_official,$Subject="TRANSCRIPT APPLICATION CORRECTION",$Msg=$msg)['status'] == 'ok'){
