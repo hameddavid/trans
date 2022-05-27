@@ -108,7 +108,8 @@ class AdminController extends Controller
 
     public function get_list_of_forgot_matno_request(){
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-        $applicants = ForgotMatno::select('*','matno_found->matric_number AS matno_found')->orderBy('created_at', 'DESC')->get(); 
+        $applicants = ForgotMatno::select('*')->orderBy('created_at', 'DESC')->get(); 
+        //return $applicants[1]->matno_found;
         return view('pages.forgot_matric',['data'=>$data,'applicants'=>$applicants]);
     }
 

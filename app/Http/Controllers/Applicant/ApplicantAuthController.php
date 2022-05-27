@@ -186,8 +186,8 @@ class ApplicantAuthController extends Controller
        ->where('t_student_test.FIRSTNAME','LIKE', "%$request->firstname%")
        ->where('t_student_test.PROG_CODE', $request->program )
        ->select('registrations.matric_number')->distinct()->get(); 
-        $matno_to_string = '';
-       if($query->count() > 0){ $matno_to_string = $query[0];}
+    //     $matno_to_string = '';
+    //    if($query->count() > 0){ $matno_to_string = $query[0];}
         $get_mat = new ForgotMatno();
         $get_mat->surname = $request->surname;
         $get_mat->firstname = $request->firstname;
@@ -196,7 +196,7 @@ class ApplicantAuthController extends Controller
         $get_mat->phone = $request->phone;
         $get_mat->program = $request->program;
         $get_mat->date_left = $request->date_left;
-        $get_mat->matno_found = $matno_to_string;
+        $get_mat->matno_found = $query;
         $get_mat->status = "PENDING";  //PENDING or TREATED
         if($get_mat->save()){ 
             $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
