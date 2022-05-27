@@ -6,6 +6,7 @@ $(document).ready(function ($) {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
     });
+
     $(".editApplicant").click(function () {
         $("#editApplicantForm").trigger("reset");
         $("#applicantModal").modal("show");
@@ -170,7 +171,13 @@ $(document).ready(function ($) {
 
     $(".viewForgotMatric").click(function () {
         $("#forgotMatric").modal("show");
+        $("#sendMatricForm").trigger("reset");
         email = $(this).data("email");
+        var suggestions = $(this).data("suggestions");
+        console.log(suggestions);
+        $("#matric_number").val(
+            $("#matric_number").val() + $(this).data("suggestions")
+        );
         $("#name").html(
             $(this).data("surname") +
                 " " +
@@ -285,8 +292,9 @@ $(document).ready(function ($) {
     });
 
     $(".approve").click(function () {
-        id = $(this).data("id");
-        approveTranscript(id);
+        var id = $(this).data("id");
+        var type = $(this).data("type");
+        approveTranscript(id, type);
     });
 
     $(".regenerate").click(function () {
@@ -326,11 +334,11 @@ $(document).ready(function ($) {
         });
     };
 
-    const approveTranscript = (id) => {
+    const approveTranscript = (id, type) => {
         $.ajax({
             type: "POST",
             url: "approve_app ",
-            data: { id: id },
+            data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
                 if (confirm("Approve Transcript?") == false) return false;

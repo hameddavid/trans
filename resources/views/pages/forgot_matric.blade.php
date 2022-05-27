@@ -49,7 +49,7 @@
                                                     <td>
                                                         <div class="btn-group btn-group-example mb-3" role="group">
                                                             @if($applicant->status == 'PENDING')
-                                                            <button type="button" data-date_left="{{$applicant->date_left}}" data-program="{{$applicant->program}}" data-email="{{$applicant->email}}" data-othername="{{$applicant->othername}}" data-phone="{{$applicant->phone}}" data-firstname="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="View" class="btn btn-secondary w-xs viewForgotMatric">
+                                                            <button type="button" data-suggestions="{{$applicant->matno_found}}" data-date_left="{{$applicant->date_left}}" data-program="{{$applicant->program}}" data-email="{{$applicant->email}}" data-othername="{{$applicant->othername}}" data-phone="{{$applicant->phone}}" data-firstname="{{$applicant->firstname}}" data-surname="{{$applicant->surname}}" title="View" class="btn btn-secondary w-xs viewForgotMatric">
                                                                 <i class="bx bx-show-alt"></i> View
                                                             </button>
                                                             @else
@@ -100,8 +100,8 @@
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="matric_number" class="col-form-label">Matric Number:</label>
-                                    <input type="text" class="form-control" name="matric_number" id="matric_number" placeholder="Enter matric number" required>
+                                    <label for="matric_number" class="col-form-label">Matric Number: <span style="color:red">(Based on our suggestion)</span></label>
+                                    <input type="text" class="form-control" name="matric_number" id="matric_number" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
