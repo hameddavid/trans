@@ -1,69 +1,216 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+  <style>
+      @font-face{
+	font-family: Quicksand;
+	src: url(../fonts/Quicksand-Regular.otf);
+}
 
-<html>
-    <head>
-        <style type="text/css">
-            .bodyBody {
-                margin: 10px;
-                font-size: 1.50em;
-            }
-            .divHeader {
-                text-align: right;
-                border: 1px solid;
-            }
-            .divReturnAddress {
-                text-align: left;
-                float: right;
-            }
-            .divSubject {
-                clear: both;
-                font-weight: bold;
-                padding-top: 80px;
-            }
-            .divAdios {
-                float: left;
-                padding-top: 50px;
-            }
-        </style>
-    </head>
-    <body class="bodyBody">
-        <div class="divSubject">
-<pre>
-RUN/REG/Attestation/15/Vol.1/{014}                                                  {12th April, 2022}                                                         
+@font-face{
+	font-family: Quicksand;
+	font-weight: bold;
+	src: url(../fonts/Quicksand-Bold.otf);
+}
 
-TO WHOM IT MAY CONCERN
-</pre>
-        </div>
+body, html {
+	width: 100%;
+	height: auto;
+	background-color: #ffffff;
+	padding: 0;
+	margin: 0;
+	font-family: Georgia;
+}
 
-        <div class="divContents" align="justify">
-            <p>
-                Dear Sir,
-            </p>
-            <h5>
-                <u>LETTER OF ATTESTATION<br>
-                    LANGUAGE OF INSTRUCTION/PROFICIENCY IN ENGLISH                    
-                </u>
-            </h5>
-            
-            <p>
-                <p>{Miss ALADEBO, Kikelomo Josephine} (Matric. No. {RUN08-09/1626}) was a student in the Department of {Finance (Banking and Finance Programme)} in the Faculty of {Management Sciences}, Redeemer’s University.</p>
+@media screen{
+	.print_footer {
+		display: none;
+	}
+}
 
-                <p>{Her} Cumulative Grade Point Average (CGPA) at the end of a {4-year} {Bachelor of Science} degree programme, in the {2009/2010} academic session, in {Psychology} was {3.52} – {Second Class (Honours) Upper Division}.</p>
+@media print {
+    .page {
+		page-break-after: always;
+	}
+	.print_footer {
+		position: fixed;
+		bottom: 0;
+		font-size: 11px;
+		text-align: center;
+		width: 100%;
+		font-family: Quicksand;
+		font-weight: bold;
+	}
+}
 
-                <p>Kindly note that English is the medium of communication in Nigerian institutions. You may also wish to note that in Redeemer’s University, all lectures, examinations, tests,
-                    Seminars, presentations, and all kinds of student assessments are conducted in English.</p>
+.page {
+	width: 100%;
+	page-break-after: always;
+}
 
-                <p>Please accord her the necessary assistance.</p>
+.header{
+	text-align: center;
+	border-bottom: 1px solid #000000;
+	font-family: Arial;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	width: 100%;
+	background-color: #ffffff;
+	color: #000000;
+	margin-bottom: 0;
+}
 
-                Yours faithfully,
+.golden_streak{
+	margin-top: 0;
+	width: 100%;
+	height: 10px;
+	/* background-color: #977b1f;
+	background: -webkit-linear-gradient(left, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39);
+	background: -o-linear-gradient(right, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39);
+	background: -moz-linear-gradient(bright, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39);
+	background: linear-gradient(to right, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39);*/
+}
 
-            </p>
-        </div>
+.header2{
+	border-bottom: 1px solid #000000;
+	width: 100%;
+	padding: 0;
+}
 
-        <div class="divAdios">
-            MISS ADETUTU ADEWOLE<br>
-            Administrative Officer, Academic Affairs<br>
-            For:  REGISTRAR
-        </div>
-    </body>
+.header2 table{
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+	font-family: Quicksand;
+	font-size: 10px;
+}
+
+.header h1, .header h2, .header h3, .header h4, .header h5, .header h6{
+	padding: 0;
+	margin: 0;
+}
+
+.header br{
+	line-height: 70%;
+}
+
+.header h1{
+	color: #000000;
+	font-size: 25px;
+}
+
+.header h2{
+	color: #000000;
+	font-size: 20px;
+}
+
+.header h5{
+	font-style: italic;
+	font-size: 12px;
+}
+
+.header h6{
+	font-style: italic;
+	font-size: 9px;
+}
+
+#recipient_h{
+	font-family: Quicksand;
+}
+
+.logo{
+	float: left;
+	height: 120px;
+	margin-left: 5%;
+	margin-top: -3px;
+}
+
+.result_table {
+	border-collapse: collapse;
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+	font-size: 10px;
+	font-family: Georgia;
+}
+
+.result_table2 {
+	border-collapse: collapse;
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+	font-family: Quicksand;
+	font-size: 10px;
+}
+
+.result_table th, .result_table td {
+	padding: 2px 2px 2px 2px;
+	font-weight: normal;
+	border: 1px solid #e5e5e5;
+}
+
+.result_table2 td {
+	padding: 0px 0px 0px 0px;
+	font-weight: normal;
+	border: 1px solid #e5e5e5;
+}
+
+.result_table th{
+	font-family: Arial;
+	padding: 5px 5px 5px 5px;
+	font-weight: bold;
+}
+
+caption{
+	text-align: left;
+	font-family: Arial;
+	font-size: 10px;
+	padding-top: 18px;
+	font-weight: bold;
+}
+
+.footer_{
+	width: 90%;
+	margin-left: 5%;
+	font-family: Georgia;
+	font-size: 12px;
+	font-style: italic;
+	margin-top: 25px;
+}
+
+.footer_2{
+	width: 90%;
+	margin-left: 5%;
+	font-family: Arial;
+	font-size: 10px;
+	font-weight: bold;
+	margin-top: 50px;
+	text-align: center;
+}
+
+#gold_div{
+	height: 20px;
+	width: 100%;
+	background-color: #977b1f; /* For browsers that do not support gradients */
+	background: -webkit-linear-gradient(left, #977b1f, #b99f39, #f4ec70); /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(right, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39); /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(bright, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39); /* For Firefox 3.6 to 15 */
+	background: linear-gradient(to right, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39); /* Standard syntax */
+	padding: 0;
+	margin: 0;
+}
+
+p{
+	margin-top: 20px;
+}
+
+  </style>
+</head>
+<body>
+    {!! $data !!}
+</body>
 </html>

@@ -186,6 +186,8 @@ class ApplicantAuthController extends Controller
        ->where('t_student_test.FIRSTNAME','LIKE', "%$request->firstname%")
        ->where('t_student_test.PROG_CODE', $request->program )
        ->select('registrations.matric_number')->distinct()->get(); 
+    //     $matno_to_string = '';
+    //    if($query->count() > 0){ $matno_to_string = $query[0];}
         $get_mat = new ForgotMatno();
         $get_mat->surname = $request->surname;
         $get_mat->firstname = $request->firstname;
@@ -202,7 +204,6 @@ class ApplicantAuthController extends Controller
             if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="FORGOT MATRIC NUMBER REQUEST",$Msg=$this->get_msg_forgot_mat($request))['status'] == 'ok' ){
             return response(['status'=>'success','message'=>'request successfully save'], 201);
            }
-          
         } return response(['status'=>'failed','message'=>'Error saving forgot matric number request'], 400);
     } catch (\Throwable $th) {
         return response(['status'=>'failed','message'=>'Error ...maybe you have this request before'], 400);

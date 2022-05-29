@@ -40,7 +40,7 @@ class ApplicationController extends Controller
     { 
         $app = OfficialApplication::find(4); 
         return view('result')->with('data',html_entity_decode($app->transcript_raw));
-        $app = StudentApplication::find(3); 
+        $app = StudentApplication::find(8); 
         return view('result')->with('data',html_entity_decode($app->transcript_raw));
     }
 
@@ -57,8 +57,17 @@ class ApplicationController extends Controller
             }
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
-                $trans_raw = $this->get_student_result($request); //  Generate the transacript HTML here
-            if($type == 'OFFICIAL'){
+                $all_result_params = $this->get_student_result($request);
+                $first_session_in_sch =  $all_result_params['first_session_in_sch']; 
+                $last_session_in_sch =  $all_result_params['last_session_in_sch']; 
+                $years_spent =  $all_result_params['years_spent']; 
+                $qualification =  $all_result_params['qualification']; //Bachelor of Arts in
+                $prog_name =  $all_result_params['prog_name']; 
+                $cgpa =  $all_result_params['cgpa']; 
+                $class_of_degree =  $all_result_params['class_of_degree']; 
+                $trans_raw =  $all_result_params['result']; //  Generate the transacript HTML here
+           return $qualification;
+                if($type == 'OFFICIAL'){
                 $request->validate(["mode" => "required","recipient"=>"required",'used_token'=>'required']); 
                 if($request->mode != "soft"){ $request->validate(["address"=>"required", "destination"=>"required"]);  }
                 if($this->validate_pin($request) == $request->used_token){
@@ -76,6 +85,13 @@ class ApplicationController extends Controller
                      $new_application->grad_status = $request->gradstat? $request->gradstat:"";
                      $new_application->reference = $request->reference? $request->reference:"";
                      $new_application->certificate = $certificate; 
+                     $new_application->first_session_in_sch =  $first_session_in_sch; 
+                     $new_application->last_session_in_sch =  $last_session_in_sch; 
+                     $new_application->years_spent =  $years_spent; 
+                     $new_application->qualification =  $qualification;
+                     $new_application->prog_name =  $prog_name; 
+                     $new_application->cgpa =  $cgpa; 
+                     $new_application->class_of_degree =  $class_of_degree; 
                      $new_application->transcript_raw = $trans_raw; 
                      if($new_application->save()){ 
                         $update_payment_table = Payment::where('rrr', $request->used_token)->first();
@@ -104,6 +120,13 @@ class ApplicationController extends Controller
                     $new_application->graduation_year = $request->graduation_year? $request->graduation_year:"";
                     $new_application->grad_status = $request->gradstat? $request->gradstat:"";
                     $new_application->certificate = $certificate; 
+                    $new_application->first_session_in_sch =  $first_session_in_sch; 
+                    $new_application->last_session_in_sch =  $last_session_in_sch; 
+                    $new_application->years_spent =  $years_spent; 
+                    $new_application->qualification =  $qualification;
+                    $new_application->prog_name =  $prog_name; 
+                    $new_application->cgpa =  $cgpa; 
+                    $new_application->class_of_degree =  $class_of_degree;
                     $new_application->transcript_raw =  $trans_raw;
                     if($new_application->save() ){  
                         // Notify applicant through email  $applicant->email and Notify admin
@@ -273,10 +296,20 @@ static function get_admin_msg($applicant){
 }
 
 public function get_student_result($request){
+    //   $prog_code  failing .... RUN1011/2797
     //$request->validate(['userid'=>'required','matno'=>'required','used_token'=>'required']);
     try {
         $matno = str_replace(' ', '', $request->matno);
+        $first_session_in_sch  = "";
+        $last_session_in_sch  = "";
+        $years_spent = "";
+        $qualification  = "";
+        $prog_name  = "";
+        $cgpa  = "";
         if($this->get_student_result_session_given_matno($matno,$sessions)){
+            $first_session_in_sch  = $sessions[0];
+            $last_session_in_sch  = $sessions[count($sessions)-1];
+            $years_spent = count($sessions);
             $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
             //$application  = OfficialApplication::where(['matric_number'=> $matno, 'used_token'=>$request->used_token,'applicant_id'=>$request->userid,'app_status'=>'PENDING'])->first(); //Get the real application
             $student  = Student::where('matric_number',$matno)->first();
@@ -471,7 +504,10 @@ public function get_student_result($request){
         </div> ';
     
         $response = str_replace("pageno", $page_no, $response);
-        return $response;
+        return ['first_session_in_sch'=>$first_session_in_sch,
+        'last_session_in_sch'=>$last_session_in_sch,
+        'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name,'cgpa'=> round($cgpa,2),
+        'class_of_degree'=>$this->class_of_degree($cgpa),'result'=>$response];
        
     }else{ return "empty student session";}
         
@@ -626,7 +662,7 @@ static function get_result_table_header($student,$applicant,$request,$prog_name,
 
 static function get_student_result_session_given_matno($matno,&$sessions){
    try {
-    $sessions = DB::table('registrations')->distinct()->where(["matric_number"=>$matno , "deleted"=>"N"])->pluck('session_id');
+    $sessions = DB::table('registrations')->distinct()->where(["matric_number"=>$matno , "deleted"=>"N"])->orderBy('session_id','ASC')->pluck('session_id');
     if($sessions->count() > 0){ $sessions = $sessions; return true;}
     return false;
    } catch (\Throwable $th) {

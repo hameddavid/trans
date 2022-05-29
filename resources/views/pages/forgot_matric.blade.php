@@ -101,7 +101,7 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="matric_number" class="col-form-label">Matric Number: <span style="color:red">(Based on our suggestion)</span></label>
-                                    <input type="text" class="form-control" name="matric_number" id="matric_number" required>
+                                    <input type="text" class="form-control"  name="matric_number" id="matric_number" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
