@@ -734,14 +734,14 @@ public function edit_app_and_verify_editpin(Request $request){
     $request->validate([ "userid" => "required","matno"=>"required",'token'=>'required' ,'appid'=>'required','requestType'=>'required']);
     $validate_token =  OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
     ->where(['edit_token'=>$request->token, 'application_id'=>$request->appid])->select('official_applications.*','applicants.surname','applicants.firstname','applicants.email','applicants.id')->first(); 
-    if(empty($validate_token)){return response(['status'=>'failed','message'=>'Token not match application'],400);}
+    if(empty($validate_token)){return response(['status'=>'failed','message'=>'This token does not match this application'],400);}
     if($request->requestType == "check_token"){
        return response(['status'=>'success','message'=>'Token match application','data'=>$validate_token->form_fields],200);
     }
     elseif($request->requestType == "update"){
         $form_data = $request->except(['userid','matno','token','appid','requestType']);
         if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
-        $request->request->add(['surname'=> $validate_token->surname, 'firstname'=>$validate_token->firstname,'app_id'=>$validate_token->id]);
+        $request->request->add(['surname'=> $validate_token->surname, 'firstname'=>$validate_token->firstname,'application_id'=>$validate_token->id]);
         if(Storage::exists($validate_token->certificate)){ Storage::delete($validate_token->certificate);}
         $certificate = $this->upload_cert($request);
         $validate_token->certificate = $certificate;
