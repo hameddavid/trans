@@ -66,7 +66,6 @@ class ApplicationController extends Controller
                 $cgpa =  $all_result_params['cgpa']; 
                 $class_of_degree =  $all_result_params['class_of_degree']; 
                 $trans_raw =  $all_result_params['result']; //  Generate the transacript HTML here
-           return $qualification;
                 if($type == 'OFFICIAL'){
                 $request->validate(["mode" => "required","recipient"=>"required",'used_token'=>'required']); 
                 if($request->mode != "soft"){ $request->validate(["address"=>"required", "destination"=>"required"]);  }
@@ -566,7 +565,7 @@ static function fetch_student_result_from_registration($matno,$session){
 static function get_prog_code_given_matno($matno, &$prog_code){
     try {
         $student = Student::where('matric_number',$matno)->first();
-        if($student->count() > 0){$prog_code = $student->PROG_CODE; return true;}
+        if($student->count() > 0){$prog_code = $student->prog_code; return true;}
         return false;
     } catch (\Throwable $th) {
 

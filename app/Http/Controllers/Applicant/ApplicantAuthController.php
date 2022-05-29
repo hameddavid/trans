@@ -180,11 +180,11 @@ class ApplicantAuthController extends Controller
         $request->validate([ 'surname'=>'required', 'firstname'=>'required', 'othername'=>'required', 'email'=>'required|email','phone'=>'required' , 'program'=>'required', 'date_left'=>'required', ]); 
        $grad_session = intval($request->date_left-1).'/'.intval($request->date_left);
         $query = DB::table('t_student_test')
-       ->join('registrations','t_student_test.MATRIC_NUMBER','registrations.matric_number')
+       ->join('registrations','t_student_test.matric_number','registrations.matric_number')
        ->where('registrations.session_id', $grad_session)
        ->where('t_student_test.SURNAME', $request->surname)
        ->where('t_student_test.FIRSTNAME','LIKE', "%$request->firstname%")
-       ->where('t_student_test.PROG_CODE', $request->program )
+       ->where('t_student_test.prog_code', $request->program )
        ->select('registrations.matric_number')->distinct()->get(); 
     //     $matno_to_string = '';
     //    if($query->count() > 0){ $matno_to_string = $query[0];}
