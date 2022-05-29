@@ -1,7 +1,7 @@
 @extends("layout.master") 
 
     @section("title")
-      Approved Transcript Requests
+      Approved Student Transcript/Proficiency Requests
     @endsection
 
     @section("content")
@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Approved Transcript Requests</h4>
+                                    <h4 class="mb-sm-0 font-size-18">Approved Student Transcript/Proficiency Requests</h4>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                                                     <td><span class="badge badge-soft-success">{{$app->app_status}}</span></td>
                                                     <td>{{ date("d M Y", strtotime($app->created_at)) }}</td>
                                                     <td>
-                                                        <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
+                                                        <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
                                                     </td>
                                                 </tr>
                                                 @endforeach

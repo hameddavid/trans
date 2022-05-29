@@ -26,12 +26,25 @@
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
                         <i data-feather="file-text"></i>
-                        <span>Transcript Requests</span>
+                        <span data-key="t-multi-level">Transcript Requests</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="pending_applications">Pending</a></li>
-                        <li><a href="recommended_applications">Recommended</a></li>
-                        <li><a href="approved_applications">Approved</a></li>
+                    <ul class="sub-menu" aria-expanded="true">
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow">Official</a>
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="pending_applications">Pending</a></li>
+                                <li><a href="recommended_applications">Recommended</a></li>
+                                <li><a href="approved_applications">Approved</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow">Student/Proficiency</a>
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="pending_applications_">Pending</a></li>
+                                <li><a href="recommended_applications_">Recommended</a></li>
+                                <li><a href="approved_applications_">Approved</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
 

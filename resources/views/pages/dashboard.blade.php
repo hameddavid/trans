@@ -5,6 +5,7 @@
     @endsection
 
     @section("content")
+    <link href="assets/css/transcript.css" rel="stylesheet" type="text/css" />
             <div class="main-content">
                 <div class="page-content">
                     <div class="container-fluid">
@@ -27,7 +28,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-grow-1">
-                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Requests</span>
+                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Official Requests</span>
                                                 <h4 class="mb-3">
                                                     <span class="counter-value" data-target="{{count($total)}}">0</span>
                                                 </h4>
@@ -48,7 +49,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-grow-1">
-                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Approved Requests</span>
+                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Approved Official Requests</span>
                                                 <h4 class="mb-3">
                                                     <span class="counter-value" data-target="{{$approved}}">0</span>
                                                 </h4>
@@ -68,7 +69,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-grow-1">
-                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Pending Requests</span>
+                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Pending Official Requests</span>
                                                 <h4 class="mb-3">
                                                     <span class="counter-value" data-target="{{$pending}}">0</span>
                                                 </h4>
@@ -207,7 +208,7 @@
                                                         <td>{{$app->matric_number}}</td>
                                                         <td>@php echo ($app->app_status == 'APPROVED') ? '<span class="badge badge-soft-success">'.$app->app_status.'</span>' : '<span class="badge badge-soft-danger">'.$app->app_status.'</span>'@endphp</td>
                                                         <td>
-                                                            <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-light btn-sm view_transcript">View</button>
+                                                            <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-light btn-sm view_transcript">View</button>
                                                         </td>
                                                     </tr>
                                                     @if ($i > 5)
