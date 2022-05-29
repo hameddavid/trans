@@ -56,20 +56,19 @@ $.ajax({
     dataType: "json",
     success: function (response) {
         transcriptData = response;
-        console.log(transcriptData);
+        localStorage.setItem("data", transcriptData);
+        console.log(localStorage.getItem("data"));
     },
     error: function (XMLHttpRequest, textStatus, errorThrown) {
         console.log(response);
     },
 });
+var requestData = localStorage.getItem("data");
 options = {
     series: [
         {
-            name: "Profit",
-            data: [
-                12.45, 16.2, 8.9, 11.42, 12.6, 18.1, 18.2, 14.16, 11.1, 8.09,
-                16.34, 12.88,
-            ],
+            name: "Requests",
+            data: [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0],
         },
     ],
     chart: { type: "bar", height: 400, stacked: !0, toolbar: { show: !1 } },
