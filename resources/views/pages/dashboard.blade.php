@@ -28,7 +28,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-grow-1">
-                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Requests</span>
+                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Total Official Requests</span>
                                                 <h4 class="mb-3">
                                                     <span class="counter-value" data-target="{{count($total)}}">0</span>
                                                 </h4>
@@ -49,7 +49,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-grow-1">
-                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Approved Requests</span>
+                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Approved Official Requests</span>
                                                 <h4 class="mb-3">
                                                     <span class="counter-value" data-target="{{$approved}}">0</span>
                                                 </h4>
@@ -69,7 +69,7 @@
                                     <div class="card-body">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-grow-1">
-                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Pending Requests</span>
+                                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Pending Official Requests</span>
                                                 <h4 class="mb-3">
                                                     <span class="counter-value" data-target="{{$pending}}">0</span>
                                                 </h4>
