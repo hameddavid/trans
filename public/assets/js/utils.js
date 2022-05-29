@@ -65,6 +65,7 @@ $(document).ready(function ($) {
         $("#transcriptModalLabel").html($(this).data("name") + "'s Transcript");
         id = $(this).data("id");
         stat = $(this).data("status");
+        var type = $(this).data("type");
         if (stat === "APPROVED") {
             $("#btnRecommend").hide();
         } else if (stat === "RECOMMENDED") {
@@ -74,9 +75,12 @@ $(document).ready(function ($) {
             console.log(stat);
         }
 
-        $(".showHTML").load(`transcript/${id}`, function (data, status, jqXGR) {
-            console.log("fetched");
-        });
+        $(".showHTML").load(
+            `transcript/${type}/${id}`,
+            function (data, status, jqXGR) {
+                console.log("fetched");
+            }
+        );
 
         $("#btnRecommend").click(function () {
             recommendTranscript(id);

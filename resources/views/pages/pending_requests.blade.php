@@ -56,7 +56,7 @@
                                                             </a>
                                                             <div class="dropdown-menu">
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
-                                                                    <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" title="View" class="btn btn-secondary w-xs view_transcript"><i class="mdi mdi-eye-check-outline"></i></button>
+                                                                    <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->application_id}}" data-type="{{$app->transcript_type}}" data-name="{{$app->surname.' '.$app->firstname}}" title="View" class="btn btn-secondary w-xs view_transcript"><i class="mdi mdi-eye-check-outline"></i></button>
                                                                     <button type="button" data-id="{{$app->application_id}}" title="Regenerate" class="btn btn-info w-xs regenerate"><i class="mdi mdi-refresh"></i></button>
                                                                 </div>
                                                                 <div class="btn-group btn-group-example mb-3" role="group">

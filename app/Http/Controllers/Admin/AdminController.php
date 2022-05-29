@@ -17,6 +17,7 @@ use Mail;
 use App\Mail\MailingAdmin;
 use App\Mail\MailingApplicant;
 use PDF;
+use URL;
 
 class AdminController extends Controller
 {
@@ -61,21 +62,30 @@ class AdminController extends Controller
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $apps = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
             ->where('app_status','PENDING')->select('official_applications.*','applicants.surname','applicants.firstname')->get(); 
-        return view('pages.pending_requests',['data'=>$data,'apps'=>$apps]);
+        $apps_ = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+            ->where('app_status','PENDING')->select('student_applications.*','applicants.surname','applicants.firstname')->get();
+        return (\Request::getPathInfo() == '/pending_applications') ? view('pages.pending_requests',['data'=>$data,'apps'=>$apps]) : 
+            view('pages.pending_applications_',['data'=>$data,'apps'=>$apps_]);
     }
 
     public function viewApprovedApplications(Request $request){
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $apps = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
             ->where('app_status','APPROVED')->select('official_applications.*','applicants.surname','applicants.firstname')->get(); 
-        return view('pages.approved_requests',['data'=>$data,'apps'=>$apps]);
+        $apps_ = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+            ->where('app_status','APPROVED')->select('student_applications.*','applicants.surname','applicants.firstname')->get();
+        return (\Request::getPathInfo() == '/approved_applications') ? view('pages.approved_requests',['data'=>$data,'apps'=>$apps]) : 
+            view('pages.approved_applications_',['data'=>$data,'apps'=>$apps_]);
     }
 
     public function viewRecommendedApplications(Request $request){
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $apps = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
             ->where('app_status','RECOMMENDED')->select('official_applications.*','applicants.surname','applicants.firstname')->get(); 
-        return view('pages.recommended_requests',['data'=>$data,'apps'=>$apps]);
+        $apps_ = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+            ->where('app_status','RECOMMENDED')->select('student_applications.*','applicants.surname','applicants.firstname')->get(); 
+        return (\Request::getPathInfo() == '/recommended_applications') ? view('pages.recommended_requests',['data'=>$data,'apps'=>$apps]) : 
+            view('pages.recommended_applications_',['data'=>$data,'apps'=>$apps_]);
     }
 
     public function viewPayments(Request $request){
@@ -118,11 +128,20 @@ class AdminController extends Controller
         return $pending_req;
     }
 
-    public function getHtmlTranscript(Request $request, $id){
-        $apps = OfficialApplication::where('application_id', $id)
-            ->select('transcript_raw')->first();
-        $decoded_transcript = html_entity_decode($apps->transcript_raw);
-        return $decoded_transcript;
+    public function getHtmlTranscript(Request $request, $type, $id){
+        if($type == 'OFFICIAL'){
+            $apps = OfficialApplication::where('application_id', $id)->select('transcript_raw')->first();
+            $decoded_transcript = html_entity_decode($apps->transcript_raw);
+            return $decoded_transcript;
+
+        }
+        else{
+            $apps = StudentApplication::where('id', $id)->select('transcript_raw')->first();
+            $decoded_transcript = html_entity_decode($apps->transcript_raw);
+            return $decoded_transcript;
+        }
+        
+        
     }
 
     public function viewSettings(Request $request){

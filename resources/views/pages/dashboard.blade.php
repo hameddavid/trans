@@ -208,7 +208,7 @@
                                                         <td>{{$app->matric_number}}</td>
                                                         <td>@php echo ($app->app_status == 'APPROVED') ? '<span class="badge badge-soft-success">'.$app->app_status.'</span>' : '<span class="badge badge-soft-danger">'.$app->app_status.'</span>'@endphp</td>
                                                         <td>
-                                                            <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-light btn-sm view_transcript">View</button>
+                                                            <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-light btn-sm view_transcript">View</button>
                                                         </td>
                                                     </tr>
                                                     @if ($i > 5)
