@@ -108,6 +108,9 @@ $(document).ready(function ($) {
         $("#check_email").prop("checked") == true
             ? $(".email_box").show()
             : $(".email_box").hide();
+        $("#check_certificate").prop("checked") == true
+            ? $(".certificate_box").show()
+            : $(".certificate_box").hide();
     });
 
     $(".preview").click(function () {
@@ -117,6 +120,7 @@ $(document).ready(function ($) {
         $(".reference").hide();
         $(".address_box").hide();
         $(".email_box").hide();
+        $(".certificate_box").hide();
         $("#previewModalLabel").html($(this).data("name") + "'s Details");
         var id = $(this).data("id");
         var recipient = $(this).data("recipient");

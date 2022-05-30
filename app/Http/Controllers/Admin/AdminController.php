@@ -50,8 +50,9 @@ class AdminController extends Controller
     }
 
     public function view_certificate(Request $request, $path){
-        dd($path);
-        return response()->file($path);
+        $file = Storage::disk('local')->get($path);
+        return (new Response($file, 200))->header('Content-Type', 'application/pdf');
+        //return response()->file($path);
     }
 
 
