@@ -49,6 +49,10 @@ class AdminController extends Controller
         return $location;
     }
 
+    public function view_certificate(Request $request, $path){
+        return response()->file($path);
+    }
+
 
     public function getTranscriptActivities(){
         for ($i=1; $i <= 12 ; $i++) { 

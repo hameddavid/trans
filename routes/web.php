@@ -42,5 +42,6 @@ Route::middleware(['adminauth'])->group(function () {
     Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
     Route::get('getTranscriptActivities', [AdminController::class, 'getTranscriptActivities']);
     Route::post('send_corrections_to_applicant', [AdminController::class, 'send_corrections_to_applicant']);
+    Route::post('view_certificate/{path}', [AdminController::class, 'view_certificate']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
 });
