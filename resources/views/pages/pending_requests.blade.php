@@ -42,7 +42,7 @@
                                                 @foreach($apps as $app)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td><button data-status="{{$app->app_status}}" data-reference="{{$app->reference}}" data-recipient="{{$app->recipient}}" data-mode="{{$app->delivery_mode}}" data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
+                                                    <td><button data-certificate="{{$app->certificate}}" data-status="{{$app->app_status}}" data-reference="{{$app->reference}}" data-recipient="{{$app->recipient}}" data-mode="{{$app->delivery_mode}}" data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
                                                     <td>{{$app->matric_number}}</td>
                                                     <td>{{$app->recipient}}</td>
                                                     <td>{{$app->destination}}</td>
@@ -146,7 +146,7 @@
                             <div class="form-check form-check-right certicate">
                                 <input class="form-check-input" type="checkbox" id="check_certificate">
                                 <label class="form-check-label" for="check_certificate">
-                                    Degree Certificate: <a href="">VIEW</a>
+                                    Degree Certificate: <a href="" target="_blank" class="viewcert">VIEW</a>
                                 </label>
                                 <input type="text" id="certicate" name="certicate" class="form-control certificate_box" required>
                             </div>

@@ -126,6 +126,9 @@ $(document).ready(function ($) {
         var recipient = $(this).data("recipient");
         var address = $(this).data("address");
         var reference = $(this).data("reference");
+        var _href = $("a.viewcert").attr("href");
+        var link = $(this).data("certificate");
+        $("a.viewcert").attr("href", _href + link);
 
         $("#appid").val($("#appid").val() + id);
 
