@@ -208,6 +208,13 @@ p{
 	margin-top: 20px;
 }
 
+div.watermark {
+ background:url('/assets/images/run_logo_big.png');
+ background-repeat:no-repeat;
+ background-position:center;
+ border:2px solid;
+ border-color:#CD853F; }
+
   </style>
 </head>
 <body>

@@ -38,7 +38,7 @@ class ApplicationController extends Controller
      }
     public function index()
     { 
-        $app = OfficialApplication::find(4); 
+        $app = OfficialApplication::find(9); 
         return view('result')->with('data',html_entity_decode($app->transcript_raw));
         $app = StudentApplication::find(8); 
         return view('result')->with('data',html_entity_decode($app->transcript_raw));

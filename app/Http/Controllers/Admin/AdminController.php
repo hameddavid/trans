@@ -23,7 +23,7 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-        // $this->middleware('adminauth');
+         $this->middleware('adminauth');
         // $this->middleware('Adminauth',['only' => ['password_reset','applicant_dashboard']]);
        // $this->middleware('log')->only('index');
        // $this->middleware('subscribed')->except('store');
@@ -188,47 +188,67 @@ class AdminController extends Controller
 
 
     public function recommend_app(Request $request){
-        $request->validate([ 'id'=>'required|string',] );
+        $request->validate([ 'id'=>'required|string','transcript_type'=>'required|string',] );
         try {
-            //code...
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if($data->role != '200'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
-        $app = OfficialApplication::where(['application_id'=> $request->id, 'app_status'=>'PENDING'])->first();
-        if($app){
-            $app->app_status = "RECOMMENDED";
-            $app->recommended_by = $data->email;
-            $app->recommended_at = date("F j, Y, g:i a");
-            if($app->save()){ return response(["status"=>"success","message"=>"Application successfully recommended for approval"],200);  }
-            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
-        }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
-
+        $type = strtoupper($request->transcript_type);
+        if($type == 'OFFICIAL'){
+            $app = OfficialApplication::where(['application_id'=> $request->id, 'app_status'=>'PENDING'])->first();
+            if($app){
+                $app->app_status = "RECOMMENDED";
+                $app->recommended_by = $data->email;
+                $app->recommended_at = date("F j, Y, g:i a");
+                if($app->save()){ return response(["status"=>"success","message"=>"Application successfully recommended for approval"],200);  }
+                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+         }elseif($type == 'STUDENT' || $type == 'PROFICIENCY'  ){
+            $app = StudentApplication::where(['id'=> $request->id, 'app_status'=>'PENDING'])->first();
+            if($app){
+                $app->app_status = "RECOMMENDED";
+                $app->recommended_by = $data->email;
+                $app->recommended_at = date("F j, Y, g:i a");
+                if($app->save()){ return response(["status"=>"success","message"=>"Application successfully recommended for approval"],200);  }
+                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+        
+         }
+           
+        } catch (\Throwable $th) {
+            return response(["status"=>"failed","message"=>"Error from catch, for recommendation"],401);
+        }
 
     }
 
 
     public function de_recommend_app(Request $request){
-        $request->validate([ 'id'=>'required|string',] );
+        $request->validate([ 'id'=>'required|string','transcript_type'=>'required|string',] );
         try {
-            //code...
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-        
         if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
-        $app = OfficialApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
-        if($app){
-            $app->app_status = "PENDING";
-            $app->recommended_by = $data->email;
-            $app->recommended_at = date("F j, Y, g:i a");
-            if($app->save()){ return response(["status"=>"success","message"=>"Application recommendation reversed successfully!"],200);  }
-            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation reverse"],401); }
-        }else{ return response(["status"=>"failed","message"=>"No application found for recommendation reverse"],401); }
-
-
+        $type = strtoupper($request->transcript_type);
+        if($type == 'OFFICIAL'){
+            $app = OfficialApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
+            if($app){    
+                $app->app_status = "PENDING";
+                $app->recommended_by = $data->email;
+                $app->recommended_at = date("F j, Y, g:i a");
+                if($app->save()){ return response(["status"=>"success","message"=>"Application recommendation reversed successfully!"],200);  }
+                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation reverse"],401); }
+            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation reverse"],401); }
+         }elseif($type == 'STUDENT' || $type == 'PROFICIENCY'  ){
+            $app = StudentApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
+            if($app){
+                $app->app_status = "PENDING";
+                $app->recommended_by = $data->email;
+                $app->recommended_at = date("F j, Y, g:i a");
+                if($app->save()){ return response(["status"=>"success","message"=>"Application recommendation reversed successfully!"],200);  }
+                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation reverse"],401); }
+            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation reverse"],401); }   
+         }    
+        } catch (\Throwable $th) {
+            return response(["status"=>"failed","message"=>"Error from catch for recommendation reverse"],401);
+        }
     }
 
     public function download_pdf(){

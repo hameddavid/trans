@@ -45,6 +45,7 @@ Route::post('app/edit_app_and_verify_editpin', [ApplicationController::class, 'e
 // Route::post('register',[AdminAuthController::class,'save_new_account']);
 // Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
  Route::post('/approve_app',[AdminController::class,'approve_app']);
+ Route::post('/recommend_app',[AdminController::class,'recommend_app']);
 // Route::post('upload_cert', [ApplicationController::class, 'upload_cert']);
 // Route::post('send_corrections_to_applicant', [AdminController::class, 'send_corrections_to_applicant']);
 
