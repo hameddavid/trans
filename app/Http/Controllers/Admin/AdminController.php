@@ -50,6 +50,7 @@ class AdminController extends Controller
     }
 
     public function view_certificate(Request $request, $path){
+        dd($path);
         return response()->file($path);
     }
 
