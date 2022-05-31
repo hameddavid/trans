@@ -39,7 +39,10 @@ class ApplicationController extends Controller
     public function index()
     { 
         $app = OfficialApplication::find(9); 
-        return view('result')->with('data',html_entity_decode($app->transcript_raw));
+        $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
+        ->where(['application_id'=> 9, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
+       
+        return view('cover_letter')->with('data',$app_official);
         $app = StudentApplication::find(8); 
         return view('result')->with('data',html_entity_decode($app->transcript_raw));
     }
