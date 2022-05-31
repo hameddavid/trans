@@ -49,12 +49,6 @@ class AdminController extends Controller
         return $location;
     }
 
-    public function view_certificate(Request $request, $path){
-        $file = Storage::disk('local')->get($path);
-        return (new Response($file, 200))->header('Content-Type', 'application/pdf');
-        //return response()->file($path);
-    }
-
 
     public function getTranscriptActivities(){
         for ($i=1; $i <= 12 ; $i++) { 
@@ -159,7 +153,7 @@ class AdminController extends Controller
     public function treat_forgot_matno_request(Request $request){
 
         $request->validate([ 'email'=>'required|string', 'retrieve_matno' => 'required|string',] );
-        try {
+        // try {
         $applicant = ForgotMatno::where(['email'=> $request->email, "status"=>"PENDING"])->first();
         if($applicant){
             $Msg =  '
@@ -186,9 +180,9 @@ class AdminController extends Controller
         }else{
             return response(["status"=>"failed","message"=>"Invalid email supplied"],401);
         }
-    } catch (\Throwable $th) {
-        return response(["status"=>"failed","message"=>"Error from catch ...treat_forgot_matno_request"],401);
-        }
+    // } catch (\Throwable $th) {
+    //     return response(["status"=>"failed","message"=>"Error from catch ...treat_forgot_matno_request"],401);
+    //     }
 
     }
 
