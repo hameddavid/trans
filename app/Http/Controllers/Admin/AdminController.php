@@ -153,7 +153,7 @@ class AdminController extends Controller
     public function treat_forgot_matno_request(Request $request){
 
         $request->validate([ 'email'=>'required|string', 'retrieve_matno' => 'required|string',] );
-        // try {
+        try {
         $applicant = ForgotMatno::where(['email'=> $request->email, "status"=>"PENDING"])->first();
         if($applicant){
             $Msg =  '
@@ -180,9 +180,9 @@ class AdminController extends Controller
         }else{
             return response(["status"=>"failed","message"=>"Invalid email supplied"],401);
         }
-    // } catch (\Throwable $th) {
-    //     return response(["status"=>"failed","message"=>"Error from catch ...treat_forgot_matno_request"],401);
-    //     }
+    } catch (\Throwable $th) {
+        return response(["status"=>"failed","message"=>"Error from catch ...treat_forgot_matno_request"],401);
+        }
 
     }
 
