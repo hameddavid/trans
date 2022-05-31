@@ -183,12 +183,28 @@ $(document).ready(function ($) {
     $(".viewForgotMatric").click(function () {
         $("#forgotMatric").modal("show");
         $("#sendMatricForm").trigger("reset");
+        $("#matric_number")
+            .empty()
+            .append("<option value=''>Select Matric Number</option>");
         email = $(this).data("email");
         var suggestions = $(this).data("suggestions");
         console.log(suggestions);
-        $("#matric_number").val(
-            $("#matric_number").val() + $(this).data("suggestions")
-        );
+        if (suggestions !== "") {
+            $(".matric_number").hide();
+            $(".select_matric_number").show();
+            $.each(suggestions, function (i, item) {
+                $("#matric_number").append(
+                    $("<option>", {
+                        value: item,
+                        text: item,
+                    })
+                );
+            });
+        } else {
+            $(".matric_number").show();
+            $(".select_matric_number").hide();
+        }
+
         $("#name").html(
             $(this).data("surname") +
                 " " +
@@ -209,8 +225,9 @@ $(document).ready(function ($) {
             function submitMatricForm() {
                 var type = "POST";
                 var ajaxurl = "treat_forgot_matno_request";
-                matric = $("#matric_number").val();
-
+                suggestions !== ""
+                    ? (matric = $("#matric_number").val())
+                    : (matric = $("#matric_number_").val());
                 $.ajax({
                     type: type,
                     url: ajaxurl,

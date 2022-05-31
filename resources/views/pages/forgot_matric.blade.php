@@ -87,7 +87,7 @@
                         <div class="col-lg-12">
                             <div class="card border border-primary">
                                 <div class="card-body">
-                                    <p class="card-text">Enter the correct matric number for this applicant and click on the send button.</p>
+                                    <p class="card-text">Select the correct matric number for this applicant and click on the send button.</p>
                                     <label for="name" class="col-form-label">Fullname: <span id="name"></span></label><hr>
                                     <label for="email" class="col-form-label">Email: <span id="email"></span></label><hr>
                                     <label for="phone" class="col-form-label">Phone number: <span id="phone"></span></label><hr>
@@ -101,7 +101,10 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label for="matric_number" class="col-form-label">Matric Number: <span style="color:red">(Based on our suggestion)</span></label>
-                                    <input type="text" class="form-control"  name="matric_number" id="matric_number" required>
+                                    <select class="form-control select_matric_number" name="matric_number" id="matric_number" required>
+                                    </select>
+                                    <input type="text" class="form-control matric_number"  name="matric_number_" id="matric_number_" 
+                                        placeholder="No suggestions, Please enter matric number here" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
