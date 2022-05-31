@@ -49,6 +49,12 @@ class AdminController extends Controller
         return $location;
     }
 
+    public function view_certificate(Request $request, $path){
+        $file = Storage::disk('local')->get($path);
+        return (new Response($file, 200))->header('Content-Type', 'application/pdf');
+        //return response()->file($path);
+    }
+
 
     public function getTranscriptActivities(){
         for ($i=1; $i <= 12 ; $i++) { 
