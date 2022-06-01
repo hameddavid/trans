@@ -62,6 +62,7 @@ static function find_and_replace_string($string){
     }else{  return ['status'=>'ok']; }
 }
 
+
  public function applicant_mail_attachment_stud($applicant,$Subject,$Msg){
     $data = [
         'to' => [$applicant->email],
