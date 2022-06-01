@@ -122,6 +122,7 @@ class ApplicantAuthController extends Controller
             $app->email  = $request->email;
             $app->password = bcrypt($auto_pass);
             $app->mobile  = $request->phone;
+            $app->sex  = $student->sex;
             $app->type = 'TRANSCRIPT';
             $save_app = $app->save();
             if($save_app){ return ['status'=>'success','message'=>'applicant created!'];}
@@ -169,8 +170,7 @@ class ApplicantAuthController extends Controller
         return '
          Kindly find on your dashboard, forgot matric number request from '.
           $request->surname . ' ' .$request->firstname .'. <br>
-         <br>
-         Thank you.';  
+         <br>';  
        
       }
      
@@ -202,7 +202,7 @@ class ApplicantAuthController extends Controller
             $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
             $request->request->add(['emails'=> $admin_users]);
             if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="FORGOT MATRIC NUMBER REQUEST",$Msg=$this->get_msg_forgot_mat($request))['status'] == 'ok' ){
-            return response(['status'=>'success','message'=>'request successfully save'], 201);
+            return response(['status'=>'success','message'=>'request successfully saved'], 201);
            }
         } return response(['status'=>'failed','message'=>'Error saving forgot matric number request'], 400);
     } catch (\Throwable $th) {
