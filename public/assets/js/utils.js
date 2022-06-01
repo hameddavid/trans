@@ -187,8 +187,9 @@ $(document).ready(function ($) {
             .empty()
             .append("<option value=''>Select Matric Number</option>");
         email = $(this).data("email");
-        var suggestions = $(this).data("suggestions");
+        suggestions = $(this).data("suggestions");
         console.log(suggestions);
+        console.log(arrayToObject(suggestions, "matric_number"));
         if (suggestions !== "") {
             $(".matric_number").hide();
             $(".select_matric_number").show();
@@ -228,7 +229,6 @@ $(document).ready(function ($) {
                 suggestions !== ""
                     ? (matric = $("#matric_number").val())
                     : (matric = $("#matric_number_").val());
-                console.log(matric);
                 $.ajax({
                     type: type,
                     url: ajaxurl,
@@ -451,4 +451,13 @@ $(document).ready(function ($) {
             },
         });
     };
+
+    const arrayToObject = (array, key) =>
+        array.reduce(
+            (obj, item) => ({
+                ...obj,
+                [item[key]]: item,
+            }),
+            {}
+        );
 });
