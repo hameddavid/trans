@@ -228,6 +228,7 @@ $(document).ready(function ($) {
                 suggestions !== ""
                     ? (matric = $("#matric_number").val())
                     : (matric = $("#matric_number_").val());
+                console.log(matric);
                 $.ajax({
                     type: type,
                     url: ajaxurl,
