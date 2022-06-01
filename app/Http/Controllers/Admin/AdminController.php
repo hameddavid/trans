@@ -312,7 +312,7 @@ class AdminController extends Controller
             $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
             ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email')->first(); 
             if($app_stud){
-                PDF::loadView('proficiency',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                PDF::loadView('proficiency_letter',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                 if (File::exists($app_stud->file_path.'.pdf')) {
                     if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
                         $app_stud->app_status = "APPROVED";
