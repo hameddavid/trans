@@ -83,15 +83,15 @@ $(document).ready(function ($) {
         );
 
         $("#btnRecommend").click(function () {
-            recommendTranscript(id);
+            recommendTranscript(id, type);
         });
 
         $("#btnDerecommend").click(function () {
-            derecommendTranscript(id);
+            derecommendTranscript(id, type);
         });
 
         $("#btnApprove").click(function () {
-            approveTranscript(id);
+            approveTranscript(id, type);
         });
     });
 
@@ -228,6 +228,7 @@ $(document).ready(function ($) {
                 suggestions !== ""
                     ? (matric = $("#matric_number").val())
                     : (matric = $("#matric_number_").val());
+                console.log(matric);
                 $.ajax({
                     type: type,
                     url: ajaxurl,
@@ -316,7 +317,8 @@ $(document).ready(function ($) {
 
     $(".recommend").click(function () {
         id = $(this).data("id");
-        recommendTranscript(id);
+        var type = $(this).data("type");
+        recommendTranscript(id, type);
     });
 
     $(".approve").click(function () {
@@ -327,14 +329,15 @@ $(document).ready(function ($) {
 
     $(".regenerate").click(function () {
         id = $(this).data("id");
-        regenerateTranscript(id);
+        var type = $(this).data("type");
+        regenerateTranscript(id, type);
     });
 
-    const recommendTranscript = (id) => {
+    const recommendTranscript = (id, type) => {
         $.ajax({
             type: "POST",
             url: "recommend_app ",
-            data: { id: id },
+            data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
                 if (confirm("Recommend Transcript?") == false) return false;
@@ -392,11 +395,11 @@ $(document).ready(function ($) {
         });
     };
 
-    const regenerateTranscript = (id) => {
+    const regenerateTranscript = (id, type) => {
         $.ajax({
             type: "POST",
             url: "regenerate_transcript  ",
-            data: { id: id },
+            data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
                 if (confirm("Regenerate Transcript?") == false) return false;
@@ -417,11 +420,11 @@ $(document).ready(function ($) {
         });
     };
 
-    const derecommendTranscript = (id) => {
+    const derecommendTranscript = (id, type) => {
         $.ajax({
             type: "POST",
             url: "de_recommend_app",
-            data: { id: id },
+            data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
                 if (confirm("Cancel recommedation?") == false) return false;

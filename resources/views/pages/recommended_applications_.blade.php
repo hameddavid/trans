@@ -69,7 +69,7 @@
                                                             <div class="dropdown-menu">
                                                                 <div class="btnJustify2">
                                                                     <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-secondary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
-                                                                    <button type="button" data-id="{{$app->id}}" class="btn btn-info waves-effect btn-label waves-light regenerate"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
+                                                                    <button type="button" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" class="btn btn-info waves-effect btn-label waves-light regenerate"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
                                                                 </div> 
                                                                 <div class="btnJustify2 p-3">
                                                                     @if($data->role == 300)<button type="button" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" class="btn btn-success waves-effect btn-label waves-light approve"><i class="bx bx-check label-icon"></i>Approve</button>@endif
