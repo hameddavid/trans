@@ -367,7 +367,7 @@ public function get_delivery_msg($data){
 public function send_corrections_to_applicant(Request $request){
     $request->validate(['appid'=>'required',]);
     //try {
-       dd(collect($request->all())->filter());
+    collect($request->all())->filter();
     $form_data = $request->except(['appid','_token']);
     $form_array = [];
     $edit_token = app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(6);
