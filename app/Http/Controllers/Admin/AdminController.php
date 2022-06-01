@@ -223,7 +223,7 @@ class AdminController extends Controller
 
     public function de_recommend_app(Request $request){
         $request->validate([ 'id'=>'required|string','transcript_type'=>'required|string',] );
-        try {
+        // try {
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
         $type = strtoupper($request->transcript_type);
@@ -246,9 +246,9 @@ class AdminController extends Controller
                 else{return response(["status"=>"failed","message"=>"Error updating application for recommendation reverse"],401); }
             }else{ return response(["status"=>"failed","message"=>"No application found for recommendation reverse"],401); }   
          }    
-        } catch (\Throwable $th) {
-            return response(["status"=>"failed","message"=>"Error from catch for recommendation reverse"],401);
-        }
+        // } catch (\Throwable $th) {
+        //     return response(["status"=>"failed","message"=>"Error from catch for recommendation reverse"],401);
+        // }
     }
 
     public function download_pdf(){
