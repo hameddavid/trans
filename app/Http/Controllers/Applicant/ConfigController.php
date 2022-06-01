@@ -62,6 +62,21 @@ static function find_and_replace_string($string){
     }else{  return ['status'=>'ok']; }
 }
 
+ public function applicant_mail_attachment_stud($applicant,$Subject,$Msg){
+    $data = [
+        'to' => [$applicant->email],
+        'docs'=> [ 
+            ['path'=> public_path($applicant->file_path.'.pdf'), 'as' => strtoupper($applicant->surname)."_TRANSCRIPT.pdf",'mime' => 'application/pdf'],
+         ],
+        'name' => $applicant->surname ." ". $applicant->firstname,
+        'sub' => $Subject,
+        'message' => $Msg
+         ];
+    Mail::to($data['to'])->send(new MailingApplicant($data));
+    if (Mail::failures()) {return ['status'=>'nok'];
+    }else{  return ['status'=>'ok']; }
+}
+
 
 
 public function list_programmes(){
