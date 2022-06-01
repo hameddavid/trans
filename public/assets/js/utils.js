@@ -193,13 +193,23 @@ $(document).ready(function ($) {
         if (suggestions !== "") {
             $(".matric_number").hide();
             $(".select_matric_number").show();
-            $.each(suggestions, function (i, item) {
-                $("#matric_number").append(
-                    $("<option>", {
-                        value: item,
-                        text: item,
-                    })
-                );
+            // $.each(suggestions, function (i, item) {
+            //     $("#matric_number").append(
+            //         $("<option>", {
+            //             value: item,
+            //             text: item,
+            //         })
+            //     );
+            // });
+            suggestions.forEach((suggestion) => {
+                for (let key in suggestion) {
+                    $("#matric_number").append(
+                        $("<option>", {
+                            value: suggestion[key],
+                            text: suggestion[key],
+                        })
+                    );
+                }
             });
         } else {
             $(".matric_number").show();
