@@ -120,6 +120,7 @@ class AdminController extends Controller
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $applicants = ForgotMatno::select('*')->orderBy('created_at', 'DESC')->get(); 
         //return $applicants[1]->matno_found;
+        dd($applicants[0]->matno_found);
         return view('pages.forgot_matric',['data'=>$data,'applicants'=>$applicants]);
     }
 
@@ -373,7 +374,7 @@ public function send_corrections_to_applicant(Request $request){
     $edit_token = app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(6);
     $msg ='<span style="color:red"> Use token '.$edit_token. ' to edit your application.<span><br><br>';
     $msg .= '<pre style="color:black">You are to look into the following for proper correction as requested from the admin in order to complete your transcript request  <br><br>';
-    $msg .=' There are '. sizeof($form_data). ' complaint from admin <br><br>';
+    $msg .=' There are '. sizeof($form_data).'(s)'. ' complaint from admin <br><br>';
     $counter = 1;  
     foreach($form_data as $key => $value){
         $msg .=' Complaint '. $counter.':  '.$key.' => '. $value.'<br><br>';
