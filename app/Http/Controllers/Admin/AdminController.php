@@ -120,6 +120,7 @@ class AdminController extends Controller
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $applicants = ForgotMatno::select('*')->orderBy('created_at', 'DESC')->get(); 
         //return $applicants[1]->matno_found;
+        dd($applicants[0]->matno_found);
         return view('pages.forgot_matric',['data'=>$data,'applicants'=>$applicants]);
     }
 
@@ -237,7 +238,7 @@ class AdminController extends Controller
                 else{return response(["status"=>"failed","message"=>"Error updating application for recommendation reverse"],401); }
             }else{ return response(["status"=>"failed","message"=>"No application found for recommendation reverse"],401); }
          }elseif($type == 'STUDENT' || $type == 'PROFICIENCY'  ){
-            $app = StudentApplication::where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
+            $app = StudentApplication::where(['id'=> $request->id, 'app_status'=>'RECOMMENDED'])->first();
             if($app){
                 $app->app_status = "PENDING";
                 $app->recommended_by = $data->email;
@@ -297,7 +298,7 @@ class AdminController extends Controller
             if($app_stud){
                 PDF::loadView('result',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                 if (File::exists($app_stud->file_path.'.pdf')) {
-                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
+                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
                         $app_stud->app_status = "APPROVED";
                         $app_stud->approved_by = $data->email;
                         $app_stud->approved_at = date("F j, Y, g:i a");
@@ -312,9 +313,9 @@ class AdminController extends Controller
             $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
             ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email')->first(); 
             if($app_stud){
-                PDF::loadView('proficiency',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                PDF::loadView('proficiency_letter',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                 if (File::exists($app_stud->file_path.'.pdf')) {
-                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
+                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
                         $app_stud->app_status = "APPROVED";
                         $app_stud->approved_by = $data->email;
                         $app_stud->approved_at = date("F j, Y, g:i a");
@@ -366,17 +367,18 @@ public function get_delivery_msg($data){
 
 public function send_corrections_to_applicant(Request $request){
     $request->validate(['appid'=>'required',]);
-    //try {
-    $form_data = $request->except('appid');
+    try {
+    $new_req = collect($request->all())->filter();
+    $form_data = $new_req->except(['appid','_token']);
     $form_array = [];
     $edit_token = app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(6);
     $msg ='<span style="color:red"> Use token '.$edit_token. ' to edit your application.<span><br><br>';
     $msg .= '<pre style="color:black">You are to look into the following for proper correction as requested from the admin in order to complete your transcript request  <br><br>';
-    $msg .=' There are '. sizeof($form_data). ' complaint from admin <br><br>';
+    $msg .=' There are '. sizeof($form_data).'(s)'. ' complaint from admin <br><br>';
     $counter = 1;  
     foreach($form_data as $key => $value){
         $msg .=' Complaint '. $counter.':  '.$key.' => '. $value.'<br><br>';
-        $form_array[$counter-1] =  [$key => $value];
+        $form_array[$key] =  $value;
         $counter++;
     }
     $msg .='</pre>';
@@ -395,9 +397,9 @@ public function send_corrections_to_applicant(Request $request){
        }
    }else{return response(['status'=>'failed','message'=>'Error saving corrected fields...'],400);
    }
-// } catch (\Throwable $th) {
-//     return response(['status'=>'failed','message'=>'Catch , Error saving corrected fields...'],400);
-// }
+} catch (\Throwable $th) {
+    return response(['status'=>'failed','message'=>'Catch , Error saving corrected fields...'],400);
+}
 }
 
 
