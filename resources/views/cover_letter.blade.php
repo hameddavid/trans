@@ -62,7 +62,9 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}                  
                     @elseif(strtoupper($data->sex) == 'F') <b>{{'Her'}}</b>
                     @else <b>{{''}}</b>
                     @endif
-                    Cumulative Grade Point Average (CGPA) at the end of a {{$data->years_spent.'-year'}}  {{$data->qualification}} degree programme, in the {{$data->last_session_in_sch}} academic session, was {{$data->cgpa}} – {{$data->class_of_degree}}. 
+                    Cumulative Grade Point Average (CGPA) at the end of a {{$data->years_spent.'-year(s)'}} 
+                     {{$data->qualification}} degree programme, in the {{$data->last_session_in_sch}} 
+                     academic session, was {{$data->cgpa}} – {{$data->class_of_degree}}. 
                     <br><br>The official language of teaching and examining the course was English.</p>
 
                 <p>Kindly note that any alteration on the transcript renders the records invalid and that the transcript is being forwarded in strict confidence and under no circumstance should it be released to the applicant.</p>

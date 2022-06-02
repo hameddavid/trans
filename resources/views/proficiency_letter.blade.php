@@ -52,12 +52,21 @@ TO WHOM IT MAY CONCERN
                     @else <b>{{''}}</b>
                     @endif
                  {{$data->surname.' '.$data->firstname}} (Matric. No. {{$data->matric_number}}) 
-                was a student in the Department of {Finance (Banking and Finance Programme)}
-                 in the Faculty of {Management Sciences}, Redeemer’s University.</p>
+                was a student in the Department of {{$data->dept}} ({{$data->prog_name}})
+                 in the Faculty of {{$data->fac}}, Redeemer’s University.</p>
 
     
 
-                <p>{Her} Cumulative Grade Point Average (CGPA) at the end of a {4-year} {Bachelor of Science} degree programme, in the {2009/2010} academic session, in {Psychology} was {3.52} – {Second Class (Honours) Upper Division}.</p>
+                <p>
+                @if(strtoupper($data->sex) == 'M') <b>{{'His'}}</b>
+                @elseif(strtoupper($data->sex) == 'F') <b>{{'Her'}}</b>
+                @else <b>{{''}}</b>
+                @endif
+                 Cumulative Grade Point Average (CGPA) at the end of a {{$data->years_spent.'-year(s)'}}
+                 {{$data->qualification}} degree programme, 
+                 in the {{$data->last_session_in_sch}} 
+                academic session, in {{$data->prog_name}} was {{$data->cgpa}} – {{$data->class_of_degree}}. 
+                    <br><br></p>
 
                 <p>Kindly note that English is the medium of communication in Nigerian institutions. You may also wish to note that in Redeemer’s University, all lectures, examinations, tests,
                     Seminars, presentations, and all kinds of student assessments are conducted in English.</p>
