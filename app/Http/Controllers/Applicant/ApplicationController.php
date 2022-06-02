@@ -237,7 +237,7 @@ class ApplicationController extends Controller
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
             $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])
-            ->select('amount','rrr','destination','status_msg','created_at')->get();
+            ->select('amount','rrr','destination','status_msg','created_at')->latest()->get();
             return $payment;
             
         } catch (\Throwable $th) {
