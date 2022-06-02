@@ -192,8 +192,13 @@ class ApplicationController extends Controller
             $success_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'success','applicant_id'=>$request->userid])->count();
             $pend_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
             $failed_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
+
+            $success_stud_app = StudentApplication::where(['matric_number'=>$request->matno,'app_status'=>'success','applicant_id'=>$request->userid])->count();
+            $pend_stud_app = StudentApplication::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
+            $failed_stud_app = StudentApplication::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
+
             $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->get();
-            return ['success_app'=>$success_app,'pend_app'=>$pend_app,'failed_app'=>$failed_app,'payment'=>$payment];
+            return ['success_app'=>$success_app + $success_stud_app,'pend_app'=>$pend_app + $pend_stud_app,'failed_app'=>$failed_app + $failed_stud_app,'payment'=>$payment];
             
         } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'catch, Error fetching success_app, pend_app, failed_app and payment!']);
@@ -203,20 +208,30 @@ class ApplicationController extends Controller
     }
 
 
-    public function my_applications(Request $request)
-    {
+    public function my_applications(Request $request){
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
             $apps = OfficialApplication::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])
-            ->select('application_id','transcript_type','created_at','app_status','destination','recipient')->get(); 
+                ->select('application_id','transcript_type','created_at','app_status','destination','recipient')->get(); 
             return $apps;
-            
-        } catch (\Throwable $th) {
+        } 
+        catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'catch, Error fetching my apps!']);
         }
-
-
     }
+
+    public function my_student_applications(Request $request){
+        $request->validate(['userid'=>'required','matno'=>'required']); 
+        try {
+            $apps = StudentApplication::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])
+                ->select('id','transcript_type','created_at','app_status','destination','recipient')->get(); 
+            return $apps;
+        } 
+        catch (\Throwable $th) {
+            return response(['status'=>'failed','message'=>'catch, Error fetching my apps!']);
+        }
+    }
+
     public function my_payments(Request $request)
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
