@@ -30,6 +30,7 @@ class AdminController extends Controller
     }
 
     public function view_certificate($path){
+        return back();
         $filepath = storage_path($path);
         return response()->file($filepath);
     }

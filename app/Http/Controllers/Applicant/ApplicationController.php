@@ -66,6 +66,8 @@ class ApplicationController extends Controller
                 $years_spent =  $all_result_params['years_spent']; 
                 $qualification =  $all_result_params['qualification']; //Bachelor of Arts in
                 $prog_name =  $all_result_params['prog_name']; 
+                $dept =  $all_result_params['dept'];  //$dept ,$fac
+                $fac =  $all_result_params['fac']; 
                 $cgpa =  $all_result_params['cgpa']; 
                 $class_of_degree =  $all_result_params['class_of_degree']; 
                 $trans_raw =  $all_result_params['result']; //  Generate the transacript HTML here
@@ -92,6 +94,8 @@ class ApplicationController extends Controller
                      $new_application->years_spent =  $years_spent; 
                      $new_application->qualification =  $qualification;
                      $new_application->prog_name =  $prog_name; 
+                     $new_application->dept =  $dept; 
+                     $new_application->fac =  $fac; 
                      $new_application->cgpa =  $cgpa; 
                      $new_application->class_of_degree =  $class_of_degree; 
                      $new_application->transcript_raw = $trans_raw; 
@@ -127,6 +131,8 @@ class ApplicationController extends Controller
                     $new_application->years_spent =  $years_spent; 
                     $new_application->qualification =  $qualification;
                     $new_application->prog_name =  $prog_name; 
+                    $new_application->dept =  $dept; 
+                    $new_application->fac =  $fac;
                     $new_application->cgpa =  $cgpa; 
                     $new_application->class_of_degree =  $class_of_degree;
                     $new_application->transcript_raw =  $trans_raw;
@@ -519,11 +525,12 @@ public function get_student_result($request){
                 Generated on the  ' . $date .'<br>
             </div>
         </div> ';
-    
+        
         $response = str_replace("pageno", $page_no, $response);
         return ['first_session_in_sch'=>$first_session_in_sch,
         'last_session_in_sch'=>$last_session_in_sch,
-        'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name,'cgpa'=> round($cgpa,2),
+        'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name ,
+        'dept'=>$dept,'fac'=>$fac,'cgpa'=> round($cgpa,2),
         'class_of_degree'=>$this->class_of_degree($cgpa),'result'=>$response];
        
     }else{ return "empty student session";}
