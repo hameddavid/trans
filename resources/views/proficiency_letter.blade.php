@@ -29,8 +29,8 @@
     <body class="bodyBody">
         <div class="divSubject">
 <pre>
-                                                                                    {{date("F j, Y")}}    
-RUN/REG/Attestation/15/Vol.1/00{{$data->application_id}}                                                                                                      
+{{date("F j, Y")}}    
+RUN/REG/Attestation/15/Vol.1/00{{$data->id}}                                                                                                      
 
 TO WHOM IT MAY CONCERN
 </pre>
