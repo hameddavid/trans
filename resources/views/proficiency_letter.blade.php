@@ -29,7 +29,8 @@
     <body class="bodyBody">
         <div class="divSubject">
 <pre>
-RUN/REG/Attestation/15/Vol.1/{014}                                                  {12th April, 2022}                                                         
+                                                                                    {{date("F j, Y")}}    
+RUN/REG/Attestation/15/Vol.1/00{{$data->application_id}}                                                                                                      
 
 TO WHOM IT MAY CONCERN
 </pre>
@@ -46,7 +47,15 @@ TO WHOM IT MAY CONCERN
             </h5>
             
             <p>
-                <p>{Miss ALADEBO, Kikelomo Josephine} (Matric. No. {RUN08-09/1626}) was a student in the Department of {Finance (Banking and Finance Programme)} in the Faculty of {Management Sciences}, Redeemer’s University.</p>
+                <p>@if(strtoupper($data->sex) == 'M') <b>{{'MR.'}}</b>
+                    @elseif(strtoupper($data->sex) == 'F') <b>{{'MISS'}}</b>
+                    @else <b>{{''}}</b>
+                    @endif
+                 {{$data->surname.' '.$data->firstname}} (Matric. No. {{$data->matric_number}}) 
+                was a student in the Department of {Finance (Banking and Finance Programme)}
+                 in the Faculty of {Management Sciences}, Redeemer’s University.</p>
+
+    
 
                 <p>{Her} Cumulative Grade Point Average (CGPA) at the end of a {4-year} {Bachelor of Science} degree programme, in the {2009/2010} academic session, in {Psychology} was {3.52} – {Second Class (Honours) Upper Division}.</p>
 
