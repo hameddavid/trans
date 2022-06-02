@@ -9,4 +9,7 @@ class StudentApplication extends Model
 {
     use HasFactory;
     protected $table = 'student_applications';
+    protected $casts = [
+        'created_at' => 'datetime:d/m/Y'
+    ];
 }
