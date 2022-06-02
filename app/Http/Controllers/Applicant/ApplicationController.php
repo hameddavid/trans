@@ -66,8 +66,8 @@ class ApplicationController extends Controller
                 $years_spent =  $all_result_params['years_spent']; 
                 $qualification =  $all_result_params['qualification']; //Bachelor of Arts in
                 $prog_name =  $all_result_params['prog_name']; 
-                $dept =  $all_result_params['dept'];  //$dept ,$fac
-                $fac =  $all_result_params['fac']; 
+                $dept = app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string2($all_result_params['dept']);  //$dept ,$fac
+                $fac = app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string2($all_result_params['fac']); 
                 $cgpa =  $all_result_params['cgpa']; 
                 $class_of_degree =  $all_result_params['class_of_degree']; 
                 $trans_raw =  $all_result_params['result']; //  Generate the transacript HTML here
@@ -738,7 +738,6 @@ static function class_of_degree($cgpa) {
 }
 
 static function get_programme_details($student,$prog_name, $dept ,$fac,&$qualification) {
-
 	$qualification = '';
     if (strtoupper($student->status ) == "GRADUATED") {
         
