@@ -10,5 +10,5 @@ class OfficialApplication extends Model
     use HasFactory;
     protected $table = 'official_applications';
     protected $primaryKey = 'application_id';
-    protected $casts = [ 'form_fields' => 'array', ];
+    protected $casts = [ 'form_fields' => 'array', 'created_at' => 'datetime:m/d/Y'];
 }
