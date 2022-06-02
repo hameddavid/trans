@@ -28,8 +28,8 @@ class ApplicationController extends Controller
 
      public function upload_cert($request){
         try {
-           
-            $path = Storage::disk('local')->putFileAs('credentials', $request->file('certificate'), strtoupper($request->surname) ."_". strtoupper($request->firstname)."_". $request->app_id ."_DEGREE_CERTIFICATE.pdf"); 
+            $path = Storage::disk('local')->putFileAs('credentials', $request->file('certificate'),
+             strtoupper($request->surname) ."_". $request->app_id ."_DEGREE_CERTIFICATE.pdf"); 
             return $path;
         } catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'Error with upload_cert function']);
