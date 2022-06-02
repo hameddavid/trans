@@ -187,7 +187,7 @@ class ApplicationController extends Controller
             $pend_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
             $failed_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
 
-            $success_stud_app = StudentApplication::where(['matric_number'=>$request->matno,'app_status'=>'success','applicant_id'=>$request->userid])->count();
+            $success_stud_app = StudentApplication::where(['matric_number'=>$request->matno,'app_status'=>'APPROVED','applicant_id'=>$request->userid])->count();
             $pend_stud_app = StudentApplication::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
             $failed_stud_app = StudentApplication::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
 
