@@ -187,18 +187,28 @@ $(document).ready(function ($) {
             .empty()
             .append("<option value=''>Select Matric Number</option>");
         email = $(this).data("email");
-        var suggestions = $(this).data("suggestions");
+        suggestions = $(this).data("suggestions");
         console.log(suggestions);
         if (suggestions !== "") {
             $(".matric_number").hide();
             $(".select_matric_number").show();
-            $.each(suggestions, function (i, item) {
-                $("#matric_number").append(
-                    $("<option>", {
-                        value: item,
-                        text: item,
-                    })
-                );
+            // $.each(suggestions, function (i, item) {
+            //     $("#matric_number").append(
+            //         $("<option>", {
+            //             value: item,
+            //             text: item,
+            //         })
+            //     );
+            // });
+            suggestions.forEach((suggestion) => {
+                for (let key in suggestion) {
+                    $("#matric_number").append(
+                        $("<option>", {
+                            value: suggestion[key],
+                            text: suggestion[key],
+                        })
+                    );
+                }
             });
         } else {
             $(".matric_number").show();
@@ -228,7 +238,6 @@ $(document).ready(function ($) {
                 suggestions !== ""
                     ? (matric = $("#matric_number").val())
                     : (matric = $("#matric_number_").val());
-                console.log(matric);
                 $.ajax({
                     type: type,
                     url: ajaxurl,
@@ -451,4 +460,13 @@ $(document).ready(function ($) {
             },
         });
     };
+
+    // const arrayToObject = (array, key) =>
+    //     array.reduce(
+    //         (obj, item) => ({
+    //             ...obj,
+    //             [item[key]]: item,
+    //         }),
+    //         {}
+    //     );
 });
