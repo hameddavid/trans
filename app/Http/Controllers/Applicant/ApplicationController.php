@@ -197,7 +197,7 @@ class ApplicationController extends Controller
             $pend_stud_app = StudentApplication::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
             $failed_stud_app = StudentApplication::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
 
-            $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->get();
+            $payment = Payment::where(['matric_number'=>$request->matno,'user_id'=>$request->userid])->latest()->take(5)->get();
             return ['success_app'=>$success_app + $success_stud_app,'pend_app'=>$pend_app + $pend_stud_app,'failed_app'=>$failed_app + $failed_stud_app,'payment'=>$payment];
             
         } catch (\Throwable $th) {
