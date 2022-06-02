@@ -18,6 +18,12 @@ static function find_and_replace_string($string){
     $string  = str_replace("&amp;", "&#38;",$string);
     return $string;
  }
+
+static function find_and_replace_string2($string){
+    $string  = str_replace("&amp;", "AND",$string);
+    $string  = str_replace("&amp;", "AND",$string);
+    return $string;
+ }
  
 
  static function stringEndsWith($haystack,$needle,$case=true) {
