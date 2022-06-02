@@ -26,6 +26,7 @@ Route::get('app/check_request_availability', [ApplicationController::class, 'che
 Route::get('app/get_transcript_destination_and_amount', [ApplicationController::class, 'get_transcript_destination_and_amount']);
 Route::get('app/get_applicant_stat', [ApplicationController::class, 'get_applicant_stat']);
 Route::get('app/my_applications', [ApplicationController::class, 'my_applications']);
+Route::get('app/my_student_applications', [ApplicationController::class, 'my_student_applications']);
 Route::get('app/my_payments', [ApplicationController::class, 'my_payments']);
 Route::post('app/check_pend_rrr', [PaymentController::class, 'check_pend_rrr']);
 Route::post('app/log_new_rrr_trans_ref', [PaymentController::class, 'log_new_rrr_trans_ref']);

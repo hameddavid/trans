@@ -197,20 +197,30 @@ class ApplicationController extends Controller
     }
 
 
-    public function my_applications(Request $request)
-    {
+    public function my_applications(Request $request){
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
             $apps = OfficialApplication::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])
-            ->select('application_id','transcript_type','created_at','app_status','destination','recipient')->get(); 
+                ->select('application_id','transcript_type','created_at','app_status','destination','recipient')->get(); 
             return $apps;
-            
-        } catch (\Throwable $th) {
+        } 
+        catch (\Throwable $th) {
             return response(['status'=>'failed','message'=>'catch, Error fetching my apps!']);
         }
-
-
     }
+
+    public function my_student_applications(Request $request){
+        $request->validate(['userid'=>'required','matno'=>'required']); 
+        try {
+            $apps = StudentApplication::where(['matric_number'=>$request->matno,'applicant_id'=>$request->userid])
+                ->select('id','transcript_type','created_at','app_status','destination','recipient')->get(); 
+            return $apps;
+        } 
+        catch (\Throwable $th) {
+            return response(['status'=>'failed','message'=>'catch, Error fetching my apps!']);
+        }
+    }
+
     public function my_payments(Request $request)
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
