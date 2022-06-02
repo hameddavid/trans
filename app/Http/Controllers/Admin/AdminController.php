@@ -321,7 +321,7 @@ class AdminController extends Controller
             if($app_stud){
                 PDF::loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                 if (File::exists($app_stud->file_path.'.pdf')) {
-                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
+                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg_prof($app_stud))['status'] == 'ok'){
                         $app_stud->app_status = "APPROVED";
                         $app_stud->approved_by = $data->email;
                         $app_stud->approved_at = date("F j, Y, g:i a");
@@ -365,6 +365,13 @@ class AdminController extends Controller
 public function get_delivery_msg($data){
     try {
         return "Kindly find attached, transcript for ". $data->surname . " ".$data->firstname ." with matric number ". $data->matric_number;
+    } catch (\Throwable $th) {
+        //throw $th;
+    }
+}
+public function get_delivery_msg_prof($data){
+    try {
+        return "Kindly find attached, Proficiency for ". $data->surname . " ".$data->firstname ." with matric number ". $data->matric_number;
     } catch (\Throwable $th) {
         //throw $th;
     }
