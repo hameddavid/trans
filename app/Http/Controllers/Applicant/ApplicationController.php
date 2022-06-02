@@ -189,7 +189,7 @@ class ApplicationController extends Controller
     {
         $request->validate(['userid'=>'required','matno'=>'required']); 
         try {
-            $success_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'success','applicant_id'=>$request->userid])->count();
+            $success_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'APPROVED','applicant_id'=>$request->userid])->count();
             $pend_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'pending','applicant_id'=>$request->userid])->count();
             $failed_app = OfficialApplication::where(['matric_number'=>$request->matno,'app_status'=>'failed','applicant_id'=>$request->userid])->count();
 
