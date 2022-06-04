@@ -295,36 +295,14 @@ class AdminController extends Controller
         // $pdf = PDF::setOptions(['isHTML5ParserEnabled' => true, 'isRemoteEnabled' => true]);
         // $pdf->getDomPDF()->setHttpContext($contxt);
         //#################################################################################
-        $contxt = stream_context_create([
-            'http' => [
-                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                'method'  => 'GET',
-                'user_agent' => 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)',
-            ],
-            'ssl' => [ 
-                'verify_peer' => FALSE, 
-                'verify_peer_name' => FALSE,
-                'allow_self_signed'=> TRUE,
-            ] 
-        ]);
-        $pdf = PDF::setOptions(['isHTML5ParserEnabled' => true, 'isRemoteEnabled' => true]);
-        $pdf->getDomPDF()->setHttpContext($contxt);
+        $pdf = PDF::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true
+        ])->loadView('result',['data'=> $app_official->transcript_raw]);
+        return $pdf->download($app_official->used_token.'.pdf');
+
                $pdf->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
-              
-               $contxt = stream_context_create([
-                'http' => [
-                    'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-                    'method'  => 'GET',
-                    'user_agent' => 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)',
-                ],
-                'ssl' => [ 
-                    'verify_peer' => FALSE, 
-                    'verify_peer_name' => FALSE,
-                    'allow_self_signed'=> TRUE,
-                ] 
-            ]);
-            $pdf = PDF::setOptions(['isHTML5ParserEnabled' => true, 'isRemoteEnabled' => true]);
-            $pdf->getDomPDF()->setHttpContext($contxt);
+          
                $pdf->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
             if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
             && File::exists( storage_path('app/'.$app_official->certificate)) ) {
