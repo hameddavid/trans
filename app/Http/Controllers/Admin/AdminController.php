@@ -30,15 +30,14 @@ class AdminController extends Controller
     }
 
     public function view_certificate($path){
-       // $filepath = storage_path($path); 
-      //https://transcriptapp.run.edu.ng/app/credentials/LAWAL_3_DEGREE_CERTIFICATE.pdf
+    
        $s_path = storage_path('app/credentials/'.$path); //. '/app/' . $path ;
        $file = File::get($s_path);
        if(!File::exists($s_path)) abort(404);
        $type = File::mimeType($s_path);
         $headers = [ 'Content-Type' => $type, ];
-        return response()->download(storage_path('app/credentials/'.$path));
-       // return response()->file($filepath);
+       // return response()->download(storage_path('app/credentials/'.$path));
+        return response()->file($s_path);
     }
     public function adminDashboard(Request $request){
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
