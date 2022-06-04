@@ -31,22 +31,11 @@ class AdminController extends Controller
     }
 
     public function view_certificate($path){
-    
-       // $filename = 'test.pdf';
-        //$path = storage_path($filename);
         $s_path = storage_path('app/credentials/'.$path);
         return Response::make(file_get_contents($s_path), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="'.$path.'"'
         ]);
-
-       $s_path = storage_path('app/credentials/'.$path);
-       if(!File::exists($s_path)) abort(404);
-        return response()->file($s_path);
-        //  $file = File::get($s_path);
-         // $type = File::mimeType($s_path);
-       // $headers = [ 'Content-Type' => $type, ];
-       // return response()->download(storage_path('app/credentials/'.$path));
     }
 
   
