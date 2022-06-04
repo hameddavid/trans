@@ -25,9 +25,10 @@ class AdminAuth
            return back();
        }
        return $next($request)
+       ->header('Access-Control-Allow-Origin','*')
+        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
        ->header('Cache-Control','no-cache, no-store, max-age=0, must-revalidate')
        ->header('pragma','no-cache')
-       ->header('Expires','Sat 01 Jan 1990 00:00:00 GMT')
-       ->header('Access-Control-Allow-Headers','*');
+       ->header('Expires','Sat 01 Jan 1990 00:00:00 GMT');
     }
 }

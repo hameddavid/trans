@@ -35,8 +35,8 @@ class AdminController extends Controller
        $file = File::get($s_path);
        if(!File::exists($s_path)) abort(404);
        $type = File::mimeType($s_path);
-       return  $type;
-        return response()->download(storage_path('app/credentials/'.$path), null, [], null);
+        $headers = [ 'Content-Type' => $type, ];
+        return response()->download(storage_path('app/credentials/'.$path), $path,  $headers);
        // return response()->file($filepath);
     }
     public function adminDashboard(Request $request){
