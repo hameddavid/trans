@@ -61,7 +61,7 @@ body, html {
 	width: 100%;
 	background-image: url("/assets/images/run_logo_big.png");
 	background-color: #ffffff;
-	color: #FF0000;
+	color: #000000;
 	margin-bottom: 0;
 }
 

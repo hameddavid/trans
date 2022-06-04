@@ -122,7 +122,7 @@
                                                 <option value="Mr.">Mr.</option>
                                                 <option value="Mrs.">Mrs.</option>
                                                 <option value="Dr.">Dr.</option>
-                                                <option value="Pst.">Pst.</option>
+                                                <option value="Pst.">Miss</option>
                                                  </select>
                                             </div>
                                           

@@ -296,7 +296,7 @@ class AdminController extends Controller
         // $pdf->getDomPDF()->setHttpContext($contxt);
         //#################################################################################
         $pdf = PDF::setOptions([
-            'isHtml5ParserEnabled' => true,
+            'isHTML5ParserEnabled' => true,
             'isRemoteEnabled' => true
         ])->loadView('result',['data'=> $app_official->transcript_raw]);
         $pdf->save($app_official->used_token.'.pdf'); 
