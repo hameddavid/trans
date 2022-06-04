@@ -293,7 +293,7 @@ class AdminController extends Controller
                PDF::loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
             if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
             && File::exists( storage_path('app/'.$app_official->certificate)) ) {
-                if(strtoupper($app_official->mode) == "SOFT"){
+                if(strtoupper($app_official->delivery_mode) == "SOFT"){
                     if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
                         $app_official->app_status = "APPROVED";
                         $app_official->approved_by = $data->email;
@@ -304,7 +304,7 @@ class AdminController extends Controller
                              return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
                         else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
                     }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
-                }elseif(strtoupper($app_official->mode) == "HARD"){
+                }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
                     $app_official->app_status = "APPROVED";
                     $app_official->approved_by = $data->email;
                     $app_official->approved_at = date("F j, Y, g:i a");
