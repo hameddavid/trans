@@ -292,7 +292,7 @@ class AdminController extends Controller
                PDF::loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
                PDF::loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
             if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
-            && File::exists($app_official->surname."_".$app_official->id.'_DEGREE_CERTIFICATE.pdf') ) {
+            && File::exists( storage_path('app/'.$app_official->certificate)) ) {
                 if(strtoupper($app_official->mode) == "SOFT"){
                     if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
                         $app_official->app_status = "APPROVED";
