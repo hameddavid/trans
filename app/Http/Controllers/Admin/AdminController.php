@@ -299,13 +299,13 @@ class AdminController extends Controller
                $pdf->set_option('isRemoteEnabled',TRUE);
                $pdf->loadHtml(view('cover_letter',['data'=> $app_official]));
                $pdf->setPaper('a4', 'portrate');
-               $pdf->setWarnings(false);
+               //$pdf->setWarnings(false);
                $pdf->save($app_official->used_token.'_cover.pdf');
                $pdf = new \Dompdf\Dompdf();
                $pdf->set_option('isRemoteEnabled',TRUE);
                $pdf->loadHtml(view('result',['data'=> $app_official->transcript_raw]));
                $pdf->setPaper('a4', 'portrate');
-               $pdf->setWarnings(false);
+               //$pdf->setWarnings(false);
                $pdf->save($app_official->used_token.'.pdf');
             if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
             && File::exists( storage_path('app/'.$app_official->certificate)) ) {
