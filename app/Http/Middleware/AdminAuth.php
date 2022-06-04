@@ -25,9 +25,9 @@ class AdminAuth
            return back();
        }
        return $next($request)
-       ->header('Cache-Control','no-cache, no-store, max-age=0,
-       must-revalidate')
+       ->header('Cache-Control','no-cache, no-store, max-age=0, must-revalidate')
        ->header('pragma','no-cache')
-       ->header('Expires','Sat 01 Jan 1990 00:00:00 GMT');
+       ->header('Expires','Sat 01 Jan 1990 00:00:00 GMT')
+       ->header('Access-Control-Allow-Headers','*');
     }
 }
