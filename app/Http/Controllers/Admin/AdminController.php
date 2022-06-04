@@ -300,7 +300,7 @@ class AdminController extends Controller
             'isRemoteEnabled' => true
         ])->loadView('result',['data'=> $app_official->transcript_raw]);
         $pdf->save($app_official->used_token.'.pdf'); 
-        return response(["status"=>"success","message"=>"Testing ...."],200);  }
+        return response(["status"=>"success","message"=>"Testing ...."],200);  
 
                $pdf->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
           
