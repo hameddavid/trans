@@ -24,8 +24,7 @@ class AdminAuth
        ){
            return back();
        }
-       return $next($request)
-       ->header('Access-Control-Allow-Origin','*')
+       return $next($request)->header('Access-Control-Allow-Origin','*')
         ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
        ->header('Cache-Control','no-cache, no-store, max-age=0, must-revalidate')
        ->header('pragma','no-cache')
