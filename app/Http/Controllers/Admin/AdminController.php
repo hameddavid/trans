@@ -31,6 +31,10 @@ class AdminController extends Controller
 
     public function view_certificate($path){
        // $filepath = storage_path($path); 
+       $s_path = storage_path('app/credentials/'.$path); //. '/app/' . $path ;
+       $file = File::get($s_path);
+       if(!File::exists($s_path)) abort(404);
+       return "Exist";
         return response()->download(storage_path('app/credentials/'.$path), null, [], null);
        // return response()->file($filepath);
     }
