@@ -30,6 +30,14 @@ class AdminController extends Controller
        // $this->middleware('subscribed')->except('store');
     }
 
+    public function download_approved(Request $request){
+        return back();
+        $s_path = storage_path('app/credentials/'.$path);
+        return Response::make(file_get_contents($s_path), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$path.'"'
+        ]);
+    }
     public function view_certificate($path){
         $s_path = storage_path('app/credentials/'.$path);
         return Response::make(file_get_contents($s_path), 200, [
@@ -321,9 +329,7 @@ class AdminController extends Controller
                     $app_official->approved_by = $data->email;
                     $app_official->approved_at = date("F j, Y, g:i a");
                     if($app_official->save()){
-                       //  File::delete($app_official->used_token.'_cover.pdf');
-                       //  File::delete($app_official->used_token.'.pdf');
-                         return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
+                         return response(["status"=>"success","message"=>"Approved, kindly download for further processes"],200);  }
                     else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
 
                 }else{ return response(["status"=>"failed","message"=>"Error with official transcript mode... "],401);  }
