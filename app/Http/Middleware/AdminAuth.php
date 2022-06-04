@@ -29,8 +29,12 @@ class AdminAuth
     //    ->header('Cache-Control','no-cache, no-store, max-age=0, must-revalidate')
     //    ->header('pragma','no-cache')
     //    ->header('Expires','Sat 01 Jan 1990 00:00:00 GMT');
+    
     $response = $next($request);
     $headers = [
+        'Cache-Control'      => 'no-cache, no-store, max-age=0, must-revalidate',
+        'pragma'     => 'no-cache',
+        'Expires' => 'Sat 01 Jan 1990 00:00:00 GMT',
         'Access-Control-Allow-Origin' => '*',
         'Access-Control-Allow-Methods' => 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS',
         'Access-Control-Allow-Headers' => '*',
