@@ -18,6 +18,7 @@ use App\Mail\MailingAdmin;
 use App\Mail\MailingApplicant;
 use PDF;
 use URL;
+use Response;
 
 class AdminController extends Controller
 {
@@ -31,6 +32,14 @@ class AdminController extends Controller
 
     public function view_certificate($path){
     
+       // $filename = 'test.pdf';
+        //$path = storage_path($filename);
+        $s_path = storage_path('app/credentials/'.$path);
+        return Response::make(file_get_contents($s_path), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$path.'"'
+        ]);
+
        $s_path = storage_path('app/credentials/'.$path);
        if(!File::exists($s_path)) abort(404);
         return response()->file($s_path);
