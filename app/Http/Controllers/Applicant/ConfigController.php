@@ -58,7 +58,7 @@ static function find_and_replace_string2($string){
         'docs'=> [ 
             ['path'=> public_path($applicant->file_path.'_cover.pdf'), 'as' => strtoupper($applicant->surname)."_COVER_LETTER.pdf",'mime' => 'application/pdf'],
             ['path'=> public_path($applicant->file_path.'.pdf'), 'as' => strtoupper($applicant->surname)."_TRANSCRIPT.pdf",'mime' => 'application/pdf'],
-            ['path'=> storage_path($app_official->surname."_".$app_official->id.'_DEGREE_CERTIFICATE.pdf'), 'as' => strtoupper($applicant->id)."CERTIFICATE.pdf",'mime' => 'application/pdf'],
+            ['path'=> storage_path('app/'.$app_official->certificate), 'as' => strtoupper($applicant->id)."CERTIFICATE.pdf",'mime' => 'application/pdf'],
          ],
         'name' => $applicant->surname ." ". $applicant->firstname,
         'sub' => $Subject,
