@@ -59,6 +59,7 @@ body, html {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	width: 100%;
+	background-image: url("/assets/images/run_logo_big.png");
 	background-color: #ffffff;
 	color: #FF0000;
 	margin-bottom: 0;
