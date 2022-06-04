@@ -28,7 +28,7 @@ class ApplicationController extends Controller
 
      public function upload_cert($request){
         try {
-            $path = Storage::disk('local')->putFileAs('credentials', $request->file('certificate'),
+            $path = Storage::disk('public')->putFileAs('credentials', $request->file('certificate'),
              strtoupper($request->surname) ."_". $request->app_id ."_DEGREE_CERTIFICATE.pdf"); 
             return $path;
         } catch (\Throwable $th) {

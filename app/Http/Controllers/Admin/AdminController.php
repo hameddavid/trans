@@ -30,7 +30,6 @@ class AdminController extends Controller
     }
 
     public function view_certificate($path){
-        return back();
         $filepath = storage_path($path);
         return response()->file($filepath);
     }
@@ -280,22 +279,35 @@ class AdminController extends Controller
         $type = strtoupper($request->transcript_type);
         if($type == 'OFFICIAL'){ 
             $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
-            ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
+            ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
             if($app_official){
                PDF::loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
                PDF::loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
-            if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')) {
-                if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
+            if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
+            && File::exists($app_official->surname."_".$app_official->id.'_DEGREE_CERTIFICATE.pdf') ) {
+                if(strtoupper($app_official->mode) == "SOFT"){
+                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
+                        $app_official->app_status = "APPROVED";
+                        $app_official->approved_by = $data->email;
+                        $app_official->approved_at = date("F j, Y, g:i a");
+                        if($app_official->save()){
+                             File::delete($app_official->used_token.'_cover.pdf');
+                             File::delete($app_official->used_token.'.pdf');
+                             return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
+                        else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
+                    }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
+                }elseif(strtoupper($app_official->mode) == "HARD"){
                     $app_official->app_status = "APPROVED";
                     $app_official->approved_by = $data->email;
                     $app_official->approved_at = date("F j, Y, g:i a");
                     if($app_official->save()){
-                         File::delete($app_official->used_token.'_cover.pdf');
-                         File::delete($app_official->used_token.'.pdf');
+                       //  File::delete($app_official->used_token.'_cover.pdf');
+                       //  File::delete($app_official->used_token.'.pdf');
                          return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
-                    else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
-                }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
-                }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  } 
+                    else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+
+                }else{ return response(["status"=>"failed","message"=>"Error with official transcript mode... "],401);  }
+                }else{return response(["status"=>"failed","message"=>"No Transcript Files  in the directory"],401);  } 
             }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
         }elseif($type == 'STUDENT'){
             $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
