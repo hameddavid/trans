@@ -307,6 +307,7 @@ class AdminController extends Controller
                 'allow_self_signed'=> TRUE,
             ] 
         ]);
+        $pdf = PDF::setOptions(['isHTML5ParserEnabled' => true, 'isRemoteEnabled' => true]);
         $pdf->setHttpContext($contxt);
                $pdf->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
               
@@ -322,6 +323,7 @@ class AdminController extends Controller
                     'allow_self_signed'=> TRUE,
                 ] 
             ]);
+            $pdf = PDF::setOptions(['isHTML5ParserEnabled' => true, 'isRemoteEnabled' => true]);
             $pdf->setHttpContext($contxt);
                $pdf->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
             if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
