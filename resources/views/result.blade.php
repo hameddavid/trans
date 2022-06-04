@@ -60,7 +60,7 @@ body, html {
 	padding-bottom: 10px;
 	width: 100%;
 	background-color: #ffffff;
-	color: #000000;
+	color: #FF0000;
 	margin-bottom: 0;
 }
 
@@ -208,12 +208,8 @@ p{
 	margin-top: 20px;
 }
 
-div.watermark {
- background:url('/assets/images/run_logo_big.png');
- background-repeat:no-repeat;
- background-position:center;
- border:2px solid;
- border-color:#CD853F; }
+
+
 
   </style>
 </head>
