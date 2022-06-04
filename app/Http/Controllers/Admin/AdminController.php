@@ -295,10 +295,10 @@ class AdminController extends Controller
         // $pdf = PDF::setOptions(['isHTML5ParserEnabled' => true, 'isRemoteEnabled' => true]);
         // $pdf->getDomPDF()->setHttpContext($contxt);
         //#################################################################################
-               $pdf = new PDF;
+               $pdf = new \Dompdf\Dompdf();
                $pdf->set_option('isRemoteEnabled',TRUE);
                $pdf->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
-               $pdf = new PDF;
+               $pdf = new \Dompdf\Dompdf();
                $pdf->set_option('isRemoteEnabled',TRUE);
                $pdf->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
             if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
