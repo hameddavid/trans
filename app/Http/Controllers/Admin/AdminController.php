@@ -31,15 +31,16 @@ class AdminController extends Controller
 
     public function view_certificate($path){
     
-       $s_path = storage_path('app/credentials/'.$path); //. '/app/' . $path ;
-     //  $file = File::get($s_path);
+       $s_path = storage_path('app/credentials/'.$path);
        if(!File::exists($s_path)) abort(404);
-       return "exist";
-      // $type = File::mimeType($s_path);
+        return response()->file($s_path);
+        //  $file = File::get($s_path);
+         // $type = File::mimeType($s_path);
        // $headers = [ 'Content-Type' => $type, ];
        // return response()->download(storage_path('app/credentials/'.$path));
-        return response()->file($s_path);
     }
+
+  
     public function adminDashboard(Request $request){
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $total = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')

@@ -36,6 +36,12 @@ class ApplicationController extends Controller
         }
         
      }
+     public function update_cert($request){
+        $s_path = storage_path('app/'.$request->certificate);
+        if(File::exists($s_path)) File::delete($s_path);
+       return $this->upload_cert($request);
+     
+     }
     public function index()
     { 
         $app = OfficialApplication::find(9); 
@@ -766,8 +772,7 @@ public function edit_app_and_verify_editpin(Request $request){
         $form_data = $request->except(['userid','matno','token','appid','requestType']);
         if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
         $request->request->add(['surname'=> $validate_token->surname, 'firstname'=>$validate_token->firstname,'application_id'=>$validate_token->id]);
-        if(Storage::exists($validate_token->certificate)){ Storage::delete($validate_token->certificate);}
-        $certificate = $this->upload_cert($request);
+        $certificate = $this->update_cert($request);
         $validate_token->certificate = $certificate;
         $form_data = $request->except(['userid','matno','token','appid','requestType','certificate']);
         }
