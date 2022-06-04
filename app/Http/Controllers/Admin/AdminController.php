@@ -32,6 +32,19 @@ class AdminController extends Controller
 
     public function download_approved(Request $request){
         return back();
+
+
+        // if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
+        //     && File::exists( storage_path('app/'.$app_official->certificate)) ) {}
+        //         if(strtoupper($app_official->delivery_mode) == "SOFT"){
+        //             if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
+        //                 $app_official->app_status = "APPROVED";
+        //                 $app_official->approved_by = $data->email;
+        //                 $app_official->approved_at = date("F j, Y, g:i a");
+        //                 if($app_official->save()){
+        //                      File::delete($app_official->used_token.'_cover.pdf');
+        //                      File::delete($app_official->used_token.'.pdf');
+       
         $s_path = storage_path('app/credentials/'.$path);
         return Response::make(file_get_contents($s_path), 200, [
             'Content-Type' => 'application/pdf',

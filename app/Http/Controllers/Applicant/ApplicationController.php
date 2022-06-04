@@ -660,7 +660,7 @@ static function get_result_table_header($student,$applicant,$request,$prog_name,
     if(strtoupper($request->transcript_type) == "OFFICIAL"){ $trans_type = 'Official Transcript'; $recipient= $request->recipient;}
     return ' <div class="page">
             <div class="header">
-                <img src="/assets/images/run_logo_big.png" class="logo"/>
+                <img src="https://transcriptapp.run.edu.ng/assets/images/run_logo_big.png" class="logo"/>
 		<h1>REDEEMER\'S UNIVERSITY</h1>
 		<h5>P.M.B. 230, Ede, Osun State, Nigeria</h5>
 		<h5>Tel: '. $transcript_mobile . ', Website: run.edu.ng, Email: ' . $transcript_email.' </h5><br>
