@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Mail;
 use App\Mail\MailingAdmin;
+use App\Mail\MailingOfficialSoft;
 use App\Mail\MailingApplicant;
 use Illuminate\Support\Facades\DB;
 class ConfigController extends Controller
@@ -62,9 +63,10 @@ static function find_and_replace_string2($string){
          ],
         'name' => $applicant->surname ." ". $applicant->firstname,
         'sub' => $Subject,
-        'message' => $Msg
+        'message' => $Msg,
+        'recipient'=> $applicant->recipient
          ];
-    Mail::to($data['to'])->send(new MailingApplicant($data));
+    Mail::to($data['to'])->send(new MailingOfficialSoft($data));
     if (Mail::failures()) {return ['status'=>'nok'];
     }else{  return ['status'=>'ok']; }
 }

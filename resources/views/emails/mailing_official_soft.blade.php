@@ -142,7 +142,7 @@
 
 <div style="font-family: Tahoma, Verdana, sans-serif">
 <div style=" box-shadow: inset; padding:20px; font-size: 12px; font-family: Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 18px; color: #393d47; line-height: 1.5;">
-<p style="margin: 0; font-size: 14px; text-align: center; padding: 10px; mso-line-height-alt: 21px;"><span style="font-size:14px;"><div style="font-size: 14px; color: #666D71;">Dear  {{ $data['name'] }}</div>
+<p style="margin: 0; font-size: 14px; text-align: center; padding: 10px; mso-line-height-alt: 21px;"><span style="font-size:14px;"><div style="font-size: 14px; color: #666D71;">Dear  {{ $data['recipient'] }}</div>
 	<br>
 
 	<span style="font-size: 14px; color: #666D71;"> {!! $data['message'] !!} 
