@@ -30,9 +30,9 @@ class AdminController extends Controller
     }
 
     public function view_certificate($path){
-        $filepath = storage_path($path); 
-        return response()->download(storage_path($path), null, [], null);
-        return response()->file($filepath);
+       // $filepath = storage_path($path); 
+        return response()->download('app/credentials/'.storage_path($path), null, [], null);
+       // return response()->file($filepath);
     }
     public function adminDashboard(Request $request){
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
