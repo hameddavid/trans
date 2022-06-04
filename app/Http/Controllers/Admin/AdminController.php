@@ -301,16 +301,15 @@ class AdminController extends Controller
         // $pdf = PDF::setOptions(['isHTML5ParserEnabled' => true, 'isRemoteEnabled' => true]);
         // $pdf->getDomPDF()->setHttpContext($contxt);
         //#################################################################################
-        $pdf = PDF::setOptions([
-            'isHTML5ParserEnabled' => true,
-            'isRemoteEnabled' => true
-        ])->loadView('result',['data'=> $app_official->transcript_raw]);
-        $pdf->save($app_official->used_token.'.pdf'); 
-        return response(["status"=>"success","message"=>"Testing ...."],200);  
+        // $pdf = PDF::setOptions([
+        //     'isHTML5ParserEnabled' => true,
+        //     'isRemoteEnabled' => true
+        // ])->loadView('result',['data'=> $app_official->transcript_raw]);
+        // $pdf->save($app_official->used_token.'.pdf'); 
+        // return response(["status"=>"success","message"=>"Testing ...."],200);  
 
-               $pdf->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
-          
-               $pdf->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
+               PDF::loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
+               PDF::loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
             if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
             && File::exists( storage_path('app/'.$app_official->certificate)) ) {
                 if(strtoupper($app_official->delivery_mode) == "SOFT"){
