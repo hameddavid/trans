@@ -34,7 +34,8 @@ class AdminController extends Controller
        $s_path = storage_path('app/credentials/'.$path); //. '/app/' . $path ;
        $file = File::get($s_path);
        if(!File::exists($s_path)) abort(404);
-       return "Exist";
+       $type = File::mimeType($s_path);
+       return  $type;
         return response()->download(storage_path('app/credentials/'.$path), null, [], null);
        // return response()->file($filepath);
     }
