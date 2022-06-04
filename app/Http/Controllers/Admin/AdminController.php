@@ -30,8 +30,8 @@ class AdminController extends Controller
     }
 
     public function view_certificate($path){
-            dd($path);
-        $filepath = storage_path($path);
+        $filepath = storage_path($path); 
+        return response()->download(storage_path($path), null, [], null);
         return response()->file($filepath);
     }
     public function adminDashboard(Request $request){
