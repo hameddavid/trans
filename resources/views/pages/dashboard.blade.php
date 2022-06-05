@@ -5,7 +5,6 @@
     @endsection
 
     @section("content")
-    <link href="assets/css/transcript.css" rel="stylesheet" type="text/css" />
             <div class="main-content">
                 <div class="page-content">
                     <div class="container-fluid">
