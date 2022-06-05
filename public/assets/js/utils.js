@@ -342,6 +342,12 @@ $(document).ready(function ($) {
         regenerateTranscript(id, type);
     });
 
+    $(".download").click(function () {
+        var id = $(this).data("id");
+        var type = $(this).data("type");
+        downloadPDF(id, type);
+    });
+
     const recommendTranscript = (id, type) => {
         $.ajax({
             type: "POST",
@@ -455,6 +461,31 @@ $(document).ready(function ($) {
                 console.log(response);
                 $("#btnDerecommend").html("Cancel Recommendation");
                 $("#btnDerecommend").prop("disabled", false);
+                $.unblockUI();
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
+
+    const downloadPDF = (id, type) => {
+        $.ajax({
+            type: "POST",
+            url: "download_approved",
+            data: { id: id, transcript_type: type },
+            dataType: "json",
+            beforeSend: function () {
+                if (confirm("Download PDF?") == false) return false;
+                $.blockUI();
+            },
+            success: function (response) {
+                console.log(response);
+                alertify.success(response.message);
+                setTimeout(function () {
+                    location.reload();
+                }, 2800);
+            },
+            error: function (response) {
+                console.log(response);
                 $.unblockUI();
                 alertify.error(response.responseJSON.message);
             },
