@@ -379,9 +379,9 @@ class AdminController extends Controller
     public function regenerate_transcript(Request $request){
         $request->validate([ 'id'=>'required|string','transcript_type'=>'required'] );
         try {
-            //code...
+            
         } catch (\Throwable $th) {
-            //throw $th;
+            
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
@@ -410,7 +410,7 @@ class AdminController extends Controller
         }elseif($type == 'STUDENT' || $type == 'PROFICIENCY'){
             $app = StudentApplication::where(['id'=> $request->id])->first();
             if($app){
-                $request->merge(['matno' => $app->matric_number, 'userid'=>$app->applicant_id,'used_token'=>$app->used_token,'transcript_type'=>$app->transcript_type]);
+                $request->merge(['matno' => $app->matric_number, 'userid'=>$app->applicant_id,'transcript_type'=>$app->transcript_type]);
                 $all_result_params = app('App\Http\Controllers\Applicant\ApplicationController')->get_student_result($request);
                 $app->first_session_in_sch =  $all_result_params['first_session_in_sch']; 
                 $app->last_session_in_sch =  $all_result_params['last_session_in_sch']; 

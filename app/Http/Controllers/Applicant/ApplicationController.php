@@ -44,11 +44,15 @@ class ApplicationController extends Controller
      }
     public function index()
     { 
-        $app = OfficialApplication::find(9); 
-        $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
-        ->where(['application_id'=> 9, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
+        $app = StudentApplication::find(15); 
+        return view('result')->with('data',html_entity_decode($app->transcript_raw));
+
+        $app = OfficialApplication::find(13); 
+        return view('result')->with('data',html_entity_decode($app->transcript_raw));
+        // $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
+        // ->where(['application_id'=> 9, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
        
-        return view('cover_letter')->with('data',$app_official);
+        // return view('cover_letter')->with('data',$app_official);
         $app = StudentApplication::find(8); 
         return view('result')->with('data',html_entity_decode($app->transcript_raw));
     }
@@ -326,7 +330,6 @@ static function get_admin_msg($applicant){
 
 public function get_student_result($request){
     //   $prog_code  failing .... RUN1011/2797
-    //$request->validate(['userid'=>'required','matno'=>'required','used_token'=>'required']);
     try {
         $matno = str_replace(' ', '', $request->matno);
         $first_session_in_sch  = "";
@@ -340,7 +343,6 @@ public function get_student_result($request){
             $last_session_in_sch  = $sessions[count($sessions)-1];
             $years_spent = count($sessions);
             $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
-            //$application  = OfficialApplication::where(['matric_number'=> $matno, 'used_token'=>$request->used_token,'applicant_id'=>$request->userid,'app_status'=>'PENDING'])->first(); //Get the real application
             $student  = Student::where('matric_number',$matno)->first();
             $response = "";
             $cumm_sum_point_unit = 0.0;
@@ -519,18 +521,30 @@ public function get_student_result($request){
                     <td>0.00 - 0.99 => Poor</td>
                     <td>CGPA: Cummulative Grade Point Average</td>
                 </tr>
-            </table>
-            <div class="footer_">
-                ________________________________<br>
-                 ' . $signatory .'<br>
-                 ' . $designation.'<br>
-                For: Registrar
-            </div>
-            <div class="print_footer">
+            </table>';
+            if(strtoupper($request->transcript_type) == 'OFFICIAL'){
+                $response = $response .' <div class="footer_">
+                    ________________________________<br>
+                    
+                      D. K. T. Akintola<br>
+                     Deputy Registrar, Academic Affairs<br>
+                    For: Registrar
+                </div>';
+            }
+            //print_footer
+            if(strtoupper($request->transcript_type) == 'OFFICIAL'){
+                $response = $response .'<div class="footer_">
                 Any alteration renders this transcript invalid<br>
                 Generated on the  ' . $date .'<br>
             </div>
-        </div> ';
+            </div> ';
+            }else{
+                $response = $response .'<div class="footer_">
+                Generated on the  ' . $date .'<br>
+            </div>
+            </div> ';
+            }
+          
         
         $response = str_replace("pageno", $page_no, $response);
         return ['first_session_in_sch'=>$first_session_in_sch,
