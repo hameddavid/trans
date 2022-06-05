@@ -308,19 +308,6 @@ class AdminController extends Controller
             $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
             ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
             if($app_official){
-                 //############ Permitir ver imagenes si falla ################################
-        //   $contxt = stream_context_create([
-        //     'ssl' => ['verify_peer' => FALSE,'verify_peer_name' => FALSE,'allow_self_signed' => TRUE, ] ]);
-        // $pdf = PDF::setOptions(['isHTML5ParserEnabled' => true, 'isRemoteEnabled' => true]);
-        // $pdf->getDomPDF()->setHttpContext($contxt);
-        //#################################################################################
-        // $pdf = PDF::setOptions([
-        //     'isHTML5ParserEnabled' => true,
-        //     'isRemoteEnabled' => true
-        // ])->loadView('result',['data'=> $app_official->transcript_raw]);
-        // $pdf->save($app_official->used_token.'.pdf'); 
-        // return response(["status"=>"success","message"=>"Testing ...."],200);  
-
                PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
                PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
             if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
@@ -390,7 +377,7 @@ class AdminController extends Controller
     }
 
     public function regenerate_transcript(Request $request){
-        $request->validate([ 'id'=>'required|string',] );
+        $request->validate([ 'id'=>'required|string','transcript_type'=>'required'] );
         try {
             //code...
         } catch (\Throwable $th) {
@@ -398,16 +385,50 @@ class AdminController extends Controller
         }
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
-        $app = OfficialApplication::where(['application_id'=> $request->id])->first();
-        $request->merge(['matno' => $app->matric_number, 'userid'=>$app->applicant_id,'used_token'=>$app->used_token,'transcript_type'=>$app->transcript_type]);
-        if($app){
-            $app->app_status = "PENDING";
-            $app->approved_by = "";
-            $app->approved_at = "";
-            $app->transcript_raw = view('pages.trans', ['data'=>app('App\Http\Controllers\Applicant\ApplicationController')->get_student_result($request)]);
-            if($app->save()){ return response(["status"=>"success","message"=>"Transcript successfully regenerated!"]);  }
-            else{return response(["status"=>"failed","message"=>"Error updating transcript regeneration"],200); }
-        }else{ return response(["status"=>"failed","message"=>"No transcript found for regeneration"],401); }
+        $type = strtoupper($request->transcript_type);
+        if($type == 'OFFICIAL'){
+            $app = OfficialApplication::where(['application_id'=> $request->id])->first();
+            if($app){
+                $request->merge(['matno' => $app->matric_number, 'userid'=>$app->applicant_id,'used_token'=>$app->used_token,'transcript_type'=>$app->transcript_type]);
+                $all_result_params = app('App\Http\Controllers\Applicant\ApplicationController')->get_student_result($request);
+                $app->first_session_in_sch =  $all_result_params['first_session_in_sch']; 
+                $app->last_session_in_sch =  $all_result_params['last_session_in_sch']; 
+                $app->years_spent =  $all_result_params['years_spent']; 
+                $app->qualification =  $all_result_params['qualification']; //Bachelor of Arts in
+                $app->prog_name =   $all_result_params['prog_name']; 
+                $app->dept =  app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string2($all_result_params['dept']);
+                $app->fac =  app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string2($all_result_params['fac']); 
+                $app->cgpa =  $all_result_params['cgpa']; 
+                $app->class_of_degree = $all_result_params['class_of_degree']; 
+                $app->transcript_raw =  $all_result_params['result']; 
+                $app->app_status = "PENDING";
+                $app->approved_by = "";
+                $app->approved_at = "";
+                if($app->save()){ return response(["status"=>"success","message"=>"Transcript successfully regenerated!"]);  }
+                else{return response(["status"=>"failed","message"=>"Error updating transcript regeneration"],200); }
+            }else{ return response(["status"=>"failed","message"=>"No transcript found for regeneration"],401); }
+        }elseif($type == 'STUDENT' || $type == 'PROFICIENCY'){
+            $app = StudentApplication::where(['id'=> $request->id])->first();
+            if($app){
+                $request->merge(['matno' => $app->matric_number, 'userid'=>$app->applicant_id,'used_token'=>$app->used_token,'transcript_type'=>$app->transcript_type]);
+                $all_result_params = app('App\Http\Controllers\Applicant\ApplicationController')->get_student_result($request);
+                $app->first_session_in_sch =  $all_result_params['first_session_in_sch']; 
+                $app->last_session_in_sch =  $all_result_params['last_session_in_sch']; 
+                $app->years_spent =  $all_result_params['years_spent']; 
+                $app->qualification =  $all_result_params['qualification']; //Bachelor of Arts in
+                $app->prog_name =   $all_result_params['prog_name']; 
+                $app->dept =  app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string2($all_result_params['dept']);
+                $app->fac =  app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string2($all_result_params['fac']); 
+                $app->cgpa =  $all_result_params['cgpa']; 
+                $app->class_of_degree = $all_result_params['class_of_degree']; 
+                $app->transcript_raw =  $all_result_params['result']; 
+                $app->app_status = "PENDING";
+                $app->approved_by = "";
+                $app->approved_at = "";
+                if($app->save()){ return response(["status"=>"success","message"=>"Transcript successfully regenerated!"]);  }
+                else{return response(["status"=>"failed","message"=>"Error updating transcript regeneration"],200); }
+            }else{ return response(["status"=>"failed","message"=>"No transcript found for regeneration"],401); }
+        }else{return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);}
 
     }
 
