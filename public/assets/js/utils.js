@@ -351,7 +351,9 @@ $(document).ready(function ($) {
     $(".download").click(function () {
         var id = $(this).data("id");
         var type = $(this).data("type");
-        downloadPDF(id, type);
+        for (let index = 0; index < 3; index++) {
+            downloadPDF(id, type, index);
+        }
     });
 
     const recommendTranscript = (id, type) => {
@@ -473,11 +475,11 @@ $(document).ready(function ($) {
         });
     };
 
-    const downloadPDF = (id, type) => {
+    const downloadPDF = (id, type, index) => {
         $.ajax({
             type: "POST",
             url: "download_approved",
-            data: { id: id, transcript_type: type },
+            data: { id: id, transcript_type: type, index: index },
             xhrFields: {
                 responseType: "blob",
             },
@@ -490,13 +492,10 @@ $(document).ready(function ($) {
                 var blob = new Blob([response]);
                 var link = document.createElement("a");
                 link.href = window.URL.createObjectURL(blob);
-                link.download = "Sample.pdf";
+                link.download = "File.pdf";
                 link.click();
                 alertify.success("File downloaded");
                 $.unblockUI();
-                // setTimeout(function () {
-                //     location.reload();
-                // }, 2800);
             },
             error: function (response) {
                 console.log(response);
