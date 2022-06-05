@@ -53,7 +53,7 @@ class AdminController extends Controller
       
     }
 
-    
+
     public function view_certificate($path){
         $s_path = storage_path('app/credentials/'.$path);
         return Response::make(file_get_contents($s_path), 200, [
@@ -283,15 +283,36 @@ class AdminController extends Controller
             return response(["status"=>"failed","message"=>"Error from catch for recommendation reverse"],401);
         }
     }
-
-    public function download_pdf(){
-        // $projects = Project::all();
-         $trans = ['key'=>'1'];
-        view()->share('trans',$trans);
-         $pdf = PDF::loadView('viewpdf',$trans);
-         return $pdf->download('owner.pdf');
-        //$pdf = PDF::make('dompdf.wrapper');
-        //$pdf->loadHTML("<h1>Welcome to Redeemer's University Transcript Portal</h1>");
+    
+    public function dis_approve_app(Request $request){
+        $request->validate([ 'id'=>'required|string','transcript_type'=>'required|string'] );
+        // try {
+            $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+        if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
+        $type = strtoupper($request->transcript_type);
+        if($type == 'OFFICIAL'){
+            $app = OfficialApplication::where(['application_id'=> $request->id, 'app_status'=>'APPROVED'])->first();
+            if($app){
+                $app->app_status = "RECOMMENDED";
+                $app->recommended_by = $data->email;
+                $app->recommended_at = date("F j, Y, g:i a").' dis_approve_app';
+                if($app->save()){ return response(["status"=>"success","message"=>"Application successfully recommended for approval"],200);  }
+                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+            }else{ return response(["status"=>"failed","message"=>"No application found for disapprove"],401); }
+         }elseif($type == 'STUDENT' || $type == 'PROFICIENCY'  ){
+            $app = StudentApplication::where(['id'=> $request->id, 'app_status'=>'PENDING'])->first();
+            if($app){
+                $app->app_status = "RECOMMENDED";
+                $app->recommended_by = $data->email;
+                $app->recommended_at = date("F j, Y, g:i a").' dis_approve_app';
+                if($app->save()){ return response(["status"=>"success","message"=>"Application successfully recommended for approval"],200);  }
+                else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+        
+         }else{ return response(["status"=>"failed","message"=>"Only official transcript is permitted here"],401); }
+        // } catch (\Throwable $th) {
+            
+        // }
     }
 
     public function approve_app(Request $request){

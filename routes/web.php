@@ -37,6 +37,7 @@ Route::middleware(['adminauth'])->group(function () {
     Route::post('/recommend_app',[AdminController::class,'recommend_app']);
     Route::post('/de_recommend_app',[AdminController::class,'de_recommend_app']);
     Route::post('/approve_app',[AdminController::class,'approve_app']);
+    Route::post('/dis_approve_app',[AdminController::class,'dis_approve_app']);
     Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
     Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
     Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
