@@ -37,9 +37,21 @@ class AdminController extends Controller
         $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
         ->where(['application_id'=> $request->id, 'app_status'=>'APPROVED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
         $type = strtoupper($request->transcript_type);
-        if($app_official){
-
-        }
+        if($app_official->count() != 0){
+            if (File::exists($app_official->used_token.'.pdf') ){
+                $s_path = public_path($app_official->used_token.'.pdf');
+                $name="Transcrip";
+                return Response::download(file_get_contents($s_path), 200, [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'inline; filename="'.$name.'"'
+                ]);
+                return Response::download($file, 'plugin.jpg', $headers);
+            }
+            else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
+            // File::delete($app_official->used_token.'.pdf');
+           // && File::exists($app_official->used_token.'_cover.pdf')
+        //     && File::exists( storage_path('app/'.$app_official->certificate)) ) {}
+        }else{return response(["status"=>"failed","message"=>"No application found"],401); }
         
         if($type == 'OFFICIAL'){ 
          
