@@ -49,7 +49,7 @@
                                                     <td><span class="badge badge-soft-success">{{$app->app_status}}</span></td>
                                                     <td>{{ date("d M Y", strtotime($app->created_at)) }}</td>
                                                     <td>
-                                                        <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button><br>
+                                                        <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button><hr>
                                                         @if($app->delivery_mode == 'Hard')<button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" class="btn btn-success waves-effect btn-label waves-light download"><i class="bx bx-download label-icon"></i>Download PDF</button>@endif
                                                     </td>
                                                 </tr>
