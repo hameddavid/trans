@@ -5,7 +5,6 @@
     @endsection
 
     @section("content")
-    <link href="assets/css/transcript.css" rel="stylesheet" type="text/css" />
             <div class="main-content">
                 <div class="page-content">
                     <div class="container-fluid">
@@ -143,12 +142,12 @@
                                 </label>
                                 <textarea class="form-control address_box" id="address" name="address" required></textarea>
                             </div><hr>
-                            <div class="form-check form-check-right certicate">
+                            <div class="form-check form-check-right certificate">
                                 <input class="form-check-input" type="checkbox" id="check_certificate">
                                 <label class="form-check-label" for="check_certificate">
                                     Degree Certificate: <a href="" target="_blank" class="viewcert">VIEW</a>
                                 </label>
-                                <input type="text" id="certicate" name="certicate" class="form-control certificate_box" required>
+                                <input type="text" id="certificate" name="certificate" class="form-control certificate_box" required>
                             </div>
                         </div>
                         <div class="modal-footer">
