@@ -39,6 +39,8 @@ class AdminController extends Controller
         $type = strtoupper($request->transcript_type);
         if($app_official->count() != 0){
             if (File::exists($app_official->used_token.'.pdf') ){
+                return response()->download(public_path($app_official->used_token.'.pdf'));
+
                 $s_path = public_path($app_official->used_token.'.pdf');
                 $name="Transcrip";
                 return Response::download(file_get_contents($s_path), 200, [
