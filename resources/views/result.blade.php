@@ -59,7 +59,6 @@ body, html {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	width: 100%;
-	background-image: url("/assets/images/run_logo_big.png");
 	background-color: #ffffff;
 	color: #000000;
 	margin-bottom: 0;
@@ -208,8 +207,13 @@ caption{
 p{
 	margin-top: 20px;
 }
-
-
+/* background-image: repeating-radial-gradient(red, yellow 10%, blue 20%); */
+.page{
+	background-image: url("/assets/images/run_logo_big.png");
+	object-fit: none;  
+	object-position: right top;  
+	
+}
 
 
   </style>

@@ -31,8 +31,19 @@ class AdminController extends Controller
     }
 
     public function download_approved(Request $request){
-        return back();
+        $request->validate([ 'id'=>'required|string', 'transcript_type' => 'required|string',] );
+        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+        if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
+        $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
+        ->where(['application_id'=> $request->id, 'app_status'=>'APPROVED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
+        $type = strtoupper($request->transcript_type);
+        if($app_official){
 
+        }
+        
+        if($type == 'OFFICIAL'){ 
+         
+        }
 
         // if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
         //     && File::exists( storage_path('app/'.$app_official->certificate)) ) {}
@@ -338,7 +349,7 @@ class AdminController extends Controller
             $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
             ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
             if($app_stud){
-                PDF::loadView('result',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                 if (File::exists($app_stud->file_path.'.pdf')) {
                     if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
                         $app_stud->app_status = "APPROVED";
@@ -356,7 +367,7 @@ class AdminController extends Controller
             ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])
             ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
             if($app_stud){
-                PDF::loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                 if (File::exists($app_stud->file_path.'.pdf')) {
                     if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg_prof($app_stud))['status'] == 'ok'){
                         $app_stud->app_status = "APPROVED";
@@ -458,7 +469,7 @@ public function send_corrections_to_applicant(Request $request){
     $edit_token = app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(6);
     $msg ='<span style="color:red"> Use token '.$edit_token. ' to edit your application.<span><br><br>';
     $msg .= '<pre style="color:black">You are to look into the following for proper correction as requested from the admin in order to complete your transcript request  <br><br>';
-    $msg .=' There are '. sizeof($form_data).'(s)'. ' complaint from admin <br><br>';
+    $msg .=' There are '. sizeof($form_data). ' complaint(s) from admin <br><br>';
     $counter = 1;  
     foreach($form_data as $key => $value){
         $msg .=' Complaint '. $counter.':  '.$key.' => '. $value.'<br><br>';
