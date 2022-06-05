@@ -59,6 +59,12 @@ $(document).ready(function ($) {
     });
 
     $(".view_transcript").click(function () {
+        $("head").append(
+            $('<link rel="stylesheet" type="text/css" />').attr(
+                "href",
+                "assets/css/transcript.css"
+            )
+        );
         $("#btnApprove").hide();
         $(".showHTML").html("");
         $("#transcriptModal").modal("show");
