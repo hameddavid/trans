@@ -492,7 +492,8 @@ $(document).ready(function ($) {
                 link.href = window.URL.createObjectURL(blob);
                 link.download = "Sample.pdf";
                 link.click();
-                alertify.success(response.message);
+                alertify.success("File downloaded");
+                $.unblockUI();
                 // setTimeout(function () {
                 //     location.reload();
                 // }, 2800);
