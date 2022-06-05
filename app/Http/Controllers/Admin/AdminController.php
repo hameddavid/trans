@@ -31,54 +31,29 @@ class AdminController extends Controller
     }
 
     public function download_approved(Request $request){
-        $request->validate([ 'id'=>'required|string', 'transcript_type' => 'required|string',] );
+        $request->validate([ 'id'=>'required|string', 'transcript_type' => 'required|string','index' => 'required',] );
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
         $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
         ->where(['application_id'=> $request->id, 'app_status'=>'APPROVED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
         $type = strtoupper($request->transcript_type);
         if($app_official->count() != 0){
-            if (File::exists($app_official->used_token.'.pdf') ){
-                $headers = [
-                    'Content-Description' => 'File Transfer',
-                    'Content-Type' => 'application/octet-stream',
-                ];                
-                return Response::download(public_path($app_official->used_token.'.pdf'), 'Transcript',$headers);
-                $s_path = public_path($app_official->used_token.'.pdf');
-                $name="Transcrip";
-                return Response::download(file_get_contents($s_path), 200, [
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="'.$name.'"'
-                ]);
-                return Response::download($file, 'plugin.jpg', $headers);
-            }
-            else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
-            // File::delete($app_official->used_token.'.pdf');
-           // && File::exists($app_official->used_token.'_cover.pdf')
-        //     && File::exists( storage_path('app/'.$app_official->certificate)) ) {}
+            if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')  && File::exists(storage_path('app/'.$app_official->certificate))){
+                $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/octet-stream',];                
+               if($request->index == 0){return Response::download(public_path($app_official->used_token.'_cover.pdf'), $app_official->used_token.'_cover.pdf' ,$headers);}
+               elseif($request->index == 1){return Response::download(public_path($app_official->used_token.'.pdf'), $app_official->used_token.'.pdf',$headers);}
+               elseif($request->index == 2){
+                File::delete($app_official->used_token.'_cover.pdf');
+                File::delete($app_official->used_token.'.pdf');
+                return Response::download(storage_path('app/'.$app_official->certificate),strtoupper($app_official->surname).'_CERTIFICATE.pdf',$headers);
+               }else{return response(["status"=>"failed","message"=>"Error with loop index sent"],401);   }
+              
+            }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
         }else{return response(["status"=>"failed","message"=>"No application found"],401); }
-        
-        if($type == 'OFFICIAL'){ 
-         
-        }
-
-        // if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
-        //     && File::exists( storage_path('app/'.$app_official->certificate)) ) {}
-        //         if(strtoupper($app_official->delivery_mode) == "SOFT"){
-        //             if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
-        //                 $app_official->app_status = "APPROVED";
-        //                 $app_official->approved_by = $data->email;
-        //                 $app_official->approved_at = date("F j, Y, g:i a");
-        //                 if($app_official->save()){
-        //                      File::delete($app_official->used_token.'_cover.pdf');
-        //                      File::delete($app_official->used_token.'.pdf');
-       
-        $s_path = storage_path('app/credentials/'.$path);
-        return Response::make(file_get_contents($s_path), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$path.'"'
-        ]);
+      
     }
+
+    
     public function view_certificate($path){
         $s_path = storage_path('app/credentials/'.$path);
         return Response::make(file_get_contents($s_path), 200, [
@@ -223,9 +198,7 @@ class AdminController extends Controller
             For further complaint, send email to transcript@run.edu.ng or chat with us via the Transcript Portal.<br>
             <br>
             OUR REDEEMER IS STRONG!
-            <br>
-            Thank you.<br>
-            ------------------------ ';  
+            <br><br>';  
             $Subject = "FORGOT MATRIC NUMBER RESPONSE";
             if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject, $Msg)['status'] == 'ok'){
                 $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
