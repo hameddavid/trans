@@ -478,17 +478,25 @@ $(document).ready(function ($) {
             type: "POST",
             url: "download_approved",
             data: { id: id, transcript_type: type },
-            dataType: "json",
+            xhrFields: {
+                responseType: "blob",
+            },
             beforeSend: function () {
                 if (confirm("Download PDF?") == false) return false;
                 $.blockUI();
             },
             success: function (response) {
                 console.log(response);
-                alertify.success(response.message);
-                setTimeout(function () {
-                    location.reload();
-                }, 2800);
+                var blob = new Blob([response]);
+                var link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "Sample.pdf";
+                link.click();
+                alertify.success("File downloaded");
+                $.unblockUI();
+                // setTimeout(function () {
+                //     location.reload();
+                // }, 2800);
             },
             error: function (response) {
                 console.log(response);
