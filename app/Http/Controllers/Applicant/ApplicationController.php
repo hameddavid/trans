@@ -785,11 +785,11 @@ public function edit_app_and_verify_editpin(Request $request){
     }
     elseif($request->requestType == "update"){
         $form_data = $request->except(['userid','matno','token','appid','requestType']);
-        if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
-        $request->request->add(['surname'=> $validate_token->surname, 'firstname'=>$validate_token->firstname]);
+        if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"],400);}
+        $request->request->add(['surname'=> $validate_token->surname, 'firstname'=>$validate_token->firstname,'app_id'=>$validate_token->applicant_id]);
         $certificate = $this->update_cert($request);
         $validate_token->certificate = $certificate;
-        $form_data = $request->except(['userid','matno','token','appid','requestType','certificate']);
+        $form_data = $request->except(['userid','matno','token','appid','requestType','certificate','app_id']);
         }
         foreach($form_data as $key => $value){
             $validate_token->$key = $value;
