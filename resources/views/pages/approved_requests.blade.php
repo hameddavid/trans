@@ -5,6 +5,18 @@
     @endsection
 
     @section("content")
+            <style>
+                .btnJustify{
+                    display: flex;
+                    justify-content: space-between;
+                    width: 230px;
+                }
+                .btnJustify2{
+                    display: flex;
+                    justify-content: space-around;
+                    width: 300px;
+                }
+            </style>
             <div class="main-content">
                 <div class="page-content">
                     <div class="container-fluid">
