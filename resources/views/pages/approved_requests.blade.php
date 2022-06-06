@@ -55,7 +55,7 @@
                                                             </a>
                                                             <div class="dropdown-menu">
                                                                 <div class="btnJustify2">
-                                                                    <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button><hr>
+                                                                    <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
                                                                     <button type="button" data-id="{{$app->application_id}}" data-type="{{$app->transcript_type}}" class="btn btn-info waves-effect btn-label waves-light regenerate"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
                                                                 </div> 
                                                                 <div class="btnJustify2 p-3">
