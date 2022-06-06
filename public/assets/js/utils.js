@@ -350,7 +350,7 @@ $(document).ready(function ($) {
 
     $(".download").click(function () {
         var id = $(this).data("id");
-        var index = 1;
+        var index = 0;
         var type = $(this).data("type");
         //for (let index = 0; index < 3; index++) {
         downloadPDF(id, type, index);
