@@ -500,7 +500,7 @@ $(document).ready(function ($) {
             error: function (response) {
                 console.log(response);
                 $.unblockUI();
-                alertify.error(response.responseJSON.message);
+                alertify.error(response.message);
             },
         });
     };
