@@ -87,9 +87,7 @@ class ApplicantAuthController extends Controller
                 kindly use: <span color="red"> ' .$auto_pass. '</span>, as your password to login to your transcript portal. <br>
                 <br>
                 Remember to reset your password!
-                <br>
-                Thank you.<br>
-                ------------------------ ';  
+                <br><br>';  
                 $Subject = "AUTO GENERATED PASSWORD";
                 $request->request->add(['surname'=>$student->SURNAME,'firstname'=>$student->FIRSTNAME]);
                 if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($request, $Subject ,$Msg )['status'] == 'ok'){

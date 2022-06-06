@@ -128,6 +128,12 @@ body, html {
 	margin-left: 5%;
 	margin-top: -3px;
 }
+/* .logo2{
+	float: right;
+	height: 120px;
+	margin-left: 5%;
+	margin-top: -3px;
+} */
 
 .result_table {
 	border-collapse: collapse;
@@ -209,10 +215,11 @@ p{
 }
 /* background-image: repeating-radial-gradient(red, yellow 10%, blue 20%); */
 .page{
-	background-image: url("/assets/images/run_logo_big.png");
+	background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	background-repeat:no-repeat;
+	background-size: cover; 
 	object-fit: none;  
-	object-position: right top;  
-	
+	object-position: right top; 
 }
 
 
