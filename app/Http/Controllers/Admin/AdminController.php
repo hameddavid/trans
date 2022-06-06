@@ -43,8 +43,8 @@ class AdminController extends Controller
                if($request->index == 0){return Response::download(public_path($app_official->used_token.'_cover.pdf'), $app_official->used_token.'_cover.pdf' ,$headers);}
                elseif($request->index == 1){return Response::download(public_path($app_official->used_token.'.pdf'), $app_official->used_token.'.pdf',$headers);}
                elseif($request->index == 2){
-                File::delete($app_official->used_token.'_cover.pdf');
-                File::delete($app_official->used_token.'.pdf');
+                //File::delete($app_official->used_token.'_cover.pdf');
+                //File::delete($app_official->used_token.'.pdf');
                 return Response::download(storage_path('app/'.$app_official->certificate),strtoupper($app_official->surname).'_CERTIFICATE.pdf',$headers);
                }else{return response(["status"=>"failed","message"=>"Error with loop index sent"],401);   }
               
