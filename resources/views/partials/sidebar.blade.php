@@ -32,6 +32,7 @@
                         <li>
                             <a href="javascript: void(0);" class="has-arrow">Official</a>
                             <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="failed_applications">Failed</a></li>
                                 <li><a href="pending_applications">Pending</a></li>
                                 <li><a href="recommended_applications">Recommended</a></li>
                                 <li><a href="approved_applications">Approved</a></li>

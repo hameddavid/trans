@@ -102,6 +102,15 @@ class AdminController extends Controller
             view('pages.pending_applications_',['data'=>$data,'apps'=>$apps_]);
     }
 
+    public function viewFailedApplications(Request $request){
+        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+         $apps = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
+             ->where('app_status','FAILED')->select('official_applications.*','applicants.surname','applicants.firstname')->get(); 
+         return view('pages.failed_requests',['data'=>$data,'apps'=>$apps]);
+            
+    }
+ 
+
     public function viewApprovedApplications(Request $request){
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $apps = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')

@@ -1,22 +1,10 @@
 @extends("layout.master") 
 
     @section("title")
-      Approved Transcript Requests
+      Failed Transcript Requests
     @endsection
 
     @section("content")
-            <style>
-                .btnJustify{
-                    display: flex;
-                    justify-content: space-between;
-                    width: 230px;
-                }
-                .btnJustify2{
-                    display: flex;
-                    justify-content: space-around;
-                    width: 300px;
-                }
-            </style>
             <div class="main-content">
                 <div class="page-content">
                     <div class="container-fluid">
@@ -25,7 +13,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Approved Transcript Requests</h4>
+                                    <h4 class="mb-sm-0 font-size-18">Failed Transcript Requests</h4>
                                 </div>
                             </div>
                         </div>
@@ -45,7 +33,6 @@
                                                     <th>Type</th>
                                                     <th>Status</th>
                                                     <th>Date</th>
-                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -53,30 +40,13 @@
                                                 @foreach($apps as $app)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td>{{$app->surname.' '.$app->firstname}}</td>
+                                                    <td><button data-certificate="{{$app->certificate}}" data-status="{{$app->app_status}}" data-reference="{{$app->reference}}" data-recipient="{{$app->recipient}}" data-mode="{{$app->delivery_mode}}" data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
                                                     <td>{{$app->matric_number}}</td>
                                                     <td>{{$app->recipient}}</td>
                                                     <td>{{$app->destination}}</td>
                                                     <td>{{$app->transcript_type}}</td>
-                                                    <td><span class="badge badge-soft-success">{{$app->app_status}}</span></td>
+                                                    <td><span class="badge badge-soft-danger">{{$app->app_status}}</span></td>
                                                     <td>{{ date("d M Y", strtotime($app->created_at)) }}</td>
-                                                    <td>
-                                                        <div class="dropdown align-self-start">
-                                                            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                <i class="bx bx-dots-horizontal-rounded font-size-18 text-dark"></i>
-                                                            </a>
-                                                            <div class="dropdown-menu">
-                                                                <div class="btnJustify2">
-                                                                    <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
-                                                                    <button type="button" data-id="{{$app->application_id}}" data-type="{{$app->transcript_type}}" class="btn btn-info waves-effect btn-label waves-light regenerate"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
-                                                                </div> 
-                                                                <div class="btnJustify2 p-3">
-                                                                    @if($app->delivery_mode == 'Hard')<button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" class="btn btn-success waves-effect btn-label waves-light download"><i class="bx bx-download label-icon"></i>Download PDF</button>@endif
-                                                                </div>
-                                                            </div>
-                                                        </div>                                                        
-                                                    </td>
-                                                </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -94,19 +64,59 @@
             </div>
             <!-- end main content-->
 
-            <!-- Transcript modal -->
-            <div id="transcriptModal" class="modal fade" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-fullscreen">
+            <!-- Preview modal -->
+            <div id="previewModal" class="modal fade" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
+                        <form method="POST" id="previewForm">
+                        @csrf
+                        <input value="" type="hidden" id="appid" name="appid" class="form-control">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="transcriptModalLabel"></h5>
+                            <h5 class="modal-title" id="previewModalLabel"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body showHTML">
+                        <div class="modal-body">
+                            <div class="form-check form-check-right">
+                                <input class="form-check-input" type="checkbox" id="check_recipient">
+                                <label class="form-check-label" for="check_recipient">
+                                    Name of Institution/Organization: <span style="color:red" id="show_recipient"></span>
+                                </label>
+                                <input type="text" id="recipient" name="recipient" class="form-control recipient" required>
+                            </div><hr>
+                            <div class="form-check form-check-right">
+                                <input class="form-check-input" type="checkbox" id="check_reference">
+                                <label class="form-check-label" for="check_reference">
+                                    Reference Number: <span style="color:red" id="show_reference"></span>
+                                </label>
+                                <input type="text" id="reference" name="reference" class="form-control reference" required>
+                            </div><hr>
+                            <div class="form-check form-check-right email">
+                                <input class="form-check-input" type="checkbox" id="check_email">
+                                <label class="form-check-label" for="check_email">
+                                    Email: <span style="color:red" id="show_email"></span>
+                                </label>
+                                <input type="email" id="email" name="email" class="form-control email_box" required><hr>
+                            </div>
+                            <div class="form-check form-check-right address">
+                                <input class="form-check-input" type="checkbox" id="check_address">
+                                <label class="form-check-label" for="check_address">
+                                    Adress of Institution/Organization: <span style="color:red" id="show_address"></span>
+                                </label>
+                                <textarea class="form-control address_box" id="address" name="address" required></textarea>
+                            </div><hr>
+                            <div class="form-check form-check-right certificate">
+                                <input class="form-check-input" type="checkbox" id="check_certificate">
+                                <label class="form-check-label" for="check_certificate">
+                                    Degree Certificate: <a href="" target="_blank" class="viewcert">VIEW</a>
+                                </label>
+                                <input type="text" id="certificate" name="certificate" class="form-control certificate_box" required>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="btnPreview" class="btn btn-danger waves-effect">Send</button>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -131,8 +141,9 @@
         <script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
         <!-- Datatable init js -->
-        <script src="assets/js/pages/datatables.init.js"></script>  
+        <script src="assets/js/pages/datatables.init.js"></script> 
         <script src="assets/js/pages/modal.init.js"></script>
+        <script src="assets/js/validation.min.js"></script>
         <script src="assets/js/utils.js"></script>   
     @endsection
 

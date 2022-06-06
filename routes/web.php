@@ -26,6 +26,7 @@ Route::middleware(['adminauth'])->group(function () {
     Route::get('/pending_applications_',[AdminController::class,'viewPendingApplications']);
     Route::get('/recommended_applications',[AdminController::class,'viewRecommendedApplications']);
     Route::get('/recommended_applications_',[AdminController::class,'viewRecommendedApplications']);
+    Route::get('/failed_applications',[AdminController::class,'viewFailedApplications']);
     Route::get('/dashboard',[AdminController::class,'adminDashboard']);
     Route::get('/payments',[AdminController::class,'viewPayments']);
     Route::get('/settings',[AdminController::class,'viewSettings']);
