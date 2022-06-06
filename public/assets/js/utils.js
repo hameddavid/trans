@@ -350,11 +350,11 @@ $(document).ready(function ($) {
 
     $(".download").click(function () {
         //var id = $(this).data("id");
-        var id = 1;
+        var id = 2;
         var type = $(this).data("type");
-        for (let index = 0; index < 3; index++) {
-            downloadPDF(id, type, index);
-        }
+        //for (let index = 0; index < 3; index++) {
+        downloadPDF(id, type, index);
+        //}
     });
 
     const recommendTranscript = (id, type) => {
