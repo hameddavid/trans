@@ -349,8 +349,8 @@ $(document).ready(function ($) {
     });
 
     $(".download").click(function () {
-        //var id = $(this).data("id");
-        var id = 2;
+        var id = $(this).data("id");
+        var index = 2;
         var type = $(this).data("type");
         //for (let index = 0; index < 3; index++) {
         downloadPDF(id, type, index);
