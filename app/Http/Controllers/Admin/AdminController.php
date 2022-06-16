@@ -393,7 +393,7 @@ class AdminController extends Controller
             if($app_stud){
                 PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                 if (File::exists($app_stud->file_path.'.pdf')) {
-                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg_prof($app_stud))['status'] == 'ok'){
+                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY PROFICIENCY LETTER DELIVERY",$Msg=$this->get_delivery_msg_prof($app_stud))['status'] == 'ok'){
                         $app_stud->app_status = "APPROVED";
                         $app_stud->approved_by = $data->email;
                         $app_stud->approved_at = date("F j, Y, g:i a");
