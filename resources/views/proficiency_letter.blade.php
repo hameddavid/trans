@@ -5,7 +5,8 @@
         <style type="text/css">
             .bodyBody {
                 margin: 10px;
-                font-size: 1.50em;
+                font-family: Arial;
+                font-size: 11px;
             }
             .divHeader {
                 text-align: right;

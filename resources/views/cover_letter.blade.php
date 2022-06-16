@@ -6,8 +6,7 @@
             .bodyBody {
                 margin: 10px;
                 font-family: Arial;
-                font-size: 10px;
-                color: #FF0000;
+                font-size: 11px;
             }
             .divHeader {
                 text-align: right;
@@ -32,7 +31,8 @@
         <div class="divSubject">
 <pre>
 {{date("F j, Y")}}  
-RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}                                                                                                
+RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}    
+                                                                                            
 {{$data->address}}  
 </pre>
         </div>
@@ -53,13 +53,14 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}
                 </u>
             </h5>
             
-            <p>
+            <p>   
+
                 <p>Please find attached herewith, the transcript of 
-                @if(strtoupper($data->sex) == 'M') <b>{{'MR.'}}</b>
-                    @elseif(strtoupper($data->sex) == 'F') <b>{{'MISS'}}</b>
+                @if(strtoupper($data->sex) == 'M') <b>{{'Mr.'}}</b>
+                    @elseif(strtoupper($data->sex) == 'F') <b>{{'Miss'}}</b>
                     @else <b>{{''}}</b>
                     @endif
-                     {{$data->surname.' '.$data->firstname}} (Matric. No. {{$data->matric_number}}).</p>
+                     {{ strtoupper($data->surname).' '.ucwords($data->firstname)}} (Matric. No. {{$data->matric_number}}).</p>
                     
                 <p> @if(strtoupper($data->sex) == 'M') <b>{{'His'}}</b>
                     @elseif(strtoupper($data->sex) == 'F') <b>{{'Her'}}</b>
