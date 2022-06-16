@@ -351,8 +351,11 @@ $(document).ready(function ($) {
     $(".download").click(function () {
         var id = $(this).data("id");
         var type = $(this).data("type");
+
         for (let index = 0; index < 3; index++) {
-            downloadPDF(id, type, index);
+            setTimeout(function () {
+                downloadPDF(id, type, index);
+            }, 3000);
         }
     });
 
