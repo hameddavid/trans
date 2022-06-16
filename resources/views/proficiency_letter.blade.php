@@ -54,8 +54,8 @@ TO WHOM IT MAY CONCERN
                     @else <b>{{''}}</b>
                     @endif
                 <b>{{ strtoupper($data->surname)}}</b> {{' '. ucwords(strtolower($data->firstname))}} (Matric. No. {{$data->matric_number}}) 
-                was a student in the Department of {{$data->dept}} ({{$data->prog_name}} Programme)
-                 in the Faculty of {{$data->fac}}, Redeemer’s University.</p>
+                was a student in the Department of {{ucwords(strtolower($data->dept))}} ({{ucwords(strtolower($data->prog_name))}} Programme)
+                 in the Faculty of {{ucwords(strtolower($data->fac))}}, Redeemer’s University.</p>
 
                 <p>
                 @if(strtoupper($data->sex) == 'M') {{'His'}}
@@ -63,15 +63,18 @@ TO WHOM IT MAY CONCERN
                 @else <b>{{''}}</b>
                 @endif
                  Cumulative Grade Point Average (CGPA) at the end of a {{$data->years_spent.'-year(s)'}}
-                 {{$data->qualification}} degree programme, 
+                 {{ucwords(strtolower($data->qualification))}} degree programme, 
                  in the {{$data->last_session_in_sch}} 
-                academic session, in {{$data->prog_name}} was {{$data->cgpa}} – {{$data->class_of_degree}}. 
+                academic session, in {{ucwords(strtolower($data->prog_name))}} was {{$data->cgpa}} – {{ucwords(strtolower($data->class_of_degree))}}. 
                     <br><br></p>
 
                 <p>Kindly note that English is the medium of communication in Nigerian institutions. You may also wish to note that in Redeemer’s University, all lectures, examinations, tests,
                     Seminars, presentations, and all kinds of student assessments are conducted in English.</p>
 
-                <p>Please accord her the necessary assistance.</p>
+                <p>Please accord  @if(strtoupper($data->sex) == 'M') {{'his'}}
+                @elseif(strtoupper($data->sex) == 'F') {{'her'}}
+                @else <b>{{''}}</b>
+                @endif the necessary assistance.</p>
 
                 Yours faithfully,
 
