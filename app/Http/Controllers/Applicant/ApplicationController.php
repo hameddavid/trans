@@ -394,7 +394,7 @@ public function get_student_result($request){
                     <td>GPA: <strong> '. strval(round($gpa, 2)) . '</strong></td>
                     </tr>
                     <tr>
-                    <td><strong>Cummulative</strong></td>
+                    <td><strong>Cumulative</strong></td>
                     <td>CTU: <strong> '. strval($cumm_sum_unit) . '</strong></td>
                     <td>CTGP: <strong> '. strval($cumm_sum_point_unit) . '</strong></td>
                     <td>CGPA: <strong> '. strval(round($cgpa, 2)) . '</strong></td>
@@ -452,7 +452,7 @@ public function get_student_result($request){
             <td>GPA: <strong> ' . strval(round($gpa, 2)) .'</strong></td>
             </tr>
             <tr>
-            <td><strong>Cummulative</strong></td>
+            <td><strong>Cumulative</strong></td>
             <td>CTU: <strong> ' . strval($cumm_sum_unit) .'</strong></td>
             <td>CTGP: <strong> ' . strval($cumm_sum_point_unit) .'</strong></td>
             <td>CGPA: <strong> ' . strval(round($cgpa, 2)) .'</strong></td>
@@ -510,17 +510,17 @@ public function get_student_result($request){
                 <tr>
                     <td>D => 49 - 45 => 2</td>
                     <td>1.50 - 2.49 => Average</td>
-                    <td>CTU: Cummulative Total Units</td>
+                    <td>CTU: Cumulative Total Units</td>
                 </tr>
                 <tr>
                     <td>E => 44 - 40 => 1</td>
                     <td>1.00 - 1.49 => Fair</td>
-                    <td>CTGP: Cummulative Total Grade Point</td>
+                    <td>CTGP: Cumulative Total Grade Point</td>
                 </tr>
                 <tr>
                     <td>F => 39 - 0 => 0</td>
                     <td>0.00 - 0.99 => Poor</td>
-                    <td>CGPA: Cummulative Grade Point Average</td>
+                    <td>CGPA: Cumulative Grade Point Average</td>
                 </tr>
             </table>';
             if(strtoupper($request->transcript_type) == 'OFFICIAL'){
