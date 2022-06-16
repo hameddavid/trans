@@ -62,6 +62,14 @@ class AdminController extends Controller
         ]);
     }
 
+    public function view_proficiency($path){
+        $s_path = storage_path('app/credentials/'.$path);
+        return Response::make(file_get_contents($s_path), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$path.'"'
+        ]);
+    }
+
   
     public function adminDashboard(Request $request){
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
@@ -328,86 +336,83 @@ class AdminController extends Controller
       
         $request->validate([ 'id'=>'required|string','transcript_type'=>'required|string'] );
         try {
-            
-        } catch (\Throwable $th) {
-            
-        }
-       $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
-        if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
-        $type = strtoupper($request->transcript_type);
-        if($type == 'OFFICIAL'){  
-            $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
-            ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
-            if($app_official){
-                if(strtoupper($app_official->delivery_mode) == "SOFT"){
-               PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('cover_letter_soft',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
-               PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result_soft',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
-                }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
-               PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
-               PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
-                }
-               if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
-            && File::exists( storage_path('app/'.$app_official->certificate)) ) {
-                if(strtoupper($app_official->delivery_mode) == "SOFT"){
-                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
+            $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+            if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
+            $type = strtoupper($request->transcript_type);
+            if($type == 'OFFICIAL'){  
+                $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
+                ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
+                if($app_official){
+                    if(strtoupper($app_official->delivery_mode) == "SOFT"){
+                   PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('cover_letter_soft',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
+                   PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result_soft',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
+                    }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
+                   PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
+                   PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
+                    }
+                   if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
+                && File::exists( storage_path('app/'.$app_official->certificate)) ) {
+                    if(strtoupper($app_official->delivery_mode) == "SOFT"){
+                        if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
+                            $app_official->app_status = "APPROVED";
+                            $app_official->approved_by = $data->email;
+                            $app_official->approved_at = date("F j, Y, g:i a");
+                            if($app_official->save()){
+                                 File::delete($app_official->used_token.'_cover.pdf');
+                                 File::delete($app_official->used_token.'.pdf');
+                                 return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
+                            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
+                        }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
+                    }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
                         $app_official->app_status = "APPROVED";
                         $app_official->approved_by = $data->email;
                         $app_official->approved_at = date("F j, Y, g:i a");
                         if($app_official->save()){
-                             File::delete($app_official->used_token.'_cover.pdf');
-                             File::delete($app_official->used_token.'.pdf');
-                             return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
-                        else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
-                    }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
-                }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
-                    $app_official->app_status = "APPROVED";
-                    $app_official->approved_by = $data->email;
-                    $app_official->approved_at = date("F j, Y, g:i a");
-                    if($app_official->save()){
-                         return response(["status"=>"success","message"=>"Approved, kindly download for further processes"],200);  }
-                    else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
-                }else{ return response(["status"=>"failed","message"=>"Error with official transcript mode... "],401);  }
-                }else{return response(["status"=>"failed","message"=>"No Transcript Files  in the directory"],401);  } 
-            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
-        }elseif($type == 'STUDENT'){
-            $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
-            ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
-            if($app_stud){
-                PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
-                if (File::exists($app_stud->file_path.'.pdf')) {
-                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
-                        $app_stud->app_status = "APPROVED";
-                        $app_stud->approved_by = $data->email;
-                        $app_stud->approved_at = date("F j, Y, g:i a");
-                        if($app_stud->save()){
-                             File::delete($app_stud->address.'.pdf');
-                             return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
-                        else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
-                    }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
-                    }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  }     
-            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
-        }elseif($type == 'PROFICIENCY'){
-            $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
-            ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])
-            ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
-            if($app_stud){
-                PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
-                if (File::exists($app_stud->file_path.'.pdf')) {
-                    if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY PROFICIENCY LETTER DELIVERY",$Msg=$this->get_delivery_msg_prof($app_stud))['status'] == 'ok'){
-                        $app_stud->app_status = "APPROVED";
-                        $app_stud->approved_by = $data->email;
-                        $app_stud->approved_at = date("F j, Y, g:i a");
-                        if($app_stud->save()){
-                             File::delete($app_stud->address.'.pdf');
-                             return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
-                        else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
-                    }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
-                    }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  }     
-            }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
-       
-        }
-        else{ return response(['status'=>'failed','message'=>'Error in transcript type supplied']);}
-       
+                             return response(["status"=>"success","message"=>"Approved, kindly download for further processes"],200);  }
+                        else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
+                    }else{ return response(["status"=>"failed","message"=>"Error with official transcript mode... "],401);  }
+                    }else{return response(["status"=>"failed","message"=>"No Transcript Files  in the directory"],401);  } 
+                }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+            }elseif($type == 'STUDENT'){
+                $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+                ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
+                if($app_stud){
+                    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                    if (File::exists($app_stud->file_path.'.pdf')) {
+                        if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
+                            $app_stud->app_status = "APPROVED";
+                            $app_stud->approved_by = $data->email;
+                            $app_stud->approved_at = date("F j, Y, g:i a");
+                            if($app_stud->save()){
+                                 File::delete($app_stud->address.'.pdf');
+                                 return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
+                            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
+                        }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
+                        }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  }     
+                }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+            }elseif($type == 'PROFICIENCY'){
+                $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+                ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])
+                ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
+                if($app_stud){
+                    // PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                    if (File::exists($app_stud->file_path.'.pdf')) {
+                        if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY PROFICIENCY LETTER DELIVERY",$Msg=$this->get_delivery_msg_prof($app_stud))['status'] == 'ok'){
+                            $app_stud->app_status = "APPROVED";
+                            $app_stud->approved_by = $data->email;
+                            $app_stud->approved_at = date("F j, Y, g:i a");
+                            if($app_stud->save()){
+                                 File::delete($app_stud->address.'.pdf');
+                                 return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
+                            else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
+                        }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
+                        }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  }     
+                }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+           
+            }
+            else{ return response(['status'=>'failed','message'=>'Error in transcript type supplied']);}
+            
+        } catch (\Throwable $th) {return response(['status'=>'failed','message'=>'Error from catch ...approve_app()']);}  
 
     }
 

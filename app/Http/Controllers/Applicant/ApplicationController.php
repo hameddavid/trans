@@ -148,6 +148,12 @@ class ApplicationController extends Controller
                     $new_application->class_of_degree =  $class_of_degree;
                     $new_application->transcript_raw =  $trans_raw;
                     if($new_application->save() ){  
+                        if($type == 'PROFICIENCY'){
+                            $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+                            ->where(['student_applications.id'=> $new_application->id, 'app_status'=>'PENDING'])
+                            ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
+                            PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                        }
                         // Notify applicant through email  $applicant->email and Notify admin
                        if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg())['status'] == 'ok'){
                         app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="NEW TRANSCRIPT ($type) REQUEST",$Msg=$this->get_admin_msg($applicant));

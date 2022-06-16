@@ -45,6 +45,7 @@ Route::middleware(['adminauth'])->group(function () {
     Route::get('getTranscriptActivities', [AdminController::class, 'getTranscriptActivities']);
     Route::post('send_corrections_to_applicant', [AdminController::class, 'send_corrections_to_applicant']);
     Route::get('/credentials/{path}', [AdminController::class, 'view_certificate']);
+    Route::get('/proficiency/{path}', [AdminController::class, 'view_proficiency']);
     Route::post('download_approved', [AdminController::class, 'download_approved']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
 });
