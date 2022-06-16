@@ -361,7 +361,6 @@ class AdminController extends Controller
                     if($app_official->save()){
                          return response(["status"=>"success","message"=>"Approved, kindly download for further processes"],200);  }
                     else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }
-
                 }else{ return response(["status"=>"failed","message"=>"Error with official transcript mode... "],401);  }
                 }else{return response(["status"=>"failed","message"=>"No Transcript Files  in the directory"],401);  } 
             }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }

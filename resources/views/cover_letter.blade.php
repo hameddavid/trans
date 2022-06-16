@@ -6,7 +6,8 @@
             .bodyBody {
                 margin: 10px;
                 font-family: Arial;
-                font-size: 1.50em;
+                font-size: 10px;
+                color: #FF0000;
             }
             .divHeader {
                 text-align: right;
