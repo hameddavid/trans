@@ -155,7 +155,7 @@ class ApplicationController extends Controller
                             PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                         }
                         // Notify applicant through email  $applicant->email and Notify admin
-                       if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg())['status'] == 'ok'){
+                       if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="PROFICIENCY APPLICATION NOTIFICATION",$Msg=$this->get_msg2())['status'] == 'ok'){
                         app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="NEW TRANSCRIPT ($type) REQUEST",$Msg=$this->get_admin_msg($applicant));
                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
                            } 
@@ -327,6 +327,10 @@ class ApplicationController extends Controller
 
 static function get_msg(){
     return 'We have successfully received your  new transcript application request, 
+    kindly excercise  patience while your request is being processed.';
+}
+static function get_msg2(){
+    return 'We have successfully received your  new language proficiency application request, 
     kindly excercise  patience while your request is being processed.';
 }
 static function get_admin_msg($applicant){
