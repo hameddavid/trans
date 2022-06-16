@@ -67,7 +67,7 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}
                     @else <b>{{''}}</b>
                     @endif
                     Cumulative Grade Point Average (CGPA) at the end of a {{$data->years_spent.'-year(s)'}} 
-                     {{$data->qualification}} degree programme, in the {{$data->last_session_in_sch}} 
+                     {{ucwords(strtolower($data->qualification))}} degree programme, in the {{$data->last_session_in_sch}} 
                      academic session, was {{$data->cgpa}} – {{$data->class_of_degree}}. 
                     <br><br>The official language of teaching and examining the course was English.</p>
 
