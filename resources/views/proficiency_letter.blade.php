@@ -49,15 +49,13 @@ TO WHOM IT MAY CONCERN
             </h5>
             
             <p>
-                <p>@if(strtoupper($data->sex) == 'M') <b>{{'MR.'}}</b>
-                    @elseif(strtoupper($data->sex) == 'F') <b>{{'MISS'}}</b>
+                <p>@if(strtoupper($data->sex) == 'M') <b>{{'Mr.'}}</b>
+                    @elseif(strtoupper($data->sex) == 'F') <b>{{'Miss'}}</b>
                     @else <b>{{''}}</b>
                     @endif
-                 {{$data->surname.' '.$data->firstname}} (Matric. No. {{$data->matric_number}}) 
+                <b>{{ strtoupper($data->surname)}}</b> {{' '. ucwords(strtolower($data->firstname))}} (Matric. No. {{$data->matric_number}}) 
                 was a student in the Department of {{$data->dept}} ({{$data->prog_name}})
                  in the Faculty of {{$data->fac}}, Redeemer’s University.</p>
-
-    
 
                 <p>
                 @if(strtoupper($data->sex) == 'M') <b>{{'His'}}</b>
