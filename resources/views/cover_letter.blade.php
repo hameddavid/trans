@@ -56,14 +56,14 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}
             <p>   
 
                 <p>Please find attached herewith, the transcript of 
-                @if(strtoupper($data->sex) == 'M') <b>{{'Mr.'}}</b>
-                    @elseif(strtoupper($data->sex) == 'F') <b>{{'Miss'}}</b>
+                @if(strtoupper($data->sex) == 'M') {{'Mr.'}}
+                    @elseif(strtoupper($data->sex) == 'F') {{'Miss'}}
                     @else <b>{{''}}</b>
                     @endif
-                     {{ strtoupper($data->surname).' '.ucwords($data->firstname)}} (Matric. No. {{$data->matric_number}}).</p>
+                     <b>{{ strtoupper($data->surname)}}</b> {{' '. ucwords(strtolower($data->firstname))}} (Matric. No. {{$data->matric_number}}).</p>
                     
-                <p> @if(strtoupper($data->sex) == 'M') <b>{{'His'}}</b>
-                    @elseif(strtoupper($data->sex) == 'F') <b>{{'Her'}}</b>
+                <p> @if(strtoupper($data->sex) == 'M') {{'His'}}
+                    @elseif(strtoupper($data->sex) == 'F') {{'Her'}}
                     @else <b>{{''}}</b>
                     @endif
                     Cumulative Grade Point Average (CGPA) at the end of a {{$data->years_spent.'-year(s)'}} 
