@@ -5,6 +5,7 @@
         <style type="text/css">
             .bodyBody {
                 margin: 10px;
+                font-family: Arial;
                 font-size: 1.50em;
             }
             .divHeader {
@@ -29,7 +30,8 @@
     <body class="bodyBody">
         <div class="divSubject">
 <pre>
-RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}                                          {{date("F j, Y")}}                                                        
+{{date("F j, Y")}}  
+RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}                                                                                                
 {{$data->address}}  
 </pre>
         </div>
