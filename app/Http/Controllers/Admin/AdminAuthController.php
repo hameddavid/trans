@@ -102,7 +102,7 @@ class AdminAuthController extends Controller
   
     $app = Admin::where('email',$data->email)->first();
     if($app){
-      if(!Hash::check($request->old_pass, $app->password)) {return response(['status'=>'failed','message' => 'Old password NOT match!'], 401);}
+      if(!Hash::check($request->old_pass, $app->password)) {return response(['status'=>'failed','message' => 'Old password does NOT match!'], 401);}
       $app->password =  bcrypt($request->password);
       if($app->save()){
         return response(['status'=>'success','message'=>'Password successfully updated'], 200);
