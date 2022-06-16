@@ -335,13 +335,18 @@ class AdminController extends Controller
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
         $type = strtoupper($request->transcript_type);
-        if($type == 'OFFICIAL'){ 
+        if($type == 'OFFICIAL'){  
             $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
             ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
             if($app_official){
+                if(strtoupper($app_official->delivery_mode) == "SOFT"){
+               PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('cover_letter_soft',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
+               PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result_soft',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
+                }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
                PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
                PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
-            if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
+                }
+               if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
             && File::exists( storage_path('app/'.$app_official->certificate)) ) {
                 if(strtoupper($app_official->delivery_mode) == "SOFT"){
                     if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment($app_official,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_official))['status'] == 'ok'){
