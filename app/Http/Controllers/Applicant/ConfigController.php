@@ -22,7 +22,8 @@ static function find_and_replace_string($string){
 
 static function find_and_replace_string2($string){
     $string  = str_replace("&amp;", "AND",$string);
-    $string  = str_replace("&amp;", "AND",$string);
+    $string  = str_replace(". &", " AND",$string);
+    $string  = str_replace("&", "AND",$string);
     return $string;
  }
  

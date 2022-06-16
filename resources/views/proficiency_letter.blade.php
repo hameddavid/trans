@@ -49,17 +49,17 @@ TO WHOM IT MAY CONCERN
             </h5>
             
             <p>
-                <p>@if(strtoupper($data->sex) == 'M') <b>{{'Mr.'}}</b>
-                    @elseif(strtoupper($data->sex) == 'F') <b>{{'Miss'}}</b>
+                <p>@if(strtoupper($data->sex) == 'M') {{'Mr.'}}
+                    @elseif(strtoupper($data->sex) == 'F') {{'Miss'}}
                     @else <b>{{''}}</b>
                     @endif
                 <b>{{ strtoupper($data->surname)}}</b> {{' '. ucwords(strtolower($data->firstname))}} (Matric. No. {{$data->matric_number}}) 
-                was a student in the Department of {{$data->dept}} ({{$data->prog_name}})
+                was a student in the Department of {{$data->dept}} ({{$data->prog_name}} Programme)
                  in the Faculty of {{$data->fac}}, Redeemer’s University.</p>
 
                 <p>
-                @if(strtoupper($data->sex) == 'M') <b>{{'His'}}</b>
-                @elseif(strtoupper($data->sex) == 'F') <b>{{'Her'}}</b>
+                @if(strtoupper($data->sex) == 'M') {{'His'}}
+                @elseif(strtoupper($data->sex) == 'F') {{'Her'}}
                 @else <b>{{''}}</b>
                 @endif
                  Cumulative Grade Point Average (CGPA) at the end of a {{$data->years_spent.'-year(s)'}}
