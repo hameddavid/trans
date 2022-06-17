@@ -131,7 +131,7 @@ class ApplicationController extends Controller
                     $new_application->delivery_mode = 'soft';
                     $new_application->transcript_type = $type;
                     $new_application->address =  $applicant->email;
-                    $new_application->destination = "Student Transcript";
+                    $new_application->destination = $type;//"Student Transcript";
                     $new_application->recipient =  $applicant->surname ." ". $applicant->firstname;
                     $new_application->app_status = "PENDING"; // default status
                     $new_application->graduation_year = $request->graduation_year? $request->graduation_year:"";
@@ -804,7 +804,7 @@ public function edit_app_and_verify_editpin(Request $request){
         foreach($form_data as $key => $value){
             $validate_token->$key = $value;
         }
-        $validate_token->edit_token = "EXPIRED";
+        $validate_token->edit_token = "EXPIRED_".$validate_token->edit_token;
         $validate_token->app_status = "PENDING";
         if($validate_token->save()){
             $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');

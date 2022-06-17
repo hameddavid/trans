@@ -63,7 +63,7 @@ class AdminController extends Controller
     }
 
     public function view_proficiency($path){
-        $s_path = storage_path('app/credentials/'.$path);
+        $s_path = public_path($path);
         return Response::make(file_get_contents($s_path), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="'.$path.'"'
@@ -405,8 +405,8 @@ class AdminController extends Controller
                                  File::delete($app_stud->address.'.pdf');
                                  return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
                             else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
-                        }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
-                        }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  }     
+                        }else{return response(["status"=>"failed","message"=>"Error sending Proficiency delivery email "],401);}
+                        }else{return response(["status"=>"failed","message"=>"No Proficiency File in the directory"],401);  }     
                 }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
            
             }
