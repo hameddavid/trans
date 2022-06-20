@@ -66,7 +66,7 @@ class ApplicationController extends Controller
             $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id,'emails'=>$admin_users]);
-            if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
+            if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allowed!"],400);}
             $certificate = $this->upload_cert($request);
             }
             if($applicant->count() != 0){
@@ -796,7 +796,7 @@ public function edit_app_and_verify_editpin(Request $request){
     }
     elseif($request->requestType == "update"){
         $form_data = $request->except(['userid','matno','token','appid','requestType']);
-        if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"],400);}
+        if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allowed!"],400);}
         $request->request->add(['surname'=> $validate_token->surname, 'firstname'=>$validate_token->firstname,'app_id'=>$validate_token->applicant_id]);
         $certificate = $this->update_cert($request);
         $validate_token->certificate = $certificate;
