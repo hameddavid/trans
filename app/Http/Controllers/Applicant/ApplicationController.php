@@ -155,7 +155,8 @@ class ApplicationController extends Controller
                             PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                         }
                         // Notify applicant through email  $applicant->email and Notify admin
-                       if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="PROFICIENCY APPLICATION NOTIFICATION",$Msg=$this->get_msg2())['status'] == 'ok'){
+                        $Subject= $type." APPLICATION NOTIFICATION";
+                       if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject,$Msg=$this->get_msg2())['status'] == 'ok'){
                         app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="NEW TRANSCRIPT ($type) REQUEST",$Msg=$this->get_admin_msg($applicant));
                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
                            } 
