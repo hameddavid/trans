@@ -4,8 +4,6 @@
     <head>
         <style type="text/css">
             .bodyBody {
-                margin-left: calc(50% - 50vw);
-                margin-right: calc(50% - 50vw);
                 font-family: Arial;
                 font-size: 11px;
                 background-image: url("https://transcriptapp.run.edu.ng/assets/images/REGISTRARLETTERHEADJPEG.jpg");
@@ -31,7 +29,7 @@
                 padding-top: 50px;
             }
             .main{
-                margin: 10% auto;
+                margin: 20% auto;
             }
         </style>
     </head>
