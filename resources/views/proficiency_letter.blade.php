@@ -9,7 +9,7 @@
                 font-family: Arial;
                 font-size: 11px;
                 background-image: url("https://transcriptapp.run.edu.ng/assets/images/REGISTRARLETTERHEADJPEG.jpg");
-                background-size: cover;
+                object-fit: fill;
                 background-repeat: no-repeat;
 
             }
