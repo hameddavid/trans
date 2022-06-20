@@ -465,7 +465,14 @@ class AdminController extends Controller
                 $app->app_status = "PENDING";
                 $app->approved_by = "";
                 $app->approved_at = "";
-                if($app->save()){ return response(["status"=>"success","message"=>"Transcript successfully regenerated!"]);  }
+                if($app->save()){
+                    if($type == 'PROFICIENCY'){
+                        $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+                        ->where(['student_applications.id'=> $app->id, 'app_status'=>'PENDING'])
+                        ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
+                        PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                    }
+                    return response(["status"=>"success","message"=>"Transcript successfully regenerated!"]);  }
                 else{return response(["status"=>"failed","message"=>"Error updating transcript regeneration"],200); }
             }else{ return response(["status"=>"failed","message"=>"No transcript found for regeneration"],401); }
         }else{return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);}
