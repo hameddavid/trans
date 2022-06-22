@@ -429,7 +429,7 @@ class AdminController extends Controller
         if($type == 'OFFICIAL'){
             $app = OfficialApplication::where(['application_id'=> $request->id])->first();
             if($app){
-                $request->merge(['matno' => $app->matric_number, 'userid'=>$app->applicant_id,'used_token'=>$app->used_token,'transcript_type'=>$app->transcript_type]);
+                $request->merge(['matno' => $app->matric_number, 'userid'=>$app->applicant_id,'used_token'=>$app->used_token,'transcript_type'=>$app->transcript_type,'recipient'=>$app->recipient]);
                 $all_result_params = app('App\Http\Controllers\Applicant\ApplicationController')->get_student_result($request);
                 $app->first_session_in_sch =  $all_result_params['first_session_in_sch']; 
                 $app->last_session_in_sch =  $all_result_params['last_session_in_sch']; 
