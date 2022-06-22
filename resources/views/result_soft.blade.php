@@ -186,6 +186,11 @@ caption{
 	font-size: 12px;
 	font-style: italic;
 	margin-top: 25px;
+	background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	background-repeat:no-repeat;
+	background-size: cover; 
+	object-fit: none;  
+	object-position: right top; 
 }
 
 .footer_2{
@@ -196,6 +201,11 @@ caption{
 	font-weight: bold;
 	margin-top: 50px;
 	text-align: center;
+	background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	background-repeat:no-repeat;
+	background-size: cover; 
+	object-fit: none;  
+	object-position: right top; 
 }
 
 #gold_div{
