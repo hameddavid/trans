@@ -498,8 +498,8 @@ public function get_student_result($request){
             </tr> ';
                         
         }
-        $signatory = 'Toyo_OJ_Teewhy';
-        $designation = 'Toyo_OJ_Teewhy';
+        $signatory = '';
+        $designation = '';
         $date = date("d-M-y");
         $response = $response .'</table>
             <table class="result_table2">

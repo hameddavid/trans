@@ -142,6 +142,11 @@ body, html {
 	margin-right: 5%;
 	font-size: 10px;
 	font-family: Georgia;
+	background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	background-repeat:no-repeat;
+	background-size: cover; 
+	object-fit: none;  
+	object-position: right top; 
 }
 
 .result_table2 {
@@ -151,6 +156,11 @@ body, html {
 	margin-right: 5%;
 	font-family: Quicksand;
 	font-size: 10px;
+	background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	background-repeat:no-repeat;
+	background-size: cover; 
+	object-fit: none;  
+	object-position: right top; 
 }
 
 .result_table th, .result_table td {
