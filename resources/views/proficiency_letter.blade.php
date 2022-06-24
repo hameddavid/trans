@@ -6,8 +6,8 @@
             .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
-                background-image: url("https://transcriptapp.run.edu.ng/assets/images/REGISTRARLETTERHEADJPEG.jpg");
-                /* background-size: contain;
+                /* background-image: url("https://transcriptapp.run.edu.ng/assets/images/REGISTRARLETTERHEADJPEG.jpg");
+                background-size: contain;
                 background-repeat: no-repeat; */
 
             }
