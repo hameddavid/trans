@@ -3,14 +3,17 @@
 <html>
     <head>
         <style type="text/css">
+        html {
+       background: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg") no-repeat center center fixed;
+       -webkit-background-size: contain;
+       -moz-background-size: contain;
+       -o-background-size: contain;
+       background-size: contain;
+        }
             .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
-                background: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg") no-repeat center center fixed;
-                -webkit-background-size: cover;
-                -moz-background-size: cover;
-                -o-background-size: cover;
-                background-size: cover;
+              
 
             }
             .divHeader {
