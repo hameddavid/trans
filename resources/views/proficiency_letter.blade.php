@@ -3,8 +3,9 @@
 <html>
     <head>
         <style type="text/css">
-        body {
-      
+        html {
+           margin:0;
+           padding:0; 
         }
             .bodyBody {
                 font-family: Arial;
