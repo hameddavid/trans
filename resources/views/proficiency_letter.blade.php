@@ -4,7 +4,7 @@
     <head>
         <style type="text/css">
         html {
-       background: url("https://transcriptapp.run.edu.ng/assets/images/letter_reg.jpg") no-repeat center center fixed;
+       background: url("https://transcriptapp.run.edu.ng/assets/images/letter_reg.png") no-repeat center center fixed;
        -webkit-background-size: cover;
        -moz-background-size: cover;
        -o-background-size: cover;
