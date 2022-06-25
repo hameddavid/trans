@@ -5,7 +5,6 @@
         <style type="text/css">
         body {
             
-	        background-color: #ffffff;
             background: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg") no-repeat center center fixed;
             -webkit-background-size: contain;
             -moz-background-size: contain;
