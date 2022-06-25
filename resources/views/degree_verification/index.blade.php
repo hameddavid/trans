@@ -434,6 +434,9 @@
                     <div class="col-lg-6 col-md-8 col-sm-12 col-12">
                         <div class="copyright-left">
                             <ul class="ft-menu link-hover">
+                                <li>
+                                    <span>Powered by RUN ICT</span>
+                                </li>
                             </ul>
                         </div>
                     </div>
