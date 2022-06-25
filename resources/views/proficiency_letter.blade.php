@@ -3,13 +3,13 @@
 <html>
     <head>
         <style type="text/css">
-        html {
+        body {
        background: url("https://transcriptapp.run.edu.ng/assets/images/letter_reg.png") no-repeat center center fixed;
        -webkit-background-size: cover;
        -moz-background-size: cover;
        -o-background-size: cover;
        background-size: cover;
-}
+        }
             .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
