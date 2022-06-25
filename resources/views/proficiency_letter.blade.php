@@ -3,7 +3,7 @@
 <html>
     <head>
         <style type="text/css">
-        html {
+        body {
        background: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg") no-repeat center center fixed;
        -webkit-background-size: contain;
        -moz-background-size: contain;
