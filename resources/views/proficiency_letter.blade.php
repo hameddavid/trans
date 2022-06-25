@@ -3,7 +3,7 @@
 <html>
     <head>
         <style type="text/css">
-        body,html {
+        body {
             padding: 0;
 	        margin: 0;
             width: 100%;
