@@ -6,14 +6,12 @@
         body {
             padding: 0;
 	        margin: 0;
-            width: 100%;
-	height: auto;
-	background-color: #ffffff;
-       background: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg") no-repeat center center fixed;
-       -webkit-background-size: contain;
-       -moz-background-size: contain;
-       -o-background-size: contain;
-       background-size: contain;
+	        background-color: #ffffff;
+            background: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg") no-repeat center center fixed;
+            -webkit-background-size: contain;
+            -moz-background-size: contain;
+            -o-background-size: contain;
+            background-size: contain;
         }
             .bodyBody {
                 font-family: Arial;
