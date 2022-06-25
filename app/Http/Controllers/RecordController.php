@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class RecordController extends Controller
 {
     public function index(){
-        return "Welcome to Record Home";
+        return view('degree_verification.index');
     }
     public function degree_verification(Request $request){
         return "Welcome to Record Home";
