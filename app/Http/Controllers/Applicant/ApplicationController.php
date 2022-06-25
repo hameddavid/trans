@@ -122,7 +122,7 @@ class ApplicationController extends Controller
                             else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
                         
                      } 
-                 }else{ return response(['status'=>'failed','message'=>'Invalid application payment pin!']);    }
+                 }else{ return response(['status'=>'failed','message'=>'Invalid application payment pin!'],401);    }
                 
                 }elseif($type == 'STUDENT' || $type == 'PROFICIENCY'){
                     $new_application = new StudentApplication();

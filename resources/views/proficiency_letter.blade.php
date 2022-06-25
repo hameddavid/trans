@@ -3,10 +3,18 @@
 <html>
     <head>
         <style type="text/css">
-        html {
-           margin:0;
-           padding:0; 
-        }
+            html {
+            margin:0;
+            padding:0; 
+            }
+            @page {
+                size: A4;
+                margin-top:0.5cm;
+                margin-bottom:0;
+                margin-left:0;
+                margin-right:0;
+                padding: 0;
+            }
             .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
