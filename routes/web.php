@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Applicant\ApplicationController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\RecordController;
 
 
 
@@ -48,4 +49,9 @@ Route::middleware(['adminauth'])->group(function () {
     Route::get('/proficiency/{path}', [AdminController::class, 'view_proficiency']);
     Route::post('download_approved', [AdminController::class, 'download_approved']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
+    
 });
+
+
+// record
+Route::get('/records',[RecordController::class,'index']);
