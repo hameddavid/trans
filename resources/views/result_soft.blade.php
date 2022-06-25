@@ -234,13 +234,14 @@ p{
 	margin-top: 20px;
 }
 /* background-image: repeating-radial-gradient(red, yellow 10%, blue 20%); */
-.page{
-	/* background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+/* .page{
+	background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
 	object-fit: none;  
-	object-position: right top;  */
-}
+	object-position: right top; 
+} */
+
 body{
 	background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
 	background-repeat:no-repeat;

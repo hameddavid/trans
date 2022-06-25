@@ -22,7 +22,8 @@ static function find_and_replace_string($string){
 
 static function find_and_replace_string2($string){
     $string  = str_replace("&amp;", "AND",$string);
-    $string  = str_replace("&amp;", "AND",$string);
+    $string  = str_replace(". &", " AND",$string);
+    $string  = str_replace("&", "AND",$string);
     return $string;
  }
  
@@ -70,13 +71,13 @@ static function find_and_replace_string2($string){
     if (Mail::failures()) {return ['status'=>'nok'];
     }else{  return ['status'=>'ok']; }
 }
-
+// 
 
  public function applicant_mail_attachment_stud($applicant,$Subject,$Msg){
     $data = [
         'to' => [$applicant->email],
         'docs'=> [ 
-            ['path'=> public_path($applicant->file_path.'.pdf'), 'as' => strtoupper($applicant->surname)."_TRANSCRIPT.pdf",'mime' => 'application/pdf'],
+            ['path'=> public_path($applicant->file_path.'.pdf'), 'as' => strtoupper($applicant->surname)."_".$applicant->transcript_type.".pdf",'mime' => 'application/pdf'],
          ],
         'name' => $applicant->surname ." ". $applicant->firstname,
         'sub' => $Subject,

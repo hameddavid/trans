@@ -3,9 +3,17 @@
 <html>
     <head>
         <style type="text/css">
+        html {
+           margin:0;
+           padding:0; 
+        }
             .bodyBody {
-                margin: 10px;
-                font-size: 1.50em;
+                font-family: Arial;
+                font-size: 11px;
+                background-image: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg");
+                background-size: contain;
+                background-repeat: no-repeat;
+
             }
             .divHeader {
                 text-align: right;
@@ -24,10 +32,14 @@
                 float: left;
                 padding-top: 50px;
             }
+            .main{
+                margin: 20% auto;
+            }
         </style>
     </head>
     <body class="bodyBody">
-        <div class="divSubject">
+            <div class="main"> 
+            <div class="divSubject">
 <pre>
 {{date("F j, Y")}}  
  
@@ -48,31 +60,32 @@ TO WHOM IT MAY CONCERN
             </h5>
             
             <p>
-                <p>@if(strtoupper($data->sex) == 'M') <b>{{'MR.'}}</b>
-                    @elseif(strtoupper($data->sex) == 'F') <b>{{'MISS'}}</b>
+                <p>@if(strtoupper($data->sex) == 'M') {{'Mr.'}}
+                    @elseif(strtoupper($data->sex) == 'F') {{'Miss'}}
                     @else <b>{{''}}</b>
                     @endif
-                 {{$data->surname.' '.$data->firstname}} (Matric. No. {{$data->matric_number}}) 
-                was a student in the Department of {{$data->dept}} ({{$data->prog_name}})
-                 in the Faculty of {{$data->fac}}, Redeemer’s University.</p>
-
-    
+                <b>{{ strtoupper($data->surname)}}</b> {{' '. ucwords(strtolower($data->firstname))}} (Matric. No. {{$data->matric_number}}) 
+                was a student in the Department of {{ucwords(strtolower($data->dept))}} ({{ucwords(strtolower($data->prog_name))}} Programme)
+                 in the Faculty of {{ucwords(strtolower($data->fac))}}, Redeemer’s University.</p>
 
                 <p>
-                @if(strtoupper($data->sex) == 'M') <b>{{'His'}}</b>
-                @elseif(strtoupper($data->sex) == 'F') <b>{{'Her'}}</b>
+                @if(strtoupper($data->sex) == 'M') {{'His'}}
+                @elseif(strtoupper($data->sex) == 'F') {{'Her'}}
                 @else <b>{{''}}</b>
                 @endif
                  Cumulative Grade Point Average (CGPA) at the end of a {{$data->years_spent.'-year(s)'}}
-                 {{$data->qualification}} degree programme, 
+                 {{ucwords(strtolower($data->qualification))}} degree programme, 
                  in the {{$data->last_session_in_sch}} 
-                academic session, in {{$data->prog_name}} was {{$data->cgpa}} – {{$data->class_of_degree}}. 
+                academic session, in {{ucwords(strtolower($data->prog_name))}} was {{$data->cgpa}} – {{ucwords(strtolower($data->class_of_degree))}}. 
                     <br><br></p>
 
                 <p>Kindly note that English is the medium of communication in Nigerian institutions. You may also wish to note that in Redeemer’s University, all lectures, examinations, tests,
                     Seminars, presentations, and all kinds of student assessments are conducted in English.</p>
 
-                <p>Please accord her the necessary assistance.</p>
+                <p>Please accord  @if(strtoupper($data->sex) == 'M') {{'his'}}
+                @elseif(strtoupper($data->sex) == 'F') {{'her'}}
+                @else <b>{{''}}</b>
+                @endif the necessary assistance.</p>
 
                 Yours faithfully,
 
@@ -84,5 +97,6 @@ TO WHOM IT MAY CONCERN
             Administrative Officer, Academic Affairs<br>
             For:  REGISTRAR
         </div>
+            </div>
     </body>
 </html>

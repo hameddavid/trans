@@ -66,7 +66,7 @@ class ApplicationController extends Controller
             $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
             $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id,'emails'=>$admin_users]);
-            if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"]);}
+            if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allowed!"],400);}
             $certificate = $this->upload_cert($request);
             }
             if($applicant->count() != 0){
@@ -131,7 +131,7 @@ class ApplicationController extends Controller
                     $new_application->delivery_mode = 'soft';
                     $new_application->transcript_type = $type;
                     $new_application->address =  $applicant->email;
-                    $new_application->destination = "Student Transcript";
+                    $new_application->destination = $type;//"Student Transcript";
                     $new_application->recipient =  $applicant->surname ." ". $applicant->firstname;
                     $new_application->app_status = "PENDING"; // default status
                     $new_application->graduation_year = $request->graduation_year? $request->graduation_year:"";
@@ -148,8 +148,15 @@ class ApplicationController extends Controller
                     $new_application->class_of_degree =  $class_of_degree;
                     $new_application->transcript_raw =  $trans_raw;
                     if($new_application->save() ){  
+                        if($type == 'PROFICIENCY'){
+                            $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
+                            ->where(['student_applications.id'=> $new_application->id, 'app_status'=>'PENDING'])
+                            ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
+                            PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                        }  
                         // Notify applicant through email  $applicant->email and Notify admin
-                       if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg())['status'] == 'ok'){
+                        $Subject= $type." APPLICATION NOTIFICATION";
+                       if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject,$Msg=$this->get_msg2())['status'] == 'ok'){
                         app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="NEW TRANSCRIPT ($type) REQUEST",$Msg=$this->get_admin_msg($applicant));
                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
                            } 
@@ -323,6 +330,10 @@ static function get_msg(){
     return 'We have successfully received your  new transcript application request, 
     kindly excercise  patience while your request is being processed.';
 }
+static function get_msg2(){
+    return 'We have successfully received your  new language proficiency application request, 
+    kindly excercise  patience while your request is being processed.';
+}
 static function get_admin_msg($applicant){
     return 'kindly check the transcript admin dashboard in order to attend to this urgent request from '
     .$applicant->surname ." ".$applicant->firstname." with matric number: ".$applicant->matric_number;
@@ -394,7 +405,7 @@ public function get_student_result($request){
                     <td>GPA: <strong> '. strval(round($gpa, 2)) . '</strong></td>
                     </tr>
                     <tr>
-                    <td><strong>Cummulative</strong></td>
+                    <td><strong>Cumulative</strong></td>
                     <td>CTU: <strong> '. strval($cumm_sum_unit) . '</strong></td>
                     <td>CTGP: <strong> '. strval($cumm_sum_point_unit) . '</strong></td>
                     <td>CGPA: <strong> '. strval(round($cgpa, 2)) . '</strong></td>
@@ -452,7 +463,7 @@ public function get_student_result($request){
             <td>GPA: <strong> ' . strval(round($gpa, 2)) .'</strong></td>
             </tr>
             <tr>
-            <td><strong>Cummulative</strong></td>
+            <td><strong>Cumulative</strong></td>
             <td>CTU: <strong> ' . strval($cumm_sum_unit) .'</strong></td>
             <td>CTGP: <strong> ' . strval($cumm_sum_point_unit) .'</strong></td>
             <td>CGPA: <strong> ' . strval(round($cgpa, 2)) .'</strong></td>
@@ -486,8 +497,8 @@ public function get_student_result($request){
             </tr> ';
                         
         }
-        $signatory = 'Toyo_OJ_Teewhy';
-        $designation = 'Toyo_OJ_Teewhy';
+        $signatory = '';
+        $designation = '';
         $date = date("d-M-y");
         $response = $response .'</table>
             <table class="result_table2">
@@ -510,17 +521,17 @@ public function get_student_result($request){
                 <tr>
                     <td>D => 49 - 45 => 2</td>
                     <td>1.50 - 2.49 => Average</td>
-                    <td>CTU: Cummulative Total Units</td>
+                    <td>CTU: Cumulative Total Units</td>
                 </tr>
                 <tr>
                     <td>E => 44 - 40 => 1</td>
                     <td>1.00 - 1.49 => Fair</td>
-                    <td>CTGP: Cummulative Total Grade Point</td>
+                    <td>CTGP: Cumulative Total Grade Point</td>
                 </tr>
                 <tr>
                     <td>F => 39 - 0 => 0</td>
                     <td>0.00 - 0.99 => Poor</td>
-                    <td>CGPA: Cummulative Grade Point Average</td>
+                    <td>CGPA: Cumulative Grade Point Average</td>
                 </tr>
             </table>';
             if(strtoupper($request->transcript_type) == 'OFFICIAL'){
@@ -785,7 +796,7 @@ public function edit_app_and_verify_editpin(Request $request){
     }
     elseif($request->requestType == "update"){
         $form_data = $request->except(['userid','matno','token','appid','requestType']);
-        if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allow!"],400);}
+        if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allowed!"],400);}
         $request->request->add(['surname'=> $validate_token->surname, 'firstname'=>$validate_token->firstname,'app_id'=>$validate_token->applicant_id]);
         $certificate = $this->update_cert($request);
         $validate_token->certificate = $certificate;
@@ -794,7 +805,7 @@ public function edit_app_and_verify_editpin(Request $request){
         foreach($form_data as $key => $value){
             $validate_token->$key = $value;
         }
-        $validate_token->edit_token = "EXPIRED";
+        $validate_token->edit_token = "EXPIRED_".$validate_token->edit_token;
         $validate_token->app_status = "PENDING";
         if($validate_token->save()){
             $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
