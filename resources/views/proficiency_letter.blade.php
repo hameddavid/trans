@@ -4,8 +4,7 @@
     <head>
         <style type="text/css">
         body {
-            padding: 0;
-	        margin: 0;
+            
 	        background-color: #ffffff;
             background: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg") no-repeat center center fixed;
             -webkit-background-size: contain;
