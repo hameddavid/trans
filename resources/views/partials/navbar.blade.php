@@ -5,19 +5,19 @@
             <div class="navbar-brand-box">
                 <a href="#" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="assets/images/run_logo.png" alt="" height="30">
+                        <img src="../assets/images/run_logo.png" alt="" height="30">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/run_logo.png" alt="" height="24"> <span class="logo-txt">Transcript</span>
+                        <img src="../assets/images/run_logo.png" alt="" height="24"> <span class="logo-txt">Transcript</span>
                     </span>
                 </a>
 
                 <a href="#" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="assets/images/run_logo.png" alt="" height="30">
+                        <img src="../assets/images/run_logo.png" alt="" height="30">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/run_logo.png" alt="" height="24"> <span class="logo-txt">Transcript</span>
+                        <img src="../assets/images/run_logo.png" alt="" height="24"> <span class="logo-txt">Transcript</span>
                     </span>
                 </a>
             </div>
@@ -57,7 +57,7 @@
                         <a href="#!" class="text-reset notification-item">
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
-                                    <img src="assets/images/avatar.png" class="rounded-circle avatar-sm" alt="user-pic">
+                                    <img src="../assets/images/avatar.png" class="rounded-circle avatar-sm" alt="user-pic">
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">New Request</h6>
@@ -80,7 +80,7 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item bg-soft-light border-start border-end" id="page-header-user-dropdown"
                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="assets/images/avatar.png"
+                    <img class="rounded-circle header-profile-user" src="../assets/images/avatar.png"
                         alt="Header Avatar">
                     <span class="d-none d-xl-inline-block ms-1 fw-medium">{{$data->email}}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
