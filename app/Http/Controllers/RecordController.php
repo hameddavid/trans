@@ -18,6 +18,7 @@ class RecordController extends Controller
         }
     }
 
+
     public function transcript_verification(Request $request){
         $validator = Validator::make($request, [ 'used_token' => 'required|string',"matno"=>"required"]);
         if ($validator->fails()) {  return response(['status'=>'failed','message'=>'Verification code/Matric number are required!'],401);  }
@@ -35,3 +36,6 @@ class RecordController extends Controller
     }
 
 }
+
+
+
