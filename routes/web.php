@@ -20,7 +20,7 @@ Route::post('admin_login_auth',[AdminAuthController::class,'login']);
 Route::get('register',[AdminAuthController::class,'register_form']);
 Route::post('register',[AdminAuthController::class,'save_new_account']);
 
- Route::middleware(['adminauth'])->group( ['prefix'=>'cpanel', 'as' => 'cpanel.'],function(){
+ Route::group( ['prefix'=>'cpanel', 'as' => 'cpanel.'],function(){
 // Route::middleware(['adminauth'])->group(function(){
     Route::get('/approved_applications',[AdminController::class,'viewApprovedApplications']);
     Route::get('/approved_applications_',[AdminController::class,'viewApprovedApplications']);
@@ -43,13 +43,13 @@ Route::post('register',[AdminAuthController::class,'save_new_account']);
     Route::post('/approve_app',[AdminController::class,'approve_app']);
     Route::post('/dis_approve_app',[AdminController::class,'dis_approve_app']);
     Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
-    Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
-    Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
-    Route::get('getTranscriptActivities', [AdminController::class, 'getTranscriptActivities']);
-    Route::post('send_corrections_to_applicant', [AdminController::class, 'send_corrections_to_applicant']);
+    Route::post('/treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
+    Route::post('/admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
+    Route::get('/getTranscriptActivities', [AdminController::class, 'getTranscriptActivities']);
+    Route::post('/send_corrections_to_applicant', [AdminController::class, 'send_corrections_to_applicant']);
     Route::get('/credentials/{path}', [AdminController::class, 'view_certificate']);
     Route::get('/proficiency/{path}', [AdminController::class, 'view_proficiency']);
-    Route::post('download_approved', [AdminController::class, 'download_approved']);
+    Route::post('/download_approved', [AdminController::class, 'download_approved']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
     
 });
