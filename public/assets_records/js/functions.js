@@ -5,12 +5,14 @@ $(document).ready(function () {
     $("#doc_type").change(function () {
         $("#doc_type").val() === "transcript"
             ? $(".transcript").show()
-            : $(".transcript").hide();
+            : $(".transcript").hide(),
+            $(".degree").hide();
     });
 
     $("#doc_type").change(function () {
         $("#doc_type").val() === "degree"
             ? $(".degree").show()
-            : $(".degree").hide();
+            : $(".degree").hide(),
+            $(".transcript").hide();
     });
 });
