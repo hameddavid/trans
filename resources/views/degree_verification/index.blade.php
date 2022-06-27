@@ -52,7 +52,7 @@
                                 </li>
                                 <li>
                                     <div>
-                                        <a class="btn-default btn-small round mt-4" target="_blank" href="https://reg.run.edu.ng/transcript">Transcript</a>
+                                        <a class="btn-default btn-small round mt-4" target="_blank" href="https://records.run.edu.ng/transcript">Transcript</a>
                                     </div>
                                 </li>
                             </ul>
@@ -114,7 +114,7 @@
                     <li><a href="#faq">FAQ</a></li>
                     <li><a href="#contact">Contact Us</a></li>
                     <li><a data-bs-toggle="modal" data-bs-target="#verificationModal" href="#">Verification</a></li>
-                    <li><a target="_blank" href="https://reg.run.edu.ng/transcript">Transcript</a></li>
+                    <li><a target="_blank" href="https://records.run.edu.ng/transcript">Transcript</a></li>
                 </ul>
             </div>
         </div>

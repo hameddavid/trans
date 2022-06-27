@@ -79,7 +79,7 @@
 <table border="0" cellpadding="0" cellspacing="0" class="image_block" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
 <tr>
 <td style="padding-bottom:10px;width:100%;padding-right:0px;padding-left:0px;margin-top:60px;">
-<div align="center" style="line-height:10px"><img alt="" src="https://transcriptapp.run.edu.ng/images/LOGO.png" style=" height: auto; max-width: 100%;" title="RUN" /></div>
+<div align="center" style="line-height:10px"><img alt="" src="https://records.run.edu.ng/images/LOGO.png" style=" height: auto; max-width: 100%;" title="RUN" /></div>
 </td>
 </tr>
 </table>
@@ -227,16 +227,16 @@
 <td>
 <div style="font-family: Tahoma, Verdana, sans-serif">
 <div style="font-size: 12px; font-family: Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #393d47; line-height: 1.2;">
-<p style="margin: 0; font-size: 14px; text-align: center;"><span style="font-size:10px;"> If you have any problems</span><br/><span style="font-size:10px;">please feel free to chat with us via the <a href="https://reg.run.edu.ng/transcript" target="_blank">Transcript Portal</a> or contact us at <a href="mailto:transcript@run.edu.ng" rel="noopener" style="text-decoration: underline; color: #393d47;" title="transcript@run.edu.ng">transcript@run.edu.ng</a> or call us at +2348154740043 <a href="Example.com" rel="noopener" style="text-decoration: underline; color: #393d47;" target="_blank"></a></span></p>
+<p style="margin: 0; font-size: 14px; text-align: center;"><span style="font-size:10px;"> If you have any problems</span><br/><span style="font-size:10px;">please feel free to chat with us via the <a href="https://records.run.edu.ng/transcript" target="_blank">Transcript Portal</a> or contact us at <a href="mailto:transcripts@run.edu.ng" rel="noopener" style="text-decoration: underline; color: #393d47;" title="transcript@run.edu.ng">transcript@run.edu.ng</a> or call us at +2348154740043 <a href="#" rel="noopener" style="text-decoration: underline; color: #393d47;" target="_blank"></a></span></p>
 <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-<div><a href="https://www.twitter.com/RedeemersUni"><img src="https://transcriptapp.run.edu.ng/images/twitter2x.png" alt="" width="40px" ></a></div>
-<div><a href="https://www.instagram.com/redeemersuniversity"><img src="https://transcriptapp.run.edu.ng/images/instagram2x.png" alt="" width="40px"></a></div>
-<div><a href="https://www.linkedin.com/school/redeemersuniversity"><img src="https://transcriptapp.run.edu.ng/images/linkedin2x.png" alt="" width="40px"></a></div>	
-<div><a href="https://www.facebook.com/redeemersuniversity"><img src="https://transcriptapp.run.edu.ng/images/facebook2x.png" alt="" width="40px"></a></div>
+<div><a href="https://www.twitter.com/RedeemersUni"><img src="https://records.run.edu.ng/images/twitter2x.png" alt="" width="40px" ></a></div>
+<div><a href="https://www.instagram.com/redeemersuniversity"><img src="https://records.run.edu.ng/images/instagram2x.png" alt="" width="40px"></a></div>
+<div><a href="https://www.linkedin.com/school/redeemersuniversity"><img src="https://records.run.edu.ng/images/linkedin2x.png" alt="" width="40px"></a></div>	
+<div><a href="https://www.facebook.com/redeemersuniversity"><img src="https://records.run.edu.ng/images/facebook2x.png" alt="" width="40px"></a></div>
 </div>
 </div>
 <div class="banner">
-	<img src="https://transcriptapp.run.edu.ng/images/banner.png" alt="" style="max-width:100% ; height:auto; margin-top: 15px;">
+	<img src="https://records.run.edu.ng/images/banner.png" alt="" style="max-width:100% ; height:auto; margin-top: 15px;">
 </div>
 </div>
 </div>
