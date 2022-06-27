@@ -277,6 +277,7 @@
                   "dark" == localStorage.getItem("data-topbar") &&
                       "horizontal" !== a.getAttribute("data-layout") &&
                       (document.body.setAttribute("data-sidebar", "light"),
+                      localStorage.setItem("data-layout-mode", "light"),
                       document.body.setAttribute("data-topbar", "dark")),
                   document.body.setAttribute("data-layout-mode", "light"),
                   "dark" !== localStorage.getItem("data-topbar") &&
@@ -290,6 +291,7 @@
                 : ("dark" == localStorage.getItem("data-sidebar") &&
                       document.body.setAttribute("data-sidebar", "dark"),
                   document.body.setAttribute("data-layout-mode", "dark"),
+                  localStorage.setItem("data-layout-mode", "dark"),
                   document.body.setAttribute("data-topbar", "dark"),
                   document.body.setAttribute("data-sidebar", "dark"));
         }),
