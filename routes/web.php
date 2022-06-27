@@ -7,14 +7,15 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\RecordController;
 
 
-
+// record
+Route::get('/',[RecordController::class,'index']);
 
 Route::get('ht',[ApplicationController::class,'index']);
 
 Route::get('mail',[AdminAuthController::class,'mail']);
 
-Route::get('/',[AdminAuthController::class,'auth_login']);
-Route::post('admin_login_auth',[AdminAuthController::class,'login']);
+Route::get('/cpanel',[AdminAuthController::class,'auth_login']);
+Route::post('cpanel/admin_login_auth',[AdminAuthController::class,'login']);
 // Admin api routes
 
 Route::get('register',[AdminAuthController::class,'register_form']);
@@ -55,5 +56,3 @@ Route::post('register',[AdminAuthController::class,'save_new_account']);
 });
 
 
-// record
-Route::get('/records',[RecordController::class,'index']);

@@ -16,11 +16,11 @@ class AdminAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!session()->has('user') && $request->path() != '/'
+        if(!session()->has('user') && $request->path() != '/cpanel'
         && $request->path() !='register'){
-           return redirect('/')->with('fail','You must login!');
+           return redirect('/cpanel')->with('fail','You must login!');
        }
-       if(session()->has('user') && ($request->path() == '/' || $request->path() == 'register')
+       if(session()->has('user') && ($request->path() == '/cpanel' || $request->path() == 'register')
        ){
            return back();
        }
