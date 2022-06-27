@@ -21,7 +21,7 @@ Route::post('cpanel/admin_login_auth',[AdminAuthController::class,'login']);
 Route::get('register',[AdminAuthController::class,'register_form']);
 Route::post('register',[AdminAuthController::class,'save_new_account']);
 
- Route::group( ['prefix'=>'cpanel', 'as' => 'cpanel.'],function(){
+ Route::group( ['prefix'=>'cpanel', 'middleware'=>'adminauth'],function(){
 // Route::middleware(['adminauth'])->group(function(){
     Route::get('/approved_applications',[AdminController::class,'viewApprovedApplications']);
     Route::get('/approved_applications_',[AdminController::class,'viewApprovedApplications']);
