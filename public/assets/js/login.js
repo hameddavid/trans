@@ -14,7 +14,7 @@ $(document).ready(function ($) {
         function submitLoginForm(e) {
             var formData = $("#loginForm").serialize();
             var type = "POST";
-            var ajaxurl = "admin_login_auth";
+            var ajaxurl = "cpanel/admin_login_auth";
 
             $.ajax({
                 type: type,
