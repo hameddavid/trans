@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 
 class RecordController extends Controller
 {
-
-
     public function index(){
         return view('degree_verification.index');
     }
@@ -15,12 +13,10 @@ class RecordController extends Controller
 
     public function degree_verification(Request $request){
         $validator = Validator::make($request, [ 'used_token' => 'required|string',"matno"=>"required"]);
-        if ($validator->fails()) { return response(['status'=>'failed','message'=>'Verification code/Matric number are required!'],401); }
-       
-        
+        if($validator->fails()) { 
+            return response(['status'=>'failed','message'=>'Verification code/Matric number are required!'],401); 
+        }
     }
-
-
 
     public function transcript_verification(Request $request){
         $validator = Validator::make($request, [ 'used_token' => 'required|string',"matno"=>"required"]);
@@ -37,6 +33,5 @@ class RecordController extends Controller
             return response(['status'=>'failed','message'=>'Unable to fetch transcript'],401); 
         }
     }
-
 
 }

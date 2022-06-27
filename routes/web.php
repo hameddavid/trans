@@ -36,6 +36,7 @@ Route::middleware(['adminauth'])->group(function () {
     Route::get('/get_list_of_forgot_matno_request_treated',[AdminController::class,'get_list_of_forgot_matno_request_treated']);
     Route::get('/transcript/{type}/{id}',[AdminController::class,'getHtmlTranscript']);
     Route::get('/getTranscript',[AdminController::class,'getHtmlTranscript']);
+    Route::get('/getverifiedTranscript',[RecordController::class,'transcript_verification']);
     Route::post('/recommend_app',[AdminController::class,'recommend_app']);
     Route::post('/de_recommend_app',[AdminController::class,'de_recommend_app']);
     Route::post('/approve_app',[AdminController::class,'approve_app']);
