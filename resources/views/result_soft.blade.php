@@ -243,7 +243,7 @@ p{
 } */
 
 body{
-	background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
 	object-fit: none;  
