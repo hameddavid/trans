@@ -279,10 +279,7 @@
                       (document.body.setAttribute("data-sidebar", "light"),
                       localStorage.setItem("data-layout-mode", "light"),
                       document.body.setAttribute("data-topbar", "dark")),
-                  document.body.setAttribute(
-                      "data-layout-mode",
-                      localStorage.getItem("data-layout-mode")
-                  ),
+                  document.body.setAttribute("data-layout-mode", "light"),
                   "dark" !== localStorage.getItem("data-topbar") &&
                       (document.body.setAttribute("data-topbar", "light"),
                       l("topbar-color-light")),
@@ -292,11 +289,9 @@
                       localStorage.getItem("data-topbar") ||
                       document.body.removeAttribute("data-sidebar"))
                 : ("dark" == localStorage.getItem("data-sidebar") &&
-                      localStorage.setItem("data-layout-mode", "dark"),
-                  document.body.setAttribute(
-                      "data-layout-mode",
-                      localStorage.getItem("data-layout-mode")
-                  ),
+                      document.body.setAttribute("data-sidebar", "dark"),
+                  document.body.setAttribute("data-layout-mode", "dark"),
+                  localStorage.setItem("data-layout-mode", "dark"),
                   document.body.setAttribute("data-topbar", "dark"),
                   document.body.setAttribute("data-sidebar", "dark"));
         }),
