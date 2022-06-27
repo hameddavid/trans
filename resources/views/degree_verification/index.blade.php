@@ -469,18 +469,26 @@
                             </select>
                         </div>
                         <div class="mb-3 transcript">
+                            <label for="matno" class="col-form-label">Matric Number</label>
+                            <input type="text" class="form-control" name="matno" id="matno">
+                        </div>
+                        <div class="mb-3 transcript">
+                            <label for="used_token" class="col-form-label">Token</label>
+                            <input type="text" class="form-control" name="used_token" id="used_token">
+                        </div>
+                        <div class="mb-3 degree">
                             <label for="institution_name" class="col-form-label">Name of Institution</label>
                             <input type="text" class="form-control" name="institution_name" id="institution_name">
                         </div>
-                        <div class="mb-3 transcript">
+                        <div class="mb-3 degree">
                             <label for="email" class="col-form-label">Institution/Company Email Address</label>
                             <input type="email" class="form-control" name="email" id="email">
                         </div>
-                        <div class="mb-3 transcript">
+                        <div class="mb-3 degree">
                             <label for="address" class="col-form-label">Address of Institution/Company</label>
                             <textarea name="" class="form-control" name="address" id="address" cols="30" rows="5"></textarea>
                         </div>
-                        <div class="mb-3 transcript">
+                        <div class="mb-3 degree">
                             <label for="phone" class="col-form-label">Phone Number</label>
                             <input type="tel" class="form-control" name="phone" id="phone">
                         </div>
