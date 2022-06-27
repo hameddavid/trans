@@ -82,7 +82,7 @@ $(document).ready(function ($) {
         }
 
         $(".showHTML").load(
-            `cpanel/transcript/${type}/${id}`,
+            `transcript/${type}/${id}`,
             function (data, status, jqXGR) {
                 console.log("fetched");
             }
@@ -158,7 +158,7 @@ $(document).ready(function ($) {
             function submitpreviewForm() {
                 var formData = $("#previewForm").serialize();
                 var type = "POST";
-                var ajaxurl = "cpanel/send_corrections_to_applicant";
+                var ajaxurl = "send_corrections_to_applicant";
 
                 $.ajax({
                     type: type,
@@ -304,7 +304,7 @@ $(document).ready(function ($) {
         function submitResetPasswordForm() {
             var formData = $("#resetPasswordForm").serialize();
             var type = "POST";
-            var ajaxurl = "cpanel/admin_reset_password";
+            var ajaxurl = "admin_reset_password";
 
             $.ajax({
                 type: type,
@@ -362,7 +362,7 @@ $(document).ready(function ($) {
     const recommendTranscript = (id, type) => {
         $.ajax({
             type: "POST",
-            url: "cpanel/recommend_app ",
+            url: "recommend_app ",
             data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
@@ -394,7 +394,7 @@ $(document).ready(function ($) {
     const approveTranscript = (id, type) => {
         $.ajax({
             type: "POST",
-            url: "cpanel/approve_app ",
+            url: "approve_app ",
             data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
@@ -424,7 +424,7 @@ $(document).ready(function ($) {
     const regenerateTranscript = (id, type) => {
         $.ajax({
             type: "POST",
-            url: "cpanel/regenerate_transcript  ",
+            url: "regenerate_transcript  ",
             data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
@@ -449,7 +449,7 @@ $(document).ready(function ($) {
     const derecommendTranscript = (id, type) => {
         $.ajax({
             type: "POST",
-            url: "cpanel/de_recommend_app",
+            url: "de_recommend_app",
             data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
@@ -481,7 +481,7 @@ $(document).ready(function ($) {
     const downloadPDF = (id, type, index) => {
         $.ajax({
             type: "POST",
-            url: "cpanel/download_approved",
+            url: "download_approved",
             data: { id: id, transcript_type: type, index: index },
             xhrFields: {
                 responseType: "blob",
