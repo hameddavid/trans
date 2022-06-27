@@ -459,10 +459,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="verification_form" method="post">
                         <div class="mb-3">
                             <label for="doc_type" class="col-form-label">Verification Type</label>
-                            <select class="form-control" name="doc_type" id="doc_type">
+                            <select class="form-control" name="doc_type" id="doc_type" required>
                                 <option value="">Select Document Type</option>
                                 <option value="transcript">Transcript</option>
                                 <option value="degree">Degree Certificate</option>
@@ -470,27 +470,27 @@
                         </div>
                         <div class="mb-3 transcript">
                             <label for="matno" class="col-form-label">Matric Number</label>
-                            <input type="text" class="form-control" name="matno" id="matno">
+                            <input type="text" class="form-control" name="matno" id="matno" required>
                         </div>
                         <div class="mb-3 transcript">
                             <label for="used_token" class="col-form-label">Token</label>
-                            <input type="text" class="form-control" name="used_token" id="used_token">
+                            <input type="text" class="form-control" name="used_token" id="used_token" required>
                         </div>
                         <div class="mb-3 degree">
                             <label for="institution_name" class="col-form-label">Name of Institution</label>
-                            <input type="text" class="form-control" name="institution_name" id="institution_name">
+                            <input type="text" class="form-control" name="institution_name" id="institution_name" required>
                         </div>
                         <div class="mb-3 degree">
                             <label for="email" class="col-form-label">Institution/Company Email Address</label>
-                            <input type="email" class="form-control" name="email" id="email">
+                            <input type="email" class="form-control" name="email" id="email" required>
                         </div>
                         <div class="mb-3 degree">
                             <label for="address" class="col-form-label">Address of Institution/Company</label>
-                            <textarea name="" class="form-control" name="address" id="address" cols="30" rows="5"></textarea>
+                            <textarea name="" class="form-control" name="address" id="address" cols="30" rows="5" required></textarea>
                         </div>
                         <div class="mb-3 degree">
                             <label for="phone" class="col-form-label">Phone Number</label>
-                            <input type="tel" class="form-control" name="phone" id="phone">
+                            <input type="tel" class="form-control" name="phone" id="phone" required>
                         </div>
                     </form>
                 </div>
@@ -511,25 +511,26 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="student_name" class="col-form-label">Name of Student</label>
-                    <input type="text" class="form-control" name="student_name" id="student_name">
+                    <input type="text" class="form-control" name="student_name" id="student_name" required>
                 </div>
                 <div class="mb-3">
                     <label for="doc_type" class="col-form-label">Year of Graduation</label>
-                    <select class="form-control" name="doc_type" id="doc_type">
+                    <select class="form-control" name="doc_type" id="doc_type" required>
                         <option value="">Select Graduation Year</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="doc_type" class="col-form-label">Programme</label>
-                    <select class="form-control" name="doc_type" id="doc_type">
+                    <select class="form-control" name="doc_type" id="doc_type" required>
                         <option value="">Select Programme</option>
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger" data-bs-target="#verificationModal" data-bs-toggle="modal" data-bs-dismiss="modal">Go Back</button>
-                <button class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
+            </form>
           </div>
         </div>
     </div>
