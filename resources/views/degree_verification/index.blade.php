@@ -528,7 +528,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger" data-bs-target="#verificationModal" data-bs-toggle="modal" data-bs-dismiss="modal">Go Back</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" id="btnSubmitVerification" class="btn btn-primary">Submit</button>
             </div>
             </form>
           </div>
