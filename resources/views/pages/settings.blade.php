@@ -52,8 +52,8 @@
             </div>
             <!-- end main content-->
         
-        <script src="assets/js/validation.min.js"></script>
-        <script src="assets/js/utils.js"></script>   
+        <script src="../assets/js/validation.min.js"></script>
+        <script src="../assets/js/utils.js"></script>   
     @endsection
 
         
