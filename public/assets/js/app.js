@@ -273,15 +273,30 @@
             "dark" == a.getAttribute("data-layout-mode")
                 ? ("dark" == localStorage.getItem("data-sidebar") &&
                       "horizontal" !== a.getAttribute("data-layout") &&
-                      document.body.setAttribute("data-sidebar", "dark"),
+                      document.body.setAttribute(
+                          "data-sidebar",
+                          localStorage.getItem("data-layout-mode")
+                      ),
                   "dark" == localStorage.getItem("data-topbar") &&
                       "horizontal" !== a.getAttribute("data-layout") &&
-                      (document.body.setAttribute("data-sidebar", "light"),
+                      (document.body.setAttribute(
+                          "data-sidebar",
+                          localStorage.getItem("data-layout-mode")
+                      ),
                       localStorage.setItem("data-layout-mode", "light"),
-                      document.body.setAttribute("data-topbar", "dark")),
-                  document.body.setAttribute("data-layout-mode", "light"),
+                      document.body.setAttribute(
+                          "data-topbar",
+                          localStorage.getItem("data-layout-mode")
+                      )),
+                  document.body.setAttribute(
+                      "data-layout-mode",
+                      localStorage.getItem("data-layout-mode")
+                  ),
                   "dark" !== localStorage.getItem("data-topbar") &&
-                      (document.body.setAttribute("data-topbar", "light"),
+                      (document.body.setAttribute(
+                          "data-topbar",
+                          localStorage.getItem("data-layout-mode")
+                      ),
                       l("topbar-color-light")),
                   "brand" == localStorage.getItem("data-sidebar") &&
                       document.body.setAttribute("data-sidebar", "brand"),
@@ -289,11 +304,23 @@
                       localStorage.getItem("data-topbar") ||
                       document.body.removeAttribute("data-sidebar"))
                 : ("dark" == localStorage.getItem("data-sidebar") &&
-                      document.body.setAttribute("data-sidebar", "dark"),
-                  document.body.setAttribute("data-layout-mode", "dark"),
+                      document.body.setAttribute(
+                          "data-sidebar",
+                          localStorage.getItem("data-layout-mode")
+                      ),
+                  document.body.setAttribute(
+                      "data-layout-mode",
+                      localStorage.getItem("data-layout-mode")
+                  ),
                   localStorage.setItem("data-layout-mode", "dark"),
-                  document.body.setAttribute("data-topbar", "dark"),
-                  document.body.setAttribute("data-sidebar", "dark"));
+                  document.body.setAttribute(
+                      "data-topbar",
+                      localStorage.getItem("data-layout-mode")
+                  ),
+                  document.body.setAttribute(
+                      "data-sidebar",
+                      localStorage.getItem("data-layout-mode")
+                  ));
         }),
         n(document).on("click", "body", function (t) {
             0 < n(t.target).closest(".right-bar-toggle, .right-bar").length ||
