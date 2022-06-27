@@ -1,18 +1,15 @@
 $(document).ready(function () {
-    //$(".transcript").hide();
+    $(".transcript").hide();
     $(".degree").hide();
 
     $("#doc_type").change(function () {
-        $("#doc_type").val() === "transcript"
-            ? $(".transcript").show()
-            : $(".transcript").hide(),
-            $(".degree").hide();
-    });
-
-    $("#doc_type").change(function () {
-        $("#doc_type").val() === "degree"
-            ? $(".degree").show()
-            : $(".degree").hide(),
+        if ($("#doc_type").val() === "transcript") {
+            $(".transcript").show();
+        } else if ($("#doc_type").val() === "degree") {
+            $(".degree").show();
+        } else {
             $(".transcript").hide();
+            $(".degree").hide();
+        }
     });
 });
