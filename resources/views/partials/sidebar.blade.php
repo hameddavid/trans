@@ -6,7 +6,7 @@
             <ul class="metismenu list-unstyled" id="side-menu">
                 <li class="menu-title" data-key="t-menu">Menu</li>
                 <li>
-                    <a href="dashboard">
+                    <a href="cpanel/dashboard">
                         <i data-feather="home"></i>
                         <span>Dashboard</span>
                     </a>
@@ -18,8 +18,8 @@
                         <span>Applicants</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="applicants">Registered Users</a></li>
-                        <li><a href="forgot_matric_num">Forgot Matric Number</a></li>
+                        <li><a href="cpanel/applicants">Registered Users</a></li>
+                        <li><a href="cpanel/forgot_matric_num">Forgot Matric Number</a></li>
                     </ul>
                 </li>
 
@@ -32,25 +32,25 @@
                         <li>
                             <a href="javascript: void(0);" class="has-arrow">Official</a>
                             <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="failed_applications">Failed</a></li>
-                                <li><a href="pending_applications">Pending</a></li>
-                                <li><a href="recommended_applications">Recommended</a></li>
-                                <li><a href="approved_applications">Approved</a></li>
+                                <li><a href="cpanel/failed_applications">Failed</a></li>
+                                <li><a href="cpanel/pending_applications">Pending</a></li>
+                                <li><a href="cpanel/recommended_applications">Recommended</a></li>
+                                <li><a href="cpanel/approved_applications">Approved</a></li>
                             </ul>
                         </li>
                         <li>
                             <a href="javascript: void(0);" class="has-arrow">Student/Proficiency</a>
                             <ul class="sub-menu" aria-expanded="true">
-                                <li><a href="pending_applications_">Pending</a></li>
-                                <li><a href="recommended_applications_">Recommended</a></li>
-                                <li><a href="approved_applications_">Approved</a></li>
+                                <li><a href="cpanel/pending_applications_">Pending</a></li>
+                                <li><a href="cpanel/recommended_applications_">Recommended</a></li>
+                                <li><a href="cpanel/approved_applications_">Approved</a></li>
                             </ul>
                         </li>
                     </ul>
                 </li>
 
                 <li>
-                    <a href="payments">
+                    <a href="cpanel/payments">
                         <i data-feather="dollar-sign"></i>
                         <span>Payments</span>
                     </a>

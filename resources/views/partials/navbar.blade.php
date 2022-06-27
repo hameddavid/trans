@@ -87,9 +87,9 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="settings"><i class="mdi mdi-cog-outline font-size-16 align-middle me-1"></i> Settings</a>
+                    <a class="dropdown-item" href="cpanel/settings"><i class="mdi mdi-cog-outline font-size-16 align-middle me-1"></i> Settings</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="logout"><i class="mdi mdi-logout font-size-16 align-middle me-1"></i> Logout</a>
+                    <a class="dropdown-item" href="cpanel/logout"><i class="mdi mdi-logout font-size-16 align-middle me-1"></i> Logout</a>
                 </div>
             </div>
 
