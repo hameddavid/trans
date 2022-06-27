@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(".transcript").hide();
+    //$(".transcript").hide();
     $(".degree").hide();
 
     $("#doc_type").change(function () {
