@@ -31,7 +31,7 @@ $(document).ready(function ($) {
                     console.log(response);
                     alertify.success(response.message);
                     setTimeout(function () {
-                        window.location.href = "dashboard";
+                        window.location.href = "cpanel/dashboard";
                     }, 2800);
                 },
                 error: function (response) {
