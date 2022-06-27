@@ -18,9 +18,10 @@
             .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
-                background-image: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg");
+                background-color:#00FFAA;
+                /* background-image: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg");
                 background-size: contain;
-                background-repeat: no-repeat;
+                background-repeat: no-repeat; */
 
             }
             .divHeader {

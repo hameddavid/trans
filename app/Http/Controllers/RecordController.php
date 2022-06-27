@@ -30,8 +30,8 @@ class RecordController extends Controller
         ->where(['student_applications.matric_number'=> $request->matno,'student_applications.used_token'=> $request->used_token])
         ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
        if($app_stud->count() == 1){
-        
-       }else{}
+
+       }else{ return response(['status'=>'failed','message'=>'No record found for this request!'],401); }
     }
 
 
