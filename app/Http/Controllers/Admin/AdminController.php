@@ -106,7 +106,7 @@ class AdminController extends Controller
             ->where('app_status','PENDING')->select('official_applications.*','applicants.surname','applicants.firstname')->get(); 
         $apps_ = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
             ->where('app_status','PENDING')->select('student_applications.*','applicants.surname','applicants.firstname')->get();
-        return (\Request::getPathInfo() == '/pending_applications') ? view('pages.pending_requests',['data'=>$data,'apps'=>$apps]) : 
+        return (\Request::getPathInfo() == '/cpanel/pending_applications') ? view('pages.pending_requests',['data'=>$data,'apps'=>$apps]) : 
             view('pages.pending_applications_',['data'=>$data,'apps'=>$apps_]);
     }
 
@@ -125,7 +125,7 @@ class AdminController extends Controller
             ->where('app_status','APPROVED')->select('official_applications.*','applicants.surname','applicants.firstname')->get(); 
         $apps_ = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
             ->where('app_status','APPROVED')->select('student_applications.*','applicants.surname','applicants.firstname')->get();
-        return (\Request::getPathInfo() == '/approved_applications') ? view('pages.approved_requests',['data'=>$data,'apps'=>$apps]) : 
+        return (\Request::getPathInfo() == '/cpanel/approved_applications') ? view('pages.approved_requests',['data'=>$data,'apps'=>$apps]) : 
             view('pages.approved_applications_',['data'=>$data,'apps'=>$apps_]);
     }
 
@@ -135,7 +135,7 @@ class AdminController extends Controller
             ->where('app_status','RECOMMENDED')->select('official_applications.*','applicants.surname','applicants.firstname')->get(); 
         $apps_ = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
             ->where('app_status','RECOMMENDED')->select('student_applications.*','applicants.surname','applicants.firstname')->get(); 
-        return (\Request::getPathInfo() == '/recommended_applications') ? view('pages.recommended_requests',['data'=>$data,'apps'=>$apps]) : 
+        return (\Request::getPathInfo() == '/cpanel/recommended_applications') ? view('pages.recommended_requests',['data'=>$data,'apps'=>$apps]) : 
             view('pages.recommended_applications_',['data'=>$data,'apps'=>$apps_]);
     }
 
