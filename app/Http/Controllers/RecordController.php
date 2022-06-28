@@ -51,6 +51,10 @@ class RecordController extends Controller
         }
     }
 
+    public function loadTranscript(){
+        return view('transcript.index');
+    }
+
 }
 
 
