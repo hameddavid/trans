@@ -69,7 +69,7 @@
                                                             <div class="dropdown-menu">
                                                                 <div class="btnJustify2">
                                                                     @if($app->transcript_type == 'PROFICIENCY')
-                                                                        <a href="proficiency/{{$app->address}}" target="_blank" type="button" class="btn btn-secondary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
+                                                                        <a href="proficiency/{{$app->address}}" target="_blank" type="button" class="btn btn-secondary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</button>
                                                                     @endif
                                                                     @if($app->transcript_type !== 'PROFICIENCY')
                                                                         <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-secondary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
