@@ -366,7 +366,7 @@ $(document).ready(function ($) {
             data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
-                if (confirm("Recommend Transcript?") == false) return false;
+                if (confirm("Recommend Application?") == false) return false;
                 $("#btnRecommend").html(
                     '<i class="fa fa-spinner fa-spin"></i>'
                 );
@@ -398,7 +398,7 @@ $(document).ready(function ($) {
             data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
-                if (confirm("Approve Transcript?") == false) return false;
+                if (confirm("Approve Application?") == false) return false;
                 $("#btnApprove").html('<i class="fa fa-spinner fa-spin"></i>');
                 $("#btnApprove").prop("disabled", true);
                 $.blockUI();
@@ -424,11 +424,11 @@ $(document).ready(function ($) {
     const regenerateTranscript = (id, type) => {
         $.ajax({
             type: "POST",
-            url: "regenerate_transcript  ",
+            url: "regenerate_transcript",
             data: { id: id, transcript_type: type },
             dataType: "json",
             beforeSend: function () {
-                if (confirm("Regenerate Transcript?") == false) return false;
+                if (confirm("Regenerate Document?") == false) return false;
                 $.blockUI();
             },
             success: function (response) {
