@@ -496,7 +496,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" data-bs-target="#verificationModal2" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary">Next</button>
+                    <button type="button" data-bs-target="#verificationModal2" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary degree">Next</button>
+                    <button type="submit" class="btn btn-primary transcript">Submit</button>
                 </div>
             </div>
         </div>
