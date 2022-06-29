@@ -482,19 +482,19 @@
                         </div>
                         <div class="mb-3 degree">
                             <label for="institution_name" class="col-form-label">Name of Institution</label>
-                            <input type="text" class="form-control" name="institution_name" id="institution_name" required>
+                            <input type="text" class="form-control" name="institution_name" id="institution_name">
                         </div>
                         <div class="mb-3 degree">
                             <label for="institution_email" class="col-form-label">Institution/Company Email Address</label>
-                            <input type="email" class="form-control" name="institution_email" id="institution_email" required>
+                            <input type="email" class="form-control" name="institution_email" id="institution_email">
                         </div>
                         <div class="mb-3 degree">
                             <label for="address" class="col-form-label">Address of Institution/Company</label>
-                            <textarea name="" class="form-control" name="address" id="address" cols="30" rows="5" required></textarea>
+                            <textarea name="" class="form-control" name="address" id="address" cols="30" rows="5"></textarea>
                         </div>
                         <div class="mb-3 degree">
                             <label for="phone" class="col-form-label">Phone Number</label>
-                            <input type="tel" class="form-control" name="phone" id="phone" required>
+                            <input type="tel" class="form-control" name="phone" id="phone">
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -515,11 +515,11 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="student_name" class="col-form-label">Name of Student (Surname first)</label>
-                    <input type="text" class="form-control" name="student_name" id="student_name" required>
+                    <input type="text" class="form-control" name="student_name" id="student_name">
                 </div>
                 <div class="mb-3">
                     <label for="grad_year" class="col-form-label">Year of Graduation</label>
-                    <select class="form-control" name="grad_year" id="grad_year" required>
+                    <select class="form-control" name="grad_year" id="grad_year">
                         <option value="">Select Graduation Year</option>
                         @for($i = 2009; $i <= date('Y'); $i++)
                         <option value="{{$i}}">{{$i}}</option>
@@ -528,7 +528,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="programme" class="col-form-label">Programme</label>
-                    <select class="form-control" name="programme" id="programme" required>
+                    <select class="form-control" name="programme" id="programme">
                         <option value="">Select Programme</option>
                         @foreach($programmes as $prog)
                         <option value="{{$prog->prog_code}}">{{$prog->programme}}</option>
