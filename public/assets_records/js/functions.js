@@ -15,15 +15,15 @@ $(document).ready(function () {
         }
     });
 
-    $("#btnSubmitVerification").click(function () {
-        $("#resetPasswordForm").validate({
-            submitHandler: submitResetPasswordForm,
+    $(".btnSubmitVerification").click(function () {
+        $("#verification_form").validate({
+            submitHandler: submitVerificationForm,
         });
 
-        function submitResetPasswordForm() {
-            var formData = $("#resetPasswordForm").serialize();
+        function submitVerificationForm() {
+            var formData = $("#verification_form").serialize();
             var type = "POST";
-            var ajaxurl = "admin_reset_password";
+            var ajaxurl = "verify_transcript";
 
             $.ajax({
                 type: type,
@@ -31,18 +31,18 @@ $(document).ready(function () {
                 data: formData,
                 dataType: "json",
                 beforeSend: function () {
-                    $("#btnSubmitVerification").html(
+                    $(".btnSubmitVerification").html(
                         '<i class="fa fa-spinner fa-spin"></i>'
                     );
                 },
                 success: function (response) {
                     console.log(response);
-                    $("#btnSubmitVerification").html("Update Password");
+                    $(".btnSubmitVerification").html("Update Password");
                     alertify.success(response.message);
                 },
                 error: function (response) {
                     console.log(response);
-                    $("#btnSubmitVerification").html("Update Password");
+                    $(".btnSubmitVerification").html("Update Password");
                     alertify.error(response.responseJSON.message);
                 },
             });

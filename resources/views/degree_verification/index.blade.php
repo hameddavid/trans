@@ -18,6 +18,10 @@
     <link rel="stylesheet" href="assets_records/css/plugins/slick-theme.css">
     <link rel="stylesheet" href="assets_records/css/plugins/lightbox.css">
     <link rel="stylesheet" href="assets_records/css/style.css">
+    <!-- alertifyjs Css -->
+    <link href="assets/libs/alertifyjs/build/css/alertify.min.css" rel="stylesheet" type="text/css" />
+    <!-- alertifyjs default themes  Css -->
+    <link href="assets/libs/alertifyjs/build/css/themes/default.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="active-dark-mode">
@@ -492,12 +496,11 @@
                             <label for="phone" class="col-form-label">Phone Number</label>
                             <input type="tel" class="form-control" name="phone" id="phone" required>
                         </div>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" data-bs-target="#verificationModal2" data-bs-toggle="modal" data-bs-dismiss="modal" class="btn btn-primary degree">Next</button>
-                    <button type="submit" class="btn btn-primary transcript">Submit</button>
+                    <button type="submit" class="btn btn-primary transcript btnSubmitVerification">Submit</button>
                 </div>
             </div>
         </div>
@@ -535,7 +538,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger" data-bs-target="#verificationModal" data-bs-toggle="modal" data-bs-dismiss="modal">Go Back</button>
-                <button type="submit" id="btnSubmitVerification" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary btnSubmitVerification">Submit</button>
             </div>
             </form>
           </div>
@@ -571,6 +574,8 @@
     <script src="assets_records/js/vendor/jquery-one-page-nav.js"></script>
     <!-- Main JS -->
     <script src="assets_records/js/main.js"></script>
+    <!-- alertifyjs js -->
+    <script src="assets/libs/alertifyjs/build/alertify.min.js"></script>
     <script src="assets_records/js/functions.js"></script>
 </body>
 
