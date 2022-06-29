@@ -45,7 +45,7 @@ class RecordController extends Controller
         $app_stud = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
             ->where(['official_applications.matric_number'=> $request->matno,'official_applications.used_token'=> $request->used_token])
             ->select('official_applications.*','official_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
-        if($app_stud->count() == 1){
+        if($app_stud){
             $decoded_transcript = html_entity_decode($app_stud->transcript_raw);
             return $decoded_transcript; 
         }
