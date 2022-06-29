@@ -50,7 +50,7 @@
                                                     <td>{{ date("d M Y", strtotime($app->created_at)) }}</td>
                                                     <td>
                                                         @if($app->transcript_type == 'PROFICIENCY')
-                                                            <a type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</a>
+                                                            <a href="proficiency/{{$app->address}}" target="_blank" type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</a>
                                                         @else
                                                             <button type="button" data-status="{{$app->app_status}}" data-type="{{$app->transcript_type}}" data-id="{{$app->id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
                                                         @endif
