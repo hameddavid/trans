@@ -523,6 +523,10 @@
                     <input type="text" class="form-control" name="firstname" id="firstname">
                 </div>
                 <div class="mb-3">
+                    <label for="othername" class="col-form-label">Othername</label>
+                    <input type="text" class="form-control" name="othername" id="othername">
+                </div>
+                <div class="mb-3">
                     <label for="grad_year" class="col-form-label">Year of Graduation</label>
                     <select class="form-control" name="grad_year" id="grad_year">
                         <option value="">Select Graduation Year</option>
