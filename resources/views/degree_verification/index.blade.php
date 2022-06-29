@@ -576,6 +576,7 @@
     <script src="assets_records/js/main.js"></script>
     <!-- alertifyjs js -->
     <script src="assets/libs/alertifyjs/build/alertify.min.js"></script>
+    <script src="assets/js/validation.min.js"></script>
     <script src="assets_records/js/functions.js"></script>
 </body>
 
