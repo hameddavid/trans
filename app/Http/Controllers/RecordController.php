@@ -38,7 +38,8 @@ class RecordController extends Controller
 
 
     public function transcript_verification(Request $request){
-        $validator = Validator::make($request, ['used_token' => 'required|string',"matno"=>"required"]);
+        dd($request->all());
+        $validator = Validator::make($request, ["used_token" => "required|string","matno"=>"required"]);
         if ($validator->fails()) {  return response(['status'=>'failed','message'=>'Verification code/Matric number are required!'],401);  }
        
         $app_stud = OfficialApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
