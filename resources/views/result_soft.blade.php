@@ -142,7 +142,7 @@ body, html {
 	margin-right: 5%;
 	font-size: 10px;
 	font-family: Georgia;
-	/* background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	/* background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
 	object-fit: none;  
@@ -156,7 +156,7 @@ body, html {
 	margin-right: 5%;
 	font-family: Quicksand;
 	font-size: 10px;
-	/* background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	/* background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
 	object-fit: none;  
@@ -196,7 +196,7 @@ caption{
 	font-size: 12px;
 	font-style: italic;
 	margin-top: 25px;
-	/* background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	/* background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
 	object-fit: none;  
@@ -211,7 +211,7 @@ caption{
 	font-weight: bold;
 	margin-top: 50px;
 	text-align: center;
-	/* background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	/* background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
 	object-fit: none;  
@@ -235,7 +235,7 @@ p{
 }
 /* background-image: repeating-radial-gradient(red, yellow 10%, blue 20%); */
 /* .page{
-	background-image: url("https://transcriptapp.run.edu.ng/assets/images/metal_logo.png");
+	background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
 	object-fit: none;  
