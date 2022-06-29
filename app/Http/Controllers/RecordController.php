@@ -23,7 +23,9 @@ use PDF;
 class RecordController extends Controller
 {
     public function index(){
-        return view('degree_verification.index');
+        $programmes = DB::table('t_college_dept')->join('t_student_test','t_college_dept.prog_code','t_student_test.prog_code')
+            ->select('t_college_dept.prog_code','t_college_dept.programme')->distinct()->get();
+        return view('degree_verification.index',['programmes'=>$programmes]);
     }
 
 

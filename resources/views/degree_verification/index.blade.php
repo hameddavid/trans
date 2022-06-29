@@ -526,6 +526,9 @@
                     <label for="programme" class="col-form-label">Programme</label>
                     <select class="form-control" name="programme" id="programme" required>
                         <option value="">Select Programme</option>
+                        @foreach($programmes as $prog)
+                        <option value="{{$prog->prog_code}}">{{$prog->programme}}</option>
+                        @endforeach
                     </select>
                 </div>
             </div>
