@@ -38,16 +38,23 @@ $(document).ready(function () {
                 dataType: "json",
                 beforeSend: function () {
                     $.blockUI();
+                    $(".btnSubmitVerification").html(
+                        `<div class="spinner-border text-light" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>`
+                    );
                     $(".btnSubmitVerification").prop("disabled", true);
                 },
                 success: function (response) {
                     console.log(response);
                     $(".btnSubmitVerification").prop("disabled", false);
+                    $(".btnSubmitVerification").html("Submit");
                     alertify.success(response.message);
                 },
                 error: function (response) {
                     console.log(response);
                     $(".btnSubmitVerification").prop("disabled", false);
+                    $(".btnSubmitVerification").html("Submit");
                     alertify.error(response.responseJSON.message);
                 },
             });
