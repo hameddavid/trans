@@ -64,11 +64,14 @@ class AdminController extends Controller
 
     public function view_proficiency($path){
         $s_path = public_path($path);
-        dd($s_path);
-        return Response::make(file_get_contents($s_path), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$path.'"'
-        ]);
+       
+        if (File::exists($path.'.pdf')){
+            dd($s_path);
+              return Response::make(file_get_contents($s_path), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$path.'"'
+            ]);
+        }
     }
 
   
