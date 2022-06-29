@@ -54,7 +54,7 @@ class RecordController extends Controller
         }
     }
 
-    public function loadTranscript(){
+    public function loadTranscriptPortal(){
         return view('transcript.index');
     }
 
