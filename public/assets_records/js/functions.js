@@ -40,7 +40,7 @@ $(document).ready(function () {
                     $.blockUI();
                     $(".btnSubmitVerification").html(
                         `<div class="spinner-border text-light" role="status">
-                          <span class="visually-hidden">Loading...</span> Submit
+                          <span class="visually-hidden">Loading...</span>
                         </div>`
                     );
                     $(".btnSubmitVerification").prop("disabled", true);
