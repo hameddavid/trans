@@ -18,7 +18,6 @@
             .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
-                background-color:#00FFAA;
                 background-image: url("https://records.run.edu.ng/assets/images/original.jpg");
                 background-size: contain;
                 background-repeat: no-repeat;
@@ -44,9 +43,9 @@
             .main{
                 margin: 20% auto;
                 padding-top: 5px;
-                padding-right: 20px; 
+                padding-right: 30px; 
                 padding-bottom: 15px; 
-                padding-left: 20px; 
+                padding-left: 30px; 
             }
         </style>
     </head>
