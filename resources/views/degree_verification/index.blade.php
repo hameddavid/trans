@@ -515,8 +515,12 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="student_name" class="col-form-label">Name of Student (Surname first)</label>
-                    <input type="text" class="form-control" name="student_name" id="student_name">
+                    <label for="surname" class="col-form-label">Surname</label>
+                    <input type="text" class="form-control" name="surname" id="surname">
+                </div>
+                <div class="mb-3">
+                    <label for="firstname" class="col-form-label">Firstname</label>
+                    <input type="text" class="form-control" name="firstname" id="firstname">
                 </div>
                 <div class="mb-3">
                     <label for="grad_year" class="col-form-label">Year of Graduation</label>
