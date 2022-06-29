@@ -57,8 +57,7 @@
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
                                                                     @if($app->transcript_type == 'PROFICIENCY')
                                                                         <a href="proficiency/{{$app->address}}" target="_blank" type="button" title="View" class="btn btn-secondary w-xs"><i class="mdi mdi-eye-check-outline"></i></a>
-                                                                    @endif
-                                                                    @if($app->transcript_type !== 'PROFICIENCY')
+                                                                    @else
                                                                         <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" data-name="{{$app->surname.' '.$app->firstname}}" title="View" class="btn btn-secondary w-xs view_transcript"><i class="mdi mdi-eye-check-outline"></i></button>
                                                                     @endif
                                                                     <button type="button" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" title="Regenerate" class="btn btn-info w-xs regenerate"><i class="mdi mdi-refresh"></i></button>
