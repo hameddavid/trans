@@ -71,7 +71,8 @@ class AdminController extends Controller
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="'.$path.'"'
             ]);
-        }
+           
+        } else{ return back();}
     }
 
   
