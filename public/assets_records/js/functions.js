@@ -37,7 +37,6 @@ $(document).ready(function () {
                 data: formData,
                 dataType: "json",
                 beforeSend: function () {
-                    $.blockUI();
                     $(".btnSubmitVerification").html(
                         `<div class="spinner-border text-light" role="status">
                           <span class="visually-hidden">Loading...</span>
