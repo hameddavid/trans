@@ -19,6 +19,10 @@
                 font-family: Arial;
                 font-size: 11px;
                 background-color:#00FFAA;
+                padding-top: 5px;
+                padding-right: 10px; 
+                padding-bottom: 15px; 
+                padding-left: 20px; 
                 /* background-image: url("https://transcriptapp.run.edu.ng/assets/images/original.jpg");
                 background-size: contain;
                 background-repeat: no-repeat; */

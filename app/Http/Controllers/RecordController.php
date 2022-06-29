@@ -10,6 +10,7 @@ use App\Models\Student;
 use App\Models\Payment;
 use App\Models\Applicant;
 use App\Models\RegistrationResult;
+use App\Models\DegreeVerification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -30,10 +31,46 @@ class RecordController extends Controller
 
 
     public function degree_verification(Request $request){
-        $validator = Validator::make($request, ['used_token' => 'required|string',"matno"=>"required"]);
-        if($validator->fails()) { 
-            return response(['status'=>'failed','message'=>'Verification code/Matric number are required!'],401); 
-        }
+        // $validator = Validator::make($request, ['used_token' => 'required|string',"matno"=>"required"]);
+        // if($validator->fails()) { 
+        //     return response(['status'=>'failed','message'=>'Verification code/Matric number are required!'],401); 
+        // }
+
+        // try {  
+
+            $request->validate([ 'surname'=>'required', 
+            'firstname'=>'required' , 'programme'=>'required',  'grad_year'=>'required'
+            ,'institution_email'=>'required|email','phone'=>'required','address'=>'required' ]); 
+          
+            $grad_session = intval($request->date_left-1).'/'.intval($request->date_left);
+            $query = DB::table('t_student_test')
+           ->join('registrations','t_student_test.matric_number','registrations.matric_number')
+           ->where('registrations.session_id', $grad_session)
+           ->where('t_student_test.SURNAME', $request->surname)
+           ->where('t_student_test.FIRSTNAME','LIKE', "%$request->firstname%")
+           ->where('t_student_test.prog_code', $request->programme)
+           ->select('registrations.matric_number')->distinct()->get(); 
+            $degree = new DegreeVerification();
+            $degree->surname = $request->surname;
+            $degree->firstname = $request->firstname;
+            $degree->othername = $request->othername;
+            $degree->institution_email = $request->institution_email;
+            $degree->institution_phone = $request->phone;
+            $degree->institution_address = $request->address;
+            $degree->program = $request->programme;
+            $degree->grad_year = $request->grad_year;
+            if($query->count() > 0){$degree->matno_found = $query;}
+            $degree->status = "PENDING";  //PENDING or TREATED
+            if($degree->save()){ 
+                $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
+                $request->request->add(['emails'=> $admin_users]);
+                if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="DEGREE VERIFICATION REQUEST",$Msg=$this->get_msg_degree_vet($request))['status'] == 'ok' ){
+                return response(['status'=>'success','message'=>'request successfully saved'], 201);
+               }
+            } return response(['status'=>'failed','message'=>'Error saving degree verification request'], 400);
+        // } catch (\Throwable $th) {
+        //     return response(['status'=>'failed','message'=>'Error ...maybe you have this request before'], 400);
+        // }
     }
 
 
@@ -58,7 +95,58 @@ class RecordController extends Controller
         return view('transcript.index');
     }
 
+
+
+    static function get_msg_degree_vet($request){
+        return '
+         Kindly find on your dashboard, degree verification request from '.
+         $address. '<br>
+         <br>';  
+       
+       
+      }
+     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
 
 
 

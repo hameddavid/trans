@@ -11,6 +11,7 @@ use App\Http\Controllers\RecordController;
 Route::get('/',[RecordController::class,'index']);
 Route::get('/transcript',[RecordController::class,'loadTranscript']);
 Route::post('/verify_transcript',[RecordController::class,'transcript_verification']);
+Route::post('/degree_verification',[RecordController::class,'degree_verification']);
 
 Route::get('ht',[ApplicationController::class,'index']);
 
