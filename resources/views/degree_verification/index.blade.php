@@ -510,7 +510,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="student_name" class="col-form-label">Name of Student</label>
+                    <label for="student_name" class="col-form-label">Name of Student (Surname first)</label>
                     <input type="text" class="form-control" name="student_name" id="student_name" required>
                 </div>
                 <div class="mb-3">
