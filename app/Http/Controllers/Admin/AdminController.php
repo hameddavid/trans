@@ -55,6 +55,7 @@ class AdminController extends Controller
 
 
     public function view_certificate($path){
+        dd($path);
         $s_path = storage_path('app/credentials/'.$path);
         return Response::make(file_get_contents($s_path), 200, [
             'Content-Type' => 'application/pdf',
@@ -66,7 +67,7 @@ class AdminController extends Controller
         $s_path = public_path($path);
        
         if (File::exists($path.'.pdf')){
-            dd($s_path);
+            dd($path);
               return Response::make(file_get_contents($s_path), 200, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="'.$path.'"'
