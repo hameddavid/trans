@@ -70,8 +70,7 @@
                                                                 <div class="btnJustify2">
                                                                     @if($app->transcript_type == 'PROFICIENCY')
                                                                         <a href="proficiency/{{$app->address}}" target="_blank" type="button" class="btn btn-secondary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</button>
-                                                                    @endif
-                                                                    @if($app->transcript_type !== 'PROFICIENCY')
+                                                                    @else
                                                                         <button type="button" data-status="{{$app->app_status}}" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-secondary waves-effect btn-label waves-light view_transcript"><i class="bx bx-show-alt label-icon"></i>View</button>
                                                                     @endif
                                                                     <button type="button" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" class="btn btn-info waves-effect btn-label waves-light regenerate"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
