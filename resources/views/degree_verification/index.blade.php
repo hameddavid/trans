@@ -481,8 +481,8 @@
                             <input type="text" class="form-control" name="institution_name" id="institution_name" required>
                         </div>
                         <div class="mb-3 degree">
-                            <label for="email" class="col-form-label">Institution/Company Email Address</label>
-                            <input type="email" class="form-control" name="email" id="email" required>
+                            <label for="institution_email" class="col-form-label">Institution/Company Email Address</label>
+                            <input type="email" class="form-control" name="institution_email" id="institution_email" required>
                         </div>
                         <div class="mb-3 degree">
                             <label for="address" class="col-form-label">Address of Institution/Company</label>
@@ -514,14 +514,17 @@
                     <input type="text" class="form-control" name="student_name" id="student_name" required>
                 </div>
                 <div class="mb-3">
-                    <label for="doc_type" class="col-form-label">Year of Graduation</label>
-                    <select class="form-control" name="doc_type" id="doc_type" required>
+                    <label for="grad_year" class="col-form-label">Year of Graduation</label>
+                    <select class="form-control" name="grad_year" id="grad_year" required>
                         <option value="">Select Graduation Year</option>
+                        @for($i = 2009; $i <= date('Y'); $i++)
+                        <option value="{{$i}}">{{$i}}</option>
+                        @endfor
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="doc_type" class="col-form-label">Programme</label>
-                    <select class="form-control" name="doc_type" id="doc_type" required>
+                    <label for="programme" class="col-form-label">Programme</label>
+                    <select class="form-control" name="programme" id="programme" required>
                         <option value="">Select Programme</option>
                     </select>
                 </div>
