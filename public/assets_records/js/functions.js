@@ -4,7 +4,7 @@ $(document).ready(function () {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
     });
-
+    $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
     $(".transcript").hide();
     $(".degree").hide();
 
@@ -36,19 +36,13 @@ $(document).ready(function () {
                 url: ajaxurl,
                 data: formData,
                 dataType: "json",
-                beforeSend: function () {
-                    $(".btnSubmitVerification").html(
-                        '<i class="fa fa-spinner fa-spin"></i>'
-                    );
-                },
+                beforeSend: function () {},
                 success: function (response) {
                     console.log(response);
-                    $(".btnSubmitVerification").html("Update Password");
                     alertify.success(response.message);
                 },
                 error: function (response) {
                     console.log(response);
-                    $(".btnSubmitVerification").html("Update Password");
                     alertify.error(response.responseJSON.message);
                 },
             });
