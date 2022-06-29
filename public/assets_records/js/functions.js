@@ -36,13 +36,18 @@ $(document).ready(function () {
                 url: ajaxurl,
                 data: formData,
                 dataType: "json",
-                beforeSend: function () {},
+                beforeSend: function () {
+                    $.blockUI();
+                    $(".btnSubmitVerification").prop("disabled", true);
+                },
                 success: function (response) {
                     console.log(response);
+                    $(".btnSubmitVerification").prop("disabled", false);
                     alertify.success(response.message);
                 },
                 error: function (response) {
                     console.log(response);
+                    $(".btnSubmitVerification").prop("disabled", false);
                     alertify.error(response.responseJSON.message);
                 },
             });
