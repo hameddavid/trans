@@ -154,7 +154,7 @@ class ApplicationController extends Controller
                             ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
                             PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
                             ->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')
-                            ->setWarnings(false)->download($app_stud->file_path.'.pdf');
+                            ->setWarnings(false)->save($app_stud->file_path.'.pdf');
                         }  
                         // Notify applicant through email  $applicant->email and Notify admin
                         $Subject= $type." APPLICATION NOTIFICATION";
