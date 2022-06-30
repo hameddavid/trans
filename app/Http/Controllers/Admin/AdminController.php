@@ -386,7 +386,7 @@ class AdminController extends Controller
                 $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
                 ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
                 if($app_stud){
-                    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => false])
+                    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
                     ->loadView('result',['data'=> $app_stud->transcript_raw])->setPaper('a4', 'portrate')
                     ->setWarnings(false)->save($app_stud->file_path.'.pdf');
                     if (File::exists($app_stud->file_path.'.pdf')) {
