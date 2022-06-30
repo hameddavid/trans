@@ -63,7 +63,8 @@ TO WHOM IT MAY CONCERN
 
 
         <div class="divContents" align="justify">
-            <img src="https://records.run.edu.ng/assets/images/original.jpg" />
+        
+            <img src="{{ asset('images/original.jpg') }}" />
             <p>
                 Dear Sir,
             </p>
