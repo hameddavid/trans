@@ -10,6 +10,7 @@ use App\Models\StudentApplication;
 use App\Models\Payment;
 use App\Models\ForgotMatno;
 use App\Models\Applicant;
+use App\Models\DegreeVerification;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
@@ -547,6 +548,65 @@ public function send_corrections_to_applicant(Request $request){
 
 
 
+public function treat_degree_verification(Request $request){
+    $request->validate([ "userid" => "required","matno"=>"required",]);
+    
+    $getStud = DegreeVerification::where(['status'=>'PENDING','id'=>$request->userid])->where('matno_found','LIKE', "%$request->matno%")->first();
+    
+    if($getStud){
+        $all_degree_params = app('App\Http\Controllers\Applicant\ApplicationController')->get_student_result($request);
+        $getStud->yr_of_adms =  $all_degree_params['first_session_in_sch']; 
+        if($getStud->grad_year != $all_degree_params['last_session_in_sch'] ){ return response(['status'=>'failed','message'=>"Error, session graduated supplied doesn't match!"],400);  }
+        if($getStud->program != $all_degree_params['prog_name'] ){ return response(['status'=>'failed','message'=>"Error, program supplied doesn't match!"],400);  }
+        // $years_spent =  $all_degree_params['years_spent']; 
+        $getStud->qualification =  $all_degree_params['qualification']; //Bachelor of Arts in
+        $getStud->dept = app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string2($all_degree_params['dept']);  //$dept ,$fac
+        $getStud->fac = app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string2($all_degree_params['fac']); 
+        // $cgpa =  $all_degree_params['cgpa']; 
+        $class_of_degree =  $all_degree_params['class_of_degree']; 
+        // $trans_raw =  $all_degree_params['result']; //  Generate the transacript HTML here
+        $getStud->status = "TREATED";
+        $getStud->treated_by = $data->email;
+        $getStud->treated_at = date("F j, Y, g:i a");
+        // $app_stud->approved_by = $data->email;
+        // $app_stud->approved_at = date("F j, Y, g:i a");
+        if($getStud->save()){ 
+            PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+            ->loadView('verification',['data'=> $getStud])
+             ->setPaper('a4', 'portrate')->setWarnings(false)->save($getStud->surname.'_'.$getStud->firstname.'_'.$getStud->othername.'.pdf');
+            if (File::exists($getStud->surname.'_'.$getStud->firstname.'_'.$getStud->othername.'.pdf')) {
+                return response(['status'=>'success','message'=>'Record/File generated successfully!'],201); 
+            }
+            return response(['status'=>'success','message'=>'Record saved but file generation failed'],201); }
+            else{response(['status'=>'failed','message'=>'Error generating file'],400);}
+    }else{
+        return response(['status'=>'failed','message'=>'No record found for this request!'],400); 
+    }
+
+
+    
+}
+public function get_pend_degree_verification(Request $request){
+
+    $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    $apps = DegreeVerification::where('status','PENDING')->select('*')->get();
+        return  view('pages.pending_degree_',['data'=>$data,'apps'=>$apps]);
+    
+
+}
+public function get_recommended_degree_verification(Request $request){
+
+    $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    $apps = DegreeVerification::where('status','RECOMMENDED')->select('*')->get();
+        return  view('pages.recommended_degree_',['data'=>$data,'apps'=>$apps]);
+
+}
+public function get_approved_degree_verification(Request $request){
+
+    $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    $apps = DegreeVerification::where('status','APPROVED')->select('*')->get();
+        return  view('pages.approved_degree_',['data'=>$data,'apps'=>$apps]);
+}
 
 
 

@@ -38,36 +38,40 @@ class RecordController extends Controller
 
         // try {  
 
-            $request->validate([ 'surname'=>'required', 
+            $request->validate([ 'surname'=>'required', 'othername'=>'required',
             'firstname'=>'required' , 'programme'=>'required',  'grad_year'=>'required'
-            ,'institution_email'=>'required|email','phone'=>'required','address'=>'required' ]); 
+            ,'institution_email'=>'required|email','institution_name'=>'required','phone'=>'required',
+            'address'=>'required' ]); 
           
-            $grad_session = intval($request->date_left-1).'/'.intval($request->date_left);
+            $grad_session = intval($request->grad_year-1).'/'.intval($request->grad_year);
             $query = DB::table('t_student_test')
            ->join('registrations','t_student_test.matric_number','registrations.matric_number')
            ->where('registrations.session_id', $grad_session)
            ->where('t_student_test.SURNAME', $request->surname)
-           ->where('t_student_test.FIRSTNAME','LIKE', "%$request->firstname%")
+           ->where('t_student_test.FIRSTNAME','LIKE', "%$request->firstname.' '.$request->othername%")
            ->where('t_student_test.prog_code', $request->programme)
            ->select('registrations.matric_number')->distinct()->get(); 
-            $degree = new DegreeVerification();
-            $degree->surname = $request->surname;
-            $degree->firstname = $request->firstname;
-            $degree->othername = $request->othername;
-            $degree->institution_email = $request->institution_email;
-            $degree->institution_phone = $request->phone;
-            $degree->institution_address = $request->address;
-            $degree->program = $request->programme;
-            $degree->grad_year = $request->grad_year;
-            if($query->count() > 0){$degree->matno_found = $query;}
-            $degree->status = "PENDING";  //PENDING or TREATED
-            if($degree->save()){ 
-                $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
-                $request->request->add(['emails'=> $admin_users]);
-                if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="DEGREE VERIFICATION REQUEST",$Msg=$this->get_msg_degree_vet($request))['status'] == 'ok' ){
-                return response(['status'=>'success','message'=>'request successfully saved'], 201);
-               }
-            } return response(['status'=>'failed','message'=>'Error saving degree verification request'], 400);
+           if($query){
+                $degree = new DegreeVerification();
+               $degree->surname = $request->surname;
+               $degree->firstname = $request->firstname;
+               $degree->othername = $request->othername;
+               $degree->institution_email = $request->institution_email;
+               $degree->institution_name = $request->institution_name;
+               $degree->institution_phone = $request->phone;
+               $degree->institution_address = $request->address;
+               $degree->program = $request->programme;
+               $degree->grad_year = $request->grad_year;
+               $degree->matno_found = $query;
+               $degree->status = "PENDING";  //PENDING or TREATED
+               if($degree->save()){ 
+                   $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
+                   $request->request->add(['emails'=> $admin_users]);
+                   if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="DEGREE VERIFICATION REQUEST",$Msg=$this->get_msg_degree_vet($request))['status'] == 'ok' ){
+                   return response(['status'=>'success','message'=>'request successfully submitted for further processes'], 201);
+                  }
+               } return response(['status'=>'failed','message'=>'Error saving degree verification request'], 400);
+           }else{return response(['status'=>'failed','message'=>'Error, No matching record found! '], 400);}
         // } catch (\Throwable $th) {
         //     return response(['status'=>'failed','message'=>'Error ...maybe you have this request before'], 400);
         // }

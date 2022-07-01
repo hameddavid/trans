@@ -192,7 +192,7 @@ class ApplicantAuthController extends Controller
         $get_mat->phone = $request->phone;
         $get_mat->program = $request->program;
         $get_mat->date_left = $request->date_left;
-        if($query->count() > 0){$get_mat->matno_found = $query;}
+        if($query){$get_mat->matno_found = $query;}
         $get_mat->status = "PENDING";  //PENDING or TREATED
         if($get_mat->save()){ 
             $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');

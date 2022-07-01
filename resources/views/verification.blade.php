@@ -57,7 +57,11 @@ United Kingdom}
             </h5>
             
             <p>
-                <p>I write to acknowledge receipt of your email dated {21st December, 2021} in connection with the above-mentioned subject and verify that the under-mentioned person was admitted to the Redeemer’s University to study for a degree course leading to the award of {Bachelor of Science (BSc.)} as summarised below:</p>
+                <p>I write to acknowledge receipt of your request dated {21st December, 2021}
+                 in connection with the above-mentioned subject and verify 
+                 that the under-mentioned person was admitted to the Redeemer’s University 
+                 to study for a degree course leading to the award of {Bachelor of Science (BSc.)} 
+                 as summarised below:</p>
 
 
                 <p>

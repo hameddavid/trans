@@ -54,6 +54,11 @@ Route::post('register',[AdminAuthController::class,'save_new_account']);
     Route::get('/credentials/{path}', [AdminController::class, 'view_certificate']);
     Route::get('/proficiency/{path}', [AdminController::class, 'view_proficiency']);
     Route::post('/download_approved', [AdminController::class, 'download_approved']);
+
+
+    Route::get('/treat_degree_verification', [AdminController::class, 'treat_degree_verification']);
+
+
     Route::get('/logout',[AdminAuthController::class,'logout']);
     
 });

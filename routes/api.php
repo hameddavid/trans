@@ -8,6 +8,7 @@ use App\Http\Controllers\Applicant\ConfigController;
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\RecordController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -57,7 +58,6 @@ Route::post('app/edit_app_and_verify_editpin', [ApplicationController::class, 'e
 Route::post('get_student_result', [ApplicationController::class, 'get_student_result']);
 
 
-
 Route::group(["middleware" => ['auth:sanctum']], function(){
     Route::get('app', [ApplicantAuthController::class, 'index']);
    
@@ -68,3 +68,8 @@ Route::group(["middleware" => ['auth:sanctum']], function(){
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+// DEGREE VERIFICATION ROUTES ////
+Route::post('degree_verification', [RecordController::class, 'degree_verification']);
