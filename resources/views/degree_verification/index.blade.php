@@ -102,7 +102,7 @@
             <div class="inner">
                 <div class="header-top">
                     <div class="logo">
-                        <a href="index.html">
+                        <a href="#">
                             <img class="logo-light" src="assets_records/images/logo.png" alt="RUN Logo">
                             <img class="logo-dark" src="assets_records/images/logo2.png" alt="RUN Logo">
                         </a>
