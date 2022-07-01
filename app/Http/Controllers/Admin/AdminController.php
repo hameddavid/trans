@@ -547,6 +547,21 @@ public function send_corrections_to_applicant(Request $request){
 
 
 
+// public function view_treated_degree_verification(Request $request){
+//     $request->validate([ "userid" => "required","matno"=>"required",]);
+
+// }
+public function view_treated_degree_verification($path){
+    $s_path = public_path($path);  
+    if (File::exists($path.'.pdf')){
+          return Response::make(file_get_contents($s_path.'.pdf'), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.$path.'"'
+        ]);
+       
+    } else{ return back();}
+}
+
 
 public function treat_degree_verification(Request $request){
     $request->validate([ "userid" => "required","matno"=>"required",]);

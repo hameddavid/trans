@@ -35,6 +35,7 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}
                                                                                             
 {{$data->address}}  
 </pre>
+<pre><p>Verification Code: {{$data->used_token}} </p> </pre>
         </div>
 
         <div class="divContents" align="justify">
@@ -78,6 +79,7 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}
                 Yours faithfully,
 
             </p>
+            <pre><p>To verify the authenticity of this document visit https://records.run.edu.ng </p> </pre>
         </div>
 
         <div class="divAdios">
