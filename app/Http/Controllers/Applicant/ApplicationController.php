@@ -60,6 +60,7 @@ class ApplicationController extends Controller
 
 
     public function submit_app(Request $request){
+        return redirect()->route('pro')->with('status','action');
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
         try {  
             $certificate = "";
@@ -153,7 +154,7 @@ class ApplicationController extends Controller
                             ->where(['student_applications.id'=> $new_application->id, 'app_status'=>'PENDING'])
                             ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
                             
-                            return redirect()->route('pro')->with('status','action');
+                           
     
                             PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->
                             loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')
