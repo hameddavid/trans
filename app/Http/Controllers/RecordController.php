@@ -51,8 +51,8 @@ class RecordController extends Controller
            ->where('t_student_test.FIRSTNAME','LIKE', "%$request->firstname.' '.$request->othername%")
            ->where('t_student_test.prog_code', $request->programme)
            ->select('registrations.matric_number')->distinct()->get(); 
-           dd($query);
-           if($query){
+           dd($query->count());
+           if($query->count()){
                 $degree = new DegreeVerification();
                $degree->surname = $request->surname;
                $degree->firstname = $request->firstname;
