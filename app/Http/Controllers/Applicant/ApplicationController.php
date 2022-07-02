@@ -60,7 +60,7 @@ class ApplicationController extends Controller
 
 
     public function submit_app(Request $request){
-        return redirect()->route('pro')->with('status','action');
+        return redirect()->route('pro')->with('path','action');
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
         try {  
             $certificate = "";
