@@ -6,7 +6,8 @@
     <title>Document</title>
 </head>
 <body> 
-    
+
+/www/wwwroot/trans/public
 
     <img src="{{'C:\xampp8.1.2_PHP 8.1.2\htdocs\transcript\public/assets/images/run_logo_big.png'}}">
     
