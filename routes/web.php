@@ -6,6 +6,9 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\RecordController;
 
+Route::get('/pro/{path}', [RecordController::class, 'pro'])->name('pro');
+
+
 
 // record
 Route::get('/',[RecordController::class,'index']);
@@ -63,5 +66,8 @@ Route::post('register',[AdminAuthController::class,'save_new_account']);
     Route::get('/logout',[AdminAuthController::class,'logout']);
     
 });
+
+
+
 
 
