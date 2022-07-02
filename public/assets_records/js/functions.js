@@ -17,15 +17,16 @@ $(document).ready(function () {
         } else if ($("#doc_type").val() === "degree") {
             $(".degree").show();
             $(".transcript").hide();
-            $("#institution_name").prop("required", true);
-            $("#institution_email").prop("required", true);
-            $("#address").prop("required", true);
-            $("#phone").prop("required", true);
-            $("#surname").prop("required", true);
-            $("#firstname").prop("required", true);
-            $("#othername").prop("required", true);
-            $("#grad_year").prop("required", true);
-            $("#programme").prop("required", true);
+            $(".degree_required").prop("required", true);
+            // $("#institution_name").prop("required", true);
+            // $("#institution_email").prop("required", true);
+            // $("#address").prop("required", true);
+            // $("#phone").prop("required", true);
+            // $("#surname").prop("required", true);
+            // $("#firstname").prop("required", true);
+            // $("#othername").prop("required", true);
+            // $("#grad_year").prop("required", true);
+            // $("#programme").prop("required", true);
         } else {
             $(".transcript").hide();
             $(".degree").hide();
