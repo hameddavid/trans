@@ -44,7 +44,7 @@ class ApplicationController extends Controller
      
      }
     public function index()
-    {  dd(public_path());
+    {  //dd(public_path());
         return PDF::loadView('testpdf')->stream();
         $pdf = PDF::loadView('testpdf');
         return $pdf->stream();

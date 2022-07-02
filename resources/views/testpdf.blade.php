@@ -7,9 +7,9 @@
 </head>
 <body> 
 
-/www/wwwroot/trans/public
 
-    <img src="{{'C:\xampp8.1.2_PHP 8.1.2\htdocs\transcript\public/assets/images/run_logo_big.png'}}">
+
+    <img src="{{'/www/wwwroot/trans/public/assets/images/run_logo_big.png'}}">
     
    
 </body>
