@@ -44,8 +44,17 @@ class ApplicationController extends Controller
      
      }
     public function index()
-    { 
+    {  dd(public_path());
+        return PDF::loadView('testpdf')->stream();
+        $pdf = PDF::loadView('testpdf');
+        return $pdf->stream();
         $app = StudentApplication::find(15); 
+       $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+       ->loadView('result',['data'=> html_entity_decode($app->transcript_raw)]);
+       return $pdf->stream();
+       // PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+        // ->loadView('verification',['data'=> $getStud])
+        //  ->setPaper('a4', 'portrate')->setWarnings(false)->save($getStud->id.'.pdf');
         return view('result')->with('data',html_entity_decode($app->transcript_raw));
 
         $app = OfficialApplication::find(13); 
