@@ -163,9 +163,7 @@ class ApplicationController extends Controller
                             ->where(['student_applications.id'=> $new_application->id, 'app_status'=>'PENDING'])
                             ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
                             
-                            PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->
-                            loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')
-                            ->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                 PDF::loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
                         }  
                         // Notify applicant through email  $applicant->email and Notify admin
                         $Subject= $type." APPLICATION NOTIFICATION";
@@ -699,7 +697,7 @@ static function get_result_table_header($student,$applicant,$request,$prog_name,
     if(strtoupper($request->transcript_type) == "OFFICIAL"){ $trans_type = 'Official Transcript'; $recipient= $request->recipient;}
     return ' <div class="page">
             <div class="header">
-                <img src="https://records.run.edu.ng/assets/images/run_logo_big.png" class="logo"/>
+                <img src="/www/wwwroot/trans/public/assets/images/run_logo_big.png" class="logo"/>
 		<h1>REDEEMER\'S UNIVERSITY</h1>
 		<h5>P.M.B. 230, Ede, Osun State, Nigeria</h5>
 		<h5>Tel: '. $transcript_mobile . ', Website: run.edu.ng, Email: ' . $transcript_email.' </h5><br>
