@@ -23,8 +23,8 @@ use PDF;
 
 class RecordController extends Controller
 {
-    public function pro($path){
-        dd($path);
+    public function pro(){
+        dd("Yes");
     }
 
     public function index(){
