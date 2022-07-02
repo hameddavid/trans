@@ -28,6 +28,7 @@ $(document).ready(function () {
     });
 
     $(".btnSubmitVerification").click(function () {
+        console.log($("#address").val());
         $("#verification_form").validate({
             submitHandler: submitVerificationForm,
         });
@@ -35,7 +36,6 @@ $(document).ready(function () {
         function submitVerificationForm() {
             var formData = $("#verification_form").serialize();
             var type = "POST";
-            //var ajaxurl = "verify_transcript";
             $("#doc_type").val() === "transcript"
                 ? (ajaxurl = "verify_transcript")
                 : (ajaxurl = "degree_verification");
