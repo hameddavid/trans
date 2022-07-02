@@ -12,9 +12,20 @@ $(document).ready(function () {
         if ($("#doc_type").val() === "transcript") {
             $(".transcript").show();
             $(".degree").hide();
+            $("#matno").prop("required", true);
+            $("#used_token").prop("required", true);
         } else if ($("#doc_type").val() === "degree") {
             $(".degree").show();
             $(".transcript").hide();
+            $("#institution_name").prop("required", true);
+            $("#institution_email").prop("required", true);
+            $("#address").prop("required", true);
+            $("#phone").prop("required", true);
+            $("#surname").prop("required", true);
+            $("#firstname").prop("required", true);
+            $("#othername").prop("required", true);
+            $("#grad_year").prop("required", true);
+            $("#programme").prop("required", true);
         } else {
             $(".transcript").hide();
             $(".degree").hide();
@@ -29,7 +40,10 @@ $(document).ready(function () {
         function submitVerificationForm() {
             var formData = $("#verification_form").serialize();
             var type = "POST";
-            var ajaxurl = "verify_transcript";
+            //var ajaxurl = "verify_transcript";
+            $("#doc_type").val() === "transcript"
+                ? (ajaxurl = "verify_transcript")
+                : (ajaxurl = "degree_verification");
 
             $.ajax({
                 type: type,

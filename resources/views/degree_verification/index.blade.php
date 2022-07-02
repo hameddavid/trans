@@ -475,11 +475,11 @@
                         </div>
                         <div class="mb-3 transcript">
                             <label for="matno" class="col-form-label">Matric Number</label>
-                            <input type="text" class="form-control" name="matno" id="matno" required>
+                            <input type="text" class="form-control" name="matno" id="matno">
                         </div>
                         <div class="mb-3 transcript">
                             <label for="used_token" class="col-form-label">Token</label>
-                            <input type="text" class="form-control" name="used_token" id="used_token" required>
+                            <input type="text" class="form-control" name="used_token" id="used_token">
                         </div>
                         <div class="mb-3 degree">
                             <label for="institution_name" class="col-form-label">Name of Institution</label>
