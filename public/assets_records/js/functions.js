@@ -14,19 +14,13 @@ $(document).ready(function () {
             $(".degree").hide();
             $("#matno").prop("required", true);
             $("#used_token").prop("required", true);
+            $(".degree_required").prop("required", false);
         } else if ($("#doc_type").val() === "degree") {
             $(".degree").show();
             $(".transcript").hide();
             $(".degree_required").prop("required", true);
-            // $("#institution_name").prop("required", true);
-            // $("#institution_email").prop("required", true);
-            // $("#address").prop("required", true);
-            // $("#phone").prop("required", true);
-            // $("#surname").prop("required", true);
-            // $("#firstname").prop("required", true);
-            // $("#othername").prop("required", true);
-            // $("#grad_year").prop("required", true);
-            // $("#programme").prop("required", true);
+            $("#matno").prop("required", false);
+            $("#used_token").prop("required", false);
         } else {
             $(".transcript").hide();
             $(".degree").hide();
