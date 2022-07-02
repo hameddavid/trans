@@ -45,7 +45,7 @@ class ApplicationController extends Controller
      }
     public function index()
     {  //dd(public_path());
-        return PDF::loadView('testpdf')->stream();
+        return PDF::loadView('testpdf')->save('teeeeeeeeee.pdf');
         $pdf = PDF::loadView('testpdf');
         return $pdf->stream();
         $app = StudentApplication::find(15); 
