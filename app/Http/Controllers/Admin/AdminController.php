@@ -507,10 +507,20 @@ public function get_delivery_msg_prof($data){
     }
 }
 
+public function get_delivery_msg_degree($data){
+    try {
+        return "Kindly find attached, degree verification for ". $data->surname . " ".$data->firstname ." with matric number ". $data->matric_number;
+    } catch (\Throwable $th) {
+        //throw $th;
+    }
+}
+
 
 public function send_corrections_to_applicant(Request $request){
     $request->validate(['appid'=>'required',]);
     try {
+        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+        if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $new_req = collect($request->all())->filter();
     $form_data = $new_req->except(['appid','_token']);
     $form_array = [];
@@ -552,6 +562,8 @@ public function send_corrections_to_applicant(Request $request){
 
 // }
 public function view_treated_degree_verification($path){
+    $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $s_path = public_path($path);  
     if (File::exists($path.'.pdf')){
           return Response::make(file_get_contents($s_path.'.pdf'), 200, [
@@ -565,9 +577,10 @@ public function view_treated_degree_verification($path){
 
 public function treat_degree_verification(Request $request){
     $request->validate([ "userid" => "required","matno"=>"required",]);
-    
-    $getStud = DegreeVerification::where(['status'=>'PENDING','id'=>$request->userid])->where('matno_found','LIKE', "%$request->matno%")->first();
-    
+    $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
+   
+    $getStud = DegreeVerification::where(['status'=>'PENDING','id'=>$request->userid])->where('matno_found','LIKE', "%$request->matno%")->first(); 
     if($getStud){
         $all_degree_params = app('App\Http\Controllers\Applicant\ApplicationController')->get_student_result($request);
         $getStud->yr_of_adms =  $all_degree_params['first_session_in_sch']; 
@@ -583,42 +596,63 @@ public function treat_degree_verification(Request $request){
         $getStud->status = "TREATED";
         $getStud->treated_by = $data->email;
         $getStud->treated_at = date("F j, Y, g:i a");
+        $getStud->matno_found = $request->matno;
         // $app_stud->approved_by = $data->email;
         // $app_stud->approved_at = date("F j, Y, g:i a");
         if($getStud->save()){ 
             PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
             ->loadView('verification',['data'=> $getStud])
-             ->setPaper('a4', 'portrate')->setWarnings(false)->save($getStud->surname.'_'.$getStud->firstname.'_'.$getStud->othername.'.pdf');
-            if (File::exists($getStud->surname.'_'.$getStud->firstname.'_'.$getStud->othername.'.pdf')) {
+             ->setPaper('a4', 'portrate')->setWarnings(false)->save($getStud->id.'.pdf');
+            if (File::exists($getStud->id.'.pdf')) {
                 return response(['status'=>'success','message'=>'Record/File generated successfully!'],201); 
             }
             return response(['status'=>'success','message'=>'Record saved but file generation failed'],201); }
             else{response(['status'=>'failed','message'=>'Error generating file'],400);}
     }else{
         return response(['status'=>'failed','message'=>'No record found for this request!'],400); 
-    }
-
-
-    
+    }   
 }
-public function get_pend_degree_verification(Request $request){
-
+public function approve_degree_verification(Request $request){
+    $request->validate([ "userid" => "required","matno"=>"required",]);
     $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
+    $getStud = DegreeVerification::where(['status'=>'TREATED','id'=>$request->userid])->where('matno_found','LIKE', "%$request->matno%")
+    ->select('*','id AS file_path', 'institution_email AS email', 'DEGREE_VERIFICATION AS transcript_type','matno_found AS matric_number')->first(); 
+    if($getStud){
+            if (File::exists($getStud->id.'.pdf')) {
+               $getStud->status = "APPROVED";
+               $getStud->approved_by = $data->email;
+                $getStud->approved_at = date("F j, Y, g:i a");
+        if($getStud->save() && app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($getStud,$Subject="REDEEMER'S UNIVERSITY DEGREE VERIFICATION DELIVERY",$Msg=$this->get_delivery_msg_degree($getStud))['status'] == 'ok' ){  
+            File::delete($getStud->id.'.pdf'); 
+            return response(['status'=>'success','message'=>'Degree verification document delivered successfully!'],201); 
+            }
+            return response(['status'=>'success','message'=>'Error sending mail/saving file'],400); }
+            else{ return response(['status'=>'failed','message'=>'Degree verification does not exist!'],400);}
+    }else{
+        return response(['status'=>'failed','message'=>'No record found for this request!'],400); 
+    }   
+}
+
+
+public function get_pend_degree_verification(Request $request){
+    $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $apps = DegreeVerification::where('status','PENDING')->select('*')->get();
         return  view('pages.pending_degree_',['data'=>$data,'apps'=>$apps]);
     
 
 }
 public function get_recommended_degree_verification(Request $request){
-
     $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $apps = DegreeVerification::where('status','RECOMMENDED')->select('*')->get();
         return  view('pages.recommended_degree_',['data'=>$data,'apps'=>$apps]);
 
 }
 public function get_approved_degree_verification(Request $request){
-
     $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $apps = DegreeVerification::where('status','APPROVED')->select('*')->get();
         return  view('pages.approved_degree_',['data'=>$data,'apps'=>$apps]);
 }

@@ -2,10 +2,26 @@
 
 <html>
     <head>
-        <style type="text/css">
+    <style type="text/css">
+            html {
+            margin:0;
+            padding:0; 
+            }
+            @page {
+                size: A4;
+                margin-top:0.5cm;
+                margin-bottom:0;
+                margin-left:0;
+                margin-right:0;
+                padding: 0;
+            }
             .bodyBody {
-                margin: 10px;
-                font-size: 1.50em;
+                font-family: Arial;
+                font-size: 11px;
+                background-image: url("https://records.run.edu.ng/assets/images/original.jpg");
+                background-size: contain;
+                background-repeat: no-repeat;
+
             }
             .divHeader {
                 text-align: right;
@@ -24,27 +40,25 @@
                 float: left;
                 padding-top: 50px;
             }
-            table {
-                font-family: sans-serif;
-                border-collapse: collapse;
-                width: 100%;
-            }
-            td, th{
-                border: 1px solid #dddddd;
-                padding: 8px;
+            .main{
+                margin: 20% auto;
+                padding-top: 5px;
+                padding-right: 30px; 
+                padding-bottom: 15px; 
+                padding-left: 30px; 
             }
         </style>
     </head>
     <body class="bodyBody">
-        <div class="divSubject">
+            <div class="main"> 
+            <div class="divSubject">
 <pre>
-RUN/REG/Acad/Verifi/63/Vol.2/{627}                                                  {12th April, 2022}                                                         
-{Prince House
-53-54 Queens Road
-Brighton, BN1 3XB
-United Kingdom}
+{{date("F j, Y")}} 
 
-{Attention: JP Morgan Chase}
+RUN/REG/Acad/Verifi/63/Vol.2/00{{$data->id}}                                                                                                         
+{{$data->institution_address}} 
+
+Attention: {{$data->institution_name}} 
 </pre>
         </div>
 
@@ -53,14 +67,14 @@ United Kingdom}
                 Dear Sir,
             </p>
             <h5>
-                <u>{RE: REFERENCE REQUEST FOR EMMANUEL OGBONNA [JPM09761]}</u>
+                <u>RE: REFERENCE REQUEST FOR {{$data->surname.' '.$data->firstname.' '.$data->othername}} [{{$data->matno_found}}]</u>
             </h5>
             
             <p>
-                <p>I write to acknowledge receipt of your request dated {21st December, 2021}
+                <p>I write to acknowledge receipt of your request dated {{$data->created_at}}
                  in connection with the above-mentioned subject and verify 
                  that the under-mentioned person was admitted to the Redeemer’s University 
-                 to study for a degree course leading to the award of {Bachelor of Science (BSc.)} 
+                 to study for a degree course leading to the award of {{$data->qualification}}
                  as summarised below:</p>
 
 
@@ -79,11 +93,11 @@ United Kingdom}
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td>{Name}</td>
-                                <td>{Year of Admission}</td>
-                                <td>{Course of Study}</td>
-                                <td>{Class of Degree}</td>
-                                <td>{Year of Graduation}</td>
+                                <td>{{$data->surname.' '.$data->firstname.' '.$data->othername}}</td>
+                                <td>{{$data->yr_of_adms}}</td>
+                                <td>{{$data->program}}</td>
+                                <td>{{$data->class_of_degree}}</td>
+                                <td>{{$data->grad_year}}</td>
                             </tr>
                         </tbody>
                     </table>
