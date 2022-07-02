@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class DegreeVerification extends Model
 {
     use HasFactory;
+    protected $table = 'degree_verification';
 }
