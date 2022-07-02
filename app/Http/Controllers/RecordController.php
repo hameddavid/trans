@@ -51,21 +51,20 @@ class RecordController extends Controller
            ->where('t_student_test.FIRSTNAME','LIKE', "%$request->firstname.' '.$request->othername%")
            ->where('t_student_test.prog_code', $request->programme)
            ->select('registrations.matric_number')->distinct()->get(); 
-           dd($query->count());
            if($query->count()){
                 $degree = new DegreeVerification();
-               $degree->surname = $request->surname;
-               $degree->firstname = $request->firstname;
-               $degree->othername = $request->othername;
-               $degree->institution_email = $request->institution_email;
-               $degree->institution_name = $request->institution_name;
-               $degree->institution_phone = $request->phone;
-               $degree->institution_address = $request->address;
-               $degree->program = $request->programme;
-               $degree->grad_year = $request->grad_year;
-               $degree->matno_found = $query;
-               $degree->status = "PENDING";  //PENDING or TREATED
-               if($degree->save()){ 
+                $degree->surname = $request->surname;
+                $degree->firstname = $request->firstname;
+                $degree->othername = $request->othername;
+                $degree->institution_email = $request->institution_email;
+                $degree->institution_name = $request->institution_name;
+                $degree->institution_phone = $request->phone;
+                $degree->institution_address = $request->address;
+                $degree->program = $request->programme;
+                $degree->grad_year = $request->grad_year;
+                $degree->matno_found = $query;
+                $degree->status = "PENDING";  //PENDING or TREATED
+                if($degree->save()){ 
                    $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
                    $request->request->add(['emails'=> $admin_users]);
                    if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="DEGREE VERIFICATION REQUEST",$Msg=$this->get_msg_degree_vet($request))['status'] == 'ok' ){
