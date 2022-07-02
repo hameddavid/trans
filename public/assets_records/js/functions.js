@@ -28,7 +28,6 @@ $(document).ready(function () {
     });
 
     $(".btnSubmitVerification").click(function () {
-        console.log($("#address").val());
         $("#verification_form").validate({
             submitHandler: submitVerificationForm,
         });

@@ -491,7 +491,7 @@
                         </div>
                         <div class="mb-3 degree">
                             <label for="address" class="col-form-label">Address of Institution/Company</label>
-                            <textarea name="" class="form-control degree_required" name="address" id="address" cols="30" rows="5"></textarea>
+                            <textarea class="form-control degree_required" name="address" id="address" cols="30" rows="5"></textarea>
                         </div>
                         <div class="mb-3 degree">
                             <label for="phone" class="col-form-label">Phone Number</label>
