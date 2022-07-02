@@ -98,7 +98,7 @@ class RecordController extends Controller
     static function get_msg_degree_vet($request){
         return '
          Kindly find on your dashboard, degree verification request from '.
-         $address. '<br>
+         $request->address. '<br>
          <br>';  
        
        
