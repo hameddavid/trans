@@ -361,7 +361,7 @@ static function get_admin_msg($applicant){
 
 public function get_student_result($request){
     //   $prog_code  failing .... RUN1011/2797
-    try {
+    // try {
         $matno = str_replace(' ', '', $request->matno);
         $first_session_in_sch  = "";
         $last_session_in_sch  = "";
@@ -386,7 +386,7 @@ public function get_student_result($request){
                 $page_no += 1;
                 $response .= $this->get_result_table_header($student,$applicant,$request,$prog_name, $dept , $fac,$page_no);
                 $results = $this->fetch_student_result_from_registration($matno,$session);
-                return count($results);
+                // return $results;
                 $semester = 0;
                 $sum_point_unit = 0.0;
                 $sum_unit = 0.0;
@@ -586,9 +586,9 @@ public function get_student_result($request){
        
     }else{ return "empty student session";}
         
-    } catch (\Throwable $th) {
-        //throw $th;
-    }
+    // } catch (\Throwable $th) {
+    //     //throw $th;
+    // }
    
 }
 
