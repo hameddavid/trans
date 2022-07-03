@@ -506,6 +506,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="verificationModal2" aria-hidden="true" aria-labelledby="verificationModal2Label" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -546,11 +547,27 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" data-bs-target="#verificationModal" data-bs-toggle="modal" data-bs-dismiss="modal">Go Back</button>
+                <button type="button" class="btn btn-danger" data-bs-target="#verificationModal" data-bs-toggle="modal" data-bs-dismiss="modal">Go Back</button>
                 <button type="submit" class="btn btn-primary btnSubmitVerification">Submit</button>
             </div>
             </form>
           </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="transcriptModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transcriptModalLabel">Transcript Verification</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body showDIV">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
