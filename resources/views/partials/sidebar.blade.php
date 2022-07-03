@@ -48,6 +48,17 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow">
+                        <i data-feather="file-text"></i>
+                        <span>Degree Verification</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="pending_verification">Pending</a></li>
+                        <li><a href="recommended_verification">Recommended</a></li>
+                        <li><a href="approved_verification">Approved</a></li>
+                    </ul>
+                </li>
 
                 <li>
                     <a href="payments">
