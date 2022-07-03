@@ -508,12 +508,75 @@ $(document).ready(function ($) {
         });
     };
 
-    // const arrayToObject = (array, key) =>
-    //     array.reduce(
-    //         (obj, item) => ({
-    //             ...obj,
-    //             [item[key]]: item,
-    //         }),
-    //         {}
-    //     );
+    $(".view_verification").click(function () {
+        $("#verificationModal").modal("show");
+        $("#verificationForm").trigger("reset");
+        $("#matric_number")
+            .empty()
+            .append("<option value=''>Select Matric Number</option>");
+        suggestions = $(this).data("suggestions");
+        if (suggestions !== "") {
+            $(".matric_number").hide();
+            $(".select_matric_number").show();
+            suggestions.forEach((suggestion) => {
+                for (let key in suggestion) {
+                    $("#matric_number").append(
+                        $("<option>", {
+                            value: suggestion[key],
+                            text: suggestion[key],
+                        })
+                    );
+                }
+            });
+        } else {
+            $(".matric_number").show();
+            $(".select_matric_number").hide();
+        }
+
+        $("#name").html($(this).data("name"));
+        $("#program").html($(this).data("programme"));
+        $("#graduation").html($(this).data("grad"));
+        verification_id = $(this).data("id");
+
+        $("#btnverification").click(function () {
+            $("#verificationForm").validate({
+                submitHandler: verificationForm,
+            });
+
+            function verificationForm() {
+                var type = "POST";
+                var ajaxurl = "treat_degree_verification";
+                suggestions !== ""
+                    ? (matric = $("#matric_number").val())
+                    : (matric = $("#matric_number_").val());
+                $.ajax({
+                    type: type,
+                    url: ajaxurl,
+                    data: {
+                        matno: matric,
+                        userid: verification_id,
+                    },
+                    dataType: "json",
+                    beforeSend: function () {
+                        $("#btnverification").html(
+                            '<i class="fa fa-spinner fa-spin"></i>'
+                        );
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        $("#btnverification").html("Generate");
+                        alertify.success(response.message);
+                        setTimeout(function () {
+                            location.reload();
+                        }, 2800);
+                    },
+                    error: function (response) {
+                        console.log(response);
+                        $("#btnverification").html("Generate");
+                        alertify.error(response.responseJSON.message);
+                    },
+                });
+            }
+        });
+    });
 });

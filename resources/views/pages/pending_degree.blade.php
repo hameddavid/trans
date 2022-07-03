@@ -52,9 +52,8 @@
                                                                 <i class="bx bx-dots-horizontal-rounded font-size-18 text-dark"></i>
                                                             </a>
                                                             <div class="dropdown-menu">
-                                                                <div class="btn-group btn-group-example mb-3" role="group">
-                                                                    <button type="button" data-status="{{$app->status}}" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" data-name="{{$app->surname.' '.$app->firstname}}" title="View Request" class="btn btn-secondary w-xs"><i class="mdi mdi-eye-check-outline"></i></button>
-                                                                    <!-- <button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" title="Regenerate" class="btn btn-info w-xs regenerate"><i class="mdi mdi-refresh"></i></button> -->
+                                                                <div class="btn-group mb-3">
+                                                                    <button type="button" data-suggestions="{{$app->matno_found}}" data-id="{{$app->id}}" data-grad="{{$app->grad_year}}" data-programme="{{$app->program}}" data-name="{{$app->surname.' '.$app->firstname.' '.$app->othername}}" class="btn btn-secondary waves-effect btn-label waves-light view_verification"><i class="bx bx-show-alt label-icon"></i>View</button>
                                                                 </div>
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
                                                                     @if($data->role == 200)<button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" title="Recommend" class="btn btn-success w-xs"><i class="mdi mdi-thumb-up"></i></button>@endif
@@ -82,80 +81,42 @@
             <!-- end main content-->
 
             <!-- Verification modal -->
-            <div id="verificationModal" class="modal fade" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-fullscreen">
+            <div class="modal fade" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="verificationModalLabel"></h5>
+                        <div class="modal-header border-primary">
+                            <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Degree Verification</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body showHTML">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                            @if($data->role == 200)<button id="btnRecommend" type="button" class="btn btn-primary waves-effect waves-light">Recommend</button>@endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- /modal -->
-
-            <!-- Preview modal -->
-            <div id="previewModal" class="modal fade" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <form method="POST" id="previewForm">
-                        @csrf
-                        <input value="" type="hidden" id="appid" name="appid" class="form-control">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="previewModalLabel"></h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-check form-check-right">
-                                <input class="form-check-input" type="checkbox" id="check_recipient">
-                                <label class="form-check-label" for="check_recipient">
-                                    Name of Institution/Organization: <span style="color:red" id="show_recipient"></span>
-                                </label>
-                                <input type="text" id="recipient" name="recipient" class="form-control recipient" required>
-                            </div><hr>
-                            <div class="form-check form-check-right">
-                                <input class="form-check-input" type="checkbox" id="check_reference">
-                                <label class="form-check-label" for="check_reference">
-                                    Reference Number: <span style="color:red" id="show_reference"></span>
-                                </label>
-                                <input type="text" id="reference" name="reference" class="form-control reference" required>
-                            </div><hr>
-                            <div class="form-check form-check-right email">
-                                <input class="form-check-input" type="checkbox" id="check_email">
-                                <label class="form-check-label" for="check_email">
-                                    Email: <span style="color:red" id="show_email"></span>
-                                </label>
-                                <input type="email" id="email" name="email" class="form-control email_box" required><hr>
-                            </div>
-                            <div class="form-check form-check-right address">
-                                <input class="form-check-input" type="checkbox" id="check_address">
-                                <label class="form-check-label" for="check_address">
-                                    Adress of Institution/Organization: <span style="color:red" id="show_address"></span>
-                                </label>
-                                <textarea class="form-control address_box" id="address" name="address" required></textarea>
-                            </div><hr>
-                            <div class="form-check form-check-right certificate">
-                                <input class="form-check-input" type="checkbox" id="check_certificate">
-                                <label class="form-check-label" for="check_certificate">
-                                    Degree Certificate: <a href="" target="_blank" class="viewcert">VIEW</a>
-                                </label>
-                                <input type="text" id="certificate" name="certificate" class="form-control certificate_box" required>
+                        <div class="col-lg-12">
+                            <div class="card border border-primary">
+                                <div class="card-body">
+                                    <p class="card-text">Select the correct matric number for this student and click on the Generate button.</p>
+                                    <label for="name" class="col-form-label">Fullname: <span id="name"></span></label><hr>
+                                    <label for="program" class="col-form-label">Programme: <span id="program"></span></label><hr>
+                                    <label for="graduation" class="col-form-label">Year of Graduation: <span id="graduation"></span></label>
+                                </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" id="btnPreview" class="btn btn-danger waves-effect">Send</button>
-                        </div>
+                        <form method="POST" id="verificationForm">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="matric_number" class="col-form-label">Matric Number: <span style="color:red">(Based on our suggestion)</span></label>
+                                    <select class="form-control select_matric_number" name="matric_number" id="matric_number" required>
+                                    </select>
+                                    <input type="text" class="form-control matric_number"  name="matric_number_" id="matric_number_" 
+                                        placeholder="No suggestions, Please enter matric number here" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" id="btnverification" class="btn btn-success">Generate</button>
+                            </div>
                         </form>
                     </div>
                 </div>
-            </div>
+            </div>            
             <!-- /modal -->
 
         
