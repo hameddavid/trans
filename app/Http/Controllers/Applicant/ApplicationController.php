@@ -47,7 +47,8 @@ class ApplicationController extends Controller
     {  //dd(public_path());
 
         // return PDF::loadView('testpdf')->setWarnings(false)->save('teeeeeeeeee.pdf');
-        $pdf = PDF::loadView('testpdf');
+        $pdf = PDF::loadView('testpdf'); 
+        return  $pdf->stream();
         File::put('TEEWHY.pdf', $pdf->output()); 
         return "Yes o";
         $pdf = PDF::loadView('testpdf');
