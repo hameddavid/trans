@@ -50,7 +50,7 @@
                 </li>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow">
-                        <i data-feather="file-text"></i>
+                        <i data-feather="globe"></i>
                         <span>Degree Verification</span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
