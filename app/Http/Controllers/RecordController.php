@@ -62,7 +62,7 @@ class RecordController extends Controller
                    $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
                    $request->request->add(['emails'=> $admin_users]);
                    if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="DEGREE VERIFICATION REQUEST",$Msg=$this->get_msg_degree_vet($request))['status'] == 'ok' ){
-                   return response(['status'=>'success','message'=>'request successfully submitted for further processes'], 201);
+                   return response(['status'=>'success','message'=>'request successfully submitted for further processing'], 201);
                   }
                } return response(['status'=>'failed','message'=>'Error saving degree verification request'], 400);
            }else{return response(['status'=>'failed','message'=>'Error, No matching record found! '], 400);}
