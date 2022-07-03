@@ -58,7 +58,7 @@ Route::post('register',[AdminAuthController::class,'save_new_account']);
     Route::get('/recommended_verification',[AdminController::class,'get_recommended_degree_verification']);
     Route::get('/approved_verification',[AdminController::class,'get_approved_degree_verification']);
 
-
+    
     
     Route::post('/recommend_degree', [AdminController::class, 'recommend_degree']);
     Route::post('/treat_degree_verification', [AdminController::class, 'treat_degree_verification']);
