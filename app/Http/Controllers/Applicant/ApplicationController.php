@@ -411,7 +411,7 @@ public function get_student_result($request){
                             
                         $cumm_sum_point_unit += $sum_point_unit;
                 $cumm_sum_unit += $sum_unit;
-                            return $cumm_sum_unit;
+                            // return $cumm_sum_unit;
                 $gpa = $sum_point_unit / floatval($sum_unit);
                 $cgpa = $cumm_sum_point_unit / floatval($cumm_sum_unit);
                  
