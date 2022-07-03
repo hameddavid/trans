@@ -10,7 +10,7 @@
         body {
                 font-family: Arial;
                 font-size: 11px;
-                background-image: url("{{public_path().'/assets/images/run_logo_big.png'}}");
+                background-image: url(https://records.run.edu.ng/assets/images/original.jpg);
                 background-size: contain;
                 background-repeat: no-repeat;
 
