@@ -10,7 +10,7 @@
         body {
                 font-family: Arial;
                 font-size: 11px;
-                background-image: url(./assets/images/original.jpg);
+                background-image: url("./assets/images/original.jpg");
                 background-size: contain;
                 background-repeat: no-repeat;
 
