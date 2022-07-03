@@ -15,11 +15,11 @@
                 margin-right:0;
                 padding: 0;
             }
-           
+            
             .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
-                background-image: url("{{ URL::asset('images') }}/original.jpg");
+                background-image: url("{{public_path().'/assets/images/original.jpg'}}");
                 background-size: contain;
                 background-repeat: no-repeat;
 

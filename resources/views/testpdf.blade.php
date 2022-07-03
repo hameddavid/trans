@@ -10,7 +10,7 @@
         body {
                 font-family: Arial;
                 font-size: 11px;
-                background-image: url("/assets/images/original.jpg");
+                background-image: url("{{public_path().'/assets/images/run_logo_big.png'}}");
                 background-size: contain;
                 background-repeat: no-repeat;
 
@@ -20,9 +20,9 @@
 
 
     
-<!-- background: url({{ public_path('path/to/image.jpg') }})
+<!-- background: url({{ public_path('path/to/image.jpg') }})-->
 
-    <img src="{{public_path().'/assets/images/original.jpg'}}">  -->
+    <img src="">  
     
    
 </body>
