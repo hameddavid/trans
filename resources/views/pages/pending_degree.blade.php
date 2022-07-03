@@ -54,7 +54,7 @@
                                                             <div class="dropdown-menu">
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
                                                                     <button type="button" data-status="{{$app->status}}" data-id="{{$app->id}}" data-type="{{$app->transcript_type}}" data-name="{{$app->surname.' '.$app->firstname}}" title="View Request" class="btn btn-secondary w-xs"><i class="mdi mdi-eye-check-outline"></i></button>
-                                                                    <button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" title="Regenerate" class="btn btn-info w-xs regenerate"><i class="mdi mdi-refresh"></i></button>
+                                                                    <!-- <button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" title="Regenerate" class="btn btn-info w-xs regenerate"><i class="mdi mdi-refresh"></i></button> -->
                                                                 </div>
                                                                 <div class="btn-group btn-group-example mb-3" role="group">
                                                                     @if($data->role == 200)<button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" title="Recommend" class="btn btn-success w-xs"><i class="mdi mdi-thumb-up"></i></button>@endif
@@ -81,12 +81,12 @@
             </div>
             <!-- end main content-->
 
-            <!-- Transcript modal -->
-            <div id="transcriptModal" class="modal fade" tabindex="-1" aria-labelledby="transcriptModalLabel" aria-hidden="true">
+            <!-- Verification modal -->
+            <div id="verificationModal" class="modal fade" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-fullscreen">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="transcriptModalLabel"></h5>
+                            <h5 class="modal-title" id="verificationModalLabel"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body showHTML">
