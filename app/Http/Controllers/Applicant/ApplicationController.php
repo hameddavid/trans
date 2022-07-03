@@ -370,7 +370,7 @@ public function get_student_result($request){
         $prog_name  = "";
         $cgpa  = "";
         if($this->get_student_result_session_given_matno($matno,$sessions)){
-            return $matno;
+            return $sessions;
             $first_session_in_sch  = $sessions[0];
             $last_session_in_sch  = $sessions[count($sessions)-1];
             $years_spent = count($sessions);
