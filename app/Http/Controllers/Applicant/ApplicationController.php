@@ -373,7 +373,6 @@ public function get_student_result($request){
             $first_session_in_sch  = $sessions[0];
             $last_session_in_sch  = $sessions[count($sessions)-1];
             $years_spent = count($sessions);
-             return count($sessions);
             $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
             $student  = Student::where('matric_number',$matno)->first();
             $response = "";
@@ -387,6 +386,7 @@ public function get_student_result($request){
                 $page_no += 1;
                 $response .= $this->get_result_table_header($student,$applicant,$request,$prog_name, $dept , $fac,$page_no);
                 $results = $this->fetch_student_result_from_registration($matno,$session);
+                return count($results);
                 $semester = 0;
                 $sum_point_unit = 0.0;
                 $sum_unit = 0.0;
