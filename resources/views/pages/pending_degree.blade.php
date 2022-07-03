@@ -53,12 +53,12 @@
                                                             </a>
                                                             <div class="dropdown-menu">
                                                                 <div class="btn-group mb-3">
-                                                                    <button type="button" data-suggestions="{{$app->matno_found}}" data-id="{{$app->id}}" data-grad="{{$app->grad_year}}" data-programme="{{$app->program}}" data-name="{{$app->surname.' '.$app->firstname.' '.$app->othername}}" class="btn btn-secondary waves-effect btn-label waves-light view_verification"><i class="bx bx-show-alt label-icon"></i>View</button>
+                                                                    <button type="button" data-suggestions="{{$app->matno_found}}" data-id="{{$app->id}}" data-grad="{{$app->grad_year}}" data-programme="{{$app->program}}" data-name="{{$app->surname.' '.$app->firstname.' '.$app->othername}}" class="btn btn-secondary waves-effect btn-label waves-light view_verification"><i class="bx bx-show-alt label-icon"></i>View App</button>
                                                                     @if($app->status=='TREATED')
-                                                                        <a href="view_treated_degree_verification/{{}}" type="button" class="btn btn-primary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View File</a>
+                                                                        <a href="view_treated_degree_verification/" target="_blank" type="button" class="btn btn-primary waves-effect btn-label waves-light p-3"><i class="bx bx-show-alt label-icon"></i>View File</a>
                                                                     @endif
                                                                 </div>
-                                                                <div class="btn-group btn-group-example mb-3" role="group">
+                                                                <div class="btn-group btn-group-example mb-3 p-3" role="group">
                                                                     @if($data->role == 200)<button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" title="Recommend" class="btn btn-success w-xs"><i class="mdi mdi-thumb-up"></i></button>@endif
                                                                     @if($data->role == 200)<button type="button" title="Disapprove" class="btn btn-danger w-xs"><i class="mdi mdi-thumb-down"></i></button>@endif
                                                                 </div> 
