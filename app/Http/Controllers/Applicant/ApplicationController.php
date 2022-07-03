@@ -169,8 +169,7 @@ class ApplicationController extends Controller
                            
                             $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]);
                              File::put($app_stud->file_path.'.pdf', $pdf->output());    
-                //  PDF::loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')
-                //  ->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                
                         }  
                         // Notify applicant through email  $applicant->email and Notify admin
                         $Subject= $type." APPLICATION NOTIFICATION";
