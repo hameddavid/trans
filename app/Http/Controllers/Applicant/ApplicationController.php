@@ -73,7 +73,7 @@ class ApplicationController extends Controller
 
 
     public function submit_app(Request $request){
-
+        return "Test1";
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
         // try {  
             $certificate = "";
