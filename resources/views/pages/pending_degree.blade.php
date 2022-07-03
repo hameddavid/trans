@@ -55,7 +55,7 @@
                                                                 <div class="btn-group mb-3">
                                                                     <button type="button" data-suggestions="{{$app->matno_found}}" data-id="{{$app->id}}" data-grad="{{$app->grad_year}}" data-programme="{{$app->program}}" data-name="{{$app->surname.' '.$app->firstname.' '.$app->othername}}" class="btn btn-secondary waves-effect btn-label waves-light view_verification"><i class="bx bx-show-alt label-icon"></i>View App</button>
                                                                     @if($app->status=='TREATED')
-                                                                        <a href="view_treated_degree_verification/" target="_blank" type="button" class="btn btn-primary waves-effect btn-label waves-light p-3"><i class="bx bx-show-alt label-icon"></i>View File</a>
+                                                                        <a href="view_treated_degree_verification/{{$app->id}}" target="_blank" type="button" class="btn btn-primary waves-effect btn-label waves-light p-3"><i class="bx bx-show-alt label-icon"></i>View File</a>
                                                                     @endif
                                                                 </div>
                                                                 <div class="btn-group btn-group-example mb-3 p-3" role="group">
