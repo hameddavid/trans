@@ -345,7 +345,7 @@ class AdminController extends Controller
     public function approve_app(Request $request){
       
         $request->validate([ 'id'=>'required|string','transcript_type'=>'required|string'] );
-        try {
+       // try {
             $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
             if($data->role != '300'){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
             $type = strtoupper($request->transcript_type);
@@ -435,7 +435,7 @@ class AdminController extends Controller
             }
             else{ return response(['status'=>'failed','message'=>'Error in transcript type supplied']);}
             
-        } catch (\Throwable $th) {return response(['status'=>'failed','message'=>'Error from catch ...approve_app()']);}  
+      //  } catch (\Throwable $th) {return response(['status'=>'failed','message'=>'Error from catch ...approve_app()']);}  
 
     }
 
