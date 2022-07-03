@@ -19,7 +19,7 @@
             .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
-                /* background-image: url("{{public_path().'/assets/images/original.jpg'}}"); */
+                background-image: url("{{public_path().'/assets/images/run_logo_big.png'}}");
                 background-size: contain;
                 background-repeat: no-repeat;
 

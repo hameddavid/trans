@@ -21,7 +21,7 @@
 
     
 <!-- background: url({{ public_path('path/to/image.jpg') }})-->
-
+{{public_path()}}
     <img src="">  
     
    
