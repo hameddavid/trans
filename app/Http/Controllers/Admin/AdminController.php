@@ -636,7 +636,7 @@ public function approve_degree_verification(Request $request){
 public function get_pend_degree_verification(Request $request){
     $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
     if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
-    $apps = DegreeVerification::where('status','PENDING')->select('*')->get();
+    $apps = DegreeVerification::where('status','PENDING')->orWhere('status','TREATED')->select('*')->get();
         return  view('pages.pending_degree',['data'=>$data,'apps'=>$apps]);
     
 

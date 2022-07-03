@@ -1,7 +1,7 @@
 @extends("layout.master") 
 
     @section("title")
-      Pending Degree Verification Requests
+      Recommeded Degree Verification Requests
     @endsection
 
     @section("content")
@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Pending Degree Verification Requests</h4>
+                                    <h4 class="mb-sm-0 font-size-18">Recommeded Degree Verification Requests</h4>
                                 </div>
                             </div>
                         </div>
@@ -53,15 +53,11 @@
                                                             </a>
                                                             <div class="dropdown-menu">
                                                                 <div class="btn-group mb-3">
-                                                                    <button type="button" data-suggestions="{{$app->matno_found}}" data-id="{{$app->id}}" data-grad="{{$app->grad_year}}" data-programme="{{$app->program}}" data-name="{{$app->surname.' '.$app->firstname.' '.$app->othername}}" class="btn btn-secondary waves-effect btn-label waves-light view_verification"><i class="bx bx-show-alt label-icon"></i>View App</button>
-                                                                    @if($app->status=='TREATED')
-                                                                        <a href="view_treated_degree_verification/" target="_blank" type="button" class="btn btn-primary waves-effect btn-label waves-light p-3"><i class="bx bx-show-alt label-icon"></i>View File</a>
+                                                                    <a href="view_treated_degree_verification/{{}}" target="_blank" type="button" class="btn btn-secondary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</a>
+                                                                    @if($data->role == 300)
+                                                                        <button type="button" data-id="{{$app->id}}" data-matno="{{$app->matno_found}}" class="btn btn-success waves-effect btn-label waves-light approve_verification"><i class="bx bx-check label-icon"></i>Approve</button>
                                                                     @endif
                                                                 </div>
-                                                                <div class="btn-group btn-group-example mb-3 p-3" role="group">
-                                                                    @if($data->role == 200)<button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" title="Recommend" class="btn btn-success w-xs"><i class="mdi mdi-thumb-up"></i></button>@endif
-                                                                    @if($data->role == 200)<button type="button" title="Disapprove" class="btn btn-danger w-xs"><i class="mdi mdi-thumb-down"></i></button>@endif
-                                                                </div> 
                                                             </div>
                                                         </div>                                                        
                                                     </td>
@@ -83,45 +79,6 @@
             </div>
             <!-- end main content-->
 
-            <!-- Verification modal -->
-            <div class="modal fade" id="verificationModal" tabindex="-1" aria-labelledby="verificationModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header border-primary">
-                            <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Degree Verification</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="card border border-primary">
-                                <div class="card-body">
-                                    <p class="card-text">Select the correct matric number for this student and click on the Generate button.</p>
-                                    <label for="name" class="col-form-label">Fullname: <span id="name"></span></label><hr>
-                                    <label for="program" class="col-form-label">Programme: <span id="program"></span></label><hr>
-                                    <label for="graduation" class="col-form-label">Year of Graduation: <span id="graduation"></span></label>
-                                </div>
-                            </div>
-                        </div>
-                        <form method="POST" id="verificationForm">
-                            @csrf
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="matric_number" class="col-form-label">Matric Number: <span style="color:red">(Based on our suggestion)</span></label>
-                                    <select class="form-control select_matric_number" name="matric_number" id="matric_number" required>
-                                    </select>
-                                    <input type="text" class="form-control matric_number"  name="matric_number_" id="matric_number_" 
-                                        placeholder="No suggestions, Please enter matric number here" required>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" id="btnverification" class="btn btn-success">Generate</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>            
-            <!-- /modal -->
-
         
         <!-- Required datatable js -->
         <script src="../assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -142,7 +99,6 @@
 
         <!-- Datatable init js -->
         <script src="../assets/js/pages/datatables.init.js"></script> 
-        <script src="../assets/js/pages/modal.init.js"></script>
         <script src="../assets/js/validation.min.js"></script>
         <script src="../assets/js/utils.js"></script>   
     @endsection
