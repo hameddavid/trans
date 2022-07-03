@@ -167,7 +167,8 @@ class ApplicationController extends Controller
                             ->where(['student_applications.id'=> $new_application->id, 'app_status'=>'PENDING'])
                             ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
                            
-                            $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]); File::put($app_stud->file_path.'.pdf', $pdf->output());    
+                            $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]);
+                             File::put($app_stud->file_path.'.pdf', $pdf->output());    
                 //  PDF::loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')
                 //  ->setWarnings(false)->save($app_stud->file_path.'.pdf');
                         }  
