@@ -373,7 +373,7 @@ public function get_student_result($request){
             $first_session_in_sch  = $sessions[0];
             $last_session_in_sch  = $sessions[count($sessions)-1];
             $years_spent = count($sessions);
-            return count($sessions);
+            // return count($sessions);
             $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
             $student  = Student::where('matric_number',$matno)->first();
             $response = "";
