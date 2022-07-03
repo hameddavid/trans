@@ -64,7 +64,7 @@ TO WHOM IT MAY CONCERN
 
         <div class="divContents" align="justify">
         
-            <!-- <img src="/www/wwwroot/trans/public/assets/images/original.jpg" /> -->
+            <img src="/www/wwwroot/trans/public/assets/images/original.jpg" />
             <p>
                 Dear Sir,
             </p>
