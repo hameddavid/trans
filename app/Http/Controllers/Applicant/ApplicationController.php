@@ -86,8 +86,6 @@ class ApplicationController extends Controller
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
                 $all_result_params = $this->get_student_result($request);
-                // return $all_result_params;
-                return $all_result_params;
                 $first_session_in_sch =  $all_result_params['first_session_in_sch']; 
                 $last_session_in_sch =  $all_result_params['last_session_in_sch']; 
                 $years_spent =  $all_result_params['years_spent']; 
@@ -169,8 +167,7 @@ class ApplicationController extends Controller
                             ->where(['student_applications.id'=> $new_application->id, 'app_status'=>'PENDING'])
                             ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
                            
-                            $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]);
-                             File::put($app_stud->file_path.'.pdf', $pdf->output());    
+                            $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]); File::put($app_stud->file_path.'.pdf', $pdf->output());    
                 
                         }  
                         // Notify applicant through email  $applicant->email and Notify admin
@@ -180,7 +177,7 @@ class ApplicationController extends Controller
                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
                            } 
                            else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
-                    } 
+                    } else{return response(['status'=>'failed','message'=>'Error saving request!'],401);}
                 }else{
                     return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
                 }
