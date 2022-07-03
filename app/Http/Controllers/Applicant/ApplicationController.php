@@ -48,7 +48,7 @@ class ApplicationController extends Controller
 
         // return PDF::loadView('testpdf')->setWarnings(false)->save('teeeeeeeeee.pdf');
         $pdf = PDF::loadView('testpdf');
-        Storage::put('public/pdf/testpdf.pdf', $pdf->output()); 
+        File::put('TEEWHY.pdf', $pdf->output()); 
         return "Yes o";
         $pdf = PDF::loadView('testpdf');
         return $pdf->stream();
@@ -166,9 +166,10 @@ class ApplicationController extends Controller
                             $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
                             ->where(['student_applications.id'=> $new_application->id, 'app_status'=>'PENDING'])
                             ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
-                            
-                 PDF::loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')
-                 ->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                           
+                            $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]); File::put($app_stud->file_path.'.pdf', $pdf->output());    
+                //  PDF::loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')
+                //  ->setWarnings(false)->save($app_stud->file_path.'.pdf');
                         }  
                         // Notify applicant through email  $applicant->email and Notify admin
                         $Subject= $type." APPLICATION NOTIFICATION";
