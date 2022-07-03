@@ -362,16 +362,25 @@ class AdminController extends Controller
                 //    ->loadView('result_soft',['data'=> $app_official->transcript_raw])
                 //    ->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
                     
-                   $pdf = PDF::loadView('cover_letter_soft',['data'=> $app_official]); 
-                   File::put($app_official->used_token.'_cover.pdf', $pdf->output());  
+                   $pdf = PDF::loadView('cover_letter_soft',['data'=> $app_official]);  File::put($app_official->used_token.'_cover.pdf', $pdf->output());  
 
-                   $pdf = PDF::loadView('result_soft',['data'=>  $app_official->transcript_raw]); 
-                   File::put($app_official->used_token.'.pdf', $pdf->output());    
+                   $pdf = PDF::loadView('result_soft',['data'=>  $app_official->transcript_raw]);  File::put($app_official->used_token.'.pdf', $pdf->output());    
 
 
                 }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
-                   PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
-                   PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
+                //    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+                //    ->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')
+                //    ->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
+
+                //    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+                //    ->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')
+                //    ->setWarnings(false)->save($app_official->used_token.'.pdf');
+
+                   $pdf = PDF::loadView('cover_letter',['data'=>  $app_official]);  File::put($app_official->used_token.'_cover.pdf', $pdf->output());   
+
+                   $pdf = PDF::loadView('result',['data'=>  $app_official->transcript_raw]);  File::put($app_official->used_token.'.pdf', $pdf->output());    
+
+
                     }
                    if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
                 && File::exists( storage_path('app/'.$app_official->certificate)) ) {
