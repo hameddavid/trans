@@ -579,4 +579,35 @@ $(document).ready(function ($) {
             }
         });
     });
+
+    $(".approve_verification").click(function () {
+        var id = $(this).data("id");
+        var matno = $(this).data("matno");
+        approveVerification(id, matno);
+    });
+
+    const approveVerification = (id, matno) => {
+        $.ajax({
+            type: "POST",
+            url: "approve_degree_verification ",
+            data: { userid: id, matno: matno },
+            dataType: "json",
+            beforeSend: function () {
+                if (confirm("Approve Request?") == false) return false;
+                $.blockUI();
+            },
+            success: function (response) {
+                console.log(response);
+                alertify.success(response.message);
+                setTimeout(function () {
+                    location.reload();
+                }, 2800);
+            },
+            error: function (response) {
+                console.log(response);
+                $.unblockUI();
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
 });
