@@ -54,6 +54,11 @@ Route::post('register',[AdminAuthController::class,'save_new_account']);
     Route::get('/proficiency/{path}', [AdminController::class, 'view_proficiency']);
     Route::post('/download_approved', [AdminController::class, 'download_approved']);
 
+    Route::get('/pending_verification',[AdminController::class,'get_pend_degree_verification']);
+    Route::get('/recommended_verification',[AdminController::class,'get_recommended_degree_verification']);
+    Route::get('/approved_verification',[AdminController::class,'get_approved_degree_verification']);
+
+
 
     Route::post('/treat_degree_verification', [AdminController::class, 'treat_degree_verification']);
     Route::post('/view_treated_degree_verification/{path}', [AdminController::class, 'view_treated_degree_verification']);
