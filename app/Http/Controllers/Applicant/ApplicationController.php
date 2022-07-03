@@ -370,10 +370,10 @@ public function get_student_result($request){
         $prog_name  = "";
         $cgpa  = "";
         if($this->get_student_result_session_given_matno($matno,$sessions)){
-            return $sessions;
             $first_session_in_sch  = $sessions[0];
             $last_session_in_sch  = $sessions[count($sessions)-1];
             $years_spent = count($sessions);
+            return count($sessions);
             $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
             $student  = Student::where('matric_number',$matno)->first();
             $response = "";
@@ -738,7 +738,7 @@ static function get_result_table_header($student,$applicant,$request,$prog_name,
 static function get_student_result_session_given_matno($matno,&$sessions){
    try {
     $sessions = DB::table('registrations')->distinct()->where(["matric_number"=>$matno , "deleted"=>"N"])->orderBy('session_id','ASC')->pluck('session_id');
-    if($sessions->count() > 0){ $sessions = $sessions; return true;}
+    if($sessions->count() > 0){  return true;}
     return false;
    } catch (\Throwable $th) {
     return response(['status'=>'failed','message'=>'catch, Error getting get_student_result_session_given_matno!']);
