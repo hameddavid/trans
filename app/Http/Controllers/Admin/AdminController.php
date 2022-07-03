@@ -639,7 +639,7 @@ public function get_pend_degree_verification(Request $request){
     $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
     if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $apps = DegreeVerification::where('status','PENDING')->select('*')->get();
-        return  view('pages.pending_degree_',['data'=>$data,'apps'=>$apps]);
+        return  view('pages.pending_degree',['data'=>$data,'apps'=>$apps]);
     
 
 }
@@ -647,14 +647,14 @@ public function get_recommended_degree_verification(Request $request){
     $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
     if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $apps = DegreeVerification::where('status','RECOMMENDED')->select('*')->get();
-        return  view('pages.recommended_degree_',['data'=>$data,'apps'=>$apps]);
+        return  view('pages.recommended_degree',['data'=>$data,'apps'=>$apps]);
 
 }
 public function get_approved_degree_verification(Request $request){
     $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
     if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $apps = DegreeVerification::where('status','APPROVED')->select('*')->get();
-        return  view('pages.approved_degree_',['data'=>$data,'apps'=>$apps]);
+        return  view('pages.approved_degree',['data'=>$data,'apps'=>$apps]);
 }
 
 
