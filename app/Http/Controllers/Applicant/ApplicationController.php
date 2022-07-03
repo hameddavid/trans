@@ -81,11 +81,12 @@ class ApplicationController extends Controller
             $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id,'emails'=>$admin_users]);
             if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allowed!"],400);}
             $certificate = $this->upload_cert($request);
-            }         return $applicant;
+            }         
 
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
                 $all_result_params = $this->get_student_result($request);
+                return $applicant;
                 return $all_result_params;
                 $first_session_in_sch =  $all_result_params['first_session_in_sch']; 
                 $last_session_in_sch =  $all_result_params['last_session_in_sch']; 
