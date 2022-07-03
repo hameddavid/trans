@@ -3,10 +3,26 @@
 <html>
     <head>
         <style type="text/css">
+            html {
+            margin:0;
+            padding:0; 
+            }
+            @page {
+                size: A4;
+                margin-top:0.5cm;
+                margin-bottom:0;
+                margin-left:0;
+                margin-right:0;
+                padding: 0;
+            }
+            
             .bodyBody {
-                margin: 10px;
                 font-family: Arial;
                 font-size: 11px;
+                /* background-image: url('/www/wwwroot/trans/public/assets/images/original.jpg'); */
+                background-size: contain;
+                background-repeat: no-repeat;
+
             }
             .divHeader {
                 text-align: right;
@@ -25,10 +41,18 @@
                 float: left;
                 padding-top: 50px;
             }
+            .main{
+                margin: 20% auto;
+                padding-top: 5px;
+                padding-right: 30px; 
+                padding-bottom: 15px; 
+                padding-left: 30px; 
+            }
         </style>
     </head>
     <body class="bodyBody">
-        <div class="divSubject">
+            <div class="main"> 
+            <div class="divSubject">
 <pre>
 {{date("F j, Y")}}  
 RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}    
