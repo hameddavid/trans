@@ -84,6 +84,7 @@ class ApplicationController extends Controller
             $certificate = $this->upload_cert($request);
             }
             if($applicant->count() != 0){
+                return $request->userid;
                 $type = strtoupper($request->transcript_type);
                 $all_result_params = $this->get_student_result($request);
                 $first_session_in_sch =  $all_result_params['first_session_in_sch']; 
