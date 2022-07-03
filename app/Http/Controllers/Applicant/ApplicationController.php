@@ -86,7 +86,7 @@ class ApplicationController extends Controller
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
                 $all_result_params = $this->get_student_result($request);
-                return $applicant;
+                // return $applicant;
                 return $all_result_params;
                 $first_session_in_sch =  $all_result_params['first_session_in_sch']; 
                 $last_session_in_sch =  $all_result_params['last_session_in_sch']; 
