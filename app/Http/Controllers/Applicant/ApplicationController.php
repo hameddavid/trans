@@ -84,9 +84,9 @@ class ApplicationController extends Controller
             $certificate = $this->upload_cert($request);
             }
             if($applicant->count() != 0){
-                return $request->userid;
                 $type = strtoupper($request->transcript_type);
                 $all_result_params = $this->get_student_result($request);
+                return $all_result_params;
                 $first_session_in_sch =  $all_result_params['first_session_in_sch']; 
                 $last_session_in_sch =  $all_result_params['last_session_in_sch']; 
                 $years_spent =  $all_result_params['years_spent']; 
@@ -575,7 +575,6 @@ public function get_student_result($request){
             </div> ';
             }
           
-        
         $response = str_replace("pageno", $page_no, $response);
         return ['first_session_in_sch'=>$first_session_in_sch,
         'last_session_in_sch'=>$last_session_in_sch,
