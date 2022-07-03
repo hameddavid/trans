@@ -18,7 +18,7 @@
             .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
-                /* background-image: url("/www/wwwroot/trans/public/assets/images/original.jpg"); */
+                background-image: url("www/wwwroot/trans/public/assets/images/original.jpg");
                 background-size: contain;
                 background-repeat: no-repeat;
 
@@ -63,8 +63,6 @@ TO WHOM IT MAY CONCERN
 
 
         <div class="divContents" align="justify">
-        
-            <img src="/www/wwwroot/trans/public/assets/images/original.jpg" />
             <p>
                 Dear Sir,
             </p>
