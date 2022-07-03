@@ -53,7 +53,7 @@
                                                             </a>
                                                             <div class="dropdown-menu">
                                                                 <div class="btn-group mb-3">
-                                                                    <a href="view_treated_degree_verification/" target="_blank" type="button" class="btn btn-secondary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</a>
+                                                                    <a href="view_treated_degree_verification/{{$app->id}}" target="_blank" type="button" class="btn btn-secondary waves-effect btn-label waves-light"><i class="bx bx-show-alt label-icon"></i>View</a>
                                                                     @if($data->role == 300)
                                                                         <button type="button" data-id="{{$app->id}}" data-matno="{{$app->matno_found}}" class="btn btn-success waves-effect btn-label waves-light approve_verification"><i class="bx bx-check label-icon"></i>Approve</button>
                                                                     @endif
