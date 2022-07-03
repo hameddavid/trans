@@ -58,17 +58,18 @@ $(document).ready(function () {
                     $(".btnSubmitVerification").prop("disabled", false);
                     $(".btnSubmitVerification").html("Submit");
                     alertify.success(response.message);
+                    if ($("#doc_type").val() === "transcript") {
+                        $(".showDIV").html("");
+                        $("#verificationModal").modal("hide");
+                        $("#transcriptModal").modal("show");
+                        $(".showDIV").html(response);
+                    }
                 },
                 error: function (response) {
                     console.log(response);
                     $(".btnSubmitVerification").prop("disabled", false);
                     $(".btnSubmitVerification").html("Submit");
                     alertify.error(response.responseJSON.message);
-
-                    $(".showDIV").html("");
-                    $("#verificationModal").modal("hide");
-                    $("#transcriptModal").modal("show");
-                    $(".showDIV").html(response.responseJSON.message);
                 },
             });
         }
