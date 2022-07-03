@@ -6,10 +6,9 @@
     <title>Document</title>
 </head>
 <body> 
+    
 
-
-
-    <img src="{{'/www/wwwroot/trans/public/assets/images/run_logo_big.png'}}">
+    <img src="{{public_path().'/assets/images/run_logo_big.png'}}">
     
    
 </body>
