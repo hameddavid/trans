@@ -57,7 +57,9 @@ $(document).ready(function () {
                     console.log(response);
                     $(".btnSubmitVerification").prop("disabled", false);
                     $(".btnSubmitVerification").html("Submit");
-                    alertify.success(response.message);
+                    if ($("#doc_type").val() === "degree") {
+                        alertify.success(response.message);
+                    }
                     if ($("#doc_type").val() === "transcript") {
                         $(".showDIV").html("");
                         $("#verificationModal").modal("hide");
