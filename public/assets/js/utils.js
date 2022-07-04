@@ -620,7 +620,7 @@ $(document).ready(function ($) {
         $.ajax({
             type: "POST",
             url: "recommend_degree ",
-            data: { userid: id },
+            data: { id: id },
             dataType: "json",
             beforeSend: function () {
                 if (confirm("Recommend Request?") == false) return false;
