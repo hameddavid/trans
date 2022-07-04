@@ -580,6 +580,11 @@ $(document).ready(function ($) {
         });
     });
 
+    $(".recommend_verification").click(function () {
+        var id = $(this).data("id");
+        recommendVerification(id);
+    });
+
     $(".approve_verification").click(function () {
         var id = $(this).data("id");
         var matno = $(this).data("matno");
@@ -594,6 +599,31 @@ $(document).ready(function ($) {
             dataType: "json",
             beforeSend: function () {
                 if (confirm("Approve Request?") == false) return false;
+                $.blockUI();
+            },
+            success: function (response) {
+                console.log(response);
+                alertify.success(response.message);
+                setTimeout(function () {
+                    location.reload();
+                }, 2800);
+            },
+            error: function (response) {
+                console.log(response);
+                $.unblockUI();
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
+
+    const recommendVerification = (id) => {
+        $.ajax({
+            type: "POST",
+            url: "recommend_degree ",
+            data: { id: id },
+            dataType: "json",
+            beforeSend: function () {
+                if (confirm("Recommend Request?") == false) return false;
                 $.blockUI();
             },
             success: function (response) {
