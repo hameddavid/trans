@@ -57,8 +57,14 @@ $(document).ready(function () {
                     console.log(response);
                     $(".btnSubmitVerification").prop("disabled", false);
                     $(".btnSubmitVerification").html("Submit");
+                    alertify.success(response.message);
+                },
+                error: function (response) {
+                    console.log(response);
+                    $(".btnSubmitVerification").prop("disabled", false);
+                    $(".btnSubmitVerification").html("Submit");
                     if ($("#doc_type").val() === "degree") {
-                        alertify.success(response.message);
+                        alertify.error(response.responseJSON.message);
                     }
                     if ($("#doc_type").val() === "transcript") {
                         $.unblockUI();
@@ -67,12 +73,6 @@ $(document).ready(function () {
                         $("#transcriptModal").modal("show");
                         $(".showDIV").html(response);
                     }
-                },
-                error: function (response) {
-                    console.log(response);
-                    $(".btnSubmitVerification").prop("disabled", false);
-                    $(".btnSubmitVerification").html("Submit");
-                    alertify.error(response.responseJSON.message);
                 },
             });
         }
