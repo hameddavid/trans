@@ -82,7 +82,8 @@ class RecordController extends Controller
             ->select('official_applications.*','official_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
         if($app_stud){
             $decoded_transcript = html_entity_decode($app_stud->transcript_raw);
-            return $decoded_transcript; 
+            return response(['status'=>'success','message'=>'Transcript successfully fetched','data'=>$decoded_transcript],201);
+            //return $decoded_transcript; 
         }
         else{
             return response(['status'=>'failed','message'=>'Unable to fetch transcript'],401); 
