@@ -353,33 +353,13 @@ class AdminController extends Controller
                 $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
                 ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
                 if($app_official){
-                    if(strtoupper($app_official->delivery_mode) == "SOFT"){
-
-                  // PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-                   //->loadView('cover_letter_soft',['data'=> $app_official])
-                  // ->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
-                //    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-                //    ->loadView('result_soft',['data'=> $app_official->transcript_raw])
-                //    ->setPaper('a4', 'portrate')->setWarnings(false)->save($app_official->used_token.'.pdf');
-                    
+                    if(strtoupper($app_official->delivery_mode) == "SOFT"){ 
                    $pdf = PDF::loadView('cover_letter_soft',['data'=> $app_official]);  File::put($app_official->used_token.'_cover.pdf', $pdf->output());  
-
                    $pdf = PDF::loadView('result_soft',['data'=>  $app_official->transcript_raw]);  File::put($app_official->used_token.'.pdf', $pdf->output());    
 
-
                 }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
-                //    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-                //    ->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')
-                //    ->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
-
-                //    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-                //    ->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')
-                //    ->setWarnings(false)->save($app_official->used_token.'.pdf');
-
                    $pdf = PDF::loadView('cover_letter',['data'=>  $app_official]);  File::put($app_official->used_token.'_cover.pdf', $pdf->output());   
-
                    $pdf = PDF::loadView('result',['data'=>  $app_official->transcript_raw]);  File::put($app_official->used_token.'.pdf', $pdf->output());    
-
 
                     }
                    if (File::exists($app_official->used_token.'.pdf') && File::exists($app_official->used_token.'_cover.pdf')
@@ -409,8 +389,7 @@ class AdminController extends Controller
                 $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
                 ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
                 if($app_stud){
-                    $pdf = PDF::loadView('result',['data'=> $app_stud->transcript_raw]); 
-                    File::put($app_stud->file_path.'.pdf', $pdf->output()); 
+                    $pdf = PDF::loadView('result',['data'=> $app_stud->transcript_raw]); File::put($app_stud->file_path.'.pdf', $pdf->output()); 
                     if (File::exists($app_stud->file_path.'.pdf')) {
                         if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail_attachment_stud($app_stud,$Subject="REDEEMER'S UNIVERSITY TRANSCRIPT DELIVERY",$Msg=$this->get_delivery_msg($app_stud))['status'] == 'ok'){
                             $app_stud->app_status = "APPROVED";
@@ -502,7 +481,8 @@ class AdminController extends Controller
                         $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
                         ->where(['student_applications.id'=> $app->id, 'app_status'=>'PENDING'])
                         ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
-                        PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])->loadView('proficiency_letter',['data'=> $app_stud])->setPaper('a4', 'portrate')->setWarnings(false)->save($app_stud->file_path.'.pdf');
+                        $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]);   File::put($app_stud->file_path.'.pdf', $pdf->output());  
+
                     }
                     return response(["status"=>"success","message"=>"Transcript successfully regenerated!"]);  }
                 else{return response(["status"=>"failed","message"=>"Error updating transcript regeneration"],200); }
@@ -620,9 +600,8 @@ public function treat_degree_verification(Request $request){
         // $app_stud->approved_by = $data->email;
         // $app_stud->approved_at = date("F j, Y, g:i a");
         if($getStud->save()){ 
-            PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-            ->loadView('verification',['data'=> $getStud])
-             ->setPaper('a4', 'portrate')->setWarnings(false)->save($getStud->id.'.pdf');
+             $pdf = PDF::loadView('verification',['data'=> $getStud]);   File::put($getStud->id.'.pdf', $pdf->output());  
+
             if (File::exists($getStud->id.'.pdf')) {
                 return response(['status'=>'success','message'=>'Record/File generated successfully!'],201); 
             }
