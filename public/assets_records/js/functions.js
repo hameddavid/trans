@@ -61,6 +61,7 @@ $(document).ready(function () {
                         alertify.success(response.message);
                     }
                     if ($("#doc_type").val() === "transcript") {
+                        $.unblockUI();
                         $(".showDIV").html("");
                         $("#verificationModal").modal("hide");
                         $("#transcriptModal").modal("show");
