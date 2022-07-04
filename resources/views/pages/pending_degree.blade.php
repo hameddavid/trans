@@ -59,7 +59,7 @@
                                                                     @endif
                                                                 </div>
                                                                 <div class="btn-group btn-group-example mb-3 p-3" role="group">
-                                                                    @if($data->role == 200)<button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" title="Recommend" class="btn btn-success w-xs"><i class="mdi mdi-thumb-up"></i></button>@endif
+                                                                    @if($data->role == 200)<button type="button" data-id="{{$app->id}}" title="Recommend" class="btn btn-success w-xs recommend_verification"><i class="mdi mdi-thumb-up"></i></button>@endif
                                                                     @if($data->role == 200)<button type="button" title="Disapprove" class="btn btn-danger w-xs"><i class="mdi mdi-thumb-down"></i></button>@endif
                                                                 </div> 
                                                             </div>
