@@ -166,8 +166,7 @@ class ApplicationController extends Controller
                         if($type == 'PROFICIENCY'){
                             $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
                             ->where(['student_applications.id'=> $new_application->id, 'app_status'=>'PENDING'])
-                            ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first(); 
-                           
+                            ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first();   
                             $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]); File::put($app_stud->file_path.'.pdf', $pdf->output());    
                 
                         }  
@@ -405,14 +404,11 @@ public function get_student_result($request){
                     <th>Grade Point</th>
                     </tr>'; }
                             
-                    if(($semester != $result->semester) && ($semester != 0)) {
-                            
+                    if(($semester != $result->semester) && ($semester != 0)) {     
                         $cumm_sum_point_unit += $sum_point_unit;
                 $cumm_sum_unit += $sum_unit;
-                            // return $cumm_sum_unit;
                 $gpa = $sum_point_unit / floatval($sum_unit);
                 $cgpa = $cumm_sum_point_unit / floatval($cumm_sum_unit);
-                 
                 $response = $response . '
                 </table>
                 <table class="result_table2">
@@ -490,7 +486,7 @@ public function get_student_result($request){
                 
         $response = $response .'
         </div>';
-            
+             
         } 
     
         // response = response[0: len(response) - len('</div>')]

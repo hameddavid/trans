@@ -97,6 +97,14 @@ public function list_programmes(){
 }
 
 
+     //    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+                //    ->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')
+                //    ->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
+
+                //    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+                //    ->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')
+                //    ->setWarnings(false)->save($app_official->used_token.'.pdf');
+
 
 
 
