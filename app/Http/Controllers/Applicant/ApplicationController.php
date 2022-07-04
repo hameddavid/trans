@@ -404,8 +404,7 @@ public function get_student_result($request){
                     <th>Grade Point</th>
                     </tr>'; }
                             
-                    if(($semester != $result->semester) && ($semester != 0)) {
-                            
+                    if(($semester != $result->semester) && ($semester != 0)) {     
                         $cumm_sum_point_unit += $sum_point_unit;
                 $cumm_sum_unit += $sum_unit;
                 $gpa = $sum_point_unit / floatval($sum_unit);
@@ -487,6 +486,14 @@ public function get_student_result($request){
                 
         $response = $response .'
         </div>';
+            if($sessionIndex == 0){
+                return ['first_session_in_sch'=>$first_session_in_sch,
+                'last_session_in_sch'=>$last_session_in_sch,
+                'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name ,
+                'dept'=>$dept,'fac'=>$fac,'cgpa'=> round($cgpa,2),
+                'class_of_degree'=>$this->class_of_degree($cgpa),'result'=>$response];
+            }
+
             
         } 
     
