@@ -358,7 +358,7 @@ static function get_admin_msg($applicant){
 
 public function get_student_result($request){
     //   $prog_code  failing .... RUN1011/2797
-    // try {
+    try {
         $matno = str_replace(' ', '', $request->matno);
         $first_session_in_sch  = "";
         $last_session_in_sch  = "";
@@ -580,9 +580,9 @@ public function get_student_result($request){
        
     }else{ return "empty student session";}
         
-    // } catch (\Throwable $th) {
-    //     //throw $th;
-    // }
+    } catch (\Throwable $th) {
+        //throw $th;
+    }
    
 }
 
