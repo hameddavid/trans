@@ -67,6 +67,12 @@ $(document).ready(function () {
                         alertify.error(response.responseJSON.message);
                     }
                     if ($("#doc_type").val() === "transcript") {
+                        $("head").append(
+                            $('<link rel="stylesheet" type="text/css" />').attr(
+                                "href",
+                                "assets/css/transcript.css"
+                            )
+                        );
                         $.unblockUI();
                         $(".showDIV").html("");
                         $("#verificationModal").modal("hide");
