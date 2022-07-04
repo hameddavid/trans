@@ -486,15 +486,7 @@ public function get_student_result($request){
                 
         $response = $response .'
         </div>';
-            if($sessionIndex == 4){
-                return ['first_session_in_sch'=>$first_session_in_sch,
-                'last_session_in_sch'=>$last_session_in_sch,
-                'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name ,
-                'dept'=>$dept,'fac'=>$fac,'cgpa'=> round($cgpa,2),
-                'class_of_degree'=>$this->class_of_degree($cgpa),'result'=>$response];
-            }
-
-            
+             
         } 
     
         // response = response[0: len(response) - len('</div>')]
