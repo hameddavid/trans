@@ -59,10 +59,17 @@ $(document).ready(function () {
                     $(".btnSubmitVerification").html("Submit");
                     alertify.success(response.message);
                     if ($("#doc_type").val() === "transcript") {
+                        $("head").append(
+                            $('<link rel="stylesheet" type="text/css" />').attr(
+                                "href",
+                                "assets/css/transcript.css"
+                            )
+                        );
+                        $.unblockUI();
                         $(".showDIV").html("");
                         $("#verificationModal").modal("hide");
                         $("#transcriptModal").modal("show");
-                        $(".showDIV").html(response);
+                        $(".showDIV").html(response.data);
                     }
                 },
                 error: function (response) {
