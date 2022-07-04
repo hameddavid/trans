@@ -486,7 +486,7 @@ public function get_student_result($request){
                 
         $response = $response .'
         </div>';
-            if($sessionIndex == 2){
+            if($sessionIndex == 3){
                 return ['first_session_in_sch'=>$first_session_in_sch,
                 'last_session_in_sch'=>$last_session_in_sch,
                 'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name ,
