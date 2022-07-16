@@ -507,7 +507,7 @@ $(document).ready(function ($) {
             error: function (response) {
                 console.log(response);
                 $.unblockUI();
-                alertify.error(response.message);
+                alertify.error(response.responseJSON.message);
             },
         });
     };
