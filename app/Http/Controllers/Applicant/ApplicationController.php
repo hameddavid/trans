@@ -108,6 +108,8 @@ class ApplicationController extends Controller
                      $new_application->transcript_type = $type;
                      $new_application->address = $request->address ? $request->address : $request->email; //use email that was entered not applicant email
                      $new_application->destination = $request->destination ? $request->destination : 'Official Soft Copy';
+                     $new_application->institutional_username = $request->institutional_username ? $request->institutional_username : ' ';
+                     $new_application->institutional_password = $request->institutional_password ? $request->institutional_password : ' ';
                      $new_application->recipient = $request->recipient;
                      $new_application->app_status = 'PENDING'; // default status
                      $new_application->used_token = $request->used_token;
