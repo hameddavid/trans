@@ -65,10 +65,6 @@ $(document).ready(function ($) {
                 "../assets/css/transcript.css"
             )
         );
-        $(".logo").attr(
-            "src",
-            "https://records.run.edu.ng/assets/images/run_logo_big.png"
-        );
         $("#btnApprove").hide();
         $(".showHTML").html("");
         $("#transcriptModal").modal("show");
@@ -88,6 +84,10 @@ $(document).ready(function ($) {
         $(".showHTML").load(
             `transcript/${type}/${id}`,
             function (data, status, jqXGR) {
+                $(".logo").attr(
+                    "src",
+                    "https://records.run.edu.ng/assets/images/run_logo_big.png"
+                );
                 console.log("fetched");
             }
         );
