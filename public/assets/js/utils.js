@@ -65,6 +65,10 @@ $(document).ready(function ($) {
                 "../assets/css/transcript.css"
             )
         );
+        $(".logo").attr(
+            "src",
+            "https://records.run.edu.ng/assets/images/run_logo_big.png"
+        );
         $("#btnApprove").hide();
         $(".showHTML").html("");
         $("#transcriptModal").modal("show");
