@@ -303,6 +303,26 @@
                                                 </li>
                                             </ul>
                                         </p>
+                                        <p>
+                                            WHERE OFFICIAL TRANSCRIPT CAN BE SENT TO
+                                            <ul>
+                                                <li>
+                                                    Official Transcripts can only be sent to the official email, e.g. registrar@oauife.edu.ng, internationaladmissions@lincoln.ac.uk, deanpgschool@unilag.edu.ng, or addresses of the Registrar of an equivalent academic institution, Dean of Postgraduate School of an equivalent academic institution, Educational Agencies, Scholarship Boards and Embassies.
+                                                </li>
+                                                <li>
+                                                    Applicants who apply for a soft copy of the official transcripts must provide the official email address as stated above.
+                                                </li>
+                                                <li>
+                                                    Upload of an electronic copy of the official transcript can be uploaded to the official web link/website of equivalent academic institutions, Scholarship Boards, and Embassies. You are expected to provide the link, username and password to enable us to complete the upload
+                                                </li>
+                                                <li>
+                                                    if you are applying for Official Transcripts to be forwarded to an evaluating entity, please include the reference number/application ID/student ID (e.g. WES Ref. no./ICAS No/PBEC No) in the address section of the application.
+                                                </li>
+                                                <li>
+                                                    For Hard copy official transcripts, the full office address of the receiving institution/organisation must be provided.
+                                                </li>
+                                            </ul>
+                                        </p>
                                     </div>
 
                                     <div class="tab-pane fade" id="nipa" role="tabpanel" aria-labelledby="profile-tab">
