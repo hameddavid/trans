@@ -276,9 +276,32 @@
                                 <div class="rn-tab-content tab-content">
                                     <div class="tab-pane fade show active" id="irin" role="tabpanel" aria-labelledby="irin-tab">
                                         <p>
-                                            IMPORTANT INFORMATION
-                                            PLEASE ENSURE THAT YOU READ THIS IMPORTANT NOTICE CAREFULLY BEFORE COMMENCING THE APPLICATION.
-                                            THERE WILL BE NO REFUND FOR ANY APPLICATION ONCE PAYMENT IS SUBMITTED/RECEIVED
+                                            IMPORTANT INFORMATION<br>
+                                            PLEASE ENSURE THAT YOU READ THIS IMPORTANT NOTICE CAREFULLY BEFORE COMMENCING THE APPLICATION.<br>
+                                            THERE WILL BE NO REFUND FOR ANY APPLICATION ONCE PAYMENT IS SUBMITTED/RECEIVED<br>
+                                            Applications are treated on a first-come-first-served basis.<br>
+
+                                            Except for payment generated through payment advice, under no condition should applicants make payment to any individual or organisation under the pretext of fast track.                                            
+                                        </p>
+                                        <p>
+                                            WHERE OFFICIAL TRANSCRIPT CAN NOT BE SENT TO
+                                            <ul>
+                                                <li>
+                                                    Official Transcripts CAN NOT be issued directly to personal postal/email addresses or non-customised email addresses, e.g. simeon@yahoo.com, paule@run.edu.ng, ukeas@gmail.com
+                                                </li>
+                                                <li>
+                                                    Official Transcripts CAN NOT be collected by hand
+                                                </li>
+                                                <li>
+                                                    Official Transcripts CAN NOT be sent to Companies/Organisations for the purpose of employment; however, a request for a Statement of Results can be made for this purpose.
+                                                </li>
+                                                <li>
+                                                    Official Transcripts CAN NOT be sent to any section/organ within Redeemer’s University (soft or hard copy).
+                                                </li>
+                                                <li>
+                                                    Official Transcripts CAN NOT be sent directly to applicants (graduates or students withdrawing their studentship).
+                                                </li>
+                                            </ul>
                                         </p>
                                     </div>
 
