@@ -329,7 +329,17 @@
                                     </div>
 
                                     <div class="tab-pane fade" id="proc" role="tabpanel" aria-labelledby="proc-tab">
-                                        <p>e-Copy - ₦12,000</p>
+                                        <ul>
+                                            <li>
+                                                Transcript Portal - procedure: Log in to https://records.run.edu.ng/transcript
+                                            </li>
+                                            <li>
+                                                For further enquiries, we are available for a live chat via the Transcript Portal
+                                            </li>
+                                            <li>
+                                                For technical issues, message ict@run.edu.ng
+                                            </li>
+                                        </ul>
                                     </div>
 
                                     <div class="tab-pane fade" id="nipa" role="tabpanel" aria-labelledby="profile-tab">
