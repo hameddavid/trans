@@ -275,7 +275,11 @@
                                 </ul>
                                 <div class="rn-tab-content tab-content">
                                     <div class="tab-pane fade show active" id="irin" role="tabpanel" aria-labelledby="irin-tab">
-                                        <p></p>
+                                        <p>
+                                            IMPORTANT INFORMATION
+                                            PLEASE ENSURE THAT YOU READ THIS IMPORTANT NOTICE CAREFULLY BEFORE COMMENCING THE APPLICATION.
+                                            THERE WILL BE NO REFUND FOR ANY APPLICATION ONCE PAYMENT IS SUBMITTED/RECEIVED
+                                        </p>
                                     </div>
 
                                     <div class="tab-pane fade" id="nipa" role="tabpanel" aria-labelledby="profile-tab">
