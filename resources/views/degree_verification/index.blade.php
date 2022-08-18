@@ -267,7 +267,10 @@
                             <div class="rn-default-tab style-two">
                                 <ul class="nav nav-tabs tab-button" role="tablist">
                                     <li class="nav-item tabs__tab " role="presentation">
-                                        <button class="nav-link active" id="irin-tab" data-bs-toggle="tab" data-bs-target="#irin" type="button" role="tab" aria-controls="irin" aria-selected="true">Procedure</button>
+                                        <button class="nav-link active" id="irin-tab" data-bs-toggle="tab" data-bs-target="#irin" type="button" role="tab" aria-controls="irin" aria-selected="true">Information</button>
+                                    </li>
+                                    <li class="nav-item tabs__tab " role="presentation">
+                                        <button class="nav-link" id="procedure-tab" data-bs-toggle="tab" data-bs-target="#procedure" type="button" role="tab" aria-controls="procedure" aria-selected="false">Procedure</button>
                                     </li>
                                     <li class="nav-item tabs__tab " role="presentation">
                                         <button class="nav-link" id="nipa-tab" data-bs-toggle="tab" data-bs-target="#nipa" type="button" role="tab" aria-controls="nipa" aria-selected="false">Charges</button>
@@ -323,6 +326,10 @@
                                                 </li>
                                             </ul>
                                         </p>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="procedure" role="tabpanel" aria-labelledby="procedure-tab">
+                                        <p>e-Copy - ₦12,000</p>
                                     </div>
 
                                     <div class="tab-pane fade" id="nipa" role="tabpanel" aria-labelledby="profile-tab">
