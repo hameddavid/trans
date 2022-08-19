@@ -1,0 +1,15 @@
+{
+  "short_name": "Transcript Portal",
+  "name": "Redeemer's University",
+  "icons": [
+    {
+      "src": "./assets/img/favicon.png",
+      "sizes": "100x100",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "https://reg.run.edu.ng/transcript",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
