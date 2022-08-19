@@ -106,7 +106,8 @@ class ApplicationController extends Controller
                      $new_application->applicant_id  = $request->userid;
                      $new_application->delivery_mode = $request->mode;
                      $new_application->transcript_type = $type;
-                     $new_application->address = $request->address ? $request->address : $request->email; //use email that was entered not applicant email
+                     $new_application->address = $request->address; //use email that was entered not applicant email
+                     $new_application->email = $request->email ? $request->email : "null"; //use email that was entered not applicant email
                      $new_application->destination = $request->destination ? $request->destination : 'Official Soft Copy';
                      $new_application->institutional_username = $request->institutional_username ? $request->institutional_username : ' ';
                      $new_application->institutional_password = $request->institutional_password ? $request->institutional_password : ' ';
