@@ -267,7 +267,10 @@
                             <div class="rn-default-tab style-two">
                                 <ul class="nav nav-tabs tab-button" role="tablist">
                                     <li class="nav-item tabs__tab " role="presentation">
-                                        <button class="nav-link active" id="irin-tab" data-bs-toggle="tab" data-bs-target="#irin" type="button" role="tab" aria-controls="irin" aria-selected="true">Procedure</button>
+                                        <button class="nav-link active" id="irin-tab" data-bs-toggle="tab" data-bs-target="#irin" type="button" role="tab" aria-controls="irin" aria-selected="true">Information</button>
+                                    </li>
+                                    <li class="nav-item tabs__tab " role="presentation">
+                                        <button class="nav-link" id="proc-tab" data-bs-toggle="tab" data-bs-target="#proc" type="button" role="tab" aria-controls="proc" aria-selected="false">Procedure</button>
                                     </li>
                                     <li class="nav-item tabs__tab " role="presentation">
                                         <button class="nav-link" id="nipa-tab" data-bs-toggle="tab" data-bs-target="#nipa" type="button" role="tab" aria-controls="nipa" aria-selected="false">Charges</button>
@@ -275,7 +278,68 @@
                                 </ul>
                                 <div class="rn-tab-content tab-content">
                                     <div class="tab-pane fade show active" id="irin" role="tabpanel" aria-labelledby="irin-tab">
-                                        <p></p>
+                                        <p>
+                                            IMPORTANT INFORMATION<br>
+                                            PLEASE ENSURE THAT YOU READ THIS IMPORTANT NOTICE CAREFULLY BEFORE COMMENCING THE APPLICATION.<br>
+                                            THERE WILL BE NO REFUND FOR ANY APPLICATION ONCE PAYMENT IS SUBMITTED/RECEIVED<br>
+                                            Applications are treated on a first-come-first-served basis.<br>
+
+                                            Except for payment generated through payment advice, under no condition should applicants make payment to any individual or organisation under the pretext of fast track.                                            
+                                        </p>
+                                        <p>
+                                            WHERE OFFICIAL TRANSCRIPT CAN NOT BE SENT TO
+                                            <ul>
+                                                <li>
+                                                    Official Transcripts CAN NOT be issued directly to personal postal/email addresses or non-customised email addresses, e.g. simeon@yahoo.com, paule@run.edu.ng, ukeas@gmail.com
+                                                </li>
+                                                <li>
+                                                    Official Transcripts CAN NOT be collected by hand
+                                                </li>
+                                                <li>
+                                                    Official Transcripts CAN NOT be sent to Companies/Organisations for the purpose of employment; however, a request for a Statement of Results can be made for this purpose.
+                                                </li>
+                                                <li>
+                                                    Official Transcripts CAN NOT be sent to any section/organ within Redeemer’s University (soft or hard copy).
+                                                </li>
+                                                <li>
+                                                    Official Transcripts CAN NOT be sent directly to applicants (graduates or students withdrawing their studentship).
+                                                </li>
+                                            </ul>
+                                        </p>
+                                        <p>
+                                            WHERE OFFICIAL TRANSCRIPT CAN BE SENT TO
+                                            <ul>
+                                                <li>
+                                                    Official Transcripts can only be sent to the official email, e.g. registrar@oauife.edu.ng, internationaladmissions@lincoln.ac.uk, deanpgschool@unilag.edu.ng, or addresses of the Registrar of an equivalent academic institution, Dean of Postgraduate School of an equivalent academic institution, Educational Agencies, Scholarship Boards and Embassies.
+                                                </li>
+                                                <li>
+                                                    Applicants who apply for a soft copy of the official transcripts must provide the official email address as stated above.
+                                                </li>
+                                                <li>
+                                                    Upload of an electronic copy of the official transcript can be uploaded to the official web link/website of equivalent academic institutions, Scholarship Boards, and Embassies. You are expected to provide the link, username and password to enable us to complete the upload
+                                                </li>
+                                                <li>
+                                                    if you are applying for Official Transcripts to be forwarded to an evaluating entity, please include the reference number/application ID/student ID (e.g. WES Ref. no./ICAS No/PBEC No) in the address section of the application.
+                                                </li>
+                                                <li>
+                                                    For Hard copy official transcripts, the full office address of the receiving institution/organisation must be provided.
+                                                </li>
+                                            </ul>
+                                        </p>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="proc" role="tabpanel" aria-labelledby="proc-tab">
+                                        <ul>
+                                            <li>
+                                                Transcript Portal - procedure: Log in to https://records.run.edu.ng/transcript
+                                            </li>
+                                            <li>
+                                                For further enquiries, we are available for a live chat via the Transcript Portal
+                                            </li>
+                                            <li>
+                                                For technical issues, message ict@run.edu.ng
+                                            </li>
+                                        </ul>
                                     </div>
 
                                     <div class="tab-pane fade" id="nipa" role="tabpanel" aria-labelledby="profile-tab">

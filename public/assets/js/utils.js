@@ -84,6 +84,10 @@ $(document).ready(function ($) {
         $(".showHTML").load(
             `transcript/${type}/${id}`,
             function (data, status, jqXGR) {
+                $(".logo").attr(
+                    "src",
+                    "https://records.run.edu.ng/assets/images/run_logo_big.png"
+                );
                 console.log("fetched");
             }
         );
@@ -503,7 +507,7 @@ $(document).ready(function ($) {
             error: function (response) {
                 console.log(response);
                 $.unblockUI();
-                alertify.error(response.message);
+                alertify.error(response.responseJSON.message);
             },
         });
     };
