@@ -56,7 +56,7 @@ static function find_and_replace_string2($string){
 
  public function applicant_mail_attachment($applicant,$Subject,$Msg){
     $data = [
-        'to' => [$applicant->address],
+        'to' => [$applicant->official_email_4_soft],
         'docs'=> [ 
             ['path'=> public_path($applicant->file_path.'_cover.pdf'), 'as' => strtoupper($applicant->surname)."_COVER_LETTER.pdf",'mime' => 'application/pdf'],
             ['path'=> public_path($applicant->file_path.'.pdf'), 'as' => strtoupper($applicant->surname)."_TRANSCRIPT.pdf",'mime' => 'application/pdf'],
