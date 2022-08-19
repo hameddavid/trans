@@ -242,13 +242,13 @@ p{
 	object-position: right top; 
 } */
 
-/* body{
+body{
 	background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
 	object-fit: none;  
 	object-position: right top; 
-} */
+}
 
 
   </style>
