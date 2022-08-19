@@ -351,7 +351,8 @@ class AdminController extends Controller
             $type = strtoupper($request->transcript_type);
             if($type == 'OFFICIAL'){  
                 $app_official = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
-                ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
+                ->where(['application_id'=> $request->id, 'app_status'=>'RECOMMENDED'])->select('official_applications.*','official_applications.used_token AS file_path',
+                'official_applications.email AS official_email_4_soft','applicants.surname','applicants.firstname','applicants.email','applicants.sex','applicants.id')->first(); 
                 if($app_official){
                     if(strtoupper($app_official->delivery_mode) == "SOFT"){ 
                    $pdf = PDF::loadView('cover_letter_soft',['data'=> $app_official]);  File::put($app_official->used_token.'_cover.pdf', $pdf->output());  
