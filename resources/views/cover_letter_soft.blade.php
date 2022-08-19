@@ -16,14 +16,14 @@
                 padding: 0;
             }
             
-            /* .bodyBody {
+            .bodyBody {
                 font-family: Arial;
                 font-size: 11px;
                 background-image: url('/www/wwwroot/trans/public/assets/images/original.jpg');
                 background-size: contain;
                 background-repeat: no-repeat;
 
-            } */
+            }
             .divHeader {
                 text-align: right;
                 border: 1px solid;
