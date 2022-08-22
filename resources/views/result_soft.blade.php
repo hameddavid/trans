@@ -243,7 +243,7 @@ p{
 } */
 
 body{
-	background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png");
+	/* background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png"); */
 	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png"); */
 	background-repeat:no-repeat;
 	background-size: cover; 
@@ -255,7 +255,7 @@ body{
   </style>
 </head>
 <body>
-	<img src="https://records.run.edu.ng/assets/images/metal_logo.png">
+	<img src="/www/wwwroot/trans/public/assets/images/metal_logo.png">
     {!! $data !!}
 </body>
 </html>
