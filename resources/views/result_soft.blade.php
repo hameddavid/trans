@@ -255,6 +255,7 @@ body{
   </style>
 </head>
 <body>
+	<img src="https://records.run.edu.ng/assets/images/metal_logo.png">
     {!! $data !!}
 </body>
 </html>
