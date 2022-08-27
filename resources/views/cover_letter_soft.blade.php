@@ -17,7 +17,7 @@
             }
             
             .bodyBody {
-                background-image: url("https://records.run.edu.ng/assets/images/original.png");
+                background-image: url("https://records.run.edu.ng/assets/images/maintenance.png");
                 /* background-image: url("https://records.run.edu.ng/assets/images/original.jpg"); */
                 /* background-image: url('/www/wwwroot/trans/public/assets/images/original.jpg'); */
                 background-size: contain;
@@ -25,6 +25,9 @@
                 font-family: Arial;
                 font-size: 11px;
 
+            }
+            body{
+                
             }
             .divHeader {
                 text-align: right;
