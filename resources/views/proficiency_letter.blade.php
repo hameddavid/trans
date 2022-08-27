@@ -110,7 +110,7 @@ TO WHOM IT MAY CONCERN
         </div>
 
         <div class="divAdios">
-            MISS ADETUTU ADEWOLE<br>
+            ADETUTU ADEWOLE<br>
             Administrative Officer, Academic Affairs<br>
             For:  REGISTRAR
         </div>
