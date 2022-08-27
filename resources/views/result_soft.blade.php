@@ -254,7 +254,7 @@ body{
 
   </style>
 </head>
-<body style="background-image: url('{{ asset('images/metal_logo.png')}}');">
+<body>
     {!! $data !!}
 </body>
 </html>
