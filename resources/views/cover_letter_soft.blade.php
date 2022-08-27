@@ -17,12 +17,13 @@
             }
             
             .bodyBody {
-                font-family: Arial;
-                font-size: 11px;
-                background-image: url("https://records.run.edu.ng/assets/images/original.jpg");
+                background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png");
+                /* background-image: url("https://records.run.edu.ng/assets/images/original.jpg"); */
                 /* background-image: url('/www/wwwroot/trans/public/assets/images/original.jpg'); */
                 background-size: contain;
                 background-repeat: no-repeat;
+                font-family: Arial;
+                font-size: 11px;
 
             }
             .divHeader {
