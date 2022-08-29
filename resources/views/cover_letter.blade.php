@@ -103,8 +103,7 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}
                 Yours faithfully,
 
             </p>
-
-            <pre><p>To verify the authenticity of this document visit https://records.run.edu.ng </p> </pre>
+            
         </div>
 
         <div class="divAdios">
@@ -112,5 +111,7 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data->application_id}}
             Deputy Registrar, Academic Affairs<br>
             For:  REGISTRAR
         </div>
+        <br>
+        <pre><p>To verify the authenticity of this document visit https://records.run.edu.ng </p> </pre>
     </body>
 </html>
