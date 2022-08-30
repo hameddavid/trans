@@ -358,7 +358,7 @@ class AdminController extends Controller
                    $pdf = PDF::loadView('cover_letter_soft',['data'=> $app_official]);  File::put($app_official->used_token.'_cover.pdf', $pdf->output());  
                    $pdf = PDF::loadView('result_soft',['data'=>  $app_official->transcript_raw]);  File::put($app_official->used_token.'.pdf', $pdf->output());    
 
-                }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
+                }elseif(strtoupper($app_official->delivery_mode) == "HARD" || strtoupper($app_official->delivery_mode) == "WES" || strtoupper($app_official->delivery_mode) == "Portal"){
                    $pdf = PDF::loadView('cover_letter',['data'=>  $app_official]);  File::put($app_official->used_token.'_cover.pdf', $pdf->output());   
                    $pdf = PDF::loadView('result',['data'=>  $app_official->transcript_raw]);  File::put($app_official->used_token.'.pdf', $pdf->output());    
 
