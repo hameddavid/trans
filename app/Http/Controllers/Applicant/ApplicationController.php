@@ -204,7 +204,8 @@ class ApplicationController extends Controller
        try { 
            // DB::enableQueryLog(); // Enable query log
              $pin = DB::table('payment_transaction')->select('rrr')
-           ->where(['user_id'=> $request->userid ,'matric_number'=> $request->matno,'destination'=>$request->destination, 'status_code'=>'00'])
+           ->where(['user_id'=> $request->userid ,'matric_number'=> $request->matno,
+           'destination'=>$request->destination, 'status_code'=>'00'])
             ->whereNOTIn('rrr', function($query){ $query->select('used_token')->from('official_applications');})->first();
             // Your Eloquent query executed by using get()
            // dd(\DB::getQueryLog()); // Show results of log
