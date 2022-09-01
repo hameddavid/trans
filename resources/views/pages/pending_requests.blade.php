@@ -133,7 +133,7 @@
                                 <label class="form-check-label" for="check_email">
                                     Email: <span style="color:red" id="show_email"></span>
                                 </label>
-                                <input type="email" id="email" name="email" class="form-control email_box" required><hr>
+                                <input type="text" id="email" name="email" class="form-control email_box" required><hr>
                             </div>
                             <div class="form-check form-check-right address">
                                 <input class="form-check-input" type="checkbox" id="check_address">
