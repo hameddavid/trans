@@ -56,7 +56,7 @@ static function find_and_replace_string2($string){
 
  public function applicant_mail_attachment($applicant,$Subject,$Msg){
     $data = [
-        'to' => [$applicant->address],
+        'to' => [$applicant->official_email_4_soft],
         'docs'=> [ 
             ['path'=> public_path($applicant->file_path.'_cover.pdf'), 'as' => strtoupper($applicant->surname)."_COVER_LETTER.pdf",'mime' => 'application/pdf'],
             ['path'=> public_path($applicant->file_path.'.pdf'), 'as' => strtoupper($applicant->surname)."_TRANSCRIPT.pdf",'mime' => 'application/pdf'],
@@ -95,17 +95,6 @@ public function list_programmes(){
     ->join('t_student_test','t_college_dept.prog_code','t_student_test.prog_code')
     ->select('t_college_dept.prog_code','t_college_dept.programme')->distinct()->get();
 }
-
-
-     //    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-                //    ->loadView('cover_letter',['data'=> $app_official])->setPaper('a4', 'portrate')
-                //    ->setWarnings(false)->save($app_official->used_token.'_cover.pdf');
-
-                //    PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
-                //    ->loadView('result',['data'=> $app_official->transcript_raw])->setPaper('a4', 'portrate')
-                //    ->setWarnings(false)->save($app_official->used_token.'.pdf');
-
-
 
 
 

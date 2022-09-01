@@ -241,9 +241,10 @@ p{
 	object-fit: none;  
 	object-position: right top; 
 } */
-
+/* https://records.run.edu.ng/assets/images/original.jpg */
 body{
-	background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
+	background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png");
+	/* background-image: url("https://records.run.edu.ng/assets/images/metal_logo.png"); */
 	background-repeat:no-repeat;
 	background-size: cover; 
 	object-fit: none;  

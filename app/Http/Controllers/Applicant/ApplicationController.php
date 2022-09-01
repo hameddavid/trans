@@ -106,7 +106,8 @@ class ApplicationController extends Controller
                      $new_application->applicant_id  = $request->userid;
                      $new_application->delivery_mode = $request->mode;
                      $new_application->transcript_type = $type;
-                     $new_application->address = $request->address ? $request->address : $request->email; //use email that was entered not applicant email
+                     $new_application->address = $request->address; //use email that was entered not applicant email
+                     $new_application->email = $request->email ? $request->email : "null"; //use email that was entered not applicant email
                      $new_application->destination = $request->destination ? $request->destination : 'Official Soft Copy';
                      $new_application->institutional_username = $request->institutional_username ? $request->institutional_username : ' ';
                      $new_application->institutional_password = $request->institutional_password ? $request->institutional_password : ' ';
@@ -169,8 +170,8 @@ class ApplicationController extends Controller
                             $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
                             ->where(['student_applications.id'=> $new_application->id, 'app_status'=>'PENDING'])
                             ->select('student_applications.*','student_applications.address AS file_path','applicants.surname','applicants.firstname','applicants.email','applicants.sex')->first();   
-                            $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]); File::put($app_stud->file_path.'.pdf', $pdf->output());    
-                
+                           $pdf = PDF::loadView('proficiency_letter',['data'=> $app_stud]); 
+                            File::put($app_stud->file_path.'.pdf', $pdf->output()); 
                         }  
                         // Notify applicant through email  $applicant->email and Notify admin
                         $Subject= $type." APPLICATION NOTIFICATION";
@@ -203,7 +204,8 @@ class ApplicationController extends Controller
        try { 
            // DB::enableQueryLog(); // Enable query log
              $pin = DB::table('payment_transaction')->select('rrr')
-           ->where(['user_id'=> $request->userid ,'matric_number'=> $request->matno,'destination'=>$request->destination, 'status_code'=>'00'])
+           ->where(['user_id'=> $request->userid ,'matric_number'=> $request->matno,
+           'destination'=>$request->destination, 'status_code'=>'00'])
             ->whereNOTIn('rrr', function($query){ $query->select('used_token')->from('official_applications');})->first();
             // Your Eloquent query executed by using get()
            // dd(\DB::getQueryLog()); // Show results of log
