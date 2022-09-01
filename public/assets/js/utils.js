@@ -135,6 +135,7 @@ $(document).ready(function ($) {
         var id = $(this).data("id");
         var recipient = $(this).data("recipient");
         var address = $(this).data("address");
+        var email = $(this).data("email");
         var reference = $(this).data("reference");
         var _href = $("a.viewcert").attr("href");
         var link = $(this).data("certificate");
@@ -147,7 +148,7 @@ $(document).ready(function ($) {
             $("#show_address").html(address);
         }
         if ($(this).data("mode") === "Soft") {
-            $("#show_email").html(address);
+            $("#show_email").html(email);
             $(".address").hide();
         }
 
