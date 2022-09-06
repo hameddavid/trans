@@ -41,7 +41,13 @@
                                                 @foreach($apps as $app)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td><button data-certificate="{{$app->certificate}}" data-status="{{$app->app_status}}" data-reference="{{$app->reference}}" data-recipient="{{$app->recipient}}" data-mode="{{$app->delivery_mode}}" data-email="{{$app->email}}" data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
+                                                    <td><button data-certificate="{{$app->certificate}}" data-status="{{$app->app_status}}" 
+                                                        data-reference="{{$app->reference}}" data-recipient="{{$app->recipient}}" 
+                                                        data-mode="{{$app->delivery_mode}}" data-email="{{$app->email}}" data-username="{{$app->institutional_username}}" 
+                                                        data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-password="{{$app->institutional_password}}"
+                                                        data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">
+                                                        {{$app->surname.' '.$app->firstname}}</button>
+                                                    </td>
                                                     <td>{{$app->matric_number}}</td>
                                                     <td>{{$app->recipient}}</td>
                                                     <td>{{$app->destination}}</td>
@@ -142,6 +148,20 @@
                                 </label>
                                 <textarea class="form-control address_box" id="address" name="address" required></textarea>
                             </div><hr>
+                            <div class="form-check form-check-right portal">
+                                <input class="form-check-input" type="checkbox" id="check_username">
+                                <label class="form-check-label" for="check_username">
+                                    Portal Username & Link: <span style="color:red" id="show_username"></span>
+                                </label>
+                                <input type="text" id="institutional_username" name="institutional_username" class="form-control username_box" required><hr>
+                            </div>
+                            <div class="form-check form-check-right portal">
+                                <input class="form-check-input" type="checkbox" id="check_password">
+                                <label class="form-check-label" for="check_password">
+                                    Portal Password: <span style="color:red" id="show_password"></span>
+                                </label>
+                                <input type="text" id="institutional_password" name="institutional_password" class="form-control password_box" required><hr>
+                            </div>
                             <div class="form-check form-check-right certificate">
                                 <input class="form-check-input" type="checkbox" id="check_certificate">
                                 <label class="form-check-label" for="check_certificate">
