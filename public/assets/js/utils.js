@@ -121,6 +121,12 @@ $(document).ready(function ($) {
         $("#check_certificate").prop("checked") == true
             ? $(".certificate_box").show()
             : $(".certificate_box").hide();
+        $("#check_username").prop("checked") == true
+            ? $(".username_box").show()
+            : $(".username_box").hide();
+        $("#check_password").prop("checked") == true
+            ? $(".password_box").show()
+            : $(".password_box").hide();
     });
 
     $(".preview").click(function () {
@@ -130,12 +136,16 @@ $(document).ready(function ($) {
         $(".reference").hide();
         $(".address_box").hide();
         $(".email_box").hide();
+        $(".username_box").hide();
+        $(".password_box").hide();
         $(".certificate_box").hide();
         $("#previewModalLabel").html($(this).data("name") + "'s Details");
         var id = $(this).data("id");
         var recipient = $(this).data("recipient");
         var address = $(this).data("address");
         var email = $(this).data("email");
+        var username = $(this).data("username");
+        var password = $(this).data("password");
         var reference = $(this).data("reference");
         var _href = $("a.viewcert").attr("href");
         var link = $(this).data("certificate");
@@ -145,10 +155,18 @@ $(document).ready(function ($) {
 
         if ($(this).data("mode") === "Hard") {
             $(".email").hide();
+            $(".portal").hide();
             $("#show_address").html(address);
         }
         if ($(this).data("mode") === "Soft") {
             $("#show_email").html(email);
+            $(".address").hide();
+            $(".portal").hide();
+        }
+        if ($(this).data("mode") === "Portal") {
+            $("#show_username").html(username);
+            $("#show_password").html(password);
+            $(".email").hide();
             $(".address").hide();
         }
 
