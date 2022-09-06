@@ -139,8 +139,8 @@
                                 <label class="form-check-label" for="check_email">
                                     Email: <span style="color:red" id="show_email"></span>
                                 </label>
-                                <input type="text" id="email" name="email" class="form-control email_box" required><hr>
-                            </div>
+                                <input type="text" id="email" name="email" class="form-control email_box" required>
+                            </div><hr>
                             <div class="form-check form-check-right address">
                                 <input class="form-check-input" type="checkbox" id="check_address">
                                 <label class="form-check-label" for="check_address">
@@ -153,15 +153,15 @@
                                 <label class="form-check-label" for="check_username">
                                     Portal Username & Link: <span style="color:red" id="show_username"></span>
                                 </label>
-                                <input type="text" id="institutional_username" name="institutional_username" class="form-control username_box" required><hr>
-                            </div>
+                                <input type="text" id="institutional_username" name="institutional_username" class="form-control username_box" required>
+                            </div><hr>
                             <div class="form-check form-check-right portal">
                                 <input class="form-check-input" type="checkbox" id="check_password">
                                 <label class="form-check-label" for="check_password">
                                     Portal Password: <span style="color:red" id="show_password"></span>
                                 </label>
-                                <input type="text" id="institutional_password" name="institutional_password" class="form-control password_box" required><hr>
-                            </div>
+                                <input type="text" id="institutional_password" name="institutional_password" class="form-control password_box" required>
+                            </div><hr>
                             <div class="form-check form-check-right certificate">
                                 <input class="form-check-input" type="checkbox" id="check_certificate">
                                 <label class="form-check-label" for="check_certificate">
