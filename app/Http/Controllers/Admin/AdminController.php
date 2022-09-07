@@ -519,7 +519,7 @@ public function get_delivery_msg_degree($data){
 
 public function send_corrections_to_applicant(Request $request){
     $request->validate(['appid'=>'required',]);
-    try {
+    //try {
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $new_req = collect($request->all())->filter();
@@ -551,9 +551,9 @@ public function send_corrections_to_applicant(Request $request){
        }
    }else{return response(['status'=>'failed','message'=>'Error saving corrected fields...'],400);
    }
-} catch (\Throwable $th) {
-    return response(['status'=>'failed','message'=>'Catch , Error saving corrected fields...'],400);
-}
+// } catch (\Throwable $th) {
+//     return response(['status'=>'failed','message'=>'Catch , Error saving corrected fields...'],400);
+// }
 }
 
 
