@@ -187,7 +187,7 @@ class ApplicantAuthController extends Controller
         $get_mat = new ForgotMatno();
         $get_mat->surname = $request->surname;
         $get_mat->firstname = $request->firstname;
-        $get_mat->othername = $request->othername;
+        $get_mat->othername = $request->othername ? $request->othername : 'null';
         $get_mat->email = $request->email;
         $get_mat->phone = $request->phone;
         $get_mat->program = $request->program;
