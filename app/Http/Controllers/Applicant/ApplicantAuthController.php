@@ -175,7 +175,7 @@ class ApplicantAuthController extends Controller
 
     public function save_forgot_matno(Request $request){
       try {    
-        $request->validate([ 'surname'=>'required', 'firstname'=>'required', 'othername'=>'required', 'email'=>'required|email','phone'=>'required' , 'program'=>'required', 'date_left'=>'required', ]); 
+        $request->validate([ 'surname'=>'required', 'firstname'=>'required', 'email'=>'required|email','phone'=>'required' , 'program'=>'required', 'date_left'=>'required', ]); 
        $grad_session = intval($request->date_left-1).'/'.intval($request->date_left);
         $query = DB::table('t_student_test')
        ->join('registrations','t_student_test.matric_number','registrations.matric_number')
