@@ -174,7 +174,7 @@ class ApplicantAuthController extends Controller
      
 
     public function save_forgot_matno(Request $request){
-      try {    
+      //try {    
         $request->validate([ 'surname'=>'required', 'firstname'=>'required', 'email'=>'required|email','phone'=>'required' , 'program'=>'required', 'date_left'=>'required', ]); 
        $grad_session = intval($request->date_left-1).'/'.intval($request->date_left);
         $query = DB::table('t_student_test')
@@ -201,9 +201,9 @@ class ApplicantAuthController extends Controller
             return response(['status'=>'success','message'=>'request successfully saved'], 201);
            }
         } return response(['status'=>'failed','message'=>'Error saving forgot matric number request'], 400);
-    } catch (\Throwable $th) {
-        return response(['status'=>'failed','message'=>'Error ...maybe you have this request before'], 400);
-    }
+    // } catch (\Throwable $th) {
+    //     return response(['status'=>'failed','message'=>'Error ...maybe you have this request before'], 400);
+    // }
 
     }
 
