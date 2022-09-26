@@ -71,7 +71,9 @@
                                                                     <button type="button" data-id="{{$app->application_id}}" data-type="{{$app->transcript_type}}" class="btn btn-info waves-effect btn-label waves-light regenerate"><i class="bx bx-refresh label-icon"></i>Regenerate</button>
                                                                 </div> 
                                                                 <div class="btnJustify2 p-3">
-                                                                    @if($app->delivery_mode == 'Hard')<button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" class="btn btn-success waves-effect btn-label waves-light download"><i class="bx bx-download label-icon"></i>Download PDF</button>@endif
+                                                                    @if($app->delivery_mode == 'Hard' || $app->delivery_mode == 'WES' || $app->delivery_mode == 'Portal')
+                                                                    <button type="button" data-type="{{$app->transcript_type}}" data-id="{{$app->application_id}}" class="btn btn-success waves-effect btn-label waves-light download"><i class="bx bx-download label-icon"></i>Download PDF</button>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </div>                                                        
