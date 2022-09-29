@@ -191,6 +191,17 @@ class PaymentController extends Controller
         else if($destination == "DEGREE"){
             return "9928095215";
         }
+
+// Degree Verification (₦5000) 9928095215
+// World Education Services (₦12,000) 9928138149
+// SOFT PORTAL WES  (₦12,000) 9928147511
+// Nigeria (₦12,000) 8201452263
+// Africa (₦20,000) 9928159113
+// America (₦25,000) 9928130748
+// Asia (₦25,000) 8201462144
+// Australia (₦25,000) 9927961794
+// Europe (₦25,000) 8201376113
+// Canada (₦25,000)   8201449890
         
      }
     
@@ -307,6 +318,7 @@ class PaymentController extends Controller
             $response = $client->request('GET', 'https://login.remita.net/remita/ecomm/' . $merchantId . '/' . $rrr . "/" . $apiHash . '/status.reg', []);
             $data = json_decode($response->getBody());
            if(trim($data->message) == "Approved"){
+            return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process','rsp'=>''], 400);
             if($this->update_payment_in_db($rrr=$rrr,$transactionId="REQUERY",$rtMsg)){
                 return $rtMsg;
             }else{
