@@ -274,8 +274,8 @@ class PaymentController extends Controller
        }
           
     } catch (\Throwable $th) {
-        return response(['status'=>'Nok','msg'=>'Error from catch... update_payment_in_db()','rsp'=>''], 401);
-
+        $rtMsg  = response(['status'=>'Nok','msg'=>'Error from catch... update_payment_in_db()','rsp'=>''], 401);
+        return true;
     } 
 
     }
@@ -319,8 +319,8 @@ class PaymentController extends Controller
             $data = json_decode($response->getBody());
             
             if(trim($data->message) == "Approved"){
-            return response(['status'=>'success','message'=>'Application successfully 11 ', 201]);
-            return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process 1','rsp'=>''], 400);
+            // return response(['status'=>'success','message'=>'Application successfully 11 ', 201]);
+            // return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process 1','rsp'=>''], 400);
             if($this->update_payment_in_db($rrr=$rrr,$transactionId="REQUERY",$rtMsg)){
                 return $rtMsg;
             }else{
