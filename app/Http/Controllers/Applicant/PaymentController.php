@@ -319,11 +319,11 @@ class PaymentController extends Controller
             $data = json_decode($response->getBody());
             return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);
             if(trim($data->message) == "Approved"){
-            return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process','rsp'=>''], 400);
+            return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process 1','rsp'=>''], 400);
             if($this->update_payment_in_db($rrr=$rrr,$transactionId="REQUERY",$rtMsg)){
                 return $rtMsg;
             }else{
-                return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process','rsp'=>''], 400);
+                return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process 2','rsp'=>''], 400);
             }
            }
         } catch (\Throwable $th) {
