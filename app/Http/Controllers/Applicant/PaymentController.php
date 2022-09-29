@@ -256,7 +256,7 @@ class PaymentController extends Controller
 
 
     public function update_payment_in_db($rrr,$transactionId,&$rtMsg){
-        try{
+        // try{
         $data = Payment::where('rrr',$rrr)->first();
         if(empty($data)){ $rtMsg = response(['status'=>'Nok','msg'=>'No match RRR record from DB','rsp'=>''],400);return true;}
        if(trim($data->status_code )== "025" && trim($data->status_msg) == "pending"){
@@ -273,10 +273,10 @@ class PaymentController extends Controller
         return true;
        }
           
-    } catch (\Throwable $th) {
-        $rtMsg  = response(['status'=>'Nok','msg'=>'Error from catch... update_payment_in_db()','rsp'=>''], 401);
-        return true;
-    } 
+    // } catch (\Throwable $th) {
+    //     $rtMsg  = response(['status'=>'Nok','msg'=>'Error from catch... update_payment_in_db()','rsp'=>''], 401);
+    //     return true;
+    // } 
 
     }
 
