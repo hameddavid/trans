@@ -317,8 +317,9 @@ class PaymentController extends Controller
             $client = new Client();
             $response = $client->request('GET', 'https://login.remita.net/remita/ecomm/' . $merchantId . '/' . $rrr . "/" . $apiHash . '/status.reg', []);
             $data = json_decode($response->getBody());
-            return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);
+            
             if(trim($data->message) == "Approved"){
+            return response(['status'=>'success','message'=>'Application successfully 11 ', 201]);
             return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process 1','rsp'=>''], 400);
             if($this->update_payment_in_db($rrr=$rrr,$transactionId="REQUERY",$rtMsg)){
                 return $rtMsg;
