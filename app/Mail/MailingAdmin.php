@@ -40,3 +40,4 @@ class MailingAdmin extends Mailable
             return $mail;
     }
 }
+
