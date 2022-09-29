@@ -41,7 +41,13 @@
                                                 @foreach($apps as $app)
                                                 <tr>
                                                     <td>{{$i}} @php $i++@endphp</td>
-                                                    <td><button data-certificate="{{$app->certificate}}" data-status="{{$app->app_status}}" data-reference="{{$app->reference}}" data-recipient="{{$app->recipient}}" data-mode="{{$app->delivery_mode}}" data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">{{$app->surname.' '.$app->firstname}}</a></td>
+                                                    <td><button data-certificate="{{$app->certificate}}" data-status="{{$app->app_status}}" 
+                                                        data-reference="{{$app->reference}}" data-recipient="{{$app->recipient}}" 
+                                                        data-mode="{{$app->delivery_mode}}" data-email="{{$app->email}}" data-username="{{$app->institutional_username}}" 
+                                                        data-address="{{$app->address}}" data-id="{{$app->application_id}}" data-password="{{$app->institutional_password}}"
+                                                        data-name="{{$app->surname.' '.$app->firstname}}" class="btn btn-primary preview">
+                                                        {{$app->surname.' '.$app->firstname}}</button>
+                                                    </td>
                                                     <td>{{$app->matric_number}}</td>
                                                     <td>{{$app->recipient}}</td>
                                                     <td>{{$app->destination}}</td>
@@ -133,14 +139,28 @@
                                 <label class="form-check-label" for="check_email">
                                     Email: <span style="color:red" id="show_email"></span>
                                 </label>
-                                <input type="email" id="email" name="email" class="form-control email_box" required><hr>
-                            </div>
+                                <input type="text" id="email" name="email" class="form-control email_box" required>
+                            </div><hr>
                             <div class="form-check form-check-right address">
                                 <input class="form-check-input" type="checkbox" id="check_address">
                                 <label class="form-check-label" for="check_address">
                                     Adress of Institution/Organization: <span style="color:red" id="show_address"></span>
                                 </label>
                                 <textarea class="form-control address_box" id="address" name="address" required></textarea>
+                            </div><hr>
+                            <div class="form-check form-check-right portal">
+                                <input class="form-check-input" type="checkbox" id="check_username">
+                                <label class="form-check-label" for="check_username">
+                                    Portal Username & Link: <span style="color:red" id="show_username"></span>
+                                </label>
+                                <input type="text" id="institutional_username" name="institutional_username" class="form-control username_box" required>
+                            </div><hr>
+                            <div class="form-check form-check-right portal">
+                                <input class="form-check-input" type="checkbox" id="check_password">
+                                <label class="form-check-label" for="check_password">
+                                    Portal Password: <span style="color:red" id="show_password"></span>
+                                </label>
+                                <input type="text" id="institutional_password" name="institutional_password" class="form-control password_box" required>
                             </div><hr>
                             <div class="form-check form-check-right certificate">
                                 <input class="form-check-input" type="checkbox" id="check_certificate">

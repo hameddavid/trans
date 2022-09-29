@@ -358,7 +358,7 @@ class AdminController extends Controller
                    $pdf = PDF::loadView('cover_letter_soft',['data'=> $app_official]);  File::put($app_official->used_token.'_cover.pdf', $pdf->output());  
                    $pdf = PDF::loadView('result_soft',['data'=>  $app_official->transcript_raw]);  File::put($app_official->used_token.'.pdf', $pdf->output());    
 
-                }elseif(strtoupper($app_official->delivery_mode) == "HARD" || strtoupper($app_official->delivery_mode) == "WES" || strtoupper($app_official->delivery_mode) == "Portal"){
+                }elseif(strtoupper($app_official->delivery_mode) == "HARD" || strtoupper($app_official->delivery_mode) == "WES" || strtoupper($app_official->delivery_mode) == "PORTAL"){
                    $pdf = PDF::loadView('cover_letter',['data'=>  $app_official]);  File::put($app_official->used_token.'_cover.pdf', $pdf->output());   
                    $pdf = PDF::loadView('result',['data'=>  $app_official->transcript_raw]);  File::put($app_official->used_token.'.pdf', $pdf->output());    
 
@@ -376,7 +376,7 @@ class AdminController extends Controller
                                  return response(["status"=>"success","message"=>"Application successfully delivered"],200);  }
                             else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
                         }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
-                    }elseif(strtoupper($app_official->delivery_mode) == "HARD"){
+                    }elseif(strtoupper($app_official->delivery_mode) == "HARD" || strtoupper($app_official->delivery_mode) == "WES" || strtoupper($app_official->delivery_mode) == "PORTAL"){
                         $app_official->app_status = "APPROVED";
                         $app_official->approved_by = $data->email;
                         $app_official->approved_at = date("F j, Y, g:i a");
@@ -520,7 +520,7 @@ public function get_delivery_msg_degree($data){
 
 public function send_corrections_to_applicant(Request $request){
     $request->validate(['appid'=>'required',]);
-    try {
+    //try {
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $new_req = collect($request->all())->filter();
@@ -552,9 +552,9 @@ public function send_corrections_to_applicant(Request $request){
        }
    }else{return response(['status'=>'failed','message'=>'Error saving corrected fields...'],400);
    }
-} catch (\Throwable $th) {
-    return response(['status'=>'failed','message'=>'Catch , Error saving corrected fields...'],400);
-}
+// } catch (\Throwable $th) {
+//     return response(['status'=>'failed','message'=>'Catch , Error saving corrected fields...'],400);
+// }
 }
 
 
