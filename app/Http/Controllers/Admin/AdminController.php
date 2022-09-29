@@ -402,7 +402,8 @@ class AdminController extends Controller
                             else{return response(["status"=>"failed","message"=>"Error updating application for recommendation"],401); }    
                         }else{return response(["status"=>"failed","message"=>"Error sending Transcript delivery email "],401);}
                         }else{return response(["status"=>"failed","message"=>"No Transcript File in the directory"],401);  }     
-                }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
+                
+                    }else{ return response(["status"=>"failed","message"=>"No application found for recommendation"],401); }
             }elseif($type == 'PROFICIENCY'){
                 $app_stud = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
                 ->where(['student_applications.id'=> $request->id, 'app_status'=>'RECOMMENDED'])

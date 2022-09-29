@@ -18,7 +18,6 @@ class PaymentController extends Controller
     public function check_pend_rrr(Request $request){
 
         $request->validate([ 'mode'=>'required|string' ,'gateway' => 'required|string',  'matno' => 'required|string', 'userid'=>'required', 'destination'=>'required']) ;
-
         $destination_r = trim(strtoupper($request->destination));
         $mode = trim(strtoupper($request->mode));
         $matno_r = $request->matno;
@@ -42,8 +41,6 @@ class PaymentController extends Controller
 
     }
 
-
-   
 
     public function log_new_rrr_trans_ref(Request $request){
        
@@ -164,33 +161,32 @@ class PaymentController extends Controller
      public function get_service_id_given_destination($destination,$mode){
       
         $destination = strtoupper($destination);
-        if(strtoupper($mode) == "SOFT" ){
-            return "8201449890";  //Temporary SERVICE TYPE
+        if(in_array(strtoupper($mode), ["SOFT",'',''])){
+            return "9928147511";  //Temporary SERVICE TYPE
         }
-        
       if($destination == "AFRICA"){
-            return "8201449890";
+            return "9928159113";
         }
         else if($destination == "WES"){
-            return "8201452263";
+            return "9928138149";
         }
         else if($destination == "NIGERIA"){
             return "8201452263";
         }
         else if($destination == "AMERICA"){
-            return "8201380610";
+            return "9928130748";
         }
         else if($destination == "ASIA"){
-            return "8201376113";
+            return "8201462144";
         }
         else if($destination == "AUSTRALIA"){
-            return "8201462144";
+            return "9927961794";
         }
         else if($destination == "EUROPE"){
-            return "8201462144";
+            return "8201376113";
         }
-        else if($destination == "SOFT"){
-            return "8201462144";
+        else if($destination == "CANADA"){
+            return "8201449890";
         }
         
      }
