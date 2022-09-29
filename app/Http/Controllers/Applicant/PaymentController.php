@@ -31,11 +31,11 @@ class PaymentController extends Controller
         
         if($this->check_pend_rrr_from_db($matno_r,$destination_r,$gateway,$userid,$pend_rrr,$pend_orderID,$rtMsg)){
            
-           return response(['status'=>'ok','message'=>$rtMsg,'p_rrr'=>$pend_rrr,'p_orderID'=>$pend_orderID], 200);
+           return response(['status'=>'success','message'=>$rtMsg,'p_rrr'=>$pend_rrr,'p_orderID'=>$pend_orderID], 200);
 
         }
         else{
-            return response(['status'=>'Nok','message'=>$rtMsg, 'new_orderid'=> $this->remita_generate_trans_ID()], 200);
+            return response(['status'=>'failed','message'=>$rtMsg, 'new_orderid'=> $this->remita_generate_trans_ID()], 200);
 
         } 
 
@@ -96,7 +96,7 @@ class PaymentController extends Controller
           return false;
             }
         catch (\Throwable $th) {
-            $rtMsg = response(['status'=>'Nok','message'=>'Error from the catch; check_pend_rrr_from_db()','rsp'=>''], 401);
+            $rtMsg = response(['status'=>'failed','message'=>'Error from the catch; check_pend_rrr_from_db()','rsp'=>''], 401);
 
         }
         
@@ -116,7 +116,7 @@ class PaymentController extends Controller
 
                if($this->get_payment_config2($serviceTypeID,$merchantId, $apiKey ,$destination,$gateway,$mode)){
                     $applicant =  Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();;
-                    return response(['status'=>'ok','message'=>'success',
+                    return response(['status'=>'success','message'=>'success',
                    'data'=>[ 'serviceTypeID'=>$serviceTypeID,
                    'merchantId'=>$merchantId,'apiKey'=>$apiKey,
                    'destination'=>$destination,'orderID'=>$orderID,'surname'=>$applicant->surname,
@@ -125,18 +125,18 @@ class PaymentController extends Controller
                 
                 }
         
-                return response(['status'=>'Nok','message'=>'Error getting serviceTypeID, Line ... Payment Controller','rsp'=>''], 400);
+                return response(['status'=>'failed','message'=>'Error getting serviceTypeID, Line ... Payment Controller','rsp'=>''], 400);
                 
             }elseif($gateway == 'FLUTTER'){
                 return "yet to be implemented...";
             }
             else{
-                return response(['status'=>'Nok','msg'=>'Error with payment gateway type supplied get_gateway_config()','rsp'=>''], 401);
+                return response(['status'=>'failed','msg'=>'Error with payment gateway type supplied get_gateway_config()','rsp'=>''], 401);
 
             }
            
         } catch (\Throwable $th) {
-            return response(['status'=>'Nok','msg'=>'Error from catch... get_gateway_config()','rsp'=>''], 401);
+            return response(['status'=>'failed','msg'=>'Error from catch... get_gateway_config()','rsp'=>''], 401);
 
         }
       
@@ -256,27 +256,27 @@ class PaymentController extends Controller
 
 
     public function update_payment_in_db($rrr,$transactionId,&$rtMsg){
-        // try{
+        try{
         $data = Payment::where('rrr',$rrr)->first();
-        if(empty($data)){ $rtMsg = response(['status'=>'Nok','msg'=>'No match RRR record from DB','rsp'=>''],400);return true;}
+        if(empty($data)){ $rtMsg = response(['status'=>'failed','msg'=>'No match RRR record from DB','rsp'=>''],400);return true;}
        if(trim($data->status_code )== "025" && trim($data->status_msg) == "pending"){
         $data->p_gateway_transaction_id = $transactionId;
         $data->status_code = "00";
         $data->status_msg = "success";
         $save_date = $data->save();
         if( $save_date){ 
-            $rtMsg = response(['status'=>'ok','message'=>'Payment successful','rsp'=>''], 200);
+            $rtMsg = response(['status'=>'success','message'=>'Payment successful','rsp'=>''], 200);
             return true;
         }
        }else{
-        $rtMsg = response(['status'=>'ok','message'=>'Record updated already!','rsp'=>''], 200);
+        $rtMsg = response(['status'=>'success','message'=>'Record updated already!','rsp'=>''], 200);
         return true;
        }
           
-    // } catch (\Throwable $th) {
-    //     $rtMsg  = response(['status'=>'Nok','msg'=>'Error from catch... update_payment_in_db()','rsp'=>''], 401);
-    //     return true;
-    // } 
+    } catch (\Throwable $th) {
+        $rtMsg  = response(['status'=>'failed','msg'=>'Error from catch... update_payment_in_db()','rsp'=>''], 401);
+        return true;
+    } 
 
     }
 
@@ -292,12 +292,12 @@ class PaymentController extends Controller
              
             } else {
         
-                return response(['status'=>'Nok','msg'=>'Payment failed :transactionId from payment gateway is empty','rsp'=>''], 400);
+                return response(['status'=>'failed','msg'=>'Payment failed :transactionId from payment gateway is empty','rsp'=>''], 400);
 
             }
           
         } catch (\Throwable $th) {
-            return response(['status'=>'Nok','msg'=>'Error from catch... update_payment()','rsp'=>''], 401);
+            return response(['status'=>'failed','msg'=>'Error from catch... update_payment()','rsp'=>''], 401);
 
         }   
     
@@ -320,19 +320,19 @@ class PaymentController extends Controller
             
             if(trim($data->message) == "Approved"){
             // return response(['status'=>'success','message'=>'Application successfully 11 ', 201]);
-            // return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process 1','rsp'=>''], 400);
+            // return response(['status'=>'failed','message'=>'Error: cannot complete re-query process 1','rsp'=>''], 400);
             if($this->update_payment_in_db($rrr=$rrr,$transactionId="REQUERY",$rtMsg)){
                 return $rtMsg;
             }else{
-                return response(['status'=>'Nok','message'=>'Error: cannot complete re-query process 2','rsp'=>''], 400);
+                return response(['status'=>'failed','message'=>'Error: cannot complete re-query process 2','rsp'=>''], 400);
             }
            }
         } catch (\Throwable $th) {
         
-            return response(['status' => 'Nok', 'message' => 'Catch Error requerying transaction: re_query_transaction()'], 401);
+            return response(['status' => 'failed', 'message' => 'Catch Error requerying transaction: re_query_transaction()'], 401);
         }
       
-        return response(['status' => 'Nok', 'message' => 'Transaction pending','data'=>$data], 401);
+        return response(['status' => 'failed', 'message' => 'Transaction pending','data'=>$data], 401);
 
     }
 
@@ -370,12 +370,12 @@ class PaymentController extends Controller
         if($this->update_payment_in_db($rrr=$RRRvalue,$transactionId= $transactionId ,$rtMsg)){
             return $rtMsg;
         }else{
-            return response(['status'=>'Nok','message'=>'Error: cannot complete response from remita bank payment processing','rsp'=>''], 400);
+            return response(['status'=>'failed','message'=>'Error: cannot complete response from remita bank payment processing','rsp'=>''], 400);
         }
        
         } catch (\Throwable $th) {
             // throw $th;
-            return response(['status' => 'Nok', 'message' => 'Catch Error : remita_bank_payment()'], 401);
+            return response(['status' => 'failed', 'message' => 'Catch Error : remita_bank_payment()'], 401);
         }
 
     }
@@ -413,12 +413,12 @@ class PaymentController extends Controller
         if($this->update_payment_in_db($rrr=$RRRvalue,$transactionId= $transactionId ,$rtMsg)){
             return $rtMsg;
         }else{
-            return response(['status'=>'Nok','msg'=>'Error: cannot complete response from remita bank payment processing','rsp'=>''], 400);
+            return response(['status'=>'failed','msg'=>'Error: cannot complete response from remita bank payment processing','rsp'=>''], 400);
         }
        
         } catch (\Throwable $th) {
             // throw $th;
-            return response(['status' => 'Nok', 'msg' => 'Catch Error : test_remita_bank()'], 401);
+            return response(['status' => 'failed', 'msg' => 'Catch Error : test_remita_bank()'], 401);
         }
 
     }
