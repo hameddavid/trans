@@ -161,7 +161,7 @@ class PaymentController extends Controller
      public function get_service_id_given_destination($destination,$mode){
       
         $destination = strtoupper($destination);
-        if(in_array(strtoupper($mode), ["SOFT",'',''])){
+        if(in_array(strtoupper($mode), ["SOFT",'PORTAL','WES'])){  
             return "9928147511";  //Temporary SERVICE TYPE
         }
       if($destination == "AFRICA"){
@@ -187,6 +187,9 @@ class PaymentController extends Controller
         }
         else if($destination == "CANADA"){
             return "8201449890";
+        }
+        else if($destination == "DEGREE"){
+            return "9928095215";
         }
         
      }
