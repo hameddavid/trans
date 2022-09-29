@@ -260,8 +260,8 @@ class PaymentController extends Controller
         $data = Payment::where('rrr',$rrr)->first();
         if(empty($data)){ $rtMsg = response(['status'=>'Nok','msg'=>'No match RRR record from DB','rsp'=>''],400);return true;}
        if(trim($data->status_code )== "025" && trim($data->status_msg) == "pending"){
-        $data->remita_transaction_id = $transactionId;
-        $data->status_code = "00" ;
+        $data->p_gateway_transaction_id = $transactionId;
+        $data->status_code = "00";
         $data->status_msg = "success";
         $save_date = $data->save();
         if( $save_date){ 
