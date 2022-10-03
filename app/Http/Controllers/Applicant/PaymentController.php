@@ -269,7 +269,7 @@ class PaymentController extends Controller
             return true;
         }
        }else{
-        $rtMsg = response(['status'=>'success','message'=>'Record updated already!','rsp'=>''], 200);
+        $rtMsg = response(['status'=>'success','message'=>'Record updated already, kindly refresh your page!','rsp'=>''], 200);
         return true;
        }
           
