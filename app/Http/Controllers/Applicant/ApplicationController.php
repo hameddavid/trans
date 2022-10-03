@@ -75,7 +75,8 @@ class ApplicationController extends Controller
 
     public function submit_app(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
-        // try {  
+        DB::beginTransaction();
+        try {  
             $certificate = "";
             $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
@@ -133,6 +134,7 @@ class ApplicationController extends Controller
                         $update_payment_table->app_id = $new_application->application_id;
                         $update_payment_table->save();
                          // Notify applicant through email  $applicant->email and Notify admin
+                        //  app('App\Http\Controllers\Applicant\ApplicationController')->validate_pin($request)
                         if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg())['status'] == 'ok'){
                             app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="NEW TRANSCRIPT ($type) REQUEST",$Msg=$this->get_admin_msg($applicant));
                             return response(['status'=>'success','message'=>'Application successfully created'],201);   
@@ -185,10 +187,11 @@ class ApplicationController extends Controller
                     return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
                 }
             }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found'],401);   }
-        // } catch (\Throwable $th) {
-        //      return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
+        } catch (\Throwable $th) {
+            DB::rollback();
+             return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
             
-        //  }
+         }
         
 }
 

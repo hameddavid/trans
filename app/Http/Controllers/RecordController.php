@@ -31,12 +31,12 @@ class RecordController extends Controller
 
 
     public function degree_verification(Request $request){
-        // try {  
+        DB::beginTransaction();
+        try {  
             $request->validate([ 'surname'=>'required', 'othername'=>'required',
             'firstname'=>'required' , 'programme'=>'required',  'grad_year'=>'required'
             ,'institution_email'=>'required|email','institution_name'=>'required','phone'=>'required',
             'address'=>'required' ]); 
-          
             $grad_session = intval($request->grad_year-1).'/'.intval($request->grad_year);
             $query = DB::table('t_student_test')
            ->join('registrations','t_student_test.matric_number','registrations.matric_number')
@@ -66,9 +66,10 @@ class RecordController extends Controller
                   }
                } return response(['status'=>'failed','message'=>'Error saving degree verification request'], 400);
            }else{return response(['status'=>'failed','message'=>'Error, No matching record found! '], 400);}
-        // } catch (\Throwable $th) {
-        //     return response(['status'=>'failed','message'=>'Error ...maybe you have this request before'], 400);
-        // }
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return response(['status'=>'failed','message'=>'Error ...maybe you have this request before'], 400);
+        }
     }
 
 
