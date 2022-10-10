@@ -144,16 +144,18 @@ class PaymentController extends Controller
 
 
     public function get_payment_config2(&$serviceTypeID,&$merchantId, &$apiKey ,$destination,$gateway,$mode) {
-        $serviceTypeID = $this->get_service_id_given_destination($destination,$mode);
-        $merchantId = "4161150426";
-        $apiKey = "258341";
+        // $serviceTypeID = $this->get_service_id_given_destination($destination,$mode);
+        // $merchantId = "4161150426";
+        // $apiKey = "258341";
+        // Demo account
+        $serviceTypeID = "4430731";
+        $merchantId = "2547916";
+        $apiKey = "1946";  
         if(!is_null($serviceTypeID)){
             return true;
         }  
         return false; 
-     //$serviceTypeID = "4430731";
-     //$merchantId = "2547916";
-     //$apiKey = "1946";  
+     
      
      }
      
