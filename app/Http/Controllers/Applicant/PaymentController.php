@@ -260,7 +260,7 @@ class PaymentController extends Controller
     public function update_payment_in_db($rrr,$transactionId,&$rtMsg){
         try{
         $data = Payment::where('rrr',$rrr)->first();
-        if(empty($data)){ $rtMsg = response(['status'=>'failed','msg'=>'No match RRR record from DB','rsp'=>''],400);return true;}
+        if(empty($data)){ $rtMsg = response(['status'=>'failed','message'=>'No match RRR record from DB','rsp'=>''],400);return true;}
        if(trim($data->status_code )== "025" && trim($data->status_msg) == "pending"){
         $data->p_gateway_transaction_id = $transactionId;
         $data->status_code = "00";
@@ -276,7 +276,7 @@ class PaymentController extends Controller
        }
           
     } catch (\Throwable $th) {
-        $rtMsg  = response(['status'=>'failed','msg'=>'Error from catch... update_payment_in_db()','rsp'=>''], 401);
+        $rtMsg  = response(['status'=>'failed','message'=>'Error from catch... update_payment_in_db()','rsp'=>''], 401);
         return true;
     } 
 
@@ -294,12 +294,12 @@ class PaymentController extends Controller
              
             } else {
         
-                return response(['status'=>'failed','msg'=>'Payment failed :transactionId from payment gateway is empty','rsp'=>''], 400);
+                return response(['status'=>'failed','message'=>'Payment failed :transactionId from payment gateway is empty','rsp'=>''], 400);
 
             }
           
         } catch (\Throwable $th) {
-            return response(['status'=>'failed','msg'=>'Error from catch... update_payment()','rsp'=>''], 401);
+            return response(['status'=>'failed','message'=>'Error from catch... update_payment()','rsp'=>''], 401);
 
         }   
     
