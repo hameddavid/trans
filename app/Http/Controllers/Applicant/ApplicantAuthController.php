@@ -219,11 +219,10 @@ class ApplicantAuthController extends Controller
                 $app->password =  bcrypt($auto_pass);
                 if($app->save()){
                 $Msg =  ' ------------------------<br>
-                kindly use: <span color="red"> ' . $auto_pass . '</span>, as your mew password to login to your transcript portal. <br>
+                kindly use: <span color="red"> ' . $auto_pass . '</span>, as your new password to login to your transcript portal. <br>
                 <br>
                 Remember to reset your password!
                 <br>
-                Thank you.<br>
                 ------------------------ ';  
                 $Subject = "AUTO GENERATED PASSWORD";
                 if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($app, $Subject ,$Msg )['status'] == 'ok'){
