@@ -84,7 +84,6 @@ class ApplicationController extends Controller
             if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allowed!"],400);}
             $certificate = $this->upload_cert($request);
             }         
-
             if($applicant->count() != 0){
                 $type = strtoupper($request->transcript_type);
                 $all_result_params = $this->get_student_result($request);
@@ -137,11 +136,14 @@ class ApplicationController extends Controller
                         //  app('App\Http\Controllers\Applicant\ApplicationController')->validate_pin($request)
                         if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject="TRANSCRIPT APPLICATION NOTIFICATION",$Msg=$this->get_msg())['status'] == 'ok'){
                             app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="NEW TRANSCRIPT ($type) REQUEST",$Msg=$this->get_admin_msg($applicant));
+                            DB::commit();
                             return response(['status'=>'success','message'=>'Application successfully created'],201);   
                             } 
-                            else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
+                            else{ DB::rollback();
+                                 return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
                         
-                     } 
+                     } else{ DB::rollback();
+                        return response(['status'=>'failed','message'=>'Error saving official transcript request!'],401);}
                  }else{ return response(['status'=>'failed','message'=>'Invalid application payment pin!'],401);    }
                 
                 }elseif($type == 'STUDENT' || $type == 'PROFICIENCY'){
@@ -179,10 +181,12 @@ class ApplicationController extends Controller
                         $Subject= $type." APPLICATION NOTIFICATION";
                        if(app('App\Http\Controllers\Applicant\ConfigController')->applicant_mail($applicant,$Subject,$Msg=$this->get_msg2())['status'] == 'ok'){
                         app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="NEW TRANSCRIPT ($type) REQUEST",$Msg=$this->get_admin_msg($applicant));
+                        DB::commit();
                         return response(['status'=>'success','message'=>'Application successfully created'],201);   
                            } 
                            else{ return response(['status'=>'success','message'=>'Application successfully created but email failed sending', 201]);  }
-                    } else{return response(['status'=>'failed','message'=>'Error saving request!'],401);}
+                    } else{ DB::rollback();
+                        return response(['status'=>'failed','message'=>'Error saving request!'],401);}
                 }else{
                     return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
                 }
