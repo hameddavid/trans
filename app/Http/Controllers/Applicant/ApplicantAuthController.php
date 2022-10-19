@@ -49,7 +49,6 @@ class ApplicantAuthController extends Controller
 
         if(!is_bool(app('App\Http\Controllers\Applicant\ApplicantAuthController')::get_student_given_matno($request->matno, $student))){
             $auto_pass = $this->RandomString(10); 
-            return $student;
             if(app('App\Http\Controllers\Applicant\ApplicantAuthController')::create_applicant($request,$student,$auto_pass)['status'] == "success"){
                 $Msg =  ' ------------------------<br>
                 kindly use: <span color="red"> ' .$auto_pass. '</span> , as your password to login to your transcript portal. <br>
