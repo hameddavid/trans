@@ -46,10 +46,8 @@ class ApplicantAuthController extends Controller
 
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]); 
         try {  
-            
+
         if(!is_bool(app('App\Http\Controllers\Applicant\ApplicantAuthController')::get_student_given_matno($request->matno, $student))){
-             //$this->get_student_given_matno($request->matno);
-             return $student;
             $auto_pass = $this->RandomString(10); 
             if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
                 $Msg =  ' ------------------------<br>
@@ -81,8 +79,7 @@ class ApplicantAuthController extends Controller
     public function send_att(Request $request){
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]);   
         try {
-        if(!is_bool($this->get_student_given_matno($request->matno,$student))){
-            //$this->get_student_given_matno($request->matno);
+        if(!is_bool(app('App\Http\Controllers\Applicant\ApplicantAuthController')::get_student_given_matno($request->matno, $student))){
             $auto_pass = $this->RandomString(10); 
             if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
                 $Msg =  ' ------------------------<br>
