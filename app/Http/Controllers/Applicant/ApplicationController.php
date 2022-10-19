@@ -73,6 +73,7 @@ class ApplicationController extends Controller
     }
 
 public function submit_degree_verification(Request $request){
+    return "yes";
     $request->validate([ "matric" => "required","email"=>"required",]);
     if(!is_bool(app('App\Http\Controllers\Applicant\ApplicantAuthController')::get_student_given_matno($request->matric,$student))){
        return $student ;
