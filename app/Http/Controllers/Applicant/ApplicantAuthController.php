@@ -45,7 +45,7 @@ class ApplicantAuthController extends Controller
     public function applicant_register(Request $request){
 
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]); 
-        //try {  
+        try {  
 
         if(!is_bool($this->get_student_given_matno($request->matno, $student))){
             $auto_pass = $this->RandomString(10); 
@@ -64,14 +64,14 @@ class ApplicantAuthController extends Controller
                 }
                return response(['status'=>'failed','message'=>'Account created but unable to send activation email to you, please contact Admin!'], 201);
             }
-            return response(['status'=>'failed','message'=>'Error creating your account!'], 401);
+            return response(['status'=>'failed','message'=>'Error creating your account, maybe record exist already!'], 401);
              
         }else{
             return response(['status'=>'failed','message'=>'Oops... we could not find your matric number'], 401);}
         
-        // } catch (\Throwable $th) {
-        //     return response(['status'=>'failed','message'=>'catch main, Error creating account...'], 401);
-        // }
+        } catch (\Throwable $th) {
+            return response(['status'=>'failed','message'=>'catch main, Error creating account...'], 401);
+        }
         
     }
 
@@ -79,7 +79,7 @@ class ApplicantAuthController extends Controller
     public function send_att(Request $request){
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]);   
         try {
-        if(!is_bool(app('App\Http\Controllers\Applicant\ApplicantAuthController')::get_student_given_matno($request->matno, $student))){
+        if(!is_bool($this->get_student_given_matno($request->matno, $student))){
             $auto_pass = $this->RandomString(10); 
             if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
                 $Msg =  ' ------------------------<br>
@@ -111,7 +111,7 @@ class ApplicantAuthController extends Controller
 
 
     static function create_applicant($request,$student,$auto_pass){
-           //try { 
+           try { 
             $app = new Applicant();
             $app->matric_number = $request->matno ;
             $app->surname = $student->SURNAME ;
@@ -124,10 +124,10 @@ class ApplicantAuthController extends Controller
             $save_app = $app->save();
             if($save_app){ return ['status'=>'success','message'=>'applicant created!'];}
             return false;
-        //    } catch (\Throwable $th) {
-        //     return ['status'=>'failed','message'=>'catch, Error creating applicant!'];
+           } catch (\Throwable $th) {
+            return ['status'=>'failed','message'=>'catch, Error creating applicant!'];
 
-        //    }
+           }
     }
 
 
