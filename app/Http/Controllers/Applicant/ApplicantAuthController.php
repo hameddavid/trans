@@ -46,6 +46,7 @@ class ApplicantAuthController extends Controller
 
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]); 
         try {
+            return 'see';
         if(!is_bool($this->get_student_given_matno($request->matno, $student))){
              //$this->get_student_given_matno($request->matno);
              return $student;
