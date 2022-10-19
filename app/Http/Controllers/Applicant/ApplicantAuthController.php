@@ -47,9 +47,9 @@ class ApplicantAuthController extends Controller
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]); 
         //try {  
 
-        if(!is_bool(app('App\Http\Controllers\Applicant\ApplicantAuthController')::get_student_given_matno($request->matno, $student))){
+        if(!is_bool($this->get_student_given_matno($request->matno, $student))){
             $auto_pass = $this->RandomString(10); 
-            if(app('App\Http\Controllers\Applicant\ApplicantAuthController')::create_applicant($request,$student,$auto_pass)['status'] == "success"){
+            if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
                 $Msg =  ' ------------------------<br>
                 kindly use: <span color="red"> ' .$auto_pass. '</span> , as your password to login to your transcript portal. <br>
                 <br>
