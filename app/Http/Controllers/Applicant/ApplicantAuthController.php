@@ -46,8 +46,8 @@ class ApplicantAuthController extends Controller
 
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]); 
         try {
-        if(!is_bool($this->get_student_given_matno($request->matno))){
-            $student = $this->get_student_given_matno($request->matno);
+        if(!is_bool($this->get_student_given_matno($request->matno, $student))){
+            $student = $student; //$this->get_student_given_matno($request->matno);
             $auto_pass = $this->RandomString(10); 
             if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
                 $Msg =  ' ------------------------<br>
@@ -79,8 +79,8 @@ class ApplicantAuthController extends Controller
     public function send_att(Request $request){
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]);   
         try {
-        if(!is_bool($this->get_student_given_matno($request->matno))){
-            $student = $this->get_student_given_matno($request->matno);
+        if(!is_bool($this->get_student_given_matno($request->matno,$student))){
+            $student = $student; //$this->get_student_given_matno($request->matno);
             $auto_pass = $this->RandomString(10); 
             if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
                 $Msg =  ' ------------------------<br>
@@ -141,10 +141,10 @@ class ApplicantAuthController extends Controller
    
 
 
-    static function get_student_given_matno($mat_no){
+    static function get_student_given_matno($mat_no, &$student ){
         try {
-            $student = Student::where('matric_number',$mat_no)->first();
-            if($student){return $student;}
+            $stud = Student::where('matric_number',$mat_no)->first();
+            if($stud){ $student= $stud; return $stud;}
             return false;
         } catch (\Throwable $th) {
 
