@@ -45,7 +45,7 @@ class ApplicantAuthController extends Controller
     public function applicant_register(Request $request){
 
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]); 
-        try {
+        try {  
             
         if(!is_bool(app('App\Http\Controllers\Applicant\ApplicantAuthController')::get_student_given_matno($request->matno, $student))){
              //$this->get_student_given_matno($request->matno);
