@@ -426,5 +426,15 @@ class PaymentController extends Controller
     }
 
 
+    public function fast_student_payment_requery(Request $request){
+        return 'Working ...';
+        // validate params
+        //  and  matric, tellerid
+        $get_rrr_given_teller_and_matric = DB::table('t_pay_via_remita')->select('*')
+        ->where(['matric_number_fk'=>$request->matric,'trans_ref'=>$request->tellerid ])->first();
+
+    }
+
+
 //php
 }
