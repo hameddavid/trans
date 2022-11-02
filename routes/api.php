@@ -51,6 +51,8 @@ Route::post('app/edit_app_and_verify_editpin', [ApplicationController::class, 'e
 //  Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
 // Route::post('upload_cert', [ApplicationController::class, 'upload_cert']);
 // Route::post('send_corrections_to_applicant', [AdminController::class, 'send_corrections_to_applicant']);
+Route::post('submit_degree_verification', [ApplicationController::class, 'submit_degree_verification']);
+Route::post('fast_student_payment_requery', [PaymentController::class, 'fast_student_payment_requery']);
 
 
 // let it be web route

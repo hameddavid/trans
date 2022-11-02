@@ -45,9 +45,9 @@ class ApplicantAuthController extends Controller
     public function applicant_register(Request $request){
 
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]); 
-        try {
-        if(!is_bool($this->get_student_given_matno($request->matno))){
-            $student = $this->get_student_given_matno($request->matno);
+        try {  
+
+        if(!is_bool($this->get_student_given_matno($request->matno, $student))){
             $auto_pass = $this->RandomString(10); 
             if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
                 $Msg =  ' ------------------------<br>
@@ -64,7 +64,7 @@ class ApplicantAuthController extends Controller
                 }
                return response(['status'=>'failed','message'=>'Account created but unable to send activation email to you, please contact Admin!'], 201);
             }
-            return response(['status'=>'failed','message'=>'Error creating your account!'], 401);
+            return response(['status'=>'failed','message'=>'Error creating your account, maybe record exist already!'], 401);
              
         }else{
             return response(['status'=>'failed','message'=>'Oops... we could not find your matric number'], 401);}
@@ -79,8 +79,7 @@ class ApplicantAuthController extends Controller
     public function send_att(Request $request){
         $request->validate(['matno'=>'required','email'=>'required|email|unique:applicants','phone'=>'required' ]);   
         try {
-        if(!is_bool($this->get_student_given_matno($request->matno))){
-            $student = $this->get_student_given_matno($request->matno);
+        if(!is_bool($this->get_student_given_matno($request->matno, $student))){
             $auto_pass = $this->RandomString(10); 
             if($this->create_applicant($request,$student,$auto_pass)['status'] == "success"){
                 $Msg =  ' ------------------------<br>
@@ -141,10 +140,10 @@ class ApplicantAuthController extends Controller
    
 
 
-    static function get_student_given_matno($mat_no){
+    static function get_student_given_matno($mat_no, &$student ){
         try {
-            $student = Student::where('matric_number',$mat_no)->first();
-            if($student){return $student;}
+            $stud = Student::where('matric_number',$mat_no)->first();
+            if($stud){ $student= $stud; return $stud;}
             return false;
         } catch (\Throwable $th) {
 

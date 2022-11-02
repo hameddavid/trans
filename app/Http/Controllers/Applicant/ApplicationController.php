@@ -72,7 +72,18 @@ class ApplicationController extends Controller
         return view('result')->with('data',html_entity_decode($app->transcript_raw));
     }
 
+public function submit_degree_verification(Request $request){
+    
+    //$request->validate([ "matric" => "required","email"=>"required",]);
+    if(!is_bool(app('App\Http\Controllers\Applicant\ApplicantAuthController')::get_student_given_matno($request->matric,$student))){
+       return $student ;
+        
+    }else{
+        return response(['status'=>'failed','message'=>'The matric number '.$request->matric.' supplied, seems not to be found, kindly contact Admin.'],401); 
+    }
+    
 
+}
     public function submit_app(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
         DB::beginTransaction();
