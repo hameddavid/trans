@@ -32,40 +32,48 @@ class RecordController extends Controller
 
     public function degree_verification(Request $request){
         DB::beginTransaction();
+        $validator = Validator::make($request->all(), [ 'surname'=>'required', 'othername'=>'required',
+        'firstname'=>'required' , 'programme'=>'required',  'grad_year'=>'required'
+        ,'institution_email'=>'required|email','institution_name'=>'required','phone'=>'required',
+        'address'=>'required','request_type'=>'required','matno'=>'required' ]);
+    if ($validator->fails()) { return response(['status'=>'failed','message'=>'Error ...All fields are required!'], 400); }
         try {  
-            $request->validate([ 'surname'=>'required', 'othername'=>'required',
-            'firstname'=>'required' , 'programme'=>'required',  'grad_year'=>'required'
-            ,'institution_email'=>'required|email','institution_name'=>'required','phone'=>'required',
-            'address'=>'required' ]); 
-            $grad_session = intval($request->grad_year-1).'/'.intval($request->grad_year);
-            $query = DB::table('t_student_test')
-           ->join('registrations','t_student_test.matric_number','registrations.matric_number')
-           ->where('registrations.session_id', $grad_session)
-           ->where('t_student_test.SURNAME', $request->surname)
-           ->where('t_student_test.FIRSTNAME','LIKE', '%'.$request->firstname.' '.$request->othername.'%')
-           ->where('t_student_test.prog_code', $request->programme)
-           ->select('registrations.matric_number')->distinct()->get(); 
-           if($query->count()){
-                $degree = new DegreeVerification();
-                $degree->surname = $request->surname;
-                $degree->firstname = $request->firstname;
-                $degree->othername = $request->othername;
-                $degree->institution_email = $request->institution_email;
-                $degree->institution_name = $request->institution_name;
-                $degree->institution_phone = $request->phone;
-                $degree->institution_address = $request->address;
-                $degree->program = $request->programme;
-                $degree->grad_year = $request->grad_year;
-                $degree->matno_found = $query;
-                $degree->status = "PENDING";  //PENDING or TREATED
-                if($degree->save()){ 
-                   $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
-                   $request->request->add(['emails'=> $admin_users]);
-                   if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="DEGREE VERIFICATION REQUEST",$Msg=$this->get_msg_degree_vet($request))['status'] == 'ok' ){
-                   return response(['status'=>'success','message'=>'request successfully submitted for further processing'], 201);
-                  }
-               } return response(['status'=>'failed','message'=>'Error saving degree verification request'], 400);
-           }else{return response(['status'=>'failed','message'=>'Error, No matching record found! '], 400);}
+            if($request->request_type == 'verify_degree'){
+                // $this->validate_pin_for_degree_verification($request)
+                if($this->validate_pin_for_degree_verification($request) != 'null'){
+                $grad_session = intval($request->grad_year-1).'/'.intval($request->grad_year);
+                $query = DB::table('t_student_test')
+               ->join('registrations','t_student_test.matric_number','registrations.matric_number')
+               ->where('registrations.session_id', $grad_session)
+               ->where('t_student_test.SURNAME', $request->surname)
+               ->where('t_student_test.FIRSTNAME','LIKE', '%'.$request->firstname.' '.$request->othername.'%')
+               ->where('t_student_test.prog_code', $request->programme)
+               ->select('registrations.matric_number')->distinct()->get(); 
+               if($query->count()){
+                    $degree = new DegreeVerification();
+                    $degree->surname = $request->surname;
+                    $degree->firstname = $request->firstname;
+                    $degree->othername = $request->othername;
+                    $degree->institution_email = $request->institution_email;
+                    $degree->institution_name = $request->institution_name;
+                    $degree->institution_phone = $request->phone;
+                    $degree->institution_address = $request->address;
+                    $degree->program = $request->programme;
+                    $degree->grad_year = $request->grad_year;
+                    $degree->matno_found = $query;
+                    $degree->status = "PENDING";  //PENDING or TREATED
+                    $degree->used_token = $this->validate_pin_for_degree_verification($request);
+                    if($degree->save()){ 
+                        DB::commit();
+                       $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
+                       $request->request->add(['emails'=> $admin_users]);
+                       if( app('App\Http\Controllers\Admin\AdminAuthController')->admin_mail($request,$Subject="DEGREE VERIFICATION REQUEST",$Msg=$this->get_msg_degree_vet($request))['status'] == 'ok' ){
+                        return response(['status'=>'success','message'=>'request successfully submitted for further processing'], 201);
+                      }
+                   } return response(['status'=>'failed','message'=>'Error saving degree verification request'], 400);
+               }else{return response(['status'=>'failed','message'=>'Error, No matching record found! '], 400);}
+            }else{ return response(['status'=>'failed','message'=>'Invalid payment pin!'],401);   }
+            }else{return response(['status'=>'failed','message'=>'Error, Unkown request type'], 400);}
         } catch (\Throwable $th) {
             DB::rollback();
             return response(['status'=>'failed','message'=>'Error ...maybe you have this request before'], 400);
@@ -107,7 +115,20 @@ class RecordController extends Controller
       }
      
 
-
+      static function validate_pin_for_degree_verification($request)
+      { 
+         try { 
+               $pin = DB::table('degree_verification_payment_transaction')->select('rrr')
+             ->where(['matric_number'=> $request->matno,
+             'email'=>$request->institution_email, 'status_code'=>'00', 'request_type'=> $request->request_type])
+              ->whereNOTIn('rrr', function($query){ $query->select('used_token')->from('degree_verification');})->first();
+              if(!empty($pin)){return $pin->rrr ;} return 'null';
+          } catch (\Throwable $th) {
+              return response(['status'=>'failed','message'=>'catch, Error validate_pin !']);
+  
+          }
+        
+      }
 
 
 

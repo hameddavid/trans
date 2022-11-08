@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Applicant\ApplicationController;
 use App\Http\Controllers\Applicant\ApplicantAuthController;
 use App\Http\Controllers\Applicant\PaymentController;
+use App\Http\Controllers\Applicant\PaymentController4Degree;
 use App\Http\Controllers\Applicant\ConfigController;
 
 use App\Http\Controllers\Admin\AdminAuthController;
@@ -53,6 +54,16 @@ Route::post('app/edit_app_and_verify_editpin', [ApplicationController::class, 'e
 // Route::post('send_corrections_to_applicant', [AdminController::class, 'send_corrections_to_applicant']);
 Route::post('submit_degree_verification', [ApplicationController::class, 'submit_degree_verification']);
 Route::post('fast_student_payment_requery', [PaymentController::class, 'fast_student_payment_requery']);
+
+
+// Degree verification payments routes
+Route::post('degree/check_pend_rrr', [PaymentController4Degree::class, 'check_pend_rrr']);
+Route::post('degree/log_new_rrr_trans_ref', [PaymentController4Degree::class, 'log_new_rrr_trans_ref']);
+Route::get('degree/get_gateway_config', [PaymentController4Degree::class, 'get_gateway_config']);
+Route::post('degree/update_payment', [PaymentController4Degree::class, 'update_payment']);
+Route::post('degree/re_query_transaction', [PaymentController4Degree::class, 're_query_transaction']);
+Route::post('degree/test_remita_bank', [PaymentController4Degree::class, 'test_remita_bank']);
+Route::post('degree/remita_bank_payment', [PaymentController4Degree::class, 'remita_bank_payment']);
 
 
 // let it be web route
