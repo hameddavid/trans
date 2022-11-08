@@ -537,7 +537,7 @@
                                 <option value="degree">Degree Certificate</option>
                             </select>
                         </div>
-                        <div class="mb-3 transcript">
+                        <div class="mb-3">
                             <label for="matno" class="col-form-label">Matric Number</label>
                             <input type="text" class="form-control" name="matno" id="matno">
                         </div>
