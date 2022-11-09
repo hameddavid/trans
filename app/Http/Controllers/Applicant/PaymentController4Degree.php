@@ -17,9 +17,13 @@ class PaymentController4Degree extends Controller
 {
     public function check_pend_rrr(Request $request){
 
+        // $request->validate(['gateway' => 'required|string', 
+        // 'institution_email'=>'required|email','institution_name'=>'required','phone'=>'required',
+        // 'address'=>'required','request_type'=>'required','matno'=>'required' ]);
+
         $request->validate(['gateway' => 'required|string', 
-        'institution_email'=>'required|email','institution_name'=>'required','phone'=>'required',
-        'address'=>'required','request_type'=>'required','matno'=>'required' ]) ;
+        'institution_email'=>'required|email','matno'=>'required' ]);
+
         $destination_r = trim(strtoupper('DEGREE'));
         $mode = trim(strtoupper('DEGREE'));
         $matno_r = $request->matno;
@@ -115,12 +119,10 @@ class PaymentController4Degree extends Controller
                if($this->get_payment_config2($serviceTypeID,$merchantId, $apiKey ,$destination,$gateway,$mode)){
                    // $applicant =  Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();;
                     return response(['status'=>'success','message'=>'success',
-                   'data'=>[ 'serviceTypeID'=>$serviceTypeID,
-                   'merchantId'=>$merchantId,'apiKey'=>$apiKey,
-                   'destination'=>$destination,'orderID'=>$orderID,'surname'=>'',
-                   'firstname'=>'',
-                   'phone'=>'','email'=>'']], 200);
-                
+                    'data'=>[ 'serviceTypeID'=>$serviceTypeID,
+                    'merchantId'=>$merchantId,'apiKey'=>$apiKey,
+                    'destination'=>$destination,'orderID'=>$orderID,'amount'=>'5000',
+                    ]], 200);
                 }
         
                 return response(['status'=>'failed','message'=>'Error getting serviceTypeID, Line ... Payment Controller','rsp'=>''], 400);
@@ -252,8 +254,8 @@ class PaymentController4Degree extends Controller
         $data->p_gateway_transaction_id = $transactionId;
         $data->status_code = "00";
         $data->status_msg = "success";
-        $save_date = $data->save();
-        if( $save_date){ 
+        $save_data = $data->save();
+        if( $save_data){ 
             $rtMsg = response(['status'=>'success','message'=>'Payment successful','rsp'=>''], 200);
             return true;
         }
