@@ -174,7 +174,7 @@ $(document).ready(function () {
         };
 
         $.ajax({
-            type: "GET",
+            type: "POST",
             url: `https://records.run.edu.ng/api/degree/check_pend_rrr?matno=${matno}&institution_email=${email}&gateway=REMITA`,
             success: function (response) {
                 if (response.status == "success") {
