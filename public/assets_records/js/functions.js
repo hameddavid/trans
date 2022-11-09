@@ -81,7 +81,7 @@ $(document).ready(function () {
 
     const getRemitaConfig = (callback) => {
         $.ajax({
-            url: `https://records.run.edu.ng/api/degree/get_gateway_config?mat_no=${matno}&gateway=REMITA&email=${email}`,
+            url: `https://records.run.edu.ng/api/degree/get_gateway_config?matno=${matno}&gateway=REMITA&email=${email}`,
             type: "GET",
             success: callback,
         });
