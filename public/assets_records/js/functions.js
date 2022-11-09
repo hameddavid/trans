@@ -49,6 +49,7 @@ $(document).ready(function () {
             $(".btnSubmitVerification").prop("disabled", true);
 
             getRemitaConfig(function (response) {
+                console.log(response);
                 if (response.status === "success") {
                     var merchantId = response.data.merchantId;
                     var serviceTypeId = response.data.serviceTypeID;
@@ -69,7 +70,6 @@ $(document).ready(function () {
                         );
                     }, 5000);
                 } else {
-                    console.log(response);
                     alertify.error(response.message);
                     $(".btnSubmitVerification").html("Submit");
                     $(".btnSubmitVerification").prop("disabled", false);
