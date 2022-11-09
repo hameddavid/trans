@@ -69,6 +69,7 @@ $(document).ready(function () {
                         );
                     }, 5000);
                 } else {
+                    console.log(response);
                     alertify.error(response.message);
                     $(".btnSubmitVerification").html("Submit");
                     $(".btnSubmitVerification").prop("disabled", false);
