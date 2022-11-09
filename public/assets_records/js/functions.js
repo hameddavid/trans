@@ -175,12 +175,12 @@ $(document).ready(function () {
 
         $.ajax({
             type: "GET",
-            url: `https://records.run.edu.ng/api/degree/check_pend_rrr?matno=${mat_no}&institution_email=${email}&gateway=REMITA`,
+            url: `https://records.run.edu.ng/api/degree/check_pend_rrr?matno=${matno}&institution_email=${email}&gateway=REMITA`,
             success: function (response) {
                 if (response.status == "success") {
                     var rrr = response.p_rrr;
                     console.log(rrr);
-                    makePayment(mat_no, firstname, surname, email, amount, rrr);
+                    makePayment(matno, firstname, surname, email, amount, rrr);
                 } else if (response.status == "failed") {
                     $.ajax(settings).done(function (res) {
                         var obj = res.substring(7, res.length - 1);
@@ -189,13 +189,13 @@ $(document).ready(function () {
                         console.log(rrr);
                         $.ajax({
                             type: "POST",
-                            url: `https://records.run.edu.ng/api/degree/log_new_rrr_trans_ref?mat_no=${mat_no}&rrr=${rrr}&amount=${amount}&institution_name=${institution_name}&gateway=REMITA&statuscode=${objJson.statuscode}&statusMsg=${objJson.status}&orderID=${orderId}&institution_email=${email}`,
+                            url: `https://records.run.edu.ng/api/degree/log_new_rrr_trans_ref?matno=${matno}&rrr=${rrr}&amount=${amount}&institution_name=${institution_name}&gateway=REMITA&statuscode=${objJson.statuscode}&statusMsg=${objJson.status}&orderID=${orderId}&institution_email=${email}`,
                             success: function (response) {
                                 console.log(response);
                                 if (response.status == "success") {
                                     alert("Proceed to Pay");
                                     makePayment(
-                                        mat_no,
+                                        matno,
                                         firstname,
                                         surname,
                                         email,
@@ -237,10 +237,10 @@ $(document).ready(function () {
         });
     };
 
-    const makePayment = (mat_no, firstname, surname, email, amount, rrr) => {
+    const makePayment = (matno, firstname, surname, email, amount, rrr) => {
         var paymentEngine = RmPaymentEngine.init({
             key: "QzAwMDAxNTY4NzN8OTU3M3w1OWUwZmVmMmUxYWYwZTlhMjk3MTU5MzIwNzcxNjc1NWYwYmI5ZWNkZWYyYzcwYWZiZGIwOGZkYmViYzhiYjI3MTkyYzA3MGRhOWZkZDgxNDhlMjdjNmVkMGI0ZjgwYjQ4ZDM1OTkwMzhmNzU4OTJmN2NjMTUxMTljZDY1NjA1NQ==",
-            customerId: mat_no,
+            customerId: matno,
             firstName: firstname,
             lastName: surname,
             email: email,
@@ -265,7 +265,7 @@ $(document).ready(function () {
                 ) {
                     $.ajax({
                         type: "POST",
-                        url: `https://records.run.edu.ng/api/degree/update_payment?paymentReference=${response.paymentReference}&transactionId=${response.transactionId}&amount=${response.amount}&mat_no=${mat_no}`,
+                        url: `https://records.run.edu.ng/api/degree/update_payment?paymentReference=${response.paymentReference}&transactionId=${response.transactionId}&amount=${response.amount}&matno=${matno}`,
                         beforeSend: function () {
                             $(".btnSubmitVerification").html(
                                 "Updating Payment..."
