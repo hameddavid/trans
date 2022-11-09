@@ -69,6 +69,9 @@ $(document).ready(function () {
                         );
                     }, 5000);
                 } else {
+                    alertify.error(response.message);
+                    $(".btnSubmitVerification").html("Submit");
+                    $(".btnSubmitVerification").prop("disabled", false);
                     return false;
                 }
             });
