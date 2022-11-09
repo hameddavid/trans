@@ -89,7 +89,7 @@ class PaymentController4Degree extends Controller
         try {    
             $rtMsg =   response(['status'=>'Defualt',' message'=>'Defualt from check_pend_rrr_from_db']);
             $data = DB::table('degree_verification_payment_transaction')
-            ->where(['email'=> $userid,'matric_number'=> $matno_r ,
+            ->where(['institution_email'=> $userid,'matric_number'=> $matno_r ,
              'request_type'=> $destination_r ,'gateway'=> $gateway ,'status_code'=> '025','status_msg'=> 'pending'])->first();
            if(!empty($data)){
             $pend_rrr = $data->rrr;
