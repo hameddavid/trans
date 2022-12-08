@@ -132,9 +132,9 @@ class AdminController extends Controller
     public function viewApprovedApplications(Request $request){
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $apps = OfficialApplication::join('applicants', 'official_applications.applicant_id', '=', 'applicants.id')
-            ->where('app_status','APPROVED')->select('official_applications.*','applicants.surname','applicants.firstname')->get(); 
+            ->where('app_status','APPROVED')->select('official_applications.*','applicants.surname','applicants.firstname')->latest()->get(); 
         $apps_ = StudentApplication::join('applicants', 'student_applications.applicant_id', '=', 'applicants.id')
-            ->where('app_status','APPROVED')->select('student_applications.*','applicants.surname','applicants.firstname')->get();
+            ->where('app_status','APPROVED')->select('student_applications.*','applicants.surname','applicants.firstname')->latest()->get();
         return (\Request::getPathInfo() == '/cpanel/approved_applications') ? view('pages.approved_requests',['data'=>$data,'apps'=>$apps]) : 
             view('pages.approved_applications_',['data'=>$data,'apps'=>$apps_]);
     }
