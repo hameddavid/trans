@@ -369,7 +369,7 @@ static function get_msg(){
     kindly excercise  patience while your request is being processed.';
 }
 static function get_msg2(){
-    return 'We have successfully received your  new language proficiency application request, 
+    return 'We have successfully received your  new application request, 
     kindly excercise  patience while your request is being processed.';
 }
 static function get_admin_msg($applicant){
