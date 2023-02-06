@@ -87,7 +87,7 @@ public function submit_degree_verification(Request $request){
     public function submit_app(Request $request){
         $request->validate([ "userid" => "required","matno"=>"required",'transcript_type'=>'required' ,]);
         DB::beginTransaction();
-        try {  
+        //try {  
             $certificate = "";
             $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
             $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
@@ -202,11 +202,11 @@ public function submit_degree_verification(Request $request){
                     return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
                 }
             }else{ return response(['status'=>'failed','message'=>'No applicant with matric number '. $request->matno . ' found'],401);   }
-        } catch (\Throwable $th) {
-            DB::rollback();
-             return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
+        // } catch (\Throwable $th) {
+        //     DB::rollback();
+        //      return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
             
-         }
+        //  }
         
 }
 
