@@ -526,7 +526,8 @@ $(document).ready(function ($) {
             error: function (response) {
                 console.log(response);
                 $.unblockUI();
-                alertify.error(response.responseJSON.message);
+                alertify.error("Error downloading files...");
+                //alertify.error(response.responseJSON.message);
             },
         });
     };
