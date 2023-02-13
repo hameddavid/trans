@@ -779,7 +779,8 @@ static function get_correct_application_for_this_request($matno,$delivery_mode,$
 
 
 static function class_of_degree($cgpa) {
-
+    $cgpa = round($cgpa,2);
+    
     if($cgpa >= 4.5)
         
         return "First Class (Honours)";
