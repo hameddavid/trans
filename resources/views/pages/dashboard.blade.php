@@ -110,9 +110,9 @@
                                     <div class="card-body">
                                         <div class="d-flex flex-wrap align-items-center mb-4">
                                             <h5 class="card-title me-2">Transcript Request Overview</h5>
-                                            <div>
-                                                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalGenerateTranscript">Generate Transcript</button>
-                                            </div>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-info" data-toggle="modal" data-target="#modalGenerateTranscript">Generate Transcript</button>
                                         </div>
 
                                         <div class="row align-items-center">
