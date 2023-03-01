@@ -110,7 +110,9 @@
                                     <div class="card-body">
                                         <div class="d-flex flex-wrap align-items-center mb-4">
                                             <h5 class="card-title me-2">Transcript Request Overview</h5>
-                                            <button class="btn btn-info">Generate Transcript</button>
+                                            <div>
+                                                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalGenerateTranscript">Generate Transcript</button>
+                                            </div>
                                         </div>
 
                                         <div class="row align-items-center">
@@ -298,6 +300,31 @@
                 </div>
             </div>
             <!-- /modal -->
+
+            <div class="modal fade" id="modalGenerateTranscript" tabindex="-1" aria-labelledby="modalGenerateTranscriptLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header border-primary">
+                            <h5 class="my-0 text-primary"><i class="mdi mdi-bullseye-arrow me-3"></i>Generate transcript</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" id="formGenerateTranscript">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="matric_number" class="col-form-label">Enter Matric Number</label>
+                                    <input type="text" class="form-control"  name="matric_number_" id="matric_number_" 
+                                        placeholder="Please enter matric number here" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" id="btnGenerateTranscript" class="btn btn-success">Generate</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
         <!-- apexcharts -->
         <script src="../assets/libs/apexcharts/apexcharts.min.js"></script>
