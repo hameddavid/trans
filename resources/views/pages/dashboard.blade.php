@@ -110,6 +110,7 @@
                                     <div class="card-body">
                                         <div class="d-flex flex-wrap align-items-center mb-4">
                                             <h5 class="card-title me-2">Transcript Request Overview</h5>
+                                            <button class="btn btn-info">Generate Transcript</button>
                                         </div>
 
                                         <div class="row align-items-center">
