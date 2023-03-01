@@ -108,6 +108,7 @@
                                 <div class="card">
                                     <!-- card body -->
                                     <div class="card-body">
+                                        <button class="btn btn-danger" data-toggle="modal" data-target="#modalGenerateTranscript">Test</button>
                                         <div class="card-header align-items-center d-flex">
                                             <h4 class="card-title mb-0 flex-grow-1">Recent Transcript Requests </h4>
                                             <button class="btn btn-info" data-toggle="modal" data-target="#modalGenerateTranscript">Generate Transcript</button>
