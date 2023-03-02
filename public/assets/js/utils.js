@@ -667,5 +667,29 @@ $(document).ready(function ($) {
 
     $("#transcript_modal").click(function () {
         $("#modalGenerateTranscript").modal("show");
+        $("#btnGenerateTranscript").click(function () {
+            var matric = $("#matric_number_").val();
+            $("head").append(
+                $('<link rel="stylesheet" type="text/css" />').attr(
+                    "href",
+                    "../assets/css/transcript.css"
+                )
+            );
+            $("#btnApprove").hide();
+            $(".showHTML").html("");
+            $("#transcriptModal").modal("show");
+            $("#transcriptModalLabel").html(matric + "'s Transcript");
+
+            $(".showHTML").load(
+                `transcript/${matric}`,
+                function (data, status, jqXGR) {
+                    $(".logo").attr(
+                        "src",
+                        "https://records.run.edu.ng/assets/images/run_logo_big.png"
+                    );
+                    console.log("fetched");
+                }
+            );
+        });
     });
 });
