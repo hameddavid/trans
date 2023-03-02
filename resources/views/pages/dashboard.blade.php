@@ -309,9 +309,21 @@
                             @csrf
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="matric_number" class="col-form-label">Enter Matric Number</label>
+                                    <label for="matric_number_" class="col-form-label">Enter Matric Number</label>
                                     <input type="text" class="form-control"  name="matric_number_" id="matric_number_" 
                                         placeholder="Please enter matric number here" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="type" class="col-form-label">Enter Type</label>
+                                    <select class="form-control" name="type" id="type" required>
+                                        <option value="official">Official</option>
+                                        <option value="student">Student</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="recipeint" class="col-form-label">Enter Recipient</label>
+                                    <input type="text" class="form-control"  name="recipeint" id="recipeint" 
+                                        placeholder="Please enter recipient here" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
