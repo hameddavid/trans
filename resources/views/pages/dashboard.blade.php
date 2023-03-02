@@ -133,7 +133,6 @@
                                     <div class="card-body">
                                         <div class="d-flex flex-wrap align-items-center mb-4">
                                             <h5 class="card-title me-2">Transcript Request by Locations</h5>
-                                            <button class="btn btn-danger" data-toggle="modal" data-target="#modalGenerateTranscript">Test</button>
                                         </div>
 
                                         <div id="sales-by-locations" data-colors='["#33c38e"]' style="height: 253px"></div>
