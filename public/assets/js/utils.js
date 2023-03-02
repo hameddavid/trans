@@ -685,7 +685,7 @@ $(document).ready(function ($) {
             $("#transcriptModalLabel").html(matric + "'s Transcript");
 
             $(".showHTML").load(
-                `submit_app_for_admin/${matric}/${type}/${recipient}`,
+                `submit_app_for_admin/?matno=${matric}&transcript_type=${type}&recipient=${recipient}`,
                 function (data, status, jqXGR) {
                     $(".logo").attr(
                         "src",
