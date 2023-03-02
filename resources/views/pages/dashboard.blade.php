@@ -314,7 +314,7 @@
                                         placeholder="Please enter matric number here" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="type" class="col-form-label">Enter Type</label>
+                                    <label for="type" class="col-form-label">Select Type</label>
                                     <select class="form-control" name="type" id="type" required>
                                         <option value="official">Official</option>
                                         <option value="student">Student</option>
