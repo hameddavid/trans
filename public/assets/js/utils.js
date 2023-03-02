@@ -669,6 +669,7 @@ $(document).ready(function ($) {
         $("#modalGenerateTranscript").modal("show");
         $("#btnGenerateTranscript").click(function () {
             var matric = $("#matric_number_").val();
+            if (matric == "") return false;
             $("head").append(
                 $('<link rel="stylesheet" type="text/css" />').attr(
                     "href",
