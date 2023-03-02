@@ -667,8 +667,11 @@ $(document).ready(function ($) {
 
     $("#transcript_modal").click(function () {
         $("#modalGenerateTranscript").modal("show");
-        $("#btnGenerateTranscript").click(function () {
+        $("#btnGenerateTranscript").click(function (e) {
+            e.preventDefault();
             var matric = $("#matric_number_").val();
+            var type = $("#type").val();
+            var recipient = $("#recipient").val();
             if (matric == "") return false;
             $("head").append(
                 $('<link rel="stylesheet" type="text/css" />').attr(
@@ -682,7 +685,7 @@ $(document).ready(function ($) {
             $("#transcriptModalLabel").html(matric + "'s Transcript");
 
             $(".showHTML").load(
-                `transcript/${matric}`,
+                `submit_app_for_admin/${matric}/${type}/${recipient}`,
                 function (data, status, jqXGR) {
                     $(".logo").attr(
                         "src",
