@@ -110,7 +110,7 @@
                                     <div class="card-body">
                                         <div class="card-header align-items-center d-flex">
                                             <h4 class="card-title mb-0 flex-grow-1">Recent Transcript Requests </h4>
-                                            <button class="btn btn-info" data-toggle="modal" data-target="#modalGenerateTranscript">Generate Transcript</button>
+                                            <button class="btn btn-info" id="transcript_modal">Generate Transcript</button>
                                         </div>
                                         <div class="row align-items-center">
                                             <div class="col-xl-12">

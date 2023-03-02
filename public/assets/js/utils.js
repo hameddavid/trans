@@ -664,4 +664,8 @@ $(document).ready(function ($) {
             },
         });
     };
+
+    $("#transcript_modal").click(function () {
+        $("#modalGenerateTranscript").modal("show");
+    });
 });
