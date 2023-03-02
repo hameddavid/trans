@@ -321,8 +321,8 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="recipeint" class="col-form-label">Enter Recipient</label>
-                                    <input type="text" class="form-control"  name="recipeint" id="recipeint" 
+                                    <label for="recipient" class="col-form-label">Enter Recipient</label>
+                                    <input type="text" class="form-control"  name="recipient" id="recipient" 
                                         placeholder="Please enter recipient here" required>
                                 </div>
                             </div>
