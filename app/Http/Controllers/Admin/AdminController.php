@@ -782,7 +782,7 @@ public function submit_app_for_admin(Request $request){
                 $new_application->admin_id  = $user->id;
                 $new_application->delivery_mode = 'soft';
                 $new_application->transcript_type = $type;
-                $new_application->address =  $applicant->email;
+                $new_application->address =  $student->email1;
                 $new_application->destination = $type;//"Student Transcript";
                 $new_application->recipient =  $request->recipient;
                 $new_application->app_status = "PENDING"; // default status
