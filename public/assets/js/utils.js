@@ -666,17 +666,17 @@ $(document).ready(function ($) {
     };
 
     $("#transcript_modal").click(function () {
-        $("head").append(
-            $('<link rel="stylesheet" type="text/css" />').attr(
-                "href",
-                "../assets/css/transcript.css"
-            )
-        );
         $("#modalGenerateTranscript").modal("show");
         $("#btnGenerateTranscript").click(function (e) {
             e.preventDefault();
             $("#btnGenerateTranscript").html(
                 '<i class="fa fa-spinner fa-spin"></i>'
+            );
+            $("head").append(
+                $('<link rel="stylesheet" type="text/css" />').attr(
+                    "href",
+                    "../assets/css/transcript.css"
+                )
             );
             var matric = $("#matric_number_").val();
             var type = $("#type").val();
