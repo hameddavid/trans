@@ -675,6 +675,9 @@ $(document).ready(function ($) {
         $("#modalGenerateTranscript").modal("show");
         $("#btnGenerateTranscript").click(function (e) {
             e.preventDefault();
+            $("#btnGenerateTranscript").html(
+                '<i class="fa fa-spinner fa-spin"></i>'
+            );
             var matric = $("#matric_number_").val();
             var type = $("#type").val();
             var recipient = $("#recipient").val();
@@ -693,6 +696,7 @@ $(document).ready(function ($) {
                         "https://records.run.edu.ng/assets/images/run_logo_big.png"
                     );
                     console.log("fetched");
+                    $("#btnGenerateTranscript").html("Generate");
                 }
             );
         });
