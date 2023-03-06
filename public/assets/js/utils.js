@@ -666,6 +666,12 @@ $(document).ready(function ($) {
     };
 
     $("#transcript_modal").click(function () {
+        $("head").append(
+            $('<link rel="stylesheet" type="text/css" />').attr(
+                "href",
+                "../assets/css/transcript.css"
+            )
+        );
         $("#modalGenerateTranscript").modal("show");
         $("#btnGenerateTranscript").click(function (e) {
             e.preventDefault();
@@ -673,12 +679,7 @@ $(document).ready(function ($) {
             var type = $("#type").val();
             var recipient = $("#recipient").val();
             if (matric == "") return false;
-            $("head").append(
-                $('<link rel="stylesheet" type="text/css" />').attr(
-                    "href",
-                    "../assets/css/transcript.css"
-                )
-            );
+
             $("#btnApprove").hide();
             $(".showHTML").html("");
             $("#transcriptModal").modal("show");
