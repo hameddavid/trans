@@ -699,6 +699,7 @@ $(document).ready(function ($) {
                     $("#btnGenerateTranscript").html("Generate");
                 }
             );
+            e.stopImmediatePropagation();
         });
     });
 });
