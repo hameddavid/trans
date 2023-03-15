@@ -667,30 +667,39 @@ $(document).ready(function ($) {
 
     $("#transcript_modal").click(function () {
         $("#modalGenerateTranscript").modal("show");
-        $("#btnGenerateTranscript").click(function () {
-            var matric = $("#matric_number_").val();
-            if (matric == "") return false;
+        $("#btnGenerateTranscript").click(function (e) {
+            e.preventDefault();
+            $("#btnGenerateTranscript").html(
+                '<i class="fa fa-spinner fa-spin"></i>'
+            );
             $("head").append(
                 $('<link rel="stylesheet" type="text/css" />').attr(
                     "href",
                     "../assets/css/transcript.css"
                 )
             );
+            var matric = $("#matric_number_").val();
+            var type = $("#type").val();
+            var recipient = $("#recipient").val();
+            if (matric == "") return false;
+
             $("#btnApprove").hide();
             $(".showHTML").html("");
             $("#transcriptModal").modal("show");
             $("#transcriptModalLabel").html(matric + "'s Transcript");
 
             $(".showHTML").load(
-                `transcript/${matric}`,
+                `submit_app_for_admin/?matno=${matric}&transcript_type=${type}&recipient=${recipient}`,
                 function (data, status, jqXGR) {
                     $(".logo").attr(
                         "src",
                         "https://records.run.edu.ng/assets/images/run_logo_big.png"
                     );
                     console.log("fetched");
+                    $("#btnGenerateTranscript").html("Generate");
                 }
             );
+            e.stopImmediatePropagation();
         });
     });
 });
