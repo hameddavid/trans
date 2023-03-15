@@ -776,7 +776,98 @@ public function submit_app_for_admin(Request $request){
             $cgpa =  $all_result_params['cgpa']; 
             $class_of_degree =  $all_result_params['class_of_degree']; 
             $trans_raw =  $all_result_params['result']; //  Generate the transacript HTML here
-            if($type == 'STUDENT' || $type == 'OFFICIAL'){
+            if($type == 'STUDENT') {
+                $old_app_stud = Adminapplications::where('matric_number',$request->matno)->first();
+                if($old_app_stud){
+                $old_app_stud->matric_number   = $request->matno;
+                $old_app_stud->admin_id  = $user->id;
+                $old_app_stud->delivery_mode = 'soft';
+                $old_app_stud->transcript_type = $type;
+                $old_app_stud->address =  $applicant->email;
+                $old_app_stud->destination = $type;//"Student Transcript";
+                $old_app_stud->recipient =  $request->recipient;
+                $old_app_stud->app_status = "PENDING"; // default status
+                $old_app_stud->graduation_year = $request->graduation_year? $request->graduation_year:"";
+                $old_app_stud->grad_status = $request->gradstat? $request->gradstat:"";
+                $old_app_stud->certificate = $request->certificate? $request->certificate:"" ; 
+                $old_app_stud->first_session_in_sch =  $first_session_in_sch; 
+                $old_app_stud->last_session_in_sch =  $last_session_in_sch; 
+                $old_app_stud->years_spent =  $years_spent; 
+                $old_app_stud->qualification =  $qualification;
+                $old_app_stud->prog_name =  $prog_name; 
+                $old_app_stud->dept =  $dept; 
+                $old_app_stud->fac =  $fac;
+                $old_app_stud->cgpa =  $cgpa; 
+                $old_app_stud->class_of_degree =  $class_of_degree;
+                $old_app_stud->transcript_raw =  $trans_raw;
+                if($old_app_stud->save() ){ 
+                    DB::commit();
+                    return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201); 
+               }
+                }else{
+                    $new_application = new Adminapplications();
+                    $new_application->matric_number   = $request->matno;
+                    $new_application->admin_id  = $user->id;
+                    $new_application->delivery_mode = 'soft';
+                    $new_application->transcript_type = $type;
+                    $new_application->address =  $applicant->email;
+                    $new_application->destination = $type;//"Student Transcript";
+                    $new_application->recipient =  $request->recipient;
+                    $new_application->app_status = "PENDING"; // default status
+                    $new_application->graduation_year = $request->graduation_year? $request->graduation_year:"";
+                    $new_application->grad_status = $request->gradstat? $request->gradstat:"";
+                    $new_application->certificate = $request->certificate? $request->certificate:"" ; 
+                    $new_application->first_session_in_sch =  $first_session_in_sch; 
+                    $new_application->last_session_in_sch =  $last_session_in_sch; 
+                    $new_application->years_spent =  $years_spent; 
+                    $new_application->qualification =  $qualification;
+                    $new_application->prog_name =  $prog_name; 
+                    $new_application->dept =  $dept; 
+                    $new_application->fac =  $fac;
+                    $new_application->cgpa =  $cgpa; 
+                    $new_application->class_of_degree =  $class_of_degree;
+                    $new_application->transcript_raw =  $trans_raw;
+                    if($new_application->save() ){ 
+                        DB::commit();
+                        return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201); 
+                   } else{ DB::rollback();
+                        return response(['status'=>'failed','message'=>'Error saving request!'],401);}
+                }
+            }
+            elseif($type == 'OFFICIAL'){
+                $old_app_off = Adminapplications::where(['matric_number'=>$request->matno,'recipient'=>$request->recipient])->first();
+                if($old_app_off){
+                $old_app_off->matric_number   = $request->matno;
+                $old_app_off->admin_id  = $user->id;
+                $old_app_off->delivery_mode = 'soft';
+                $old_app_off->transcript_type = $type;
+                $old_app_off->address =  $applicant->email;
+                $old_app_off->destination = $type;//"Student Transcript";
+                $old_app_off->recipient =  $request->recipient;
+                $old_app_off->app_status = "PENDING"; // default status
+                $old_app_off->graduation_year = $request->graduation_year? $request->graduation_year:"";
+                $old_app_off->grad_status = $request->gradstat? $request->gradstat:"";
+                $old_app_off->certificate = $request->certificate? $request->certificate:"" ; 
+                $old_app_off->first_session_in_sch =  $first_session_in_sch; 
+                $old_app_off->last_session_in_sch =  $last_session_in_sch; 
+                $old_app_off->years_spent =  $years_spent; 
+                $old_app_off->qualification =  $qualification;
+                $old_app_off->prog_name =  $prog_name; 
+                $old_app_off->dept =  $dept; 
+                $old_app_off->fac =  $fac;
+                $old_app_off->cgpa =  $cgpa; 
+                $old_app_off->class_of_degree =  $class_of_degree;
+                $old_app_off->transcript_raw =  $trans_raw;
+                if($old_app_off->save() ){ 
+                    DB::commit();
+                    $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $old_app_off,'data2'=>  $student]);  
+                    File::put($student->surname.'_cover.pdf', $pdf->output());   
+                    $pdf = PDF::loadView('result_admin',['data1'=>  $old_app_off,'data2'=>  $student]); 
+                    File::put($student->surname.'.pdf', $pdf->output());    
+                    return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201); 
+               }
+                }
+                else{
                 $new_application = new Adminapplications();
                 $new_application->matric_number   = $request->matno;
                 $new_application->admin_id  = $user->id;
@@ -801,10 +892,14 @@ public function submit_app_for_admin(Request $request){
                 $new_application->transcript_raw =  $trans_raw;
                 if($new_application->save() ){ 
                     DB::commit();
-                    return response(['status'=>'success','message'=>'Application successfully created','data'=>$new_application->transcript_raw],201); 
+                    $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $new_application,'data2'=>  $student]);  
+                    File::put($student->surname.'_cover.pdf', $pdf->output());   
+                    $pdf = PDF::loadView('result_admin',['data1'=>  $new_application,'data2'=>  $student]); 
+                    File::put($student->surname.'.pdf', $pdf->output());    
+                    return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201); 
                } else{ DB::rollback();
                     return response(['status'=>'failed','message'=>'Error saving request!'],401);}
-            }else{
+            }}else{
                 return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
             }
         }else{ return response(['status'=>'failed','message'=>'No student with matric number '. $request->matno . ' found'],401);   }
