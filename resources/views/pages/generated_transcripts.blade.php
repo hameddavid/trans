@@ -30,8 +30,8 @@
                                                     <th>Matric Number</th>
                                                     <th>Type</th>
                                                     <th>Recipient</th>
-                                                    <th>Status</th>
                                                     <th>Date</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -43,8 +43,8 @@
                                                     <td>{{$transcript->matric_number}}</td>
                                                     <td>{{$transcript->transcript_type}}</td>
                                                     <td>{{$transcript->recipient}}</td>
-                                                    <td>@php echo ($transcript->app_status == 'SUCCESS') ? '<span class="badge badge-soft-success">'.$transcript->app_status.'</span>' : '<span class="badge badge-soft-danger">'.$transcript->app_status.'</span>'@endphp</td>
                                                     <td>{{ date("d M Y", strtotime($transcript->created_at)) }}</td>
+                                                    <td><button class="btn btn-info">Download</button></td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
