@@ -696,6 +696,8 @@ $(document).ready(function ($) {
                         "https://records.run.edu.ng/assets/images/run_logo_big.png"
                     );
                     console.log(data.data);
+                    $(".showHTML").html("");
+                    $(".showHTML").html(data.data);
                     $("#btnGenerateTranscript").html("Generate");
                 }
             );
