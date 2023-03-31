@@ -665,6 +665,15 @@ $(document).ready(function ($) {
         });
     };
 
+    const fetchTranscript = async (matric, type, recipient) => {
+        const res = await fetch(
+            `submit_app_for_admin/?matno=${matric}&transcript_type=${type}&recipient=${recipient}`
+        );
+        const trans_data = await res.json();
+        $("#btnGenerateTranscript").html("Generate");
+        return trans_data.data;
+    };
+
     $("#transcript_modal").click(function () {
         $("#modalGenerateTranscript").modal("show");
         $("#btnGenerateTranscript").click(function (e) {
@@ -687,20 +696,19 @@ $(document).ready(function ($) {
             $(".showHTML").html("");
             $("#transcriptModal").modal("show");
             $("#transcriptModalLabel").html(matric + "'s Transcript");
+            fetchTranscript(matric, type, recipient);
 
-            $(".showHTML").load(
-                `submit_app_for_admin/?matno=${matric}&transcript_type=${type}&recipient=${recipient}`,
-                function (data, status, jqXGR) {
-                    $(".logo").attr(
-                        "src",
-                        "https://records.run.edu.ng/assets/images/run_logo_big.png"
-                    );
-                    console.log(data.data);
-                    $(".showHTML").html("");
-                    $(".showHTML").html(data.data);
-                    $("#btnGenerateTranscript").html("Generate");
-                }
-            );
+            // $(".showHTML").load(
+            //     `submit_app_for_admin/?matno=${matric}&transcript_type=${type}&recipient=${recipient}`,
+            //     function (data, status, jqXGR) {
+            //         $(".logo").attr(
+            //             "src",
+            //             "https://records.run.edu.ng/assets/images/run_logo_big.png"
+            //         );
+            //         console.log(data);
+            //         $("#btnGenerateTranscript").html("Generate");
+            //     }
+            // );
             e.stopImmediatePropagation();
         });
     });
