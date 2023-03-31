@@ -783,7 +783,7 @@ public function submit_app_for_admin(Request $request){
                 $old_app_stud->admin_id  = $user->id;
                 $old_app_stud->delivery_mode = 'soft';
                 $old_app_stud->transcript_type = $type;
-                $old_app_stud->address =  $applicant->email;
+                $old_app_stud->address =  $student->EMAIL1;
                 $old_app_stud->destination = $type;//"Student Transcript";
                 $old_app_stud->recipient =  $request->recipient;
                 $old_app_stud->app_status = "PENDING"; // default status
@@ -810,7 +810,7 @@ public function submit_app_for_admin(Request $request){
                     $new_application->admin_id  = $user->id;
                     $new_application->delivery_mode = 'soft';
                     $new_application->transcript_type = $type;
-                    $new_application->address =  $applicant->email;
+                    $new_application->address =  $student->EMAIL1;
                     $new_application->destination = $type;//"Student Transcript";
                     $new_application->recipient =  $request->recipient;
                     $new_application->app_status = "PENDING"; // default status
@@ -841,7 +841,7 @@ public function submit_app_for_admin(Request $request){
                 $old_app_off->admin_id  = $user->id;
                 $old_app_off->delivery_mode = 'soft';
                 $old_app_off->transcript_type = $type;
-                $old_app_off->address =  $applicant->email;
+                $old_app_off->address =  $student->EMAIL1;
                 $old_app_off->destination = $type;//"Student Transcript";
                 $old_app_off->recipient =  $request->recipient;
                 $old_app_off->app_status = "PENDING"; // default status
