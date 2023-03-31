@@ -34,6 +34,7 @@ Route::post('register',[AdminAuthController::class,'save_new_account']);
     Route::get('/failed_applications',[AdminController::class,'viewFailedApplications']);
     Route::get('/dashboard',[AdminController::class,'adminDashboard']);
     Route::get('/payments',[AdminController::class,'viewPayments']);
+    Route::get('/generated-transcripts',[AdminController::class,'viewGeneratedTranscripts']);
     Route::get('/settings',[AdminController::class,'viewSettings']);
     Route::get('/applicants',[AdminController::class,'viewApplicants']);
     Route::get('/forgot_matric_num',[AdminController::class,'get_list_of_forgot_matno_request']);

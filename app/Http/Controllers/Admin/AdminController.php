@@ -157,6 +157,13 @@ class AdminController extends Controller
         return view('pages.payments',['data'=>$data,'payments'=>$payments]);
     }
 
+    public function viewGeneratedTranscripts(Request $request){
+        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+        $transcripts = DE::table('admin_applications')->join('t_student_test', 'admin_applications.matric_number', 't_student_test.matric_number')
+        ->select('admin_applications.*','t_student_test.SURNAME','t_student_test.FIRSTNAME')->get(); 
+        return view('pages.generated_transcripts',['data'=>$data,'transcripts'=>$transcripts]);
+     }
+
     public function viewApplicants(Request $request){
        $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $applicants = Applicant::select('*')->get(); 

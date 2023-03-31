@@ -704,18 +704,6 @@ $(document).ready(function ($) {
                 "src",
                 "https://records.run.edu.ng/assets/images/run_logo_big.png"
             );
-
-            // $(".showHTML").load(
-            //     `submit_app_for_admin/?matno=${matric}&transcript_type=${type}&recipient=${recipient}`,
-            //     function (data, status, jqXGR) {
-            //         $(".logo").attr(
-            //             "src",
-            //             "https://records.run.edu.ng/assets/images/run_logo_big.png"
-            //         );
-            //         console.log(data);
-            //         $("#btnGenerateTranscript").html("Generate");
-            //     }
-            // );
             e.stopImmediatePropagation();
         });
     });
