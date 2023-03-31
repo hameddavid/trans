@@ -860,8 +860,8 @@ public function submit_app_for_admin(Request $request){
                 $old_app_off->transcript_raw =  $trans_raw;
                 if($old_app_off->save() ){ 
                     DB::commit();
-                    // $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $old_app_off,'data2'=>  $student]);  
-                    // File::put($student->surname.'_cover.pdf', $pdf->output());   
+                    $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $old_app_off,'data2'=>  $student]);  
+                    File::put($student->surname.'_cover.pdf', $pdf->output());   
                     // $pdf = PDF::loadView('result_admin',['data1'=>  $old_app_off,'data2'=>  $student]); 
                     // File::put($student->surname.'.pdf', $pdf->output());    
                     return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($old_app_off->transcript_raw)],201); 
