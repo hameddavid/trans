@@ -66,6 +66,13 @@
                         <span>Payments</span>
                     </a>
                 </li>
+
+                <li>
+                    <a href="generated-transcripts">
+                        <i data-feather="file-text"></i>
+                        <span>Generated Transcripts</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->
