@@ -671,7 +671,6 @@ $(document).ready(function ($) {
         );
         const trans_data = await res.json();
         $("#btnGenerateTranscript").html("Generate");
-        console.log(trans_data);
         return trans_data.data;
     };
 
@@ -699,7 +698,12 @@ $(document).ready(function ($) {
             $("#transcriptModalLabel").html(matric + "'s Transcript");
             const toShow = await fetchTranscript(matric, type, recipient);
             console.log(toShow);
+            $("#modalGenerateTranscript").modal("hide");
             $(".showHTML").html(toShow);
+            $(".logo").attr(
+                "src",
+                "https://records.run.edu.ng/assets/images/run_logo_big.png"
+            );
 
             // $(".showHTML").load(
             //     `submit_app_for_admin/?matno=${matric}&transcript_type=${type}&recipient=${recipient}`,
