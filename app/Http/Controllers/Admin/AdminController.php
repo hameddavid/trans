@@ -896,10 +896,6 @@ public function submit_app_for_admin(Request $request){
                     File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'_cover.pdf', $pdf->output());   
                     $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
                     File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'.pdf', $pdf->output());
-                    // $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $new_application,'data2'=>  $student]);  
-                    // File::put($student->SURNAME.'_cover.pdf', $pdf->output());   
-                    // $pdf = PDF::loadView('result_admin',['data1'=>  $new_application,'data2'=>  $student]); 
-                    // File::put($student->SURNAME.'.pdf', $pdf->output());    
                     return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201); 
                } else{ DB::rollback();
                     return response(['status'=>'failed','message'=>'Error saving request!'],401);}
