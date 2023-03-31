@@ -671,12 +671,13 @@ $(document).ready(function ($) {
         );
         const trans_data = await res.json();
         $("#btnGenerateTranscript").html("Generate");
+        console.log(trans_data);
         return trans_data.data;
     };
 
     $("#transcript_modal").click(function () {
         $("#modalGenerateTranscript").modal("show");
-        $("#btnGenerateTranscript").click(function (e) {
+        $("#btnGenerateTranscript").click(async function (e) {
             e.preventDefault();
             $("#btnGenerateTranscript").html(
                 '<i class="fa fa-spinner fa-spin"></i>'
@@ -696,7 +697,7 @@ $(document).ready(function ($) {
             $(".showHTML").html("");
             $("#transcriptModal").modal("show");
             $("#transcriptModalLabel").html(matric + "'s Transcript");
-            const toShow = fetchTranscript(matric, type, recipient);
+            const toShow = await fetchTranscript(matric, type, recipient);
             console.log(toShow);
             $(".showHTML").html(toShow);
 
