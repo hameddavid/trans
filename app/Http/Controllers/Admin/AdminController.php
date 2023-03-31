@@ -892,6 +892,10 @@ public function submit_app_for_admin(Request $request){
                 $new_application->transcript_raw =  $trans_raw;
                 if($new_application->save() ){ 
                     DB::commit();
+                    $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $new_application,'data2'=>  $student]);  
+                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'_cover.pdf', $pdf->output());   
+                    $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
+                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'.pdf', $pdf->output());
                     // $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $new_application,'data2'=>  $student]);  
                     // File::put($student->SURNAME.'_cover.pdf', $pdf->output());   
                     // $pdf = PDF::loadView('result_admin',['data1'=>  $new_application,'data2'=>  $student]); 
