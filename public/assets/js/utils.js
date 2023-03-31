@@ -696,7 +696,9 @@ $(document).ready(function ($) {
             $(".showHTML").html("");
             $("#transcriptModal").modal("show");
             $("#transcriptModalLabel").html(matric + "'s Transcript");
-            fetchTranscript(matric, type, recipient);
+            const toShow = fetchTranscript(matric, type, recipient);
+            console.log(toShow);
+            $(".showHTML").html(toShow);
 
             // $(".showHTML").load(
             //     `submit_app_for_admin/?matno=${matric}&transcript_type=${type}&recipient=${recipient}`,
