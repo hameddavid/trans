@@ -71,7 +71,7 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data1->id}}
                     @elseif(strtoupper($data2->sex) == 'F') <b>{{'MISS'}}</b>
                     @else <b>{{''}}</b>
                     @endif
-                     {{$data2->surname.' '.$data2->firstname}} AND ATTESTATION TO PROFICIENCY IN ENGLISH LANGUAGE<br>
+                     {{$data2->SURNAME.' '.$data2->FIRSTNAME}} AND ATTESTATION TO PROFICIENCY IN ENGLISH LANGUAGE<br>
                     @if($data1->reference) {{'REFERENCE NUMBER: '.$data1->reference}}
                     @endif
                 </u>
@@ -84,7 +84,7 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data1->id}}
                     @elseif(strtoupper($data2->sex) == 'F') {{'Miss'}}
                     @else <b>{{''}}</b>
                     @endif
-                     <b>{{ strtoupper($data2->surname)}}</b> {{' '. ucwords(strtolower($data2->firstname))}} (Matric. No. {{$data2->matric_number}}).</p>
+                     <b>{{ strtoupper($data2->SURNAME)}}</b> {{' '. ucwords(strtolower($data2->FIRSTNAME))}} (Matric. No. {{$data2->matric_number}}).</p>
                     
                 <p> @if(strtoupper($data2->sex) == 'M') {{'His'}}
                     @elseif(strtoupper($data2->sex) == 'F') {{'Her'}}
