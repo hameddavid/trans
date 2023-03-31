@@ -59,7 +59,6 @@ RUN/REG/Acad/Stud.Trscpt/53/Vol.12/00{{$data1->id}}
                                                                                             
 {{$data1->address}}  
 </pre>
-<!-- <pre><p>Verification Code: {{$data->used_token}} </p> </pre> -->
         </div>
 
         <div class="divContents" align="justify">
