@@ -695,7 +695,7 @@ $(document).ready(function ($) {
                         "src",
                         "https://records.run.edu.ng/assets/images/run_logo_big.png"
                     );
-                    console.log("fetched");
+                    console.log(data);
                     $("#btnGenerateTranscript").html("Generate");
                 }
             );
