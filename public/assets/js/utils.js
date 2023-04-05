@@ -712,7 +712,7 @@ $(document).ready(function ($) {
         $.ajax({
             type: "POST",
             url: "download_submit_app_for_admin ",
-            data: { id: id, matno: matno, type: type },
+            data: { id: id, matno: matno, transcript_type: type },
             xhrFields: {
                 responseType: "blob",
             },

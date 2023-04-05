@@ -921,7 +921,7 @@ public function submit_app_for_admin(Request $request){
 
 
 public function download_submit_app_for_admin(Request $request){
-    $request->validate([ 'id'=>'required|string', 'transcript_type' => 'required|string','index' => 'required',] );
+    $request->validate([ 'id'=>'required|string', 'transcript_type' => 'required|string',] );
     $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
     if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
     $app_admin = Adminapplications::join('t_student_test', 'admin_applications.matric_number', 
