@@ -940,7 +940,7 @@ public function download_submit_app_for_admin(Request $request){
         //     File::delete($app_admin->used_token.'.pdf');
         //     return Response::download(storage_path('app/'.$app_admin->certificate),strtoupper($app_admin->surname).'_CERTIFICATE.pdf',$headers);
         //    }else{return response(["status"=>"failed","message"=>"Error with loop index sent"],401);   }
-        return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf'), $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf' ,$headers);
+        return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf'), $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_'.$app_admin->app_id.'.pdf' ,$headers);
         }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
     }else{return response(["status"=>"failed","message"=>"No application found"],401); }
   
