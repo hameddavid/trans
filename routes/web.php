@@ -66,6 +66,7 @@ Route::post('register',[AdminAuthController::class,'save_new_account']);
     Route::post('/approve_degree_verification', [AdminController::class, 'approve_degree_verification']);
     Route::get('/view_treated_degree_verification/{path}', [AdminController::class, 'view_treated_degree_verification']);
     Route::get('/submit_app_for_admin', [AdminController::class, 'submit_app_for_admin']);
+    Route::get('/download_submit_app_for_admin', [AdminController::class, 'download_submit_app_for_admin']);
 
 
     Route::get('/logout',[AdminAuthController::class,'logout']);
