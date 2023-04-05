@@ -44,7 +44,7 @@
                                                     <td>{{$transcript->transcript_type}}</td>
                                                     <td>{{$transcript->recipient}}</td>
                                                     <td>{{ date("d M Y", strtotime($transcript->created_at)) }}</td>
-                                                    <td><button class="btn btn-info">Download</button></td>
+                                                    <td><button class="btn btn-info download_transcript">Download</button></td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -83,6 +83,7 @@
 
         <!-- Datatable init js -->
         <script src="../assets/js/pages/datatables.init.js"></script>    
+        <script src="../assets/js/utils.js"></script>
     @endsection
 
         
