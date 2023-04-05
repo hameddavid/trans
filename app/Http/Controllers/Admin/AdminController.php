@@ -932,7 +932,7 @@ public function download_submit_app_for_admin(Request $request){
     if($app_admin->count() != 0){
         // if (File::exists($app_admin->used_token.'.pdf') && File::exists($app_admin->used_token.'_cover.pdf')  && File::exists(storage_path('app/'.$app_admin->certificate))){
             if (File::exists($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf')){ 
-            $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/octet-stream',];                
+            $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/pdf',];                
         //    if($request->index == 0){return Response::download(public_path($app_admin->used_token.'_cover.pdf'), $app_admin->used_token.'_cover.pdf' ,$headers);}
         //    elseif($request->index == 1){return Response::download(public_path($app_admin->used_token.'.pdf'), $app_admin->used_token.'.pdf',$headers);}
         //    elseif($request->index == 2){
