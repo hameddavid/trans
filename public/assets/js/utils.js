@@ -707,4 +707,40 @@ $(document).ready(function ($) {
             e.stopImmediatePropagation();
         });
     });
+
+    const downloadTranscript = (id, matno, type) => {
+        $.ajax({
+            type: "POST",
+            url: "download_submit_app_for_admin ",
+            data: { id: id, matno: matno, transcript_type: type },
+            xhrFields: {
+                responseType: "blob",
+            },
+            beforeSend: function () {
+                if (confirm("Download Transcript?") == false) return false;
+                $.blockUI();
+            },
+            success: function (response) {
+                console.log(response);
+                var blob = new Blob([response]);
+                var link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "File.pdf";
+                link.click();
+                alertify.success(response.message);
+            },
+            error: function (response) {
+                console.log(response);
+                $.unblockUI();
+                alertify.error(response.responseJSON.message);
+            },
+        });
+    };
+
+    $(".download_transcript").click(function () {
+        var id = $(this).data("id");
+        var matno = $(this).data("matno");
+        var type = $(this).data("type");
+        downloadTranscript(id, matno, type);
+    });
 });
