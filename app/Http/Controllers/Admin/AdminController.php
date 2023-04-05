@@ -932,7 +932,7 @@ public function download_submit_app_for_admin(Request $request){
     if($app_admin->count() != 0){
         // if (File::exists($app_admin->used_token.'.pdf') && File::exists($app_admin->used_token.'_cover.pdf')  && File::exists(storage_path('app/'.$app_admin->certificate))){
             if (File::exists($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf')){ 
-            $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/pdf',];                
+            $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/octet-stream',];                
         //    if($request->index == 0){return Response::download(public_path($app_admin->used_token.'_cover.pdf'), $app_admin->used_token.'_cover.pdf' ,$headers);}
         //    elseif($request->index == 1){return Response::download(public_path($app_admin->used_token.'.pdf'), $app_admin->used_token.'.pdf',$headers);}
         //    elseif($request->index == 2){
@@ -940,7 +940,8 @@ public function download_submit_app_for_admin(Request $request){
         //     File::delete($app_admin->used_token.'.pdf');
         //     return Response::download(storage_path('app/'.$app_admin->certificate),strtoupper($app_admin->surname).'_CERTIFICATE.pdf',$headers);
         //    }else{return response(["status"=>"failed","message"=>"Error with loop index sent"],401);   }
-        return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf'), 'newName.pdf' ,$headers);
+       
+        return response()->download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf'), $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_'.$app_admin->app_id.'.pdf' ,$headers);
         }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
     }else{return response(["status"=>"failed","message"=>"No application found"],401); }
   
