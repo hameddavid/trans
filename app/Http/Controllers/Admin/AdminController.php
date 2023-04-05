@@ -928,8 +928,8 @@ public function download_submit_app_for_admin(Request $request){
     '=', 't_student_test.matric_number')
     ->where(['admin_applications.id'=> $request->id])->select('admin_applications.*','t_student_test.*')->first(); 
    
-    return response(["status"=>"failed","message"=>$app_admin],401); 
-    
+    return response(["status"=>"failed","message"=>$app_admin],200); 
+
     $type = strtoupper($request->transcript_type);
     if($app_admin->count() != 0){
         if (File::exists($app_admin->used_token.'.pdf') && File::exists($app_admin->used_token.'_cover.pdf')  && File::exists(storage_path('app/'.$app_admin->certificate))){
