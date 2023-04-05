@@ -711,7 +711,7 @@ $(document).ready(function ($) {
     const downloadTranscript = (id, matno, type) => {
         $.ajax({
             type: "POST",
-            url: "recommend_degree ",
+            url: "download_submit_app_for_admin ",
             data: { id: id, matno: matno, type: type },
             xhrFields: {
                 responseType: "blob",
