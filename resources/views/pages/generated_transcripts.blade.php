@@ -44,7 +44,7 @@
                                                     <td>{{$transcript->transcript_type}}</td>
                                                     <td>{{$transcript->recipient}}</td>
                                                     <td>{{ date("d M Y", strtotime($transcript->created_at)) }}</td>
-                                                    <td><button class="btn btn-info download_transcript">Download</button></td>
+                                                    <td><button data-id="{{$transcript->id}}" data-type="{{$transcript->transcript_type}}" data-matno="{{$transcript->matric_number}}" class="btn btn-info download_transcript">Download</button></td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
