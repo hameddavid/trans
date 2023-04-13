@@ -813,7 +813,7 @@ public function submit_app_for_admin(Request $request){
                     // File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'_cover.pdf', $pdf->output());   
                     $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
                     File::put($student->SURNAME.'_'.$student->FIRSTNAME.'_student_copy_@'.$old_app_stud->id.'.pdf', $pdf->output());
-                    return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201); 
+                    return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($old_app_stud->transcript_raw)],201); 
                }
                 }else{
                     $new_application = new Adminapplications();
