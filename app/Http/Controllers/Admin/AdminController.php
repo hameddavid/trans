@@ -1177,7 +1177,7 @@ public function get_student_result_for_admin($request){
     
         // response = response[0: len(response) - len('</div>')]
         app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
-        $response = $response .'
+        $response = $response .'<br><br><br><hr>
         <table class="result_table2">
             <caption>Overall Academic Summary</caption>
         <tr>
