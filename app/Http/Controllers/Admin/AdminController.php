@@ -809,6 +809,10 @@ public function submit_app_for_admin(Request $request){
                 $old_app_stud->transcript_raw =  $trans_raw;
                 if($old_app_stud->save() ){ 
                     DB::commit();
+                    // $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $new_application,'data2'=>  $student]);  
+                    // File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'_cover.pdf', $pdf->output());   
+                    $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
+                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'_student_copy_@'.$old_app_stud->id.'.pdf', $pdf->output());
                     return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201); 
                }
                 }else{
@@ -836,7 +840,9 @@ public function submit_app_for_admin(Request $request){
                     $new_application->transcript_raw =  $trans_raw;
                     if($new_application->save() ){ 
                         DB::commit();
-                        return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201); 
+                        $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
+                        File::put($student->SURNAME.'_'.$student->FIRSTNAME.'_student_copy_@'.$new_application->id.'.pdf', $pdf->output());
+                    return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201);  
                    } else{ DB::rollback();
                         return response(['status'=>'failed','message'=>'Error saving request!'],401);}
                 }
@@ -940,8 +946,8 @@ public function download_submit_app_for_admin(Request $request){
         //     File::delete($app_admin->used_token.'.pdf');
         //     return Response::download(storage_path('app/'.$app_admin->certificate),strtoupper($app_admin->surname).'_CERTIFICATE.pdf',$headers);
         //    }else{return response(["status"=>"failed","message"=>"Error with loop index sent"],401);   }
-       
-        return response()->download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf'), $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_'.$app_admin->app_id.'.pdf' ,$headers);
+        return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf'), 
+        $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_'.$app_admin->app_id.'.pdf' ,$headers);
         }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
     }else{return response(["status"=>"failed","message"=>"No application found"],401); }
   
