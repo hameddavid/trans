@@ -758,6 +758,7 @@ public function get_approved_degree_verification(Request $request){
 
 
 public function submit_app_for_admin(Request $request){
+    dd('working...');
     $request->validate(["matno"=>"required",'transcript_type'=>'required','recipient'=>'required']);
     DB::beginTransaction();
     $user =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
