@@ -1084,92 +1084,92 @@ public function get_student_result_for_admin($request){
         </table>';
                 
    
-            if ($sessionIndex === array_key_last($sessions)) {
-                app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
-                $response = $response .'
-                <table class="result_table2">
-                    <caption>Overall Academic Summary</caption>
-                <tr>
-                        <td><strong>Status</strong></td>
-                    <td> ' . $student->status.' </td>
-                </tr>
-                <tr>
-                    <td><strong>Qualification Obtained</strong></td>
-                    <td> ' . $qualification .' </td>
-                </tr> ';
+            // if ($sessionIndex === array_key_last($sessions)) {
+            //     app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
+            //     $response = $response .'
+            //     <table class="result_table2">
+            //         <caption>Overall Academic Summary</caption>
+            //     <tr>
+            //             <td><strong>Status</strong></td>
+            //         <td> ' . $student->status.' </td>
+            //     </tr>
+            //     <tr>
+            //         <td><strong>Qualification Obtained</strong></td>
+            //         <td> ' . $qualification .' </td>
+            //     </tr> ';
                             
-                if (strtoupper($student->status) == strtoupper("Graduated")) {
+            //     if (strtoupper($student->status) == strtoupper("Graduated")) {
             
-                    $response = $response .'<tr>
-                            <td><strong>Class of Degree</strong></td>
-                            <td> ' . app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa).' </td>
-                    </tr> ';
+            //         $response = $response .'<tr>
+            //                 <td><strong>Class of Degree</strong></td>
+            //                 <td> ' . app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa).' </td>
+            //         </tr> ';
                                 
-                }
-                $signatory = '';
-                $designation = '';
-                $date = date("d-M-y");
-                $response = $response .'</table>
-                    <table class="result_table2">
-                        <caption>Key</caption>
-                        <tr>
-                            <td>A => 100 - 70 => 5</td>
-                            <td>4.50 - 5.00 => Excellent</td>
-                            <td>TU: Total Units</td>
-                        </tr>
-                        <tr>
-                            <td>B => 69 - 60 => 4</td>
-                            <td>3.50 - 4.49 => Very Good</td>
-                            <td>TGP: Total Grade Point</td>
-                        </tr>
-                        <tr>
-                            <td>C => 59 - 50 => 3</td>
-                            <td>2.50 - 3.49 => Good</td>
-                            <td>GPA: Grade Point Average</td>
-                        </tr>
-                        <tr>
-                            <td>D => 49 - 45 => 2</td>
-                            <td>1.50 - 2.49 => Average</td>
-                            <td>CTU: Cumulative Total Units</td>
-                        </tr>
-                        <tr>
-                            <td>E => 44 - 40 => 1</td>
-                            <td>1.00 - 1.49 => Fair</td>
-                            <td>CTGP: Cumulative Total Grade Point</td>
-                        </tr>
-                        <tr>
-                            <td>F => 39 - 0 => 0</td>
-                            <td>0.00 - 0.99 => Poor</td>
-                            <td>CGPA: Cumulative Grade Point Average</td>
-                        </tr>
-                    </table>';
-                    if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                        $response = $response .' <div class="footer_">
-                            ________________________________<br>
+            //     }
+            //     $signatory = '';
+            //     $designation = '';
+            //     $date = date("d-M-y");
+            //     $response = $response .'</table>
+            //         <table class="result_table2">
+            //             <caption>Key</caption>
+            //             <tr>
+            //                 <td>A => 100 - 70 => 5</td>
+            //                 <td>4.50 - 5.00 => Excellent</td>
+            //                 <td>TU: Total Units</td>
+            //             </tr>
+            //             <tr>
+            //                 <td>B => 69 - 60 => 4</td>
+            //                 <td>3.50 - 4.49 => Very Good</td>
+            //                 <td>TGP: Total Grade Point</td>
+            //             </tr>
+            //             <tr>
+            //                 <td>C => 59 - 50 => 3</td>
+            //                 <td>2.50 - 3.49 => Good</td>
+            //                 <td>GPA: Grade Point Average</td>
+            //             </tr>
+            //             <tr>
+            //                 <td>D => 49 - 45 => 2</td>
+            //                 <td>1.50 - 2.49 => Average</td>
+            //                 <td>CTU: Cumulative Total Units</td>
+            //             </tr>
+            //             <tr>
+            //                 <td>E => 44 - 40 => 1</td>
+            //                 <td>1.00 - 1.49 => Fair</td>
+            //                 <td>CTGP: Cumulative Total Grade Point</td>
+            //             </tr>
+            //             <tr>
+            //                 <td>F => 39 - 0 => 0</td>
+            //                 <td>0.00 - 0.99 => Poor</td>
+            //                 <td>CGPA: Cumulative Grade Point Average</td>
+            //             </tr>
+            //         </table>';
+            //         if(strtoupper($request->transcript_type) == 'OFFICIAL'){
+            //             $response = $response .' <div class="footer_">
+            //                 ________________________________<br>
                             
-                            Oyedapo Oyeniyi<br>
-                            Assistant Registrar, Academic Affairs<br>
-                            For: Registrar
-                        </div>';
-                    }
-                    //print_footer
-                    if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                        $response = $response .'<div class="footer_">
-                        Any alteration renders this transcript invalid<br>
-                        Generated on the  ' . $date .'<br>
-                    </div>
-                    </div> ';
-                    }else{
-                        $response = $response .'<div class="footer_">
-                        Generated on the  ' . $date .'<br>
-                    </div>
-                    </div> ';
-                    }
+            //                 Oyedapo Oyeniyi<br>
+            //                 Assistant Registrar, Academic Affairs<br>
+            //                 For: Registrar
+            //             </div>';
+            //         }
+            //         //print_footer
+            //         if(strtoupper($request->transcript_type) == 'OFFICIAL'){
+            //             $response = $response .'<div class="footer_">
+            //             Any alteration renders this transcript invalid<br>
+            //             Generated on the  ' . $date .'<br>
+            //         </div>
+            //         </div> ';
+            //         }else{
+            //             $response = $response .'<div class="footer_">
+            //             Generated on the  ' . $date .'<br>
+            //         </div>
+            //         </div> ';
+            //         }
                   
-            }else{
-                $response = $response .'
-                </div>'; 
-            }
+            // }else{
+            //     $response = $response .'
+            //     </div>'; 
+            // }
         } 
     
         // response = response[0: len(response) - len('</div>')]
