@@ -506,8 +506,9 @@ public function get_student_result($request){
             </tr>
         </table>';
                 
-        $response = $response .'
-        </div>';
+        // $response = $response .'
+        // </div>';
+        
              
         } 
     
@@ -574,8 +575,8 @@ public function get_student_result($request){
                 $response = $response .' <div class="footer_">
                     ________________________________<br>
                     
-                      D. K. T. Akintola<br>
-                     Deputy Registrar, Academic Affairs<br>
+                      Oyedapo Oyeniyi<br>
+                     Assistant Registrar, Academic Affairs<br>
                     For: Registrar
                 </div>';
             }
@@ -590,7 +591,7 @@ public function get_student_result($request){
                 $response = $response .'<div class="footer_">
                 Generated on the  ' . $date .'<br>
             </div>
-            </div> ';
+            </div> </div>';
             }
           
         $response = str_replace("pageno", $page_no, $response);
@@ -738,7 +739,7 @@ static function get_result_table_header($student,$applicant,$request,$prog_name,
 			<td>Matriculation Number: <strong> ' . $applicant->matric_number .' </strong></td>
 		    </tr>
 		    <tr> 
-			<td>College: <strong> ' . $fac .' </strong></td>
+			<td>Faculty: <strong> ' . $fac .' </strong></td>
 			<td>Department: <strong> ' . $dept .  ' </strong></td>
 			<td>Programme: <strong> ' . $prog_name .  ' </strong></td>
 		    </tr>
