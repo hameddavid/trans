@@ -1083,8 +1083,9 @@ public function get_student_result_for_admin($request){
             </tr>
         </table>';
                 
-        $response = $response .'
-            </div>'; 
+        // $response = $response .'
+        //     </div>'; 
+        dd(array_key_last($sessions));
             if ($sessionIndex === array_key_last($sessions)) {
                 app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
                 $response = $response .'
