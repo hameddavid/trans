@@ -1087,7 +1087,7 @@ public function get_student_result_for_admin($request){
         //     </div>'; 
        
             if ($sessionIndex === array_key_last($sessions)) {
-                echo array_key_last($sessions);
+                // echo array_key_last($sessions);
                 app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
                 $response = $response .'
                 <table class="result_table2">
