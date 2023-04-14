@@ -946,10 +946,10 @@ public function download_submit_app_for_admin(Request $request){
             }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
         }
         elseif ( $type == 'STUDENT' ){
-            if (File::exists($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf')){ 
+            if (File::exists($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_student_copy_@'.$app_admin->app_id.'.pdf')){ 
                 $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/octet-stream',];                
           
-                return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf'), 
+                return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_student_copy_@'.$app_admin->app_id.'.pdf'), 
             $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_student_copy_@'.$app_admin->app_id.'.pdf' ,$headers);
             }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
         }else{return response(["status"=>"failed","message"=>"Unknown transcript type supplied"],401); }
