@@ -773,7 +773,6 @@ public function submit_app_for_admin(Request $request){
         if($user && $student){
             $type = strtoupper($request->transcript_type);
             $all_result_params = $this->get_student_result_for_admin($request);
-            dd($all_result_params);
             $first_session_in_sch =  $all_result_params['first_session_in_sch']; 
             $last_session_in_sch =  $all_result_params['last_session_in_sch']; 
             $years_spent =  $all_result_params['years_spent']; 
