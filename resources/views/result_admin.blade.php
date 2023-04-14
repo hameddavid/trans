@@ -191,13 +191,11 @@ caption{
 
 .footer_{
 	width: 90%;
-	position: sticky;
-  	top: 100%;
-	margin-left: 5%;
+	margin-left: 50%;
 	font-family: Georgia;
 	font-size: 12px;
 	font-style: italic;
-	/* margin-top: 75px; */
+	margin-top: 200px;
 	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
