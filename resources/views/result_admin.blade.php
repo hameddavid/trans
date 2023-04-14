@@ -195,7 +195,7 @@ caption{
 	font-family: Georgia;
 	font-size: 12px;
 	font-style: italic;
-	margin-top: 25px;
+	margin-bottom: 0px;
 	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
