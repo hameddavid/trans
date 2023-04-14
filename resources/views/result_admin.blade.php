@@ -191,11 +191,11 @@ caption{
 
 .footer_{
 	width: 90%;
-	margin-left: 40%;
+	margin-left: 5%;
 	font-family: Georgia;
 	font-size: 12px;
 	font-style: italic;
-	margin-top: 250px;
+	margin-top: 300px;
 	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
@@ -220,11 +220,11 @@ caption{
 
 .footer_3{
 	width: 90%;
-	margin-left: 40%;
+	margin-left: 5%;
 	font-family: Georgia;
 	font-size: 12px;
 	font-style: italic;
-	margin-top: 25px;
+	margin-top: 40px;
 	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
