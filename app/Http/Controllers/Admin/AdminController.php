@@ -1152,7 +1152,7 @@ public function get_student_result_for_admin($request){
                         </tr>
                     </table>';
                     if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                        $response = $response .' <div class="footer_">
+                        $response = $response .' <div class="footer_3">
                             ________________________________<br>
                             
                             Oyedapo Oyeniyi<br>
@@ -1162,7 +1162,7 @@ public function get_student_result_for_admin($request){
                     }
                     //print_footer
                     if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                        $response = $response .'<div class="footer_">
+                        $response = $response .'<div class="footer_3">
                         Any alteration renders this transcript invalid<br>
                         Generated on the  ' . $date .'<br>
                     </div>
