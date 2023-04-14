@@ -191,11 +191,11 @@ caption{
 
 .footer_{
 	width: 90%;
-	margin-left: 50%;
+	margin-left: 40%;
 	font-family: Georgia;
 	font-size: 12px;
 	font-style: italic;
-	margin-top: 200px;
+	margin-top: 250px;
 	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
@@ -211,6 +211,20 @@ caption{
 	font-weight: bold;
 	margin-top: 50px;
 	text-align: center;
+	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
+	background-repeat:no-repeat;
+	background-size: cover; 
+	object-fit: none;  
+	object-position: right top;  */
+}
+
+.footer_3{
+	width: 90%;
+	margin-left: 40%;
+	font-family: Georgia;
+	font-size: 12px;
+	font-style: italic;
+	margin-top: 150px;
 	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
