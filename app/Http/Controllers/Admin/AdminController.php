@@ -1168,7 +1168,7 @@ public function get_student_result_for_admin($request){
                     </div>
                     </div> ';
                     }else{
-                        $response = $response .'<div class="footer_">
+                        $response = $response .'<div class="footer_3">
                         Generated on the  ' . $date .'<br>
                     </div>
                     </div> ';
