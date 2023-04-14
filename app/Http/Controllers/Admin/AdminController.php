@@ -1177,7 +1177,7 @@ public function get_student_result_for_admin($request){
             // if (1 == 1){$response = $response .'
             //         </div>'; }
             end($sessions);
-            if ($sessionIndex === key($sessions)) {
+            if ($sessionIndex == 4) {
                 return 'LAST ELEMENT!';
               }
         }  //sessions array loop closed here
