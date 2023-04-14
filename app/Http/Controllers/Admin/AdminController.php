@@ -976,10 +976,12 @@ public function get_student_result_for_admin($request){
             $cumm_sum_point_unit = 0.0;
             $cumm_sum_unit = 0.0;
             $page_no = 0;
+            $last_index = -1;
             app('App\Http\Controllers\Applicant\ApplicationController')::get_prog_code_given_matno($matno, $prog_code);
             // $this->get_dept_given_prog_code($prog_code,$prog_name, $dept , $fac); another function for prog_dept_fac
             app('App\Http\Controllers\Applicant\ApplicationController')::prog_dept_fac($prog_code, $prog_name, $dept , $fac);
             foreach($sessions as $sessionIndex => $session){
+                if ( $sessionIndex > $last_index){ $last_index = $sessionIndex;}
                 $page_no += 1;
                 $response .= app('App\Http\Controllers\Applicant\ApplicationController')::get_result_table_header($student,$applicant=$student,$request,$prog_name, $dept , $fac,$page_no);
                 $results = app('App\Http\Controllers\Applicant\ApplicationController')::fetch_student_result_from_registration($matno,$session);
@@ -1088,8 +1090,8 @@ public function get_student_result_for_admin($request){
         //     </div>'; 
        
             // if ($sessionIndex === array_key_last($sessions)) {
-                if ($sessionIndex == array_key_last($sessions)) {
-
+                if ($sessionIndex == 3) {
+                    return $last_index;
                 app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
                 $response = $response .'<br><br><br><hr>
                 <table class="result_table2">
