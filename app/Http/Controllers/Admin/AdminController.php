@@ -1182,12 +1182,13 @@ public function get_student_result_for_admin($request){
                     Generated on the  ' . $date .'<br>
                 </div>
                 </div> ';
-                }else{
-                    $response = $response .'<div class="footer_">
-                    Generated on the  ' . $date .'<br>
-                </div>
-                </div> ';
                 }
+                // else{
+                //     $response = $response .'<div class="footer_">
+                //     Generated on the  ' . $date .'<br>
+                // </div>
+                // </div> ';
+                // }
                 // $response = $response .'
                 // </div>'; 
             }
