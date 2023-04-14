@@ -1086,14 +1086,10 @@ public function get_student_result_for_admin($request){
             </tr>
         </table>';
                 
-        // $response = $response .'
-        //     </div>'; 
-       
-            // if ($sessionIndex === array_key_last($sessions)) {
                 if (count($sessions) == $last_index) {
                     
                 app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
-                $response = $response .'<br><br><br><hr style="border-top: 1px dotted black;">
+                $response = $response .'<br><hr style="border-top: 1px dotted black;">
                 <table class="result_table2">
                     <caption>Overall Academic Summary</caption>
                 <tr>
