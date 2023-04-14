@@ -1175,6 +1175,17 @@ public function get_student_result_for_admin($request){
                     }
                   
             }else{
+                 //print_footer
+                 if(strtoupper($request->transcript_type) == 'OFFICIAL'){
+                    $response = $response .'<div class="footer_">
+                    Any alteration renders this transcript invalid<br>
+                    Generated on the  ' . $date .'<br>
+                </div> ';
+                }else{
+                    $response = $response .'<div class="footer_">
+                    Generated on the  ' . $date .'<br>
+                </div>';
+                }
                 $response = $response .'
                 </div>'; 
             }
