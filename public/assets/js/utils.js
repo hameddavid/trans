@@ -725,7 +725,7 @@ $(document).ready(function ($) {
                 var blob = new Blob([response]);
                 var link = document.createElement("a");
                 link.href = window.URL.createObjectURL(blob);
-                link.download = "File.pdf";
+                link.download = `${matno}.pdf`;
                 link.click();
                 alertify.success(response.message);
             },
@@ -737,7 +737,6 @@ $(document).ready(function ($) {
         });
     };
 
-    //$(".download_transcript").click(function () {
     $("#datatable-buttons").on("click", ".download_transcript", function () {
         var id = $(this).data("id");
         var matno = $(this).data("matno");
