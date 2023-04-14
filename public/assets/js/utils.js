@@ -727,7 +727,8 @@ $(document).ready(function ($) {
                 link.href = window.URL.createObjectURL(blob);
                 link.download = `${matno}.pdf`;
                 link.click();
-                alertify.success(response.message);
+                alertify.success("File downloaded");
+                $.unblockUI();
             },
             error: function (response) {
                 console.log(response);
