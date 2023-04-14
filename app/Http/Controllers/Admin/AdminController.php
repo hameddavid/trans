@@ -1087,7 +1087,7 @@ public function get_student_result_for_admin($request){
         // $response = $response .'
         //     </div>'; 
        
-            if ($sessionIndex === array_key_last($sessions)) {
+            // if ($sessionIndex === array_key_last($sessions)) {
                 // echo array_key_last($sessions);
                 // app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
                 // $response = $response .'<br><br><br><hr>
@@ -1170,10 +1170,12 @@ public function get_student_result_for_admin($request){
                 //     </div> ';
                 //     }
                   
-            }else{
-                $response = $response .'
-                </div>'; 
-            }
+            // }else{
+            //     $response = $response .'
+            //     </div>'; 
+            // }
+            if (1 == 1){$response = $response .'
+                    </div>'; }
         }  //sessions array loop closed here
     
         // response = response[0: len(response) - len('</div>')]
