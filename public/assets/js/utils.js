@@ -737,7 +737,8 @@ $(document).ready(function ($) {
         });
     };
 
-    $(".download_transcript").click(function () {
+    //$(".download_transcript").click(function () {
+    $("#datatable-buttons").on("click", ".download_transcript", function () {
         var id = $(this).data("id");
         var matno = $(this).data("matno");
         var type = $(this).data("type");
