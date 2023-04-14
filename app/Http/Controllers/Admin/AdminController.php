@@ -1164,12 +1164,12 @@ public function get_student_result_for_admin($request){
                     if(strtoupper($request->transcript_type) == 'OFFICIAL'){
                         $response = $response .'<div class="footer_4">
                         Any alteration renders this transcript invalid<br>
-                        Generated on the  ' . $date .'<br>
+                        Generated on   ' . $date .'<br>
                     </div>
                     </div> ';
                     }else{
                         $response = $response .'<div class="footer_4">
-                        Generated on the  ' . $date .'<br>
+                        Generated on   ' . $date .'<br>
                     </div>
                     </div> ';
                     }
@@ -1177,10 +1177,10 @@ public function get_student_result_for_admin($request){
             }else{
                  //print_footer
                  if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                    $response = $response .'<div class="footer_4">Any alteration renders this transcript invalid<br> Generated on the  ' . $date .'<br></div></div> ';
+                    $response = $response .'<div class="footer_4">Any alteration renders this transcript invalid<br> Generated on   ' . $date .'<br></div></div> ';
                 }
                 else{
-                    $response = $response .'<div class="footer_4"> Generated on the  ' . $date .'<br> </div> </div> ';
+                    $response = $response .'<div class="footer_4"> Generated on   ' . $date .'<br> </div> </div> ';
                 }
                 // $response = $response .'
                 // </div>'; 
