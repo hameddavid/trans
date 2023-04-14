@@ -981,7 +981,7 @@ public function get_student_result_for_admin($request){
             $cumm_sum_unit = 0.0;
             $page_no = 0;
             $last_index = 0;
-            $date = date("d-M-y");
+            $date = date("F j, Y, g:i a");
             app('App\Http\Controllers\Applicant\ApplicationController')::get_prog_code_given_matno($matno, $prog_code);
             // $this->get_dept_given_prog_code($prog_code,$prog_name, $dept , $fac); another function for prog_dept_fac
             app('App\Http\Controllers\Applicant\ApplicationController')::prog_dept_fac($prog_code, $prog_name, $dept , $fac);
@@ -1152,7 +1152,7 @@ public function get_student_result_for_admin($request){
                         </tr>
                     </table>';
                     if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                        $response = $response .' <div class="footer_3">
+                        $response = $response .' <div class="footer_">
                             ________________________________<br>
                             
                             Oyedapo Oyeniyi<br>
@@ -1162,13 +1162,13 @@ public function get_student_result_for_admin($request){
                     }
                     //print_footer
                     if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                        $response = $response .'<div class="footer_3">
+                        $response = $response .'<div class="footer_4">
                         Any alteration renders this transcript invalid<br>
                         Generated on the  ' . $date .'<br>
                     </div>
                     </div> ';
                     }else{
-                        $response = $response .'<div class="footer_3">
+                        $response = $response .'<div class="footer_4">
                         Generated on the  ' . $date .'<br>
                     </div>
                     </div> ';
@@ -1177,10 +1177,10 @@ public function get_student_result_for_admin($request){
             }else{
                  //print_footer
                  if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                    $response = $response .'<div class="footer_">Any alteration renders this transcript invalid<br> Generated on the  ' . $date .'<br></div></div> ';
+                    $response = $response .'<div class="footer_4">Any alteration renders this transcript invalid<br> Generated on the  ' . $date .'<br></div></div> ';
                 }
                 else{
-                    $response = $response .'<div class="footer_"> Generated on the  ' . $date .'<br> </div> </div> ';
+                    $response = $response .'<div class="footer_4"> Generated on the  ' . $date .'<br> </div> </div> ';
                 }
                 // $response = $response .'
                 // </div>'; 

@@ -195,7 +195,7 @@ caption{
 	font-family: Georgia;
 	font-size: 12px;
 	font-style: italic;
-	margin-top: 300px;
+	margin-top: 25px;
 	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
 	background-repeat:no-repeat;
 	background-size: cover; 
@@ -230,6 +230,18 @@ caption{
 	background-size: cover; 
 	object-fit: none;  
 	object-position: right top;  */
+}
+
+.footer_4{
+	font-size: 12px;
+	font-family: Georgia;
+	font-style: italic;
+	padding: 35px;
+	text-align: center;
+	position: absolute;
+	right: 0;
+	left: 0;
+	bottom: 0;
 }
 
 #gold_div{
