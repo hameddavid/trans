@@ -1174,8 +1174,12 @@ public function get_student_result_for_admin($request){
             //     $response = $response .'
             //     </div>'; 
             // }
-            if (1 == 1){$response = $response .'
-                    </div>'; }
+            // if (1 == 1){$response = $response .'
+            //         </div>'; }
+            end($sessions);
+            if ($sessionIndex === key($sessions)) {
+                return 'LAST ELEMENT!';
+              }
         }  //sessions array loop closed here
     
         // response = response[0: len(response) - len('</div>')]
