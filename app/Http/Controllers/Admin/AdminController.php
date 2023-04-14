@@ -981,6 +981,7 @@ public function get_student_result_for_admin($request){
             $cumm_sum_unit = 0.0;
             $page_no = 0;
             $last_index = 0;
+            $date = date("d-M-y");
             app('App\Http\Controllers\Applicant\ApplicationController')::get_prog_code_given_matno($matno, $prog_code);
             // $this->get_dept_given_prog_code($prog_code,$prog_name, $dept , $fac); another function for prog_dept_fac
             app('App\Http\Controllers\Applicant\ApplicationController')::prog_dept_fac($prog_code, $prog_name, $dept , $fac);
@@ -1116,7 +1117,6 @@ public function get_student_result_for_admin($request){
                 }
                 $signatory = '';
                 $designation = '';
-                $date = date("d-M-y");
                 $response = $response .'</table>
                     <table class="result_table2">
                         <caption>Key</caption>
@@ -1176,19 +1176,12 @@ public function get_student_result_for_admin($request){
                   
             }else{
                  //print_footer
-                //  if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                    $response = $response .'<div class="footer_">
-                    Any alteration renders this transcript invalid<br>
-                    Generated on the  ' . $date .'<br>
-                </div>
-                </div> ';
-                // }
-                // else{
-                //     $response = $response .'<div class="footer_">
-                //     Generated on the  ' . $date .'<br>
-                // </div>
-                // </div> ';
-                // }
+                 if(strtoupper($request->transcript_type) == 'OFFICIAL'){
+                    $response = $response .'<div class="footer_">Any alteration renders this transcript invalid<br> Generated on the  ' . $date .'<br></div></div> ';
+                }
+                else{
+                    $response = $response .'<div class="footer_"> Generated on the  ' . $date .'<br> </div> </div> ';
+                }
                 // $response = $response .'
                 // </div>'; 
             }
