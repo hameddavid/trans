@@ -1180,14 +1180,16 @@ public function get_student_result_for_admin($request){
                     $response = $response .'<div class="footer_">
                     Any alteration renders this transcript invalid<br>
                     Generated on the  ' . $date .'<br>
+                </div>
                 </div> ';
                 }else{
                     $response = $response .'<div class="footer_">
                     Generated on the  ' . $date .'<br>
-                </div>';
+                </div>
+                </div> ';
                 }
-                $response = $response .'
-                </div>'; 
+                // $response = $response .'
+                // </div>'; 
             }
             
             
