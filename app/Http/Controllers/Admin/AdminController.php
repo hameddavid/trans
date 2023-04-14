@@ -812,7 +812,7 @@ public function submit_app_for_admin(Request $request){
                     // $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $new_application,'data2'=>  $student]);  
                     // File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'_cover.pdf', $pdf->output());   
                     $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
-                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'_student_copy_@'.$old_app_stud->id.'.pdf', $pdf->output());
+                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'_STUDENT_COPY_@'.$old_app_stud->id.'.pdf', $pdf->output());
                     return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($old_app_stud->transcript_raw)],201); 
                }
                 }else{
@@ -841,7 +841,7 @@ public function submit_app_for_admin(Request $request){
                     if($new_application->save() ){ 
                         DB::commit();
                         $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
-                        File::put($student->SURNAME.'_'.$student->FIRSTNAME.'_student_copy_@'.$new_application->id.'.pdf', $pdf->output());
+                        File::put($student->SURNAME.'_'.$student->FIRSTNAME.'_STUDENT_COPY_@'.$new_application->id.'.pdf', $pdf->output());
                     return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201);  
                    } else{ DB::rollback();
                         return response(['status'=>'failed','message'=>'Error saving request!'],401);}
@@ -936,7 +936,7 @@ public function download_submit_app_for_admin(Request $request){
    
     $type = strtoupper($request->transcript_type);
     if($app_admin->count() != 0){
-        // $student->SURNAME.'_'.$student->FIRSTNAME.'_student_copy_@'.$old_app_stud->id.'.pdf'
+        // $student->SURNAME.'_'.$student->FIRSTNAME.'_STUDENT_COPY_@'.$old_app_stud->id.'.pdf'
         if ( $type == 'OFFICIAL' ){
             if (File::exists($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf')){ 
                 $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/octet-stream',];                
@@ -946,11 +946,11 @@ public function download_submit_app_for_admin(Request $request){
             }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
         }
         elseif ( $type == 'STUDENT' ){
-            if (File::exists($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_student_copy_@'.$app_admin->app_id.'.pdf')){ 
+            if (File::exists($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_STUDENT_COPY_@'.$app_admin->app_id.'.pdf')){ 
                 $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/octet-stream',];                
           
-                return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_student_copy_@'.$app_admin->app_id.'.pdf'), 
-            $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_student_copy_@'.$app_admin->app_id.'.pdf' ,$headers);
+                return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_STUDENT_COPY_@'.$app_admin->app_id.'.pdf'), 
+            $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_STUDENT_COPY_@'.$app_admin->app_id.'.pdf' ,$headers);
             }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
         }else{return response(["status"=>"failed","message"=>"Unknown transcript type supplied"],401); }
             
@@ -1183,87 +1183,7 @@ public function get_student_result_for_admin($request){
             
         }  //sessions array loop closed here
     
-        // response = response[0: len(response) - len('</div>')]
-        // app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
-        // $response = $response .'<br><br><br><hr>
-        // <table class="result_table2">
-        //     <caption>Overall Academic Summary</caption>
-        // <tr>
-        //         <td><strong>Status</strong></td>
-        //     <td> ' . $student->status.' </td>
-        // </tr>
-        // <tr>
-        //     <td><strong>Qualification Obtained</strong></td>
-        //     <td> ' . $qualification .' </td>
-        // </tr> ';
-                    
-        // if (strtoupper($student->status) == strtoupper("Graduated")) {
-    
-        //     $response = $response .'<tr>
-        //             <td><strong>Class of Degree</strong></td>
-        //             <td> ' . app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa).' </td>
-        //     </tr> ';
-                        
-        // }
-        // $signatory = '';
-        // $designation = '';
-        // $date = date("d-M-y");
-        // $response = $response .'</table>
-        //     <table class="result_table2">
-        //         <caption>Key</caption>
-        //         <tr>
-        //             <td>A => 100 - 70 => 5</td>
-        //             <td>4.50 - 5.00 => Excellent</td>
-        //             <td>TU: Total Units</td>
-        //         </tr>
-        //         <tr>
-        //             <td>B => 69 - 60 => 4</td>
-        //             <td>3.50 - 4.49 => Very Good</td>
-        //             <td>TGP: Total Grade Point</td>
-        //         </tr>
-        //         <tr>
-        //             <td>C => 59 - 50 => 3</td>
-        //             <td>2.50 - 3.49 => Good</td>
-        //             <td>GPA: Grade Point Average</td>
-        //         </tr>
-        //         <tr>
-        //             <td>D => 49 - 45 => 2</td>
-        //             <td>1.50 - 2.49 => Average</td>
-        //             <td>CTU: Cumulative Total Units</td>
-        //         </tr>
-        //         <tr>
-        //             <td>E => 44 - 40 => 1</td>
-        //             <td>1.00 - 1.49 => Fair</td>
-        //             <td>CTGP: Cumulative Total Grade Point</td>
-        //         </tr>
-        //         <tr>
-        //             <td>F => 39 - 0 => 0</td>
-        //             <td>0.00 - 0.99 => Poor</td>
-        //             <td>CGPA: Cumulative Grade Point Average</td>
-        //         </tr>
-        //     </table>';
-        //     if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-        //         $response = $response .' <div class="footer_">
-        //             ________________________________<br>
-                    
-        //               D. K. T. Akintola<br>
-        //              Deputy Registrar, Academic Affairs<br>
-        //             For: Registrar
-        //         </div>';
-        //     }
-        //     //print_footer
-        //     if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-        //         $response = $response .'<div class="footer_">
-        //         Any alteration renders this transcript invalid<br>
-        //         Generated on the  ' . $date .'<br>
-        //     </div>
-        //     </div> ';
-        //     }else{
-        //         $response = $response .'<div class="footer_">
-        //         Generated on the  ' . $date .'<br>
-        //     </div>
-        //     </div> ';
-        //     }
+       
           
         $response = str_replace("pageno", $page_no, $response);
         return ['first_session_in_sch'=>$first_session_in_sch,
