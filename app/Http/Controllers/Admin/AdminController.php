@@ -1088,8 +1088,8 @@ public function get_student_result_for_admin($request){
         //     </div>'; 
        
             // if ($sessionIndex === array_key_last($sessions)) {
-                if ($sessionIndex == 3) {
-                    
+                if ($sessionIndex == array_key_last($sessions)) {
+
                 app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
                 $response = $response .'<br><br><br><hr>
                 <table class="result_table2">
