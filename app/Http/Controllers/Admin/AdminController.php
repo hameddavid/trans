@@ -773,6 +773,7 @@ public function submit_app_for_admin(Request $request){
         if($user && $student){
             $type = strtoupper($request->transcript_type);
             $all_result_params = $this->get_student_result_for_admin($request);
+            dd($all_result_params);
             $first_session_in_sch =  $all_result_params['first_session_in_sch']; 
             $last_session_in_sch =  $all_result_params['last_session_in_sch']; 
             $years_spent =  $all_result_params['years_spent']; 
@@ -975,11 +976,12 @@ public function get_student_result_for_admin($request){
             $cumm_sum_point_unit = 0.0;
             $cumm_sum_unit = 0.0;
             $page_no = 0;
-            $last_index = -1;
+            $last_index = 0;
             app('App\Http\Controllers\Applicant\ApplicationController')::get_prog_code_given_matno($matno, $prog_code);
             // $this->get_dept_given_prog_code($prog_code,$prog_name, $dept , $fac); another function for prog_dept_fac
             app('App\Http\Controllers\Applicant\ApplicationController')::prog_dept_fac($prog_code, $prog_name, $dept , $fac);
             foreach($sessions as $sessionIndex => $session){
+                $sessionIndex +=1;
                 if ( $sessionIndex > $last_index){ $last_index = $sessionIndex;}
                 $page_no += 1;
                 $response .= app('App\Http\Controllers\Applicant\ApplicationController')::get_result_table_header($student,$applicant=$student,$request,$prog_name, $dept , $fac,$page_no);
@@ -1089,10 +1091,10 @@ public function get_student_result_for_admin($request){
         //     </div>'; 
        
             // if ($sessionIndex === array_key_last($sessions)) {
-                if ($sessionIndex == $last_index) {
+                if (count($sessions) == $last_index) {
                     
                 app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
-                $response = $response .'<br><br><br><hr>
+                $response = $response .'<br><br><br><hr style="border-top: 1px dotted black;">
                 <table class="result_table2">
                     <caption>Overall Academic Summary</caption>
                 <tr>
