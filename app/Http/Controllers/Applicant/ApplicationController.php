@@ -511,7 +511,7 @@ public function get_student_result($request){
                 
         if (count($sessions) == $last_index) {
                     
-            app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
+            $this->get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
             $response = $response .'<br><hr style="border-top: 1px dotted black;">
             <table class="result_table2">
                 <caption>Overall Academic Summary</caption>
@@ -528,7 +528,7 @@ public function get_student_result($request){
         
                 $response = $response .'<tr>
                         <td><strong>Class of Degree</strong></td>
-                        <td> ' . app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa).' </td>
+                        <td> ' . $this->class_of_degree($cgpa,$prog_name).' </td>
                 </tr> ';
                             
             }
@@ -606,7 +606,7 @@ public function get_student_result($request){
         'last_session_in_sch'=>$last_session_in_sch,
         'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name ,
         'dept'=>$dept,'fac'=>$fac,'cgpa'=> round($cgpa,2),
-        'class_of_degree'=>$this->class_of_degree($cgpa),'result'=>$response];
+        'class_of_degree'=>$this->class_of_degree($cgpa,$prog_name),'result'=>$response];
        
     }else{ return "empty student session";}
         
@@ -786,43 +786,67 @@ static function get_correct_application_for_this_request($matno,$delivery_mode,$
 
 
 
-static function class_of_degree($cgpa) {
+static function class_of_degree($cgpa,$prog_name) {
     $cgpa = round($cgpa,2);
-    
-    if($cgpa >= 4.5)
-        
-        return "First Class (Honours)";
-    
-    elseif ($cgpa >= 3.5 )
-        
-	    return "Second Class (Honours) Upper Division";
-		
-    elseif ($cgpa >= 2.4)
-        
-	    return "Second Class (Honours) Lower Division";
-		
-    elseif ($cgpa >= 1.5)
-        
-	    return "Third Class (Honours)";
-		
-    elseif ($cgpa >= 1.0 )
 
-	    return "Pass";
-		
-    else {return "";}
+    if(strtoupper($prog_name) == "NURSING SCIENCE"){
+       
+        if($cgpa >= 4.5)
+            
+            return "Pass With Distinction";
+        
+        elseif ($cgpa >= 3.5 )
+            
+            return "Pass With Credit";
+            
+        elseif ($cgpa >= 2.5)
+            
+            return "Pass";
+            
+        else {return "Out of range";}
+    }else{
+
+        if($cgpa >= 4.5)
+            
+            return "First Class (Honours)";
+        
+        elseif ($cgpa >= 3.5 )
+            
+            return "Second Class (Honours) Upper Division";
+            
+        elseif ($cgpa >= 2.4)
+            
+            return "Second Class (Honours) Lower Division";
+            
+        elseif ($cgpa >= 1.5)
+            
+            return "Third Class (Honours)";
+            
+        elseif ($cgpa >= 1.0 )
+    
+            return "Pass";
+            
+        else {return "";}
+        
+    }
+    
 		
 }
 
 static function get_programme_details($student,$prog_name, $dept ,$fac,&$qualification) {
-	$qualification = '';
+	$qualification = '';  //NURSING SCIENCE
     if (strtoupper($student->status ) == "GRADUATED") {
-        
-        if (app('App\Http\Controllers\Applicant\ConfigController')::stringEndsWith(strtoupper($fac), "SCIENCES") ) { $qualification = "Bachelor of Science in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);
-                
-        }elseif(str_contains(strtoupper($fac),"LAW")){  $qualification = "Bachelor of Laws in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name) ;}
-                   
-	else{ $qualification = "Bachelor of Arts in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);}
-  
+
+        if (app('App\Http\Controllers\Applicant\ConfigController')::stringEndsWith(strtoupper($fac), "SCIENCES") && $prog_name ="NURSING SCIENCE"){
+            $qualification = "Bachelor of Nursing Science ";
+        }
+        elseif (app('App\Http\Controllers\Applicant\ConfigController')::stringEndsWith(strtoupper($fac), "SCIENCES") ) { 
+                $qualification = "Bachelor of Science in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);
+                    
+        }elseif(str_contains(strtoupper($fac),"LAW")){  $qualification = "Bachelor of Laws" ;}
+                    
+        else{ $qualification = "Bachelor of Arts in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);}
+    
     }
 		
     return true;
