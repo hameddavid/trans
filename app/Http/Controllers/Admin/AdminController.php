@@ -1111,7 +1111,7 @@ public function get_student_result_for_admin($request){
             
                     $response = $response .'<tr>
                             <td><strong>Class of Degree</strong></td>
-                            <td> ' . app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa).' </td>
+                            <td> ' . app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa,$prog_name).' </td>
                     </tr> ';
                                 
                 }
@@ -1182,8 +1182,7 @@ public function get_student_result_for_admin($request){
                 else{
                     $response = $response .'<div class="footer_4"> Generated on   ' . $date .'<br> </div> </div> ';
                 }
-                // $response = $response .'
-                // </div>'; 
+                
             }
             
             
@@ -1197,7 +1196,7 @@ public function get_student_result_for_admin($request){
         'last_session_in_sch'=>$last_session_in_sch,
         'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name ,
         'dept'=>$dept,'fac'=>$fac,'cgpa'=> round($cgpa,2),
-        'class_of_degree'=>app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa),'result'=>$response];
+        'class_of_degree'=>app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa,$prog_name),'result'=>$response];
        
     }else{ return "empty student session";}
         
