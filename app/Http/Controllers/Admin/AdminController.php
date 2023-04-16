@@ -160,7 +160,8 @@ class AdminController extends Controller
     public function viewGeneratedTranscripts(Request $request){
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
         $transcripts = DB::table('admin_applications')->join('t_student_test', 'admin_applications.matric_number', 't_student_test.matric_number')
-        ->select('admin_applications.*','t_student_test.SURNAME','t_student_test.FIRSTNAME')->get(); 
+        ->select('admin_applications.*','t_student_test.SURNAME','t_student_test.FIRSTNAME')->orderBy('created_at', 'desc')->get(); 
+       
         return view('pages.generated_transcripts',['data'=>$data,'transcripts'=>$transcripts]);
      }
 
@@ -1169,6 +1170,7 @@ public function get_student_result_for_admin($request){
                     </div> ';
                     }else{
                         $response = $response .'<div class="footer_4">
+                        Any alteration renders this transcript invalid<br>
                         Generated on   ' . $date .'<br>
                     </div>
                     </div> ';
@@ -1180,7 +1182,7 @@ public function get_student_result_for_admin($request){
                     $response = $response .'<div class="footer_4">Any alteration renders this transcript invalid<br> Generated on   ' . $date .'<br></div></div> ';
                 }
                 else{
-                    $response = $response .'<div class="footer_4"> Generated on   ' . $date .'<br> </div> </div> ';
+                    $response = $response .'<div class="footer_4">Any alteration renders this transcript invalid<br> Generated on   ' . $date .'<br> </div> </div> ';
                 }
                 
             }
