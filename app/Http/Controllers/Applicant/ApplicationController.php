@@ -837,8 +837,8 @@ static function get_programme_details($student,$prog_name, $dept ,$fac,&$qualifi
 	$qualification = '';  //NURSING SCIENCE
     if (strtoupper($student->status ) == "GRADUATED") {
 
-        if (app('App\Http\Controllers\Applicant\ConfigController')::stringEndsWith(strtoupper($fac), "SCIENCES") && $prog_name ="NURSING SCIENCE"){
-            $qualification = "Bachelor of Nursing Science ";
+        if (app('App\Http\Controllers\Applicant\ConfigController')::stringEndsWith(strtoupper($fac), "SCIENCES") && $prog_name == "NURSING SCIENCE"){
+            $qualification = "Bachelor of  Nursing Science ";
         }
         elseif (app('App\Http\Controllers\Applicant\ConfigController')::stringEndsWith(strtoupper($fac), "SCIENCES") ) { 
                 $qualification = "Bachelor of Science in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);
