@@ -11,7 +11,7 @@ use App\Http\Controllers\MiscController;
 
 
 // Misc
-Route::get('/load_course_from_local_db_not_online',[RecordController::class,'load_course_from_local_db_not_online']);
+Route::get('/load_course_from_local_db_not_online',[MiscController::class,'load_course_from_local_db_not_online']);
 
 
 
