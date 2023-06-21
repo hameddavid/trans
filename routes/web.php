@@ -5,12 +5,25 @@ use App\Http\Controllers\Applicant\ApplicationController;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\RecordController;
+use App\Http\Controllers\MiscController;
+
+
+
+
+// Misc
+Route::get('/load_course_from_local_db_not_online',[RecordController::class,'load_course_from_local_db_not_online']);
+
+
+
 
 // record
 Route::get('/',[RecordController::class,'index']);
 Route::get('/transcript',[RecordController::class,'loadTranscriptPortal']);
 Route::post('/verify_transcript',[RecordController::class,'transcript_verification']);
 Route::post('/degree_verification',[RecordController::class,'degree_verification']);
+
+
+
 
 Route::get('ht',[ApplicationController::class,'index']);
 
