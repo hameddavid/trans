@@ -2555,7 +2555,10 @@ class MiscController extends Controller
             ];
 
             foreach($data as $key => $arr){
- DB::insert('insert into t_course (course_code, course_title,unit,unit_id) values (?, ?,?,?)',[$arr['course_code'],$arr['course_title'],$arr['unit'],$arr['unit_id']]);
+               $Check =  DB::table('t_course').where('course_code', $arr['course_code']).first();
+                if(!$Check){
+                DB::insert('insert into t_course (course_code, course_title,unit,unit_id) values (?, ?,?,?)',[$arr['course_code'],$arr['course_title'],$arr['unit'],$arr['unit_id']]);
+                }
            
         }
        
