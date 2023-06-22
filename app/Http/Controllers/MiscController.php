@@ -2551,19 +2551,22 @@ class MiscController extends Controller
                 "course_title"=> "INTRODUCTION TO MACHINE LEARNING I",
                 "unit"=> 0,
                 "unit_id"=> "20210901"
-            ],
-            [
-                "course_code"=> "TOS 411",
-                "course_title"=> "HOTEL MANAGEMENT",
-                "unit"=> 2,
-                "unit_id"=> "20220901"
             ]
             ];
 
-        foreach($data as $key => $arr){
-           echo  $arr['course_code'];
-        }
+DB::insert('insert into t_course (course_code, course_title,unit,unit_id) values (?, ?,?,?)', ['TOS 411','HOTEL MANAGEMENT','2','20220901']);
+        // foreach($data as $key => $arr){
+        //    echo  $arr['course_code'];
+        // }
        
+
+        // ,
+        //     [
+        //         "course_code"=> "TOS 411",
+        //         "course_title"=> "HOTEL MANAGEMENT",
+        //         "unit"=> 2,
+        //         "unit_id"=> "20220901"
+        //     ]
     }
 
 
