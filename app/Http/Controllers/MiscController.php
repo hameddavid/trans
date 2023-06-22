@@ -2554,10 +2554,10 @@ class MiscController extends Controller
             ]
             ];
 
-DB::insert('insert into t_course (course_code, course_title,unit,unit_id) values (?, ?,?,?)', ['TOS 411','HOTEL MANAGEMENT','2','20220901']);
-        // foreach($data as $key => $arr){
-        //    echo  $arr['course_code'];
-        // }
+            foreach($data as $key => $arr){
+ DB::insert('insert into t_course (course_code, course_title,unit,unit_id) values (?, ?,?,?)',[$arr['course_code'],$arr['course_title'],$arr['unit'],$arr['unit_id']]);
+           
+        }
        
 
         // ,
