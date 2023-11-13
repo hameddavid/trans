@@ -794,6 +794,7 @@ static function get_correct_application_for_this_request($matno,$delivery_mode,$
 
 
 static function class_of_degree($cgpa,$prog_name) {
+    return "Pass";
     $cgpa = number_format($cgpa,2, '.', '');
 
     if(strtoupper($prog_name) == "NURSING SCIENCE"){
