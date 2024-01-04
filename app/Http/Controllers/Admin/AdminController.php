@@ -1023,17 +1023,17 @@ public function get_student_result_for_admin($request){
                 $response = $response . '
                 </table>
                 <table class="result_table2">
-                            <tr>
+                            <tr>  
                                 <td><strong>Semester</strong></td>
                     <td>TU: <strong> '. strval($sum_unit) . '</strong></td>
                     <td>TGP: <strong> '. strval($sum_point_unit) . '</strong></td>
-                    <td>GPA: <strong> '. strval(round($gpa, 2)) . '</strong></td>
+                    <td>GPA: <strong> '. strval(number_format($gpa, 2, '.', '')) . '</strong></td>
                     </tr>
                     <tr>
                     <td><strong>Cumulative</strong></td>
                     <td>CTU: <strong> '. strval($cumm_sum_unit) . '</strong></td>
                     <td>CTGP: <strong> '. strval($cumm_sum_point_unit) . '</strong></td>
-                    <td>CGPA: <strong> '. strval(round($cgpa, 2)) . '</strong></td>
+                    <td>CGPA: <strong> '. strval(number_format($cgpa, 2, '.', '')) . '</strong></td>
                     </tr>
                 </table>'; 
                 
@@ -1085,13 +1085,13 @@ public function get_student_result_for_admin($request){
             <td><strong>Semester</strong></td>
             <td>TU: <strong> ' . strval($sum_unit) .'</strong></td>
             <td>TGP: <strong> ' . strval($sum_point_unit) .'</strong></td>
-            <td>GPA: <strong> ' . strval(round($gpa, 2)) .'</strong></td>
+            <td>GPA: <strong> ' . strval(number_format($gpa, 2, '.', '')) .'</strong></td>
             </tr>
             <tr>
             <td><strong>Cumulative</strong></td>
             <td>CTU: <strong> ' . strval($cumm_sum_unit) .'</strong></td>
             <td>CTGP: <strong> ' . strval($cumm_sum_point_unit) .'</strong></td>
-            <td>CGPA: <strong> ' . strval(round($cgpa, 2)) .'</strong></td>
+            <td>CGPA: <strong> ' . strval(number_format($cgpa, 2, '.', '')) .'</strong></td>
             </tr>
         </table>';
                 
@@ -1199,7 +1199,7 @@ public function get_student_result_for_admin($request){
         return ['first_session_in_sch'=>$first_session_in_sch,
         'last_session_in_sch'=>$last_session_in_sch,
         'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name ,
-        'dept'=>$dept,'fac'=>$fac,'cgpa'=> round($cgpa,2),
+        'dept'=>$dept,'fac'=>$fac,'cgpa'=> number_format($cgpa,2, '.', ''),
         'class_of_degree'=>app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa,$prog_name),'result'=>$response];
        
     }else{ return "empty student session";}
