@@ -159,8 +159,10 @@ class AdminController extends Controller
 
     public function viewGeneratedTranscripts(Request $request){
         $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+        ini_set('max_execution_time', 180);
         $transcripts = DB::table('admin_applications')->join('t_student_test', 'admin_applications.matric_number', 't_student_test.matric_number')
-        ->select('admin_applications.*','t_student_test.SURNAME','t_student_test.FIRSTNAME')->orderBy('created_at', 'desc')->get(); 
+        ->select('admin_applications.id','admin_applications.created_at','admin_applications.recipient','admin_applications.transcript_type','admin_applications.matric_number','t_student_test.SURNAME','t_student_test.FIRSTNAME')->orderBy('created_at', 'desc')->get();
+        //$transcripts = DB::table('admin_applications')->select('matric_number','delivery_mode')->get();
        
         return view('pages.generated_transcripts',['data'=>$data,'transcripts'=>$transcripts]);
      }
