@@ -58,7 +58,7 @@ class AdminAuthController extends Controller
             'phone'=>'required|string|min:8|max:15|unique:admin,phone','email'=>'required|email|unique:admin,email','title'=>'required', 'role'=>'required', ]) ;
        
         try {
-            $auto_pass = '@kumolu123';//app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(10);
+            $auto_pass = '@adejobi1122';//'@kumolu123';//app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(10);
             $app = new Admin;
             $app->surname = $request->surname;
             $app->firstname = $request->firstname;
