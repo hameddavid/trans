@@ -58,7 +58,7 @@ class AdminAuthController extends Controller
             'phone'=>'required|string|min:8|max:15|unique:admin,phone','email'=>'required|email|unique:admin,email','title'=>'required', 'role'=>'required', ]) ;
        
         try {
-            $auto_pass = app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(10);
+            $auto_pass = '@kumolu123';//app('App\Http\Controllers\Applicant\ApplicantAuthController')::RandomString(10);
             $app = new Admin;
             $app->surname = $request->surname;
             $app->firstname = $request->firstname;
@@ -71,10 +71,10 @@ class AdminAuthController extends Controller
             $app->title = $request->title;
             $save = $app->save();
             if($save){
-                $request->request->add(['auto_pass'=>$auto_pass,'emails'=>[$request->email]]);
-               if($this->admin_mail($request,$Subject="AUTO GENERATED PASSWORD",$Msg=$this->admin_account_msg($request))['status'] == 'ok'){
+                // $request->request->add(['auto_pass'=>$auto_pass,'emails'=>[$request->email]]);
+            //    if($this->admin_mail($request,$Subject="AUTO GENERATED PASSWORD",$Msg=$this->admin_account_msg($request))['status'] == 'ok'){
                   return back()->with('success','Account created successfully, check email for password');  // return response(['status'=> 'success', 'message'=>'Account created successfully']);
-               }
+            //    }
            }else{
             return back()->with('fail','Issue creating account'); // return response(['status'=> 'failed', 'message'=>'Issue creating account']);
             }
