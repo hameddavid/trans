@@ -496,7 +496,7 @@ public function get_student_result($request){
             $response = $response .'
             </table>
             <table class="result_table2">
-                <tr>
+                <tr>sum_unit
             <td><strong>Semester</strong></td>
             <td>TU: <strong> ' . strval($sum_unit) .'</strong></td>
             <td>TGP: <strong> ' . strval($sum_point_unit) .'</strong></td>
