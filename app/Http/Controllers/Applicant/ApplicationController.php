@@ -794,10 +794,40 @@ static function get_correct_application_for_this_request($matno,$delivery_mode,$
 
 
 static function class_of_degree($cgpa,$prog_name) {
-    // return "Pass";
+   
     $cgpa = number_format($cgpa,2, '.', '');
-
     if(strtoupper($prog_name) == "NURSING SCIENCE"){
+       
+        if($cgpa >= 4.5)
+            
+            return "Pass With Distinction";
+        
+        elseif ($cgpa >= 3.5 )
+            
+            return "Pass With Credit";
+            
+        elseif ($cgpa >= 2.5)
+            
+            return "Pass";
+            
+        else {return "Out of range";}
+    
+    }elseif(strtoupper($prog_name) == "PHYSIOTHERAPY"){
+       
+        if($cgpa >= 4.5)
+            
+            return "Pass With Distinction";
+        
+        elseif ($cgpa >= 3.5 )
+            
+            return "Pass With Credit";
+            
+        elseif ($cgpa >= 2.5)
+            
+            return "Pass";
+            
+        else {return "Out of range";}
+    }elseif(strtoupper($prog_name) == "MEDICAL LABORATORY SCIENCE"){
        
         if($cgpa >= 4.5)
             
