@@ -1,0 +1,320 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Transcript Application API",
+        "description": "API for transcript and degree verification system",
+        "contact": {
+            "email": "support@example.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/app/available_prog": {
+            "get": {
+                "tags": [
+                    "Application"
+                ],
+                "summary": "Get available programs",
+                "description": "Returns list of available academic programs",
+                "operationId": "getAvailablePrograms",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/app/register": {
+            "post": {
+                "tags": [
+                    "Applicant Auth"
+                ],
+                "summary": "Register new applicant",
+                "description": "Create a new applicant account",
+                "operationId": "registerApplicant",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password",
+                                    "name"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registration successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/app/login": {
+            "post": {
+                "tags": [
+                    "Applicant Auth"
+                ],
+                "summary": "Login applicant",
+                "description": "Authenticate applicant and return token",
+                "operationId": "loginApplicant",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/app/check_request_availability": {
+            "get": {
+                "tags": [
+                    "Application"
+                ],
+                "summary": "Check request availability",
+                "description": "Check if applicant can submit new request",
+                "operationId": "checkRequestAvailability",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/app/submit_app": {
+            "post": {
+                "tags": [
+                    "Application"
+                ],
+                "summary": "Submit application",
+                "description": "Submit applicant application for processing",
+                "operationId": "submitApplication",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Application submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/degree_verification": {
+            "post": {
+                "tags": [
+                    "Records"
+                ],
+                "summary": "Verify degree",
+                "description": "Submit degree verification request",
+                "operationId": "degreeVerification",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Verification submitted",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/app/update-reg-score": {
+            "post": {
+                "summary": "Array of result objects",
+                "operationId": "e08f15acdb0ac22eaf8dd1431e8d9524",
+                "requestBody": {
+                    "description": "Array of student's registration results",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "properties": {
+                                        "matric_number_fk": {
+                                            "description": "Student's matric number",
+                                            "type": "string"
+                                        },
+                                        "session_id": {
+                                            "description": "Academic session of the result",
+                                            "type": "string"
+                                        },
+                                        "semester": {
+                                            "description": "Semester of the result",
+                                            "type": "string"
+                                        },
+                                        "course_code": {
+                                            "description": "Course code",
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "description": "Course status C/E",
+                                            "type": "string"
+                                        },
+                                        "score": {
+                                            "description": "Course score",
+                                            "type": "integer"
+                                        },
+                                        "grade": {
+                                            "description": "Course grade",
+                                            "type": "string"
+                                        },
+                                        "remarks": {
+                                            "description": "Remark on grade",
+                                            "type": "string"
+                                        },
+                                        "deleted": {
+                                            "description": "Deleted flag",
+                                            "type": "string"
+                                        },
+                                        "unit_id": {
+                                            "description": "Unit identification of the course",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Update successful"
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Application",
+            "description": "Application endpoints"
+        },
+        {
+            "name": "Applicant Auth",
+            "description": "Applicant authentication endpoints"
+        },
+        {
+            "name": "Records",
+            "description": "Academic records endpoints"
+        }
+    ]
+}

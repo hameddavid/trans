@@ -380,6 +380,7 @@ static function get_admin_msg($applicant){
 
 public function get_student_result($request){
     //   $prog_code  failing .... RUN1011/2797
+   
     try {
         $matno = str_replace(' ', '', $request->matno);
         $first_session_in_sch  = "";
@@ -430,7 +431,9 @@ public function get_student_result($request){
                     <th>Grade Point</th>
                     </tr>'; }
                             
-                    if(($semester != $result->semester) && ($semester != 0)) {     
+                    if(($semester != $result->semester) && ($semester != 0)) {   
+                         if ($result->flag_waver == 0 && $prog_code == 'NUR') {continue;} 
+                         
                         $cumm_sum_point_unit += $sum_point_unit;
                 $cumm_sum_unit += $sum_unit;
                 $gpa = $sum_point_unit / floatval($sum_unit);
@@ -486,7 +489,8 @@ public function get_student_result($request){
                 $sum_point_unit += ($this->get_position_given_grade(strtoupper($result->grade)) * $result->unit);
                  
                 $semester = $result->semester;
-            }      
+            } 
+             if ($result->flag_waver == 0 && $prog_code == 'NUR') {continue;} 
             $cumm_sum_point_unit += $sum_point_unit;
             $cumm_sum_unit += $sum_unit;
                             
@@ -573,8 +577,8 @@ public function get_student_result($request){
                         $response = $response .' <div class="footer_">
                             ________________________________<br>
                             
-                            Oyedapo Oyeniyi<br>
-                            Assistant Registrar, Academic Affairs<br>
+                            S. A. Ogunlade<br>
+                            Deputy Registrar, Academic Affairs Division<br>
                             For: Registrar
                         </div>';
                     }
@@ -651,7 +655,15 @@ static function format_semester($semester){
 static function fetch_student_result_from_registration($matno,$session){
     try {
         $result = DB::table('t_course')->join('registrations', 't_course.unit_id', '=', 'registrations.unit_id')
-        ->select('registrations.session_id', 'registrations.semester', 'registrations.course_code','registrations.status','registrations.score','registrations.grade','t_course.course_title','t_course.unit')
+        ->select(
+            'registrations.session_id', 
+            'registrations.semester', 
+            'registrations.course_code',
+            'registrations.status',
+            'registrations.score',
+            'registrations.grade',
+            'registrations.flag_waver',
+            't_course.course_title','t_course.unit')
         ->where(DB::raw("CONCAT(registrations.course_code,registrations.unit_id)"), DB::raw("CONCAT(t_course.course_code,t_course.unit_id)"))
         ->where('registrations.session_id',$session)
         ->where('registrations.matric_number',$matno)
@@ -881,10 +893,20 @@ static function get_programme_details($student,$prog_name, $dept ,$fac,&$qualifi
         elseif(app('App\Http\Controllers\Applicant\ConfigController')::stringEndsWith(strtoupper($fac), "SCIENCES") && $prog_name == "PHYSIOTHERAPY"){
             $qualification = "Bachelor of Physiotherapy";
         }
+        elseif ($prog_name == "ARCHITECTURE") { 
+                $qualification = "Bachelor of Science in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);
+                    
+        }
         elseif (app('App\Http\Controllers\Applicant\ConfigController')::stringEndsWith(strtoupper($fac), "SCIENCES") ) { 
                 $qualification = "Bachelor of Science in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);
                     
-        }elseif(str_contains(strtoupper($fac),"LAW")){  $qualification = "Bachelor of Laws" ;}
+        }
+        elseif(str_contains(strtoupper($fac),"LAW")){
+            $qualification = "Bachelor of Laws" ;
+        }
+        elseif(str_contains(strtoupper($fac),"ENGINEERING")){
+            $qualification = "Bachelor of Engineering in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);
+        }
                     
         else{ $qualification = "Bachelor of Arts in " . app('App\Http\Controllers\Applicant\ConfigController')::find_and_replace_string($prog_name);}
     

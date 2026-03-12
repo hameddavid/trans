@@ -6,6 +6,7 @@ use App\Http\Controllers\Applicant\ApplicantAuthController;
 use App\Http\Controllers\Applicant\PaymentController;
 use App\Http\Controllers\Applicant\PaymentController4Degree;
 use App\Http\Controllers\Applicant\ConfigController;
+use App\Http\Controllers\ManageRegistrationUploadController;
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
@@ -86,3 +87,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // DEGREE VERIFICATION ROUTES ////
 Route::post('degree_verification', [RecordController::class, 'degree_verification']);
+
+
+// Registration management from local result
+
+Route::post('app/update-reg-score', [ManageRegistrationUploadController::class, 'updateRegistrations']);
+
+

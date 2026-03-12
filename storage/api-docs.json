@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Transcript Application API",
+    "description": "API documentation for the Transcript Application",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/app/available_prog": {
+      "get": {
+        "tags": ["Application"],
+        "summary": "Get available programs",
+        "responses": {
+          "200": {
+            "description": "List of available programs"
+          }
+        }
+      }
+    },
+    "/app/register": {
+      "post": {
+        "tags": ["Applicant Auth"],
+        "summary": "Register new applicant",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registration successful"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/app/login": {
+      "post": {
+        "tags": ["Applicant Auth"],
+        "summary": "Login applicant",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful"
+          }
+        }
+      }
+    }
+  }
+}

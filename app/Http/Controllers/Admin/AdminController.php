@@ -25,6 +25,7 @@ use Response;
 
 class AdminController extends Controller
 {
+
     public function __construct() 
     {
          $this->middleware('adminauth');
@@ -765,14 +766,14 @@ public function submit_app_for_admin(Request $request){
     DB::beginTransaction();
     $user =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
     $student = Student::where(['matric_number'=>$request->matno])->first();
-    //try {  
+    try {  
         // $certificate = "";
         // $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
         // $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
         // $request->request->add(['surname'=> $applicant->surname, 'firstname'=>$applicant->firstname,'app_id'=>$applicant->id,'emails'=>$admin_users]);
         // if($request->has('certificate') && $request->certificate !=""){  if(strtoupper($request->file('certificate')->extension()) != 'PDF'){ return response(["status"=>"Fail", "message"=>"Only pdf files are allowed!"],400);}
         // $certificate = $this->upload_cert($request);
-        // }         
+        // }  
         if($user && $student){
             $type = strtoupper($request->transcript_type);
             $all_result_params = $this->get_student_result_for_admin($request);
@@ -919,11 +920,11 @@ public function submit_app_for_admin(Request $request){
                 return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
             }
         }else{ return response(['status'=>'failed','message'=>'No student with matric number '. $request->matno . ' found'],401);   }
-    // } catch (\Throwable $th) {
-    //     DB::rollback();
-    //      return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
+    } catch (\Throwable $th) {
+        DB::rollback();
+         return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
         
-    //  }
+     }
     
 }
 
@@ -964,47 +965,60 @@ public function download_submit_app_for_admin(Request $request){
 
 
 
+
+
 public function get_student_result_for_admin($request){
     try {
-        $matno = str_replace(' ', '', $request->matno);
-        $first_session_in_sch  = "";
-        $last_session_in_sch  = "";
+        $matno = str_replace(' ', '', (string) $request->matno);
+        $first_session_in_sch = "";
+        $last_session_in_sch = "";
         $years_spent = "";
-        $qualification  = "";
-        $prog_name  = "";
-        $cgpa  = "";
-        if(app('App\Http\Controllers\Applicant\ApplicationController')::get_student_result_session_given_matno($matno,$sessions)){
-            $first_session_in_sch  = $sessions[0];
-            $last_session_in_sch  = $sessions[count($sessions)-1];
-            $years_spent = count($sessions);
-            // $applicant  = Applicant::where(['matric_number'=>$matno, 'id'=>$request->userid])->first(); 
-            $student  = Student::where('matric_number',$matno)->first();
-            $response = "";
-            $cumm_sum_point_unit = 0.0;
-            $cumm_sum_unit = 0.0;
-            $page_no = 0;
-            $last_index = 0;
-            $date = date("F j, Y, g:i a");
-            app('App\Http\Controllers\Applicant\ApplicationController')::get_prog_code_given_matno($matno, $prog_code);
-            // $this->get_dept_given_prog_code($prog_code,$prog_name, $dept , $fac); another function for prog_dept_fac
-            app('App\Http\Controllers\Applicant\ApplicationController')::prog_dept_fac($prog_code, $prog_name, $dept , $fac);
-            foreach($sessions as $sessionIndex => $session){
-                $sessionIndex +=1;
-                if ( $sessionIndex > $last_index){ $last_index = $sessionIndex;}
-                $page_no += 1;
-                $response .= app('App\Http\Controllers\Applicant\ApplicationController')::get_result_table_header($student,$applicant=$student,$request,$prog_name, $dept , $fac,$page_no);
-                $results = app('App\Http\Controllers\Applicant\ApplicationController')::fetch_student_result_from_registration($matno,$session);
-                // return $results;
-                $semester = 0;
-                $sum_point_unit = 0.0;
-                $sum_unit = 0.0;
-                foreach($results as $resultIndex => $result){
-            
-                    if (($semester != $result->semester) && ($semester == 0)) {
-                        
-                        $response = $response . '
+        $qualification = "";
+        $prog_name = "";
+        $cgpa = 0.0;
+        $dept = "";
+        $fac = "";
+        $sessions = [];
+        $prog_code = "";
+        // echo "Matno: ". $matno . "<br>";
+        $applicationController = app('App\Http\Controllers\Applicant\ApplicationController');
+
+        if (!$applicationController::get_student_result_session_given_matno($matno, $sessions) || empty($sessions)) {
+            return "empty student session";
+        }
+
+        $first_session_in_sch = $sessions[0];
+        $last_session_in_sch = $sessions[count($sessions) - 1];
+        $years_spent = count($sessions);
+
+        $student = Student::where('matric_number', $matno)->first();
+        if (!$student) {
+            return "Error fetching student result ...";
+        }
+
+        $response = "";
+        $cumm_sum_point_unit = 0.0;
+        $cumm_sum_unit = 0.0;
+        $page_no = 0;
+        $date = date("F j, Y, g:i a");
+
+        $applicationController::get_prog_code_given_matno($matno, $prog_code);
+        $applicationController::prog_dept_fac($prog_code, $prog_name, $dept, $fac);
+
+        foreach ($sessions as $sessionIndex => $session) {
+            $page_no += 1;
+            $response .= $applicationController::get_result_table_header($student, $student, $request, $prog_name, $dept, $fac, $page_no);
+            $results = $applicationController::fetch_student_result_from_registration($matno, $session);
+
+            $semester = 0;
+            $sum_point_unit = 0.0;
+            $sum_unit = 0.0;
+
+            foreach ($results as $result) {
+                if (($semester != $result->semester) && ($semester == 0)) {
+                    $response .= '
                 <table class="result_table">
-                            <caption>Session: ' . $session . ', Semester: ' .  app('App\Http\Controllers\Applicant\ApplicationController')::format_semester($result->semester) . '</caption>
+                            <caption>Session: ' . $session . ', Semester: ' . $applicationController::format_semester($result->semester) . '</caption>
                     <tr>
                     <th>Course Code</th>
                     <th>Course Title</th>
@@ -1013,34 +1027,36 @@ public function get_student_result_for_admin($request){
                     <th>Score</th>
                     <th>Grade</th>
                     <th>Grade Point</th>
-                    </tr>'; }
-                            
-                    if(($semester != $result->semester) && ($semester != 0)) {     
-                        $cumm_sum_point_unit += $sum_point_unit;
-                $cumm_sum_unit += $sum_unit;
-                $gpa = $sum_point_unit / floatval($sum_unit);
-                $cgpa = $cumm_sum_point_unit / floatval($cumm_sum_unit);
-                $response = $response . '
+                    </tr>';
+                }
+
+                if (($semester != $result->semester) && ($semester != 0)) {
+                    $cumm_sum_point_unit += $sum_point_unit;
+                    $cumm_sum_unit += $sum_unit;
+
+                    $gpa = $sum_unit > 0 ? ($sum_point_unit / floatval($sum_unit)) : 0;
+                    $cgpa = $cumm_sum_unit > 0 ? ($cumm_sum_point_unit / floatval($cumm_sum_unit)) : 0;
+
+                    $response .= '
                 </table>
                 <table class="result_table2">
-                            <tr>  
+                            <tr>
                                 <td><strong>Semester</strong></td>
-                    <td>TU: <strong> '. strval($sum_unit) . '</strong></td>
-                    <td>TGP: <strong> '. strval($sum_point_unit) . '</strong></td>
-                    <td>GPA: <strong> '. strval(number_format($gpa, 2, '.', '')) . '</strong></td>
+                    <td>TU: <strong> ' . strval($sum_unit) . '</strong></td>
+                    <td>TGP: <strong> ' . strval($sum_point_unit) . '</strong></td>
+                    <td>GPA: <strong> ' . strval(number_format($gpa, 2, '.', '')) . '</strong></td>
                     </tr>
                     <tr>
                     <td><strong>Cumulative</strong></td>
-                    <td>CTU: <strong> '. strval($cumm_sum_unit) . '</strong></td>
-                    <td>CTGP: <strong> '. strval($cumm_sum_point_unit) . '</strong></td>
-                    <td>CGPA: <strong> '. strval(number_format($cgpa, 2, '.', '')) . '</strong></td>
+                    <td>CTU: <strong> ' . strval($cumm_sum_unit) . '</strong></td>
+                    <td>CTGP: <strong> ' . strval($cumm_sum_point_unit) . '</strong></td>
+                    <td>CGPA: <strong> ' . strval(number_format($cgpa, 2, '.', '')) . '</strong></td>
                     </tr>
-                </table>'; 
-                
-    
-                $response = $response .'
+                </table>';
+
+                    $response .= '
                 <table class="result_table">
-                            <caption>Session: ' . $session .', Semester: ' . app('App\Http\Controllers\Applicant\ApplicationController')::format_semester($result->semester) .'</caption>
+                            <caption>Session: ' . $session . ', Semester: ' . $applicationController::format_semester($result->semester) . '</caption>
                     <tr>
                     <th>Course Code</th>
                     <th>Course Title</th>
@@ -1050,77 +1066,78 @@ public function get_student_result_for_admin($request){
                     <th>Grade</th>
                     <th>Grade Point</th>
                     </tr>';
-                $sum_point_unit = 0.0;
-                $sum_unit = 0.0;
-            
-        }        
-                
-                
-                $response = $response .'
+                    $sum_point_unit = 0.0;
+                    $sum_unit = 0.0;
+                }
+
+                $gradePoint = $applicationController::get_position_given_grade(strtoupper($result->grade)) * $result->unit;
+
+                $response .= '
                     <tr>
-                        <td>' . strval($result->course_code) .'</td>
-                        <td>' . strval($result->course_title) .'</td>
-                        <td>' . app('App\Http\Controllers\Applicant\ApplicationController')::fetch_status($result->status) .'</td>
-                        <td align="center">' . strval($result->unit) .'</td>
-                        <td align="center">' . strval($result->score) .'</td>
-                        <td align="center">' . strval($result->grade) .'</td>
-                        <td align="center">' .  strval(app('App\Http\Controllers\Applicant\ApplicationController')::get_position_given_grade(strtoupper($result->grade)) * $result->unit) .'</td>
+                        <td>' . strval($result->course_code) . '</td>
+                        <td>' . strval($result->course_title) . '</td>
+                        <td>' . $applicationController::fetch_status($result->status) . '</td>
+                        <td align="center">' . strval($result->unit) . '</td>
+                        <td align="center">' . strval($result->score) . '</td>
+                        <td align="center">' . strval($result->grade) . '</td>
+                        <td align="center">' . strval($gradePoint) . '</td>
                     </tr>';
-                        
-                $sum_unit += $result->unit;
-                $sum_point_unit += (app('App\Http\Controllers\Applicant\ApplicationController')::get_position_given_grade(strtoupper($result->grade)) * $result->unit);
-                 
+
+                // Only include in GPA/CGPA calculation if flag_waver is not 1
+                if (!isset($result->flag_waver) || $result->flag_waver != 1) {
+                    $sum_unit += $result->unit;
+                    $sum_point_unit += $gradePoint;
+                }
+                
                 $semester = $result->semester;
-            }      
+            }
+
             $cumm_sum_point_unit += $sum_point_unit;
             $cumm_sum_unit += $sum_unit;
-                            
-            $gpa = $sum_point_unit / floatval($sum_unit);
-            $cgpa = $cumm_sum_point_unit / floatval($cumm_sum_unit);
-    
-            $response = $response .'
+
+            $gpa = $sum_unit > 0 ? ($sum_point_unit / floatval($sum_unit)) : 0;
+            $cgpa = $cumm_sum_unit > 0 ? ($cumm_sum_point_unit / floatval($cumm_sum_unit)) : 0;
+
+            $response .= '
             </table>
             <table class="result_table2">
                 <tr>
             <td><strong>Semester</strong></td>
-            <td>TU: <strong> ' . strval($sum_unit) .'</strong></td>
-            <td>TGP: <strong> ' . strval($sum_point_unit) .'</strong></td>
-            <td>GPA: <strong> ' . strval(number_format($gpa, 2, '.', '')) .'</strong></td>
+            <td>TU: <strong> ' . strval($sum_unit) . '</strong></td>
+            <td>TGP: <strong> ' . strval($sum_point_unit) . '</strong></td>
+            <td>GPA: <strong> ' . strval(number_format($gpa, 2, '.', '')) . '</strong></td>
             </tr>
             <tr>
             <td><strong>Cumulative</strong></td>
-            <td>CTU: <strong> ' . strval($cumm_sum_unit) .'</strong></td>
-            <td>CTGP: <strong> ' . strval($cumm_sum_point_unit) .'</strong></td>
-            <td>CGPA: <strong> ' . strval(number_format($cgpa, 2, '.', '')) .'</strong></td>
+            <td>CTU: <strong> ' . strval($cumm_sum_unit) . '</strong></td>
+            <td>CTGP: <strong> ' . strval($cumm_sum_point_unit) . '</strong></td>
+            <td>CGPA: <strong> ' . strval(number_format($cgpa, 2, '.', '')) . '</strong></td>
             </tr>
         </table>';
-                
-                if (count($sessions) == $last_index) {
-                    
-                app('App\Http\Controllers\Applicant\ApplicationController')::get_programme_details($student,$prog_name, $dept ,$fac,$qualification);
-                $response = $response .'<br><hr style="border-top: 1px dotted black;">
+
+            $isLastSession = ($sessionIndex === (count($sessions) - 1));
+            if ($isLastSession) {
+                $applicationController::get_programme_details($student, $prog_name, $dept, $fac, $qualification);
+                $response .= '<br><hr style="border-top: 1px dotted black;">
                 <table class="result_table2">
                     <caption>Overall Academic Summary</caption>
                 <tr>
                         <td><strong>Status</strong></td>
-                    <td> ' . $student->status.' </td>
+                    <td> ' . $student->status . ' </td>
                 </tr>
                 <tr>
                     <td><strong>Qualification Obtained</strong></td>
-                    <td> ' . $qualification .' </td>
+                    <td> ' . $qualification . ' </td>
                 </tr> ';
-                            
+
                 if (strtoupper($student->status) == strtoupper("Graduated")) {
-            
-                    $response = $response .'<tr>
+                    $response .= '<tr>
                             <td><strong>Class of Degree</strong></td>
-                            <td> ' . app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa,$prog_name).' </td>
+                            <td> ' . $applicationController::class_of_degree($cgpa, $prog_name) . ' </td>
                     </tr> ';
-                                
                 }
-                $signatory = '';
-                $designation = '';
-                $response = $response .'</table>
+
+                $response .= '</table>
                     <table class="result_table2">
                         <caption>Key</caption>
                         <tr>
@@ -1154,58 +1171,44 @@ public function get_student_result_for_admin($request){
                             <td>CGPA: Cumulative Grade Point Average</td>
                         </tr>
                     </table>';
-                    if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                        $response = $response .' <div class="footer_">
+
+                if (strtoupper($request->transcript_type) == 'OFFICIAL') {
+                    $response .= ' <div class="footer_">
                             ________________________________<br>
-                            
-                            Oyedapo Oyeniyi<br>
-                            Assistant Registrar, Academic Affairs<br>
+
+                            S. A. Ogunlade<br>
+                            Deputy Registrar, Academic Affairs Division<br>
                             For: Registrar
                         </div>';
-                    }
-                    //print_footer
-                    if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                        $response = $response .'<div class="footer_4">
+                }
+
+                $response .= '<div class="footer_4">
                         Any alteration renders this transcript invalid<br>
-                        Generated on   ' . $date .'<br>
+                        Generated on   ' . $date . '<br>
                     </div>
                     </div> ';
-                    }else{
-                        $response = $response .'<div class="footer_4">
-                        Any alteration renders this transcript invalid<br>
-                        Generated on   ' . $date .'<br>
-                    </div>
-                    </div> ';
-                    }
-                  
-            }else{
-                 //print_footer
-                 if(strtoupper($request->transcript_type) == 'OFFICIAL'){
-                    $response = $response .'<div class="footer_4">Any alteration renders this transcript invalid<br> Generated on   ' . $date .'<br></div></div> ';
-                }
-                else{
-                    $response = $response .'<div class="footer_4">Any alteration renders this transcript invalid<br> Generated on   ' . $date .'<br> </div> </div> ';
-                }
-                
+            } else {
+                $response .= '<div class="footer_4">Any alteration renders this transcript invalid<br> Generated on   ' . $date . '<br></div></div> ';
             }
-            
-            
-            
-        }  //sessions array loop closed here
-    
-       
-          
+        }
+
         $response = str_replace("pageno", $page_no, $response);
-        return ['first_session_in_sch'=>$first_session_in_sch,
-        'last_session_in_sch'=>$last_session_in_sch,
-        'years_spent'=>$years_spent,'qualification'=>$qualification,'prog_name'=>$prog_name ,
-        'dept'=>$dept,'fac'=>$fac,'cgpa'=> number_format($cgpa,2, '.', ''),
-        'class_of_degree'=>app('App\Http\Controllers\Applicant\ApplicationController')::class_of_degree($cgpa,$prog_name),'result'=>$response];
-       
-    }else{ return "empty student session";}
+        return [
+            'first_session_in_sch' => $first_session_in_sch,
+            'last_session_in_sch' => $last_session_in_sch,
+            'years_spent' => $years_spent,
+            'qualification' => $qualification,
+            'prog_name' => $prog_name,
+            'dept' => $dept,
+            'fac' => $fac,
+            'cgpa' => number_format($cgpa, 2, '.', ''),
+            'class_of_degree' => $applicationController::class_of_degree($cgpa, $prog_name),
+            'result' => $response,
+        ];
         
     } catch (\Throwable $th) {
         //throw $th;
+        return "Error fetching student result ...";
     }
    
 }

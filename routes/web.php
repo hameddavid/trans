@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\RecordController;
 use App\Http\Controllers\MiscController;
+use App\Http\Controllers\UpdateController;
 
 
 
@@ -14,7 +15,8 @@ use App\Http\Controllers\MiscController;
 Route::get('/load_course_from_local_db_not_online',[MiscController::class,'load_course_from_local_db_not_online']);
 
 
-
+// Record update 
+Route::get('/update',[UpdateController::class,'fetchMatricNumbersFromExternal']);
 
 // record
 Route::get('/',[RecordController::class,'index']);
