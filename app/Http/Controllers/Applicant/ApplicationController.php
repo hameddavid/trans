@@ -480,7 +480,7 @@ public function get_student_result($request){
                         <td>' . strval($result->course_title) .'</td>
                         <td>' . $this->fetch_status($result->status) .'</td>
                         <td align="center">' . strval($result->unit) .'</td>
-                        <td align="center">' . strval($result->score) .'</td>
+                        <td align="center">' . strval($result->total_score) .'</td>
                         <td align="center">' . strval($result->grade) .'</td>
                         <td align="center">' .  strval($this->get_position_given_grade(strtoupper($result->grade)) * $result->unit) .'</td>
                     </tr>';
@@ -660,7 +660,9 @@ static function fetch_student_result_from_registration($matno,$session){
             'registrations.semester', 
             'registrations.course_code',
             'registrations.status',
+            'registrations.ca',
             'registrations.score',
+            'registrations.total_score',
             'registrations.grade',
             'registrations.flag_waver',
             't_course.course_title','t_course.unit')

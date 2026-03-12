@@ -766,7 +766,7 @@ public function submit_app_for_admin(Request $request){
     DB::beginTransaction();
     $user =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
     $student = Student::where(['matric_number'=>$request->matno])->first();
-    try {  
+    // try {  
         // $certificate = "";
         // $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
         // $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
@@ -920,11 +920,11 @@ public function submit_app_for_admin(Request $request){
                 return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
             }
         }else{ return response(['status'=>'failed','message'=>'No student with matric number '. $request->matno . ' found'],401);   }
-    } catch (\Throwable $th) {
-        DB::rollback();
-         return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
+    // } catch (\Throwable $th) {
+    //     DB::rollback();
+    //      return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
         
-     }
+    //  }
     
 }
 
@@ -1078,7 +1078,7 @@ public function get_student_result_for_admin($request){
                         <td>' . strval($result->course_title) . '</td>
                         <td>' . $applicationController::fetch_status($result->status) . '</td>
                         <td align="center">' . strval($result->unit) . '</td>
-                        <td align="center">' . strval($result->score) . '</td>
+                        <td align="center">' . strval($result->total_score) . '</td>
                         <td align="center">' . strval($result->grade) . '</td>
                         <td align="center">' . strval($gradePoint) . '</td>
                     </tr>';
