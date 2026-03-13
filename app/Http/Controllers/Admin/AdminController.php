@@ -766,7 +766,7 @@ public function submit_app_for_admin(Request $request){
     DB::beginTransaction();
     $user =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
     $student = Student::where(['matric_number'=>$request->matno])->first();
-    // try {  
+    try {  
         // $certificate = "";
         // $admin_users = Admin::where('account_status','ACTIVE')->pluck('email');
         // $applicant = Applicant::where(['id'=> $request->userid, 'matric_number'=>$request->matno])->first();
@@ -816,8 +816,9 @@ public function submit_app_for_admin(Request $request){
                     // $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $new_application,'data2'=>  $student]);  
                     // File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'_cover.pdf', $pdf->output());   
                     $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
-                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'_STUDENT_COPY_@'.$old_app_stud->id.'.pdf', $pdf->output());
-                    return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($old_app_stud->transcript_raw)],201); 
+                    $pdfPath = storage_path('app/'.$student->SURNAME.'_'.$student->FIRSTNAME.'_STUDENT_COPY_@'.$old_app_stud->id.'.pdf');
+                    File::put($pdfPath, $pdf->output());
+                    return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($old_app_stud->transcript_raw)],201);
                }
                 }else{
                     $new_application = new Adminapplications();
@@ -845,8 +846,9 @@ public function submit_app_for_admin(Request $request){
                     if($new_application->save() ){ 
                         DB::commit();
                         $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
-                        File::put($student->SURNAME.'_'.$student->FIRSTNAME.'_STUDENT_COPY_@'.$new_application->id.'.pdf', $pdf->output());
-                    return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201);  
+                        $pdfPath = storage_path('app/'.$student->SURNAME.'_'.$student->FIRSTNAME.'_STUDENT_COPY_@'.$new_application->id.'.pdf');
+                        File::put($pdfPath, $pdf->output());
+                        return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201);  
                    } else{ DB::rollback();
                         return response(['status'=>'failed','message'=>'Error saving request!'],401);}
                 }
@@ -878,9 +880,11 @@ public function submit_app_for_admin(Request $request){
                 if($old_app_off->save() ){ 
                     DB::commit();
                     $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $old_app_off,'data2'=>  $student]);  
-                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$old_app_off->id.'_cover.pdf', $pdf->output());   
+                    $pdfCoverPath = storage_path('app/'.$student->SURNAME.'_'.$student->FIRSTNAME.'@'.$old_app_off->id.'_cover.pdf');
+                    File::put($pdfCoverPath, $pdf->output());   
                     $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
-                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$old_app_off->id.'.pdf', $pdf->output());    
+                    $pdfPath = storage_path('app/'.$student->SURNAME.'_'.$student->FIRSTNAME.'@'.$old_app_off->id.'.pdf');
+                    File::put($pdfPath, $pdf->output());    
                     return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($old_app_off->transcript_raw)],201); 
                }
                 }
@@ -910,9 +914,11 @@ public function submit_app_for_admin(Request $request){
                 if($new_application->save() ){ 
                     DB::commit();
                     $pdf = PDF::loadView('cover_letter_admin',['data1'=>  $new_application,'data2'=>  $student]);  
-                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'_cover.pdf', $pdf->output());   
+                    $pdfCoverPath = storage_path('app/'.$student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'_cover.pdf');
+                    File::put($pdfCoverPath, $pdf->output());   
                     $pdf = PDF::loadView('result_admin',['data1'=>  $trans_raw,'data2'=>  $student]); 
-                    File::put($student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'.pdf', $pdf->output());
+                    $pdfPath = storage_path('app/'.$student->SURNAME.'_'.$student->FIRSTNAME.'@'.$new_application->id.'.pdf');
+                    File::put($pdfPath, $pdf->output());
                     return response(['status'=>'success','message'=>'Application successfully created','data'=>html_entity_decode($new_application->transcript_raw)],201); 
                } else{ DB::rollback();
                     return response(['status'=>'failed','message'=>'Error saving request!'],401);}
@@ -920,11 +926,11 @@ public function submit_app_for_admin(Request $request){
                 return response(['status'=>'failed','message'=>'Error in transcript type supplied'],401);
             }
         }else{ return response(['status'=>'failed','message'=>'No student with matric number '. $request->matno . ' found'],401);   }
-    // } catch (\Throwable $th) {
-    //     DB::rollback();
-    //      return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
+    } catch (\Throwable $th) {
+        DB::rollback();
+         return response(['status'=>'failed','message'=>'catch, Error summit_app ! NOTE (mode of delivery,address,recipient, and used_token are all required for official transcript)',401]);
         
-    //  }
+     }
     
 }
 
@@ -932,34 +938,34 @@ public function submit_app_for_admin(Request $request){
 
 public function download_submit_app_for_admin(Request $request){
     $request->validate([ 'id'=>'required|string', 'transcript_type' => 'required|string',] );
-    $data =  app('App\Http\Controllers\Admin\AdminAuthController')->auth_user(session('user'));
+    $data =  app('App\\Http\\Controllers\\Admin\\AdminAuthController')->auth_user(session('user'));
     if(!in_array($data->role,['200','300'])){return response(["status"=>"failed","message"=>"You are not permitted for this action!"],401);}
-    $app_admin = Adminapplications::join('t_student_test', 'admin_applications.matric_number', 
-    '=', 't_student_test.matric_number')
-    ->where(['admin_applications.id'=> $request->id])->select('admin_applications.*','t_student_test.*','admin_applications.id AS app_id')->first(); 
-   
+    $app_admin = Adminapplications::join('t_student_test', 'admin_applications.matric_number', '=', 't_student_test.matric_number')
+        ->where(['admin_applications.id'=> $request->id])
+        ->select('admin_applications.*','t_student_test.*','admin_applications.id AS app_id')->first(); 
+
     $type = strtoupper($request->transcript_type);
-    if($app_admin->count() != 0){
-        // $student->SURNAME.'_'.$student->FIRSTNAME.'_STUDENT_COPY_@'.$old_app_stud->id.'.pdf'
-        if ( $type == 'OFFICIAL' ){
-            if (File::exists($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf')){ 
-                $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/octet-stream',];                
-          
-                return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf'), 
-            $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_'.$app_admin->app_id.'.pdf' ,$headers);
-            }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
+    if($app_admin && $app_admin->count() != 0){
+        if ($type == 'OFFICIAL') {
+            $fileName = $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'@'.$app_admin->app_id.'.pdf';
+        } elseif ($type == 'STUDENT') {
+            $fileName = $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_STUDENT_COPY_@'.$app_admin->app_id.'.pdf';
+        } else {
+            return response(["status"=>"failed","message"=>"Unknown transcript type supplied"],401);
         }
-        elseif ( $type == 'STUDENT' ){
-            if (File::exists($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_STUDENT_COPY_@'.$app_admin->app_id.'.pdf')){ 
-                $headers = [ 'Content-Description' => 'File Transfer', 'Content-Type' => 'application/octet-stream',];                
-          
-                return Response::download(public_path($app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_STUDENT_COPY_@'.$app_admin->app_id.'.pdf'), 
-            $app_admin->SURNAME.'_'.$app_admin->FIRSTNAME.'_STUDENT_COPY_@'.$app_admin->app_id.'.pdf' ,$headers);
-            }else{return response(["status"=>"failed","message"=>"No File found in the directory"],401); }
-        }else{return response(["status"=>"failed","message"=>"Unknown transcript type supplied"],401); }
-            
-    }else{return response(["status"=>"failed","message"=>"No application found"],401); }
-  
+        $filePath = 'app/'.$fileName;
+        $storagePath = storage_path($filePath);
+        if (file_exists($storagePath)) {
+            return response()->download($storagePath, $fileName, [
+                'Content-Description' => 'File Transfer',
+                'Content-Type' => 'application/pdf',
+            ]);
+        } else {
+            return response(["status"=>"failed","message"=>"No File found in the directory"],401);
+        }
+    } else {
+        return response(["status"=>"failed","message"=>"No application found"],401);
+    }
 }
 
 

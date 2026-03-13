@@ -267,18 +267,12 @@ p{
 	object-fit: none;  
 	object-position: right top;  */
 }
-body{
-	background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
-	background-repeat:no-repeat;
-	background-size: cover; 
-	object-fit: none;  
-	object-position: right top; 
-}
+
 
 
   </style>
 </head>
-<body>
-    {!! $data1 !!}
+<body style="background-image: url('{{ public_path('assets/images/metal_logo.png') }}'); background-repeat: no-repeat; background-size: cover; object-fit: none; object-position: right top;">
+	{!! $data1 !!}
 </body>
 </html>
