@@ -1,39 +1,11 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+// Superseded by 2026_06_03_000001_baseline_schema.php
+// Kept as a no-op because production's migrations table records it as already run.
+return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('admin', function (Blueprint $table) {
-            $table->id();
-            $table->string('surname');
-            $table->string('firstname');
-            $table->string('lastname');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->jsonb('role');
-            $table->rememberToken();
-            $table->timestamps();
-        });
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('admin');
-    }
-}
+    public function up(): void {}
+    public function down(): void {}
+};
