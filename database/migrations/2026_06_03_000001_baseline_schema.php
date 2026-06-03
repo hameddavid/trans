@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Baseline schema for all application-managed tables.
  * Uses hasTable() guards so it is safe to run on existing production databases.
- * Does NOT touch: t_student_test, t_course, t_college_dept, registrations.
+ * Uses hasTable() guards so it is safe to run on existing production databases.
  */
 return new class extends Migration
 {
@@ -305,6 +305,92 @@ return new class extends Migration
                 $table->unsignedInteger('reserved_at')->nullable();
                 $table->unsignedInteger('available_at');
                 $table->unsignedInteger('created_at');
+            });
+        }
+
+        // External/read-only tables — exist in production, created here for fresh/test environments only
+        if (!Schema::hasTable('t_colleges')) {
+            Schema::create('t_colleges', function (Blueprint $table) {
+                $table->string('college_id')->primary();
+                $table->string('college');
+            });
+        }
+
+        if (!Schema::hasTable('t_departments')) {
+            Schema::create('t_departments', function (Blueprint $table) {
+                $table->string('department_id')->primary();
+                $table->string('department');
+                $table->string('college_id_FK')->index();
+            });
+        }
+
+        if (!Schema::hasTable('t_programmes')) {
+            Schema::create('t_programmes', function (Blueprint $table) {
+                $table->string('programme_id')->primary();
+                $table->string('programme');
+                $table->string('department_id_FK')->index();
+            });
+        }
+
+        if (!Schema::hasTable('t_college_dept')) {
+            Schema::create('t_college_dept', function (Blueprint $table) {
+                $table->id();
+                $table->string('prog_code')->index();
+                $table->string('programme');
+                $table->string('department');
+                $table->string('college');
+            });
+        }
+
+        if (!Schema::hasTable('t_student_test')) {
+            Schema::create('t_student_test', function (Blueprint $table) {
+                $table->id();
+                $table->string('matric_number')->unique();
+                $table->string('SURNAME');
+                $table->string('FIRSTNAME');
+                $table->string('OTHERNAME')->nullable();
+                $table->string('EMAIL1')->nullable();
+                $table->string('prog_code')->nullable()->index();
+                $table->string('status')->nullable();
+                $table->string('sex')->nullable();
+            });
+        }
+
+        if (!Schema::hasTable('t_course')) {
+            Schema::create('t_course', function (Blueprint $table) {
+                $table->id();
+                $table->string('course_code')->nullable()->index();
+                $table->string('course_title')->nullable();
+                $table->string('unit_id')->nullable();
+                $table->string('semester')->nullable();
+                $table->string('level')->nullable();
+                $table->string('programme_id')->nullable();
+            });
+        }
+
+        if (!Schema::hasTable('registrations')) {
+            Schema::create('registrations', function (Blueprint $table) {
+                $table->id();
+                $table->string('matric_number')->index();
+                $table->string('session_id')->nullable();
+                $table->string('semester')->nullable();
+                $table->string('course_code')->nullable();
+                $table->string('unit_id')->nullable();
+                $table->string('status')->nullable();
+                $table->string('ca')->nullable();
+                $table->string('score')->nullable();
+                $table->string('total_score')->nullable();
+                $table->string('grade')->nullable();
+                $table->string('deleted')->nullable();
+                $table->string('flag_waver')->nullable();
+            });
+        }
+
+        if (!Schema::hasTable('ug_course_with_pass_mark')) {
+            Schema::create('ug_course_with_pass_mark', function (Blueprint $table) {
+                $table->id();
+                $table->string('course_code')->nullable();
+                $table->string('pass_mark')->nullable();
             });
         }
     }
