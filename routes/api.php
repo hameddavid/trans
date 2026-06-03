@@ -1,96 +1,130 @@
 <?php
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Applicant\ApplicationController;
-use App\Http\Controllers\Applicant\ApplicantAuthController;
-use App\Http\Controllers\Applicant\PaymentController;
-use App\Http\Controllers\Applicant\PaymentController4Degree;
-use App\Http\Controllers\Applicant\ConfigController;
-use App\Http\Controllers\ManageRegistrationUploadController;
-
-use App\Http\Controllers\Admin\AdminAuthController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\RecordController;
-
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\Public\VerificationController;
+use App\Http\Controllers\Api\V1\Applicant\AuthController as ApplicantAuthController;
+use App\Http\Controllers\Api\V1\Applicant\ApplicationController as ApplicantApplicationController;
+use App\Http\Controllers\Api\V1\Applicant\PaymentController as ApplicantPaymentController;
+use App\Http\Controllers\Api\V1\Applicant\DegreePaymentController;
+use App\Http\Controllers\Api\V1\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Api\V1\Admin\DashboardController;
+use App\Http\Controllers\Api\V1\Admin\ApplicationController as AdminApplicationController;
+use App\Http\Controllers\Api\V1\Admin\DegreeVerificationController;
+use App\Http\Controllers\Api\V1\Admin\ApplicantController;
+use App\Http\Controllers\Api\V1\Admin\PaymentController as AdminPaymentController;
+use App\Http\Controllers\Api\V1\Admin\GeneratedTranscriptController;
 
+Route::prefix('v1')->group(function () {
 
+    // Public (no auth)
+    Route::prefix('public')->group(function () {
+        Route::post('verify-transcript', [VerificationController::class, 'verifyTranscript']);
+        Route::post('degree-verification', [VerificationController::class, 'submitDegreeVerification']);
+        Route::get('programmes', [VerificationController::class, 'getAvailableProgrammes']);
+        Route::get('programme-list', [VerificationController::class, 'listProgrammes']);
+        Route::get('destinations', [ApplicantApplicationController::class, 'getDestinationsAndAmounts']);
+        Route::post('remita-notify', [ApplicantPaymentController::class, 'remitaNotification']);
+    });
 
+    // Applicant auth (no auth required)
+    Route::prefix('applicant')->group(function () {
+        Route::post('register', [ApplicantAuthController::class, 'register']);
+        Route::post('login', [ApplicantAuthController::class, 'login']);
+        Route::post('forgot-password', [ApplicantAuthController::class, 'forgotPassword']);
+        Route::post('reset-password-with-token', [ApplicantAuthController::class, 'resetPasswordWithToken']);
+        Route::post('forgot-matric', [ApplicantAuthController::class, 'saveForgotMatricNumber']);
 
+        // Degree payment (institution pays, no applicant auth)
+        Route::prefix('degree-payment')->group(function () {
+            Route::post('check-pending-rrr', [DegreePaymentController::class, 'checkPendingRRR']);
+            Route::post('log-transaction', [DegreePaymentController::class, 'logTransaction']);
+            Route::get('gateway-config', [DegreePaymentController::class, 'getGatewayConfig']);
+            Route::post('update-payment', [DegreePaymentController::class, 'updatePayment']);
+            Route::post('re-query', [DegreePaymentController::class, 'reQueryTransaction']);
+            Route::post('remita-bank-callback', [DegreePaymentController::class, 'remitaBankPayment']);
+        });
+    });
 
-Route::get('app/available_prog', [ApplicationController::class, 'available_prog']);
-Route::get('app/list_programmes', [ConfigController::class, 'list_programmes']);
-Route::post('app/send_att', [ApplicantAuthController::class, 'send_att']);
-Route::post('app/register', [ApplicantAuthController::class, 'applicant_register']);
-Route::post('app/login', [ApplicantAuthController::class, 'applicant_login']);
-Route::post('app/save_forgot_matno', [ApplicantAuthController::class, 'save_forgot_matno']);
-Route::post('app/save', [ApplicationController::class, 'store']);
-Route::get('app/check_request_availability', [ApplicationController::class, 'check_request_availability']);
-Route::get('app/get_transcript_destination_and_amount', [ApplicationController::class, 'get_transcript_destination_and_amount']);
-Route::get('app/get_applicant_stat', [ApplicationController::class, 'get_applicant_stat']);
-Route::get('app/my_applications', [ApplicationController::class, 'my_applications']);
-Route::get('app/my_student_applications', [ApplicationController::class, 'my_student_applications']);
-Route::get('app/my_payments', [ApplicationController::class, 'my_payments']);
-Route::post('app/check_pend_rrr', [PaymentController::class, 'check_pend_rrr']);
-Route::post('app/log_new_rrr_trans_ref', [PaymentController::class, 'log_new_rrr_trans_ref']);
-Route::post('app/submit_app', [ApplicationController::class, 'submit_app']);
-Route::get('app/get_gateway_config', [PaymentController::class, 'get_gateway_config']);
-Route::post('app/update_payment', [PaymentController::class, 'update_payment']);
-Route::post('app/re_query_transaction', [PaymentController::class, 're_query_transaction']);
-Route::post('app/test_remita_bank', [PaymentController::class, 'test_remita_bank']);
-Route::post('app/remita_bank_payment', [PaymentController::class, 'remita_bank_payment']);
-Route::post('app/forgot_password', [ApplicantAuthController::class, 'forgot_password']);
-Route::post('app/reset_password', [ApplicantAuthController::class, 'reset_password']);
-Route::post('app/edit_app_and_verify_editpin', [ApplicationController::class, 'edit_app_and_verify_editpin']);
+    // Applicant authenticated
+    Route::prefix('applicant')->middleware('auth:applicant')->group(function () {
+        Route::get('me', [ApplicantAuthController::class, 'me']);
+        Route::post('logout', [ApplicantAuthController::class, 'logout']);
+        Route::post('reset-password', [ApplicantAuthController::class, 'resetPassword']);
+        Route::get('check-availability', [ApplicantApplicationController::class, 'checkAvailability']);
+        Route::post('submit-application', [ApplicantApplicationController::class, 'submitApplication']);
+        Route::get('my-official-applications', [ApplicantApplicationController::class, 'myOfficialApplications']);
+        Route::get('my-student-applications', [ApplicantApplicationController::class, 'myStudentApplications']);
+        Route::get('my-payments', [ApplicantApplicationController::class, 'myPayments']);
+        Route::get('stats', [ApplicantApplicationController::class, 'stats']);
+        Route::post('edit-application', [ApplicantApplicationController::class, 'editApplication']);
+        Route::post('submit-complaint', [ApplicantApplicationController::class, 'submitComplaint']);
+        Route::get('my-complaints', [ApplicantApplicationController::class, 'myComplaints']);
 
-// Please remove all the routes here before final production
-// Admin api routes
- //Route::post('treat_forgot_matno_request',[AdminController::class,'treat_forgot_matno_request']);
-// Route::post('register',[AdminAuthController::class,'save_new_account']);
-// Route::post('admin_reset_password', [AdminAuthController::class, 'admin_reset_password']);
-//  Route::post('/approve_app',[AdminController::class,'approve_app']);
-//  Route::post('/recommend_app',[AdminController::class,'recommend_app']);
-//  Route::post('/regenerate_transcript',[AdminController::class,'regenerate_transcript']);
-// Route::post('upload_cert', [ApplicationController::class, 'upload_cert']);
-// Route::post('send_corrections_to_applicant', [AdminController::class, 'send_corrections_to_applicant']);
-Route::post('submit_degree_verification', [ApplicationController::class, 'submit_degree_verification']);
-Route::post('fast_student_payment_requery', [PaymentController::class, 'fast_student_payment_requery']);
+        Route::prefix('payment')->group(function () {
+            Route::post('initiate', [ApplicantPaymentController::class, 'initiatePayment']);
+            Route::post('verify', [ApplicantPaymentController::class, 'verifyPayment']);
+            Route::post('check-pending-rrr', [ApplicantPaymentController::class, 'checkPendingRRR']);
+            Route::post('log-transaction', [ApplicantPaymentController::class, 'logTransaction']);
+            Route::get('gateway-config', [ApplicantPaymentController::class, 'getGatewayConfig']);
+            Route::post('update-payment', [ApplicantPaymentController::class, 'updatePayment']);
+            Route::post('re-query', [ApplicantPaymentController::class, 'reQueryTransaction']);
+            Route::post('remita-bank-callback', [ApplicantPaymentController::class, 'remitaBankPayment']);
+        });
+    });
 
+    // Admin auth (no auth required)
+    Route::prefix('admin')->group(function () {
+        Route::post('login', [AdminAuthController::class, 'login']);
+        Route::post('register', [AdminAuthController::class, 'register']);
+    });
 
-// Degree verification payments routes
-Route::post('degree/check_pend_rrr', [PaymentController4Degree::class, 'check_pend_rrr']);
-Route::post('degree/log_new_rrr_trans_ref', [PaymentController4Degree::class, 'log_new_rrr_trans_ref']);
-Route::get('degree/get_gateway_config', [PaymentController4Degree::class, 'get_gateway_config']);
-Route::post('degree/update_payment', [PaymentController4Degree::class, 'update_payment']);
-Route::post('degree/re_query_transaction', [PaymentController4Degree::class, 're_query_transaction']);
-Route::post('degree/test_remita_bank', [PaymentController4Degree::class, 'test_remita_bank']);
-Route::post('degree/remita_bank_payment', [PaymentController4Degree::class, 'remita_bank_payment']);
+    // Admin authenticated
+    Route::prefix('admin')->middleware('auth:admin')->group(function () {
+        Route::get('me', [AdminAuthController::class, 'me']);
+        Route::post('logout', [AdminAuthController::class, 'logout']);
+        Route::post('reset-password', [AdminAuthController::class, 'resetPassword']);
 
+        Route::get('dashboard', [DashboardController::class, 'index']);
+        Route::get('transcript-activities', [DashboardController::class, 'transcriptActivities']);
+        Route::get('transcript-locations', [DashboardController::class, 'transcriptLocations']);
 
-// let it be web route
+        Route::prefix('applications')->group(function () {
+            Route::get('pending-official', [AdminApplicationController::class, 'pendingOfficial']);
+            Route::get('recommended-official', [AdminApplicationController::class, 'recommendedOfficial']);
+            Route::get('approved-official', [AdminApplicationController::class, 'approvedOfficial']);
+            Route::get('failed-official', [AdminApplicationController::class, 'failedOfficial']);
+            Route::get('pending-student', [AdminApplicationController::class, 'pendingStudent']);
+            Route::get('recommended-student', [AdminApplicationController::class, 'recommendedStudent']);
+            Route::get('approved-student', [AdminApplicationController::class, 'approvedStudent']);
+            Route::post('recommend', [AdminApplicationController::class, 'recommend']);
+            Route::post('de-recommend', [AdminApplicationController::class, 'deRecommend']);
+            Route::post('approve', [AdminApplicationController::class, 'approve']);
+            Route::post('disapprove', [AdminApplicationController::class, 'disapprove']);
+            Route::post('regenerate', [AdminApplicationController::class, 'regenerate']);
+            Route::post('send-corrections', [AdminApplicationController::class, 'sendCorrections']);
+            Route::get('transcript-html/{type}/{id}', [AdminApplicationController::class, 'getTranscriptHtml']);
+            Route::post('download-approved', [AdminApplicationController::class, 'downloadApproved']);
+            Route::post('submit-admin-app', [AdminApplicationController::class, 'submitAdminApplication']);
+            Route::post('download-admin-app', [AdminApplicationController::class, 'downloadAdminApplication']);
+        });
 
-Route::post('get_student_result', [ApplicationController::class, 'get_student_result']);
+        Route::prefix('degree-verification')->group(function () {
+            Route::get('pending', [DegreeVerificationController::class, 'pending']);
+            Route::get('recommended', [DegreeVerificationController::class, 'recommended']);
+            Route::get('approved', [DegreeVerificationController::class, 'approved']);
+            Route::post('treat', [DegreeVerificationController::class, 'treat']);
+            Route::post('recommend', [DegreeVerificationController::class, 'recommend']);
+            Route::post('approve', [DegreeVerificationController::class, 'approve']);
+            Route::get('view-document/{path}', [DegreeVerificationController::class, 'viewDocument']);
+        });
 
-
-Route::group(["middleware" => ['auth:sanctum']], function(){
-    Route::get('app', [ApplicantAuthController::class, 'index']);
-   
-  
+        Route::get('applicants', [ApplicantController::class, 'index']);
+        Route::post('applicants/update', [ApplicantController::class, 'update']);
+        Route::get('complaints', [ApplicantController::class, 'complaints']);
+        Route::post('complaints/respond', [ApplicantController::class, 'respondToComplaint']);
+        Route::get('forgot-matric-requests', [ApplicantController::class, 'forgotMatricRequests']);
+        Route::post('treat-forgot-matric', [ApplicantController::class, 'treatForgotMatric']);
+        Route::get('payments', [AdminPaymentController::class, 'index']);
+        Route::get('generated-transcripts', [GeneratedTranscriptController::class, 'index']);
+    });
 });
-
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-
-
-// DEGREE VERIFICATION ROUTES ////
-Route::post('degree_verification', [RecordController::class, 'degree_verification']);
-
-
-// Registration management from local result
-
-Route::post('app/update-reg-score', [ManageRegistrationUploadController::class, 'updateRegistrations']);
-
-

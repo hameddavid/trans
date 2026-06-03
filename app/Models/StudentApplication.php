@@ -2,14 +2,31 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\ApplicationStatus;
+use App\Enums\TranscriptType;
 use Illuminate\Database\Eloquent\Model;
 
 class StudentApplication extends Model
 {
-    use HasFactory;
     protected $table = 'student_applications';
-    protected $casts = [
-        'created_at' => 'datetime:m/d/Y'
+
+    protected $fillable = [
+        'matric_number', 'applicant_id', 'delivery_mode', 'transcript_type',
+        'address', 'destination', 'recipient', 'app_status',
+        'graduation_year', 'grad_status', 'certificate',
+        'first_session_in_sch', 'last_session_in_sch', 'years_spent',
+        'qualification', 'prog_name', 'dept', 'fac', 'cgpa',
+        'class_of_degree', 'transcript_raw', 'recommended_by',
+        'recommended_at', 'approved_by', 'approved_at',
     ];
+
+    protected $casts = [
+        'app_status' => ApplicationStatus::class,
+        'transcript_type' => TranscriptType::class,
+    ];
+
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class, 'applicant_id');
+    }
 }

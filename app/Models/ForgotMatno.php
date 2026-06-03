@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ForgotMatno extends Model
 {
-    use HasFactory;
     protected $table = 'forgot_matno';
-  // protected $casts = [ 'matno_found' => 'array', ];
+
+    protected $fillable = [
+        'surname', 'firstname', 'othername', 'email', 'phone',
+        'program', 'date_left', 'matno_found', 'status',
+        'treated_by', 'treated_at',
+    ];
 }
