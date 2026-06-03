@@ -13,3 +13,5 @@ npm-debug.log
 yarn-error.log
 .DS_Store
 *.zip
+/public/*.pdf
+*.PNG
