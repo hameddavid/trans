@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\DeleteResultRequest;
+use App\Http\Requests\Admin\UpdateMatricNumberRequest;
 use App\Http\Requests\Admin\UploadResultsRequest;
 use App\Services\ResultUploadService;
 use Illuminate\Http\JsonResponse;
@@ -207,6 +208,84 @@ class ResultUploadController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => $sessions,
+        ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/admin/results/update-matric",
+     *     operationId="updateMatricNumber",
+     *     tags={"Result Upload"},
+     *     summary="Update a student's matric number across all tables",
+     *     description="Changes a student's matric number in t_student_test and cascades the update to registrations, applicants, official_applications, student_applications, admin_applications, and payment_transaction.",
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"old_matric_number","new_matric_number"},
+     *             @OA\Property(property="old_matric_number", type="string", example="RUN/BCH/25/111"),
+     *             @OA\Property(property="new_matric_number", type="string", example="RUN/PUH/25/111"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Matric number updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Matric number updated successfully."),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="old_matric", type="string", example="RUN/BCH/25/111"),
+     *                 @OA\Property(property="new_matric", type="string", example="RUN/PUH/25/111"),
+     *                 @OA\Property(
+     *                     property="affected_tables",
+     *                     type="object",
+     *                     example={"registrations": 42, "applicants": 1},
+     *                     description="Tables updated with row counts",
+     *                 ),
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(response=404, description="Student not found", @OA\JsonContent()),
+     *     @OA\Response(response=409, description="New matric number already exists", @OA\JsonContent()),
+     *     @OA\Response(response=422, description="Validation error", @OA\JsonContent()),
+     *     @OA\Response(response=401, description="Unauthenticated", @OA\JsonContent()),
+     * )
+     */
+    public function updateMatric(UpdateMatricNumberRequest $request): JsonResponse
+    {
+        try {
+            $result = $this->service->updateMatricNumber(
+                $request->old_matric_number,
+                $request->new_matric_number,
+            );
+        } catch (\Throwable $e) {
+            Log::error('Matric number update failed', ['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Update failed. Please try again.',
+            ], 500);
+        }
+
+        if (!$result['found']) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Student with matric number "' . $request->old_matric_number . '" not found.',
+            ], 404);
+        }
+
+        if ($result['conflict'] ?? false) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'A student with matric number "' . $request->new_matric_number . '" already exists.',
+            ], 409);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Matric number updated successfully.',
+            'data' => $result,
         ]);
     }
 

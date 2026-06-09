@@ -133,6 +133,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/', [ResultUploadController::class, 'index']);
             Route::get('sessions', [ResultUploadController::class, 'sessions']);
             Route::post('delete', [ResultUploadController::class, 'delete']);
+            Route::post('update-matric', [ResultUploadController::class, 'updateMatric']);
         });
     });
 });

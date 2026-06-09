@@ -198,6 +198,65 @@ class ResultUploadService
         return $query->orderBy('matric_number')->get();
     }
 
+    public function updateMatricNumber(string $oldMatric, string $newMatric): array
+    {
+        $student = Student::where('matric_number', $oldMatric)->first();
+        if (!$student) {
+            return ['found' => false];
+        }
+
+        $existing = Student::where('matric_number', $newMatric)->first();
+        if ($existing) {
+            return ['found' => true, 'conflict' => true];
+        }
+
+        $tables = [
+            'registrations' => 'matric_number',
+            'applicants' => 'matric_number',
+            'official_applications' => 'matric_number',
+            'student_applications' => 'matric_number',
+            'admin_applications' => 'matric_number',
+            'payment_transaction' => 'matric_number',
+        ];
+
+        DB::beginTransaction();
+
+        try {
+            $affected = [];
+
+            foreach ($tables as $table => $column) {
+                $count = DB::table($table)
+                    ->where($column, $oldMatric)
+                    ->update([$column => $newMatric]);
+                if ($count > 0) {
+                    $affected[$table] = $count;
+                }
+            }
+
+            DB::table('t_student_test')
+                ->where('matric_number', $oldMatric)
+                ->update(['matric_number' => $newMatric]);
+
+            DB::commit();
+
+            return [
+                'found' => true,
+                'conflict' => false,
+                'old_matric' => $oldMatric,
+                'new_matric' => $newMatric,
+                'affected_tables' => $affected,
+            ];
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Matric number update failed', [
+                'old' => $oldMatric,
+                'new' => $newMatric,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
+
     public function deleteResult(string $session, int $semester, string $matricNumber, string $courseCode): bool
     {
         return DB::table('registrations')

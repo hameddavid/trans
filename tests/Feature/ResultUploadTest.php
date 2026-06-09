@@ -226,4 +226,73 @@ class ResultUploadTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    public function test_can_update_matric_number_across_tables(): void
+    {
+        $headers = $this->adminHeaders();
+        Student::factory()->create(['matric_number' => 'RUN/BCH/25/111']);
+
+        $this->postJson('/api/v1/admin/results/upload', [
+            'session' => '2024/2025',
+            'semester' => 1,
+            'results' => [[
+                'matric_number' => 'RUN/BCH/25/111',
+                'course_code' => 'CSC 301',
+                'total_score' => 75,
+                'grade' => 'B',
+            ]],
+        ], $headers);
+
+        $response = $this->postJson('/api/v1/admin/results/update-matric', [
+            'old_matric_number' => 'RUN/BCH/25/111',
+            'new_matric_number' => 'RUN/PUH/25/111',
+        ], $headers);
+
+        $response->assertOk()
+            ->assertJsonPath('status', 'success')
+            ->assertJsonPath('data.new_matric', 'RUN/PUH/25/111');
+
+        $this->assertDatabaseHas('t_student_test', ['matric_number' => 'RUN/PUH/25/111']);
+        $this->assertDatabaseMissing('t_student_test', ['matric_number' => 'RUN/BCH/25/111']);
+        $this->assertDatabaseHas('registrations', ['matric_number' => 'RUN/PUH/25/111']);
+        $this->assertDatabaseMissing('registrations', ['matric_number' => 'RUN/BCH/25/111']);
+    }
+
+    public function test_update_matric_rejects_nonexistent_student(): void
+    {
+        $headers = $this->adminHeaders();
+
+        $response = $this->postJson('/api/v1/admin/results/update-matric', [
+            'old_matric_number' => 'FAKE/0000/0000',
+            'new_matric_number' => 'RUN/NEW/25/001',
+        ], $headers);
+
+        $response->assertStatus(404);
+    }
+
+    public function test_update_matric_rejects_duplicate_target(): void
+    {
+        $headers = $this->adminHeaders();
+        Student::factory()->create(['matric_number' => 'RUN/OLD/25/001']);
+        Student::factory()->create(['matric_number' => 'RUN/NEW/25/001']);
+
+        $response = $this->postJson('/api/v1/admin/results/update-matric', [
+            'old_matric_number' => 'RUN/OLD/25/001',
+            'new_matric_number' => 'RUN/NEW/25/001',
+        ], $headers);
+
+        $response->assertStatus(409);
+    }
+
+    public function test_update_matric_rejects_same_value(): void
+    {
+        $headers = $this->adminHeaders();
+
+        $response = $this->postJson('/api/v1/admin/results/update-matric', [
+            'old_matric_number' => 'RUN/BCH/25/111',
+            'new_matric_number' => 'RUN/BCH/25/111',
+        ], $headers);
+
+        $response->assertStatus(422);
+    }
 }
