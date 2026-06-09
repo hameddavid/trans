@@ -257,9 +257,14 @@ return new class extends Migration
         if (!Schema::hasTable('settings')) {
             Schema::create('settings', function (Blueprint $table) {
                 $table->id();
-                $table->string('key')->unique();
-                $table->text('value')->nullable();
-                $table->timestamps();
+                $table->integer('semester');
+                $table->char('session', 9);
+                $table->string('status', 10)->default('');
+                $table->timestamp('created_at')->useCurrent();
+                $table->string('updated_at', 191)->nullable();
+
+                $table->index('semester');
+                $table->index('session');
             });
         }
 
@@ -344,45 +349,48 @@ return new class extends Migration
 
         if (!Schema::hasTable('t_student_test')) {
             Schema::create('t_student_test', function (Blueprint $table) {
-                $table->id();
-                $table->string('matric_number')->unique();
-                $table->string('SURNAME');
-                $table->string('FIRSTNAME');
-                $table->string('OTHERNAME')->nullable();
-                $table->string('EMAIL1')->nullable();
-                $table->string('prog_code')->nullable()->index();
-                $table->string('status')->nullable();
-                $table->string('sex')->nullable();
+                $table->increments('ID');
+                $table->string('matric_number', 25)->unique();
+                $table->string('SURNAME', 35)->nullable();
+                $table->string('FIRSTNAME', 35)->nullable();
+                $table->string('sex', 5)->nullable()->default('');
+                $table->string('EMAIL1', 255)->nullable();
+                $table->string('prog_code', 10)->nullable()->index();
+                $table->string('status', 15)->nullable();
+                $table->string('session_admitted', 45);
+                $table->string('session_graduated', 45)->nullable();
             });
         }
 
         if (!Schema::hasTable('t_course')) {
             Schema::create('t_course', function (Blueprint $table) {
                 $table->id();
-                $table->string('course_code')->nullable()->index();
-                $table->string('course_title')->nullable();
-                $table->string('unit_id')->nullable();
-                $table->string('semester')->nullable();
-                $table->string('level')->nullable();
-                $table->string('programme_id')->nullable();
+                $table->string('course_code', 45)->index();
+                $table->text('course_title')->nullable();
+                $table->integer('unit')->nullable();
+                $table->integer('unit_id')->nullable();
             });
         }
 
         if (!Schema::hasTable('registrations')) {
             Schema::create('registrations', function (Blueprint $table) {
                 $table->id();
-                $table->string('matric_number')->index();
-                $table->string('session_id')->nullable();
-                $table->string('semester')->nullable();
-                $table->string('course_code')->nullable();
-                $table->string('unit_id')->nullable();
-                $table->string('status')->nullable();
-                $table->string('ca')->nullable();
-                $table->string('score')->nullable();
-                $table->string('total_score')->nullable();
-                $table->string('grade')->nullable();
-                $table->string('deleted')->nullable();
-                $table->string('flag_waver')->nullable();
+                $table->string('matric_number', 20)->index();
+                $table->integer('semester');
+                $table->char('session_id', 9);
+                $table->string('course_code', 45);
+                $table->string('lecturer_id', 30)->nullable();
+                $table->char('status', 1);
+                $table->decimal('score', 5, 2)->default(-1);
+                $table->decimal('ca', 5, 2)->default(-1);
+                $table->integer('total_score')->default(0);
+                $table->char('grade', 1);
+                $table->string('remarks', 50);
+                $table->char('deleted', 1)->default('N');
+                $table->char('unit_id', 8)->default('');
+                $table->boolean('flag_waver')->default(false);
+                $table->timestamp('created_at')->useCurrent();
+                $table->string('updated_at', 191)->nullable();
             });
         }
 

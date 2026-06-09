@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\V1\Admin\DegreeVerificationController;
 use App\Http\Controllers\Api\V1\Admin\ApplicantController;
 use App\Http\Controllers\Api\V1\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Api\V1\Admin\GeneratedTranscriptController;
+use App\Http\Controllers\Api\V1\Admin\ResultUploadController;
 
 Route::prefix('v1')->group(function () {
 
@@ -126,5 +127,12 @@ Route::prefix('v1')->group(function () {
         Route::post('treat-forgot-matric', [ApplicantController::class, 'treatForgotMatric']);
         Route::get('payments', [AdminPaymentController::class, 'index']);
         Route::get('generated-transcripts', [GeneratedTranscriptController::class, 'index']);
+
+        Route::prefix('results')->group(function () {
+            Route::post('upload', [ResultUploadController::class, 'upload']);
+            Route::get('/', [ResultUploadController::class, 'index']);
+            Route::get('sessions', [ResultUploadController::class, 'sessions']);
+            Route::post('delete', [ResultUploadController::class, 'delete']);
+        });
     });
 });

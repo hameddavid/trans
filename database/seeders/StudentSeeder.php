@@ -25,9 +25,9 @@ class StudentSeeder extends Seeder
         }
 
         $students = [
-            ['matric_number' => 'RUN/2020/0001', 'SURNAME' => 'ADEYEMI', 'FIRSTNAME' => 'JOHN', 'OTHERNAME' => 'OLA', 'EMAIL1' => 'john.adeyemi@test.com', 'prog_code' => '100', 'status' => 'active', 'sex' => 'Male'],
-            ['matric_number' => 'RUN/2020/0002', 'SURNAME' => 'OKAFOR', 'FIRSTNAME' => 'GRACE', 'OTHERNAME' => 'NGOZI', 'EMAIL1' => 'grace.okafor@test.com', 'prog_code' => '101', 'status' => 'active', 'sex' => 'Female'],
-            ['matric_number' => 'RUN/2020/0003', 'SURNAME' => 'IBRAHIM', 'FIRSTNAME' => 'MOHAMMED', 'OTHERNAME' => null, 'EMAIL1' => 'mohammed.ibrahim@test.com', 'prog_code' => '200', 'status' => 'active', 'sex' => 'Male'],
+            ['matric_number' => 'RUN/2020/0001', 'SURNAME' => 'ADEYEMI', 'FIRSTNAME' => 'JOHN', 'EMAIL1' => 'john.adeyemi@test.com', 'prog_code' => '100', 'status' => 'active', 'sex' => 'Male', 'session_admitted' => '2020/2021'],
+            ['matric_number' => 'RUN/2020/0002', 'SURNAME' => 'OKAFOR', 'FIRSTNAME' => 'GRACE', 'EMAIL1' => 'grace.okafor@test.com', 'prog_code' => '101', 'status' => 'active', 'sex' => 'Female', 'session_admitted' => '2020/2021'],
+            ['matric_number' => 'RUN/2020/0003', 'SURNAME' => 'IBRAHIM', 'FIRSTNAME' => 'MOHAMMED', 'EMAIL1' => 'mohammed.ibrahim@test.com', 'prog_code' => '200', 'status' => 'active', 'sex' => 'Male', 'session_admitted' => '2020/2021'],
         ];
 
         foreach ($students as $student) {

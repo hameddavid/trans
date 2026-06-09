@@ -13,8 +13,8 @@ class Student extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'matric_number', 'SURNAME', 'FIRSTNAME', 'OTHERNAME',
-        'EMAIL1', 'prog_code', 'status', 'sex',
+        'matric_number', 'SURNAME', 'FIRSTNAME',
+        'EMAIL1', 'prog_code', 'status', 'sex', 'session_admitted',
     ];
 
     public function registrations()
