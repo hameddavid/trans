@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UploadResultsRequest;
 use App\Services\ResultUploadService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @OA\Tag(
@@ -107,6 +108,9 @@ class ResultUploadController extends Controller
      */
     public function upload(UploadResultsRequest $request): JsonResponse
     {
+        set_time_limit(300);
+        ini_set('memory_limit', '512M');
+
         try {
             $result = $this->service->uploadResults($request->validated());
 
@@ -116,6 +120,7 @@ class ResultUploadController extends Controller
                 'data' => $result,
             ]);
         } catch (\Throwable $e) {
+            Log::error('Result upload failed', ['error' => $e->getMessage()]);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Result upload failed. Please try again.',

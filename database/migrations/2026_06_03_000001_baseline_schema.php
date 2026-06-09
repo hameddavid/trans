@@ -391,6 +391,8 @@ return new class extends Migration
                 $table->boolean('flag_waver')->default(false);
                 $table->timestamp('created_at')->useCurrent();
                 $table->string('updated_at', 191)->nullable();
+
+                $table->unique(['matric_number', 'session_id', 'semester', 'course_code'], 'reg_composite_unique');
             });
         }
 

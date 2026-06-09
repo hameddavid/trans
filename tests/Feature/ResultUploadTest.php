@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Admin;
-use App\Models\Course;
-use App\Models\RegistrationResult;
 use App\Models\Setting;
 use App\Models\Student;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -45,7 +43,7 @@ class ResultUploadTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('status', 'success')
-            ->assertJsonPath('data.created', 1);
+            ->assertJsonPath('data.total_processed', 1);
 
         $this->assertDatabaseHas('registrations', [
             'matric_number' => 'RUN/2020/0001',
@@ -82,7 +80,7 @@ class ResultUploadTest extends TestCase
         ], $headers);
 
         $response->assertOk()
-            ->assertJsonPath('data.created', 1);
+            ->assertJsonPath('data.total_processed', 1);
 
         $this->assertDatabaseHas('t_student_test', [
             'matric_number' => 'RUN/2024/9999',
@@ -108,11 +106,11 @@ class ResultUploadTest extends TestCase
         ], $headers);
 
         $response->assertOk()
-            ->assertJsonPath('data.created', 0)
+            ->assertJsonPath('data.total_processed', 0)
             ->assertJsonPath('data.skipped.0.matric_number', 'FAKE/0000/0000');
     }
 
-    public function test_updates_existing_result(): void
+    public function test_updates_existing_result_via_upsert(): void
     {
         $headers = $this->adminHeaders();
         Student::factory()->create(['matric_number' => 'RUN/2020/0001']);
@@ -140,8 +138,16 @@ class ResultUploadTest extends TestCase
         ], $headers);
 
         $response->assertOk()
-            ->assertJsonPath('data.updated', 1)
-            ->assertJsonPath('data.created', 0);
+            ->assertJsonPath('data.total_processed', 1);
+
+        $this->assertDatabaseHas('registrations', [
+            'matric_number' => 'RUN/2020/0001',
+            'course_code' => 'CSC 301',
+            'total_score' => 75,
+            'grade' => 'B',
+        ]);
+
+        $this->assertDatabaseCount('registrations', 1);
     }
 
     public function test_can_retrieve_results(): void
@@ -190,6 +196,11 @@ class ResultUploadTest extends TestCase
 
         $response->assertOk()
             ->assertJsonPath('status', 'success');
+
+        $this->assertDatabaseHas('registrations', [
+            'matric_number' => 'RUN/2020/0001',
+            'deleted' => 'Y',
+        ]);
     }
 
     public function test_upload_requires_authentication(): void

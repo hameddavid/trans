@@ -10,6 +10,18 @@ class UploadResultsRequest extends FormRequest
 
     public function rules(): array
     {
+        $count = is_array($this->input('results')) ? count($this->input('results')) : 0;
+
+        // For large batches (>1000), only validate the envelope to avoid
+        // spending minutes in the validator. The service handles bad rows gracefully.
+        if ($count > 1000) {
+            return [
+                'session' => 'required|string|regex:/^\d{4}\/\d{4}$/',
+                'semester' => 'required|integer|in:1,2',
+                'results' => 'required|array|min:1',
+            ];
+        }
+
         return [
             'session' => 'required|string|regex:/^\d{4}\/\d{4}$/',
             'semester' => 'required|integer|in:1,2',

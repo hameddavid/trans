@@ -11,82 +11,156 @@ use Illuminate\Support\Facades\Log;
 
 class ResultUploadService
 {
+    private const CHUNK_SIZE = 1000;
+
     public function uploadResults(array $data): array
     {
         $session = $data['session'];
-        $semester = $data['semester'];
+        $semester = (int) $data['semester'];
         $results = $data['results'];
 
         $this->ensureSettingExists($session, $semester);
 
-        $created = 0;
-        $updated = 0;
         $skipped = [];
+        $totalUpserted = 0;
 
-        DB::beginTransaction();
-
-        try {
-            foreach ($results as $index => $row) {
-                $student = $this->ensureStudentExists($row);
-                if (!$student) {
-                    $skipped[] = [
-                        'index' => $index,
-                        'matric_number' => $row['matric_number'],
-                        'reason' => 'Could not resolve or create student record.',
-                    ];
-                    continue;
-                }
-
-                $course = $this->ensureCourseExists($row);
-
-                $existing = RegistrationResult::where([
-                    'matric_number' => $row['matric_number'],
-                    'session_id' => $session,
-                    'semester' => $semester,
-                    'course_code' => $row['course_code'],
-                ])->first();
-
-                $record = [
-                    'matric_number' => $row['matric_number'],
-                    'session_id' => $session,
-                    'semester' => $semester,
-                    'course_code' => $row['course_code'],
-                    'unit_id' => $row['unit_id'] ?? $course->unit_id ?? '',
-                    'ca' => $row['ca'] ?? -1,
-                    'score' => $row['score'] ?? -1,
-                    'total_score' => $row['total_score'] ?? 0,
-                    'grade' => $row['grade'] ?? '',
-                    'remarks' => $this->gradeToRemarks($row['grade'] ?? ''),
-                    'status' => $row['status'] ?? 'C',
-                    'lecturer_id' => $row['lecturer_id'] ?? '',
-                    'deleted' => 'N',
-                    'flag_waver' => $row['flag_waver'] ?? 0,
-                ];
-
-                if ($existing) {
-                    $existing->update($record);
-                    $updated++;
-                } else {
-                    RegistrationResult::create($record);
-                    $created++;
-                }
-            }
-
-            DB::commit();
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Log::error('Result upload failed', ['error' => $e->getMessage()]);
-            throw $e;
+        foreach (array_chunk($results, self::CHUNK_SIZE, true) as $chunk) {
+            $chunkResult = $this->processChunk($chunk, $session, $semester);
+            $totalUpserted += $chunkResult['upserted'];
+            array_push($skipped, ...$chunkResult['skipped']);
         }
 
         return [
             'session' => $session,
             'semester' => $semester,
-            'created' => $created,
-            'updated' => $updated,
-            'skipped' => $skipped,
-            'total_processed' => $created + $updated,
+            'total_processed' => $totalUpserted,
+            'skipped_count' => count($skipped),
+            'skipped' => array_slice($skipped, 0, 100),
         ];
+    }
+
+    private function processChunk(array $chunk, string $session, int $semester): array
+    {
+        $matricNumbers = array_unique(array_column($chunk, 'matric_number'));
+        $courseCodes = array_unique(array_column($chunk, 'course_code'));
+
+        $existingStudents = Student::whereIn('matric_number', $matricNumbers)
+            ->pluck('matric_number')
+            ->flip()
+            ->all();
+
+        $this->bulkEnsureCourses($chunk, $courseCodes);
+
+        $courseUnitMap = Course::whereIn('course_code', $courseCodes)
+            ->pluck('unit_id', 'course_code')
+            ->all();
+
+        $newStudents = [];
+        foreach ($chunk as $row) {
+            if (!isset($existingStudents[$row['matric_number']]) && !empty($row['student'])) {
+                $newStudents[$row['matric_number']] = $row['student'];
+            }
+        }
+        if ($newStudents) {
+            $this->bulkCreateStudents($newStudents);
+            foreach ($newStudents as $matric => $s) {
+                $existingStudents[$matric] = true;
+            }
+        }
+
+        $skipped = [];
+        $upsertRows = [];
+
+        foreach ($chunk as $index => $row) {
+            if (!isset($existingStudents[$row['matric_number']])) {
+                $skipped[] = [
+                    'index' => $index,
+                    'matric_number' => $row['matric_number'],
+                    'reason' => 'Student not found and no student data provided.',
+                ];
+                continue;
+            }
+
+            $upsertRows[] = [
+                'matric_number' => $row['matric_number'],
+                'session_id' => $session,
+                'semester' => $semester,
+                'course_code' => $row['course_code'],
+                'unit_id' => $row['unit_id'] ?? $courseUnitMap[$row['course_code']] ?? '',
+                'ca' => $row['ca'] ?? -1,
+                'score' => $row['score'] ?? -1,
+                'total_score' => $row['total_score'] ?? 0,
+                'grade' => $row['grade'] ?? '',
+                'remarks' => $this->gradeToRemarks($row['grade'] ?? ''),
+                'status' => $row['status'] ?? 'C',
+                'lecturer_id' => $row['lecturer_id'] ?? '',
+                'deleted' => 'N',
+                'flag_waver' => $row['flag_waver'] ?? 0,
+            ];
+        }
+
+        if ($upsertRows) {
+            DB::table('registrations')->upsert(
+                $upsertRows,
+                ['matric_number', 'session_id', 'semester', 'course_code'],
+                ['unit_id', 'ca', 'score', 'total_score', 'grade', 'remarks', 'status', 'lecturer_id', 'deleted', 'flag_waver']
+            );
+        }
+
+        return [
+            'upserted' => count($upsertRows),
+            'skipped' => $skipped,
+        ];
+    }
+
+    private function bulkEnsureCourses(array $chunk, array $courseCodes): void
+    {
+        $existing = Course::whereIn('course_code', $courseCodes)
+            ->pluck('course_code')
+            ->flip()
+            ->all();
+
+        $newCourses = [];
+        $seen = [];
+        foreach ($chunk as $row) {
+            $code = $row['course_code'];
+            if (!isset($existing[$code]) && !isset($seen[$code])) {
+                $seen[$code] = true;
+                $newCourses[] = [
+                    'course_code' => $code,
+                    'course_title' => $row['course_title'] ?? null,
+                    'unit' => $row['unit'] ?? null,
+                    'unit_id' => $row['unit_id'] ?? null,
+                ];
+            }
+        }
+
+        if ($newCourses) {
+            foreach (array_chunk($newCourses, self::CHUNK_SIZE) as $batch) {
+                DB::table('t_course')->insertOrIgnore($batch);
+            }
+        }
+    }
+
+    private function bulkCreateStudents(array $students): void
+    {
+        $rows = [];
+        foreach ($students as $matric => $s) {
+            $rows[] = [
+                'matric_number' => $matric,
+                'SURNAME' => strtoupper($s['surname'] ?? ''),
+                'FIRSTNAME' => strtoupper($s['firstname'] ?? ''),
+                'EMAIL1' => $s['email'] ?? null,
+                'prog_code' => $s['prog_code'] ?? null,
+                'sex' => $s['sex'] ?? null,
+                'status' => 'active',
+                'session_admitted' => $s['session_admitted'] ?? '',
+            ];
+        }
+
+        foreach (array_chunk($rows, self::CHUNK_SIZE) as $batch) {
+            DB::table('t_student_test')->insertOrIgnore($batch);
+        }
     }
 
     private function ensureSettingExists(string $session, int $semester): Setting
@@ -94,43 +168,6 @@ class ResultUploadService
         return Setting::firstOrCreate(
             ['session' => $session, 'semester' => $semester],
             ['status' => '']
-        );
-    }
-
-    private function ensureStudentExists(array $row): ?Student
-    {
-        $student = Student::where('matric_number', $row['matric_number'])->first();
-
-        if ($student) {
-            return $student;
-        }
-
-        if (empty($row['student'])) {
-            return null;
-        }
-
-        $s = $row['student'];
-        return Student::create([
-            'matric_number' => $row['matric_number'],
-            'SURNAME' => strtoupper($s['surname'] ?? ''),
-            'FIRSTNAME' => strtoupper($s['firstname'] ?? ''),
-            'EMAIL1' => $s['email'] ?? null,
-            'prog_code' => $s['prog_code'] ?? null,
-            'sex' => $s['sex'] ?? null,
-            'status' => 'active',
-            'session_admitted' => $s['session_admitted'] ?? '',
-        ]);
-    }
-
-    private function ensureCourseExists(array $row): Course
-    {
-        return Course::firstOrCreate(
-            ['course_code' => $row['course_code']],
-            [
-                'course_title' => $row['course_title'] ?? null,
-                'unit' => $row['unit'] ?? null,
-                'unit_id' => $row['unit_id'] ?? null,
-            ]
         );
     }
 
@@ -163,18 +200,13 @@ class ResultUploadService
 
     public function deleteResult(string $session, int $semester, string $matricNumber, string $courseCode): bool
     {
-        $record = RegistrationResult::where([
-            'matric_number' => $matricNumber,
-            'session_id' => $session,
-            'semester' => $semester,
-            'course_code' => $courseCode,
-        ])->first();
-
-        if (!$record) {
-            return false;
-        }
-
-        $record->update(['deleted' => 'Y']);
-        return true;
+        return DB::table('registrations')
+            ->where([
+                'matric_number' => $matricNumber,
+                'session_id' => $session,
+                'semester' => $semester,
+                'course_code' => $courseCode,
+            ])
+            ->update(['deleted' => 'Y']) > 0;
     }
 }
