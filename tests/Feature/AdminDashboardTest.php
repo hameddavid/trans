@@ -22,15 +22,12 @@ class AdminDashboardTest extends TestCase
 
     public function test_admin_can_access_dashboard(): void
     {
-        if (config('database.default') === 'sqlite') {
-            $this->markTestSkipped('Dashboard uses MySQL-specific MONTH() function.');
-        }
-
         [$admin, $headers] = $this->authenticatedAdmin();
 
         $response = $this->getJson('/api/v1/admin/dashboard', $headers);
 
-        $response->assertOk();
+        $response->assertOk()
+            ->assertJsonStructure(['services', 'revenue', 'charts', 'recentActivities']);
     }
 
     public function test_unauthenticated_user_cannot_access_dashboard(): void

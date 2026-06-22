@@ -14,8 +14,18 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    private function monthExpression(): string
+    {
+        $driver = DB::getDriverName();
+        return $driver === 'sqlite'
+            ? "CAST(strftime('%m', created_at) AS INTEGER)"
+            : 'MONTH(created_at)';
+    }
+
     public function index(Request $request)
     {
+        $monthExpr = $this->monthExpression();
+
         $officialStats = OfficialApplication::selectRaw("
             COUNT(*) as total,
             SUM(CASE WHEN app_status = 'PENDING' THEN 1 ELSE 0 END) as pending,
@@ -52,14 +62,14 @@ class DashboardController extends Controller
 
         $monthlyLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-        $monthlyOfficial = OfficialApplication::selectRaw('MONTH(created_at) as m, COUNT(*) as c')
-            ->groupByRaw('MONTH(created_at)')->pluck('c', 'm');
-        $monthlyStudent = StudentApplication::selectRaw('MONTH(created_at) as m, COUNT(*) as c')
-            ->groupByRaw('MONTH(created_at)')->pluck('c', 'm');
-        $monthlyDegree = DegreeVerification::selectRaw('MONTH(created_at) as m, COUNT(*) as c')
-            ->groupByRaw('MONTH(created_at)')->pluck('c', 'm');
-        $monthlyAdmin = AdminApplication::selectRaw('MONTH(created_at) as m, COUNT(*) as c')
-            ->groupByRaw('MONTH(created_at)')->pluck('c', 'm');
+        $monthlyOfficial = OfficialApplication::selectRaw("{$monthExpr} as m, COUNT(*) as c")
+            ->groupByRaw("{$monthExpr}")->pluck('c', 'm');
+        $monthlyStudent = StudentApplication::selectRaw("{$monthExpr} as m, COUNT(*) as c")
+            ->groupByRaw("{$monthExpr}")->pluck('c', 'm');
+        $monthlyDegree = DegreeVerification::selectRaw("{$monthExpr} as m, COUNT(*) as c")
+            ->groupByRaw("{$monthExpr}")->pluck('c', 'm');
+        $monthlyAdmin = AdminApplication::selectRaw("{$monthExpr} as m, COUNT(*) as c")
+            ->groupByRaw("{$monthExpr}")->pluck('c', 'm');
 
         $monthlyOfficialData = [];
         $monthlyStudentData = [];
@@ -150,9 +160,11 @@ class DashboardController extends Controller
 
     public function transcriptActivities()
     {
+        $monthExpr = $this->monthExpression();
+
         $monthly = DB::table('official_applications')
-            ->selectRaw('MONTH(created_at) as m, COUNT(*) as c')
-            ->groupByRaw('MONTH(created_at)')
+            ->selectRaw("{$monthExpr} as m, COUNT(*) as c")
+            ->groupByRaw("{$monthExpr}")
             ->pluck('c', 'm');
 
         $data = [];
