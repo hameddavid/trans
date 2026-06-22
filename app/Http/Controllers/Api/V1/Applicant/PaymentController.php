@@ -7,6 +7,7 @@ use App\Http\Requests\Payment\CheckPendingRRRRequest;
 use App\Http\Requests\Payment\LogTransactionRequest;
 use App\Http\Requests\Payment\GatewayConfigRequest;
 use App\Http\Requests\Payment\UpdatePaymentRequest;
+use App\Http\Requests\Applicant\InitiatePaymentRequest;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 
@@ -14,13 +15,8 @@ class PaymentController extends Controller
 {
     public function __construct(protected PaymentService $paymentService) {}
 
-    public function initiatePayment(Request $request)
+    public function initiatePayment(InitiatePaymentRequest $request)
     {
-        $request->validate([
-            'destination' => 'required|string',
-            'amount' => 'required|string',
-        ]);
-
         $applicant = $request->user();
         $destination = strtoupper($request->destination);
         $amount = $request->amount;
@@ -182,6 +178,7 @@ class PaymentController extends Controller
 
     public function remitaBankPayment(Request $request)
     {
+        $request->validate(['rrr' => 'nullable|string']);
         $this->paymentService->processRemitaBankPayment($request->getContent());
         return response()->json(['status' => 'success', 'message' => 'Payment processed']);
     }

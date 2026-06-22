@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Applicant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Applicant\SubmitApplicationRequest;
+use App\Http\Requests\Applicant\SubmitComplaintRequest;
 use App\Http\Requests\Applicant\EditApplicationRequest;
 use App\Http\Resources\OfficialApplicationResource;
 use App\Http\Resources\StudentApplicationResource;
@@ -130,13 +131,8 @@ class ApplicationController extends Controller
         ]);
     }
 
-    public function submitComplaint(Request $request)
+    public function submitComplaint(SubmitComplaintRequest $request)
     {
-        $request->validate([
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string|max:2000',
-        ]);
-
         $applicant = $request->user();
 
         \App\Models\Complaint::create([

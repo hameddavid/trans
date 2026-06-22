@@ -27,12 +27,12 @@ Route::prefix('v1')->group(function () {
         Route::post('remita-notify', [ApplicantPaymentController::class, 'remitaNotification']);
     });
 
-    // Applicant auth (no auth required)
-    Route::prefix('applicant')->group(function () {
+    // Applicant auth (no auth required, rate-limited)
+    Route::prefix('applicant')->middleware('throttle:auth')->group(function () {
         Route::post('register', [ApplicantAuthController::class, 'register']);
         Route::post('login', [ApplicantAuthController::class, 'login']);
-        Route::post('forgot-password', [ApplicantAuthController::class, 'forgotPassword']);
-        Route::post('reset-password-with-token', [ApplicantAuthController::class, 'resetPasswordWithToken']);
+        Route::post('forgot-password', [ApplicantAuthController::class, 'forgotPassword'])->middleware('throttle:password-reset');
+        Route::post('reset-password-with-token', [ApplicantAuthController::class, 'resetPasswordWithToken'])->middleware('throttle:password-reset');
         Route::post('forgot-matric', [ApplicantAuthController::class, 'saveForgotMatricNumber']);
 
         // Degree payment (institution pays, no applicant auth)
@@ -73,8 +73,8 @@ Route::prefix('v1')->group(function () {
         });
     });
 
-    // Admin auth (no auth required)
-    Route::prefix('admin')->group(function () {
+    // Admin auth (no auth required, rate-limited)
+    Route::prefix('admin')->middleware('throttle:auth')->group(function () {
         Route::post('login', [AdminAuthController::class, 'login']);
         Route::post('register', [AdminAuthController::class, 'register']);
     });
