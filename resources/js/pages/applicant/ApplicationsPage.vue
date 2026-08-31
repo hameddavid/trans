@@ -62,11 +62,11 @@
               <tbody class="divide-y divide-gray-200">
                 <tr v-for="app in officialApplications" :key="app.id" class="hover:bg-gray-50">
                   <td class="px-4 py-2 whitespace-nowrap text-gray-700 font-mono text-xs">{{ app.id }}</td>
-                  <td class="px-4 py-2 whitespace-nowrap text-gray-700">{{ app.matno }}</td>
-                  <td class="px-4 py-2 whitespace-nowrap text-gray-700 capitalize">{{ app.type }}</td>
+                  <td class="px-4 py-2 whitespace-nowrap text-gray-700">{{ app.matric_number }}</td>
+                  <td class="px-4 py-2 whitespace-nowrap text-gray-700 capitalize">{{ app.transcript_type }}</td>
                   <td class="px-4 py-2 whitespace-nowrap text-gray-700">{{ app.destination || '-' }}</td>
                   <td class="px-4 py-2 whitespace-nowrap">
-                    <span :class="statusBadgeClass(app.status)">{{ app.status }}</span>
+                    <span :class="statusBadgeClass(app.app_status)">{{ app.app_status }}</span>
                   </td>
                   <td class="px-4 py-2 whitespace-nowrap text-gray-500">{{ formatDate(app.created_at) }}</td>
                   <td class="px-4 py-2 whitespace-nowrap">
@@ -110,10 +110,10 @@
               <tbody class="divide-y divide-gray-200">
                 <tr v-for="app in studentApplications" :key="app.id" class="hover:bg-gray-50">
                   <td class="px-4 py-2 whitespace-nowrap text-gray-700 font-mono text-xs">{{ app.id }}</td>
-                  <td class="px-4 py-2 whitespace-nowrap text-gray-700">{{ app.matno }}</td>
-                  <td class="px-4 py-2 whitespace-nowrap text-gray-700 capitalize">{{ app.type }}</td>
+                  <td class="px-4 py-2 whitespace-nowrap text-gray-700">{{ app.matric_number }}</td>
+                  <td class="px-4 py-2 whitespace-nowrap text-gray-700 capitalize">{{ app.transcript_type }}</td>
                   <td class="px-4 py-2 whitespace-nowrap">
-                    <span :class="statusBadgeClass(app.status)">{{ app.status }}</span>
+                    <span :class="statusBadgeClass(app.app_status)">{{ app.app_status }}</span>
                   </td>
                   <td class="px-4 py-2 whitespace-nowrap text-gray-500">{{ formatDate(app.created_at) }}</td>
                   <td class="px-4 py-2 whitespace-nowrap">
@@ -151,19 +151,19 @@
           </div>
           <div class="flex justify-between">
             <span class="text-gray-500">Matric Number</span>
-            <span class="font-medium text-gray-900">{{ selectedApp.matno }}</span>
+            <span class="font-medium text-gray-900">{{ selectedApp.matric_number }}</span>
           </div>
           <div class="flex justify-between">
             <span class="text-gray-500">Type</span>
-            <span class="font-medium text-gray-900 capitalize">{{ selectedApp.type }}</span>
+            <span class="font-medium text-gray-900 capitalize">{{ selectedApp.transcript_type }}</span>
           </div>
           <div v-if="selectedApp.destination" class="flex justify-between">
             <span class="text-gray-500">Destination</span>
             <span class="font-medium text-gray-900">{{ selectedApp.destination }}</span>
           </div>
-          <div v-if="selectedApp.recipient_name" class="flex justify-between">
+          <div v-if="selectedApp.recipient" class="flex justify-between">
             <span class="text-gray-500">Recipient</span>
-            <span class="font-medium text-gray-900">{{ selectedApp.recipient_name }}</span>
+            <span class="font-medium text-gray-900">{{ selectedApp.recipient }}</span>
           </div>
           <div v-if="selectedApp.delivery_mode" class="flex justify-between">
             <span class="text-gray-500">Delivery Mode</span>
@@ -171,12 +171,78 @@
           </div>
           <div class="flex justify-between">
             <span class="text-gray-500">Status</span>
-            <span :class="statusBadgeClass(selectedApp.status)">{{ selectedApp.status }}</span>
+            <span :class="statusBadgeClass(selectedApp.app_status)">{{ selectedApp.app_status }}</span>
           </div>
           <div class="flex justify-between">
             <span class="text-gray-500">Date Applied</span>
             <span class="font-medium text-gray-900">{{ formatDate(selectedApp.created_at) }}</span>
           </div>
+
+          <!-- Courier Submission Section -->
+          <template v-if="selectedApp.courier_status">
+            <div class="border-t border-gray-200 pt-3 mt-3">
+              <h4 class="font-semibold text-gray-900 mb-2">Courier / Shipping</h4>
+
+              <!-- Status: pending — show form -->
+              <div v-if="selectedApp.courier_status === 'pending'" class="space-y-3">
+                <p class="text-xs text-gray-500">Your transcript is ready for dispatch. Please provide your courier details and upload proof of payment.</p>
+
+                <div v-if="selectedApp.courier_notes" class="bg-red-50 border border-red-200 rounded-lg p-3 text-xs text-red-700">
+                  <strong>Note from admin:</strong> {{ selectedApp.courier_notes }}
+                </div>
+
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">Courier Company *</label>
+                  <input v-model="courierForm.courier_company" type="text" placeholder="e.g. DHL, FedEx, GIG Logistics"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-run-blue focus:border-run-blue outline-none" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">Contact Details *</label>
+                  <input v-model="courierForm.courier_contact" type="text" placeholder="Phone number or email of courier agent"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-run-blue focus:border-run-blue outline-none" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">Tracking Number (if available)</label>
+                  <input v-model="courierForm.courier_tracking" type="text" placeholder="Optional"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-run-blue focus:border-run-blue outline-none" />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">Payment Receipt / Evidence *</label>
+                  <input type="file" ref="courierReceiptInput" accept=".jpg,.jpeg,.png,.pdf" @change="handleCourierFile"
+                    class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-run-blue/10 file:text-run-blue hover:file:bg-run-blue/20" />
+                  <p class="text-[11px] text-gray-400 mt-1">JPG, PNG, or PDF. Max 5MB.</p>
+                </div>
+                <button
+                  @click="handleSubmitCourier"
+                  :disabled="courierSubmitting"
+                  class="w-full bg-run-blue text-white py-2.5 rounded-lg text-sm font-medium hover:bg-run-blue/90 transition disabled:opacity-50"
+                >
+                  {{ courierSubmitting ? 'Submitting...' : 'Submit Courier Details' }}
+                </button>
+              </div>
+
+              <!-- Status: submitted — show what was submitted -->
+              <div v-else-if="selectedApp.courier_status === 'submitted'" class="space-y-1.5">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700 mb-2">
+                  Your courier details have been submitted and are awaiting verification.
+                </div>
+                <div class="flex justify-between"><span class="text-gray-500">Company</span><span class="font-medium text-gray-900">{{ selectedApp.courier_company }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Contact</span><span class="font-medium text-gray-900">{{ selectedApp.courier_contact }}</span></div>
+                <div v-if="selectedApp.courier_tracking" class="flex justify-between"><span class="text-gray-500">Tracking #</span><span class="font-medium text-gray-900">{{ selectedApp.courier_tracking }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Submitted</span><span class="font-medium text-gray-900">{{ formatDate(selectedApp.courier_submitted_at) }}</span></div>
+              </div>
+
+              <!-- Status: verified — confirmed -->
+              <div v-else-if="selectedApp.courier_status === 'verified'" class="space-y-1.5">
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-xs text-green-700 mb-2">
+                  Your courier details have been verified. Your transcript will be dispatched shortly.
+                </div>
+                <div class="flex justify-between"><span class="text-gray-500">Company</span><span class="font-medium text-gray-900">{{ selectedApp.courier_company }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Contact</span><span class="font-medium text-gray-900">{{ selectedApp.courier_contact }}</span></div>
+                <div v-if="selectedApp.courier_tracking" class="flex justify-between"><span class="text-gray-500">Tracking #</span><span class="font-medium text-gray-900">{{ selectedApp.courier_tracking }}</span></div>
+              </div>
+            </div>
+          </template>
         </div>
         <div class="px-4 py-3 border-t border-gray-200">
           <button
@@ -194,12 +260,20 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { DocumentTextIcon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { useToast } from 'vue-toastification';
 import { useApplicationStore } from '@/stores/application';
+import * as applicantApi from '@/api/applicantApi';
 
+const toast = useToast();
 const applicationStore = useApplicationStore();
 
 const activeTab = ref('official');
 const selectedApp = ref(null);
+
+const courierForm = ref({ courier_company: '', courier_contact: '', courier_tracking: '' });
+const courierFile = ref(null);
+const courierReceiptInput = ref(null);
+const courierSubmitting = ref(false);
 
 const tabs = [
   { key: 'official', label: 'Official Applications' },
@@ -228,6 +302,42 @@ function statusBadgeClass(status) {
 
 function viewApplication(app) {
   selectedApp.value = app;
+  courierForm.value = { courier_company: '', courier_contact: '', courier_tracking: '' };
+  courierFile.value = null;
+}
+
+function handleCourierFile(e) {
+  courierFile.value = e.target.files[0] || null;
+}
+
+async function handleSubmitCourier() {
+  if (!courierForm.value.courier_company || !courierForm.value.courier_contact) {
+    toast.error('Please fill in the courier company and contact details.');
+    return;
+  }
+  if (!courierFile.value) {
+    toast.error('Please upload proof of payment.');
+    return;
+  }
+
+  courierSubmitting.value = true;
+  try {
+    const formData = new FormData();
+    formData.append('application_id', selectedApp.value.id);
+    formData.append('courier_company', courierForm.value.courier_company);
+    formData.append('courier_contact', courierForm.value.courier_contact);
+    formData.append('courier_tracking', courierForm.value.courier_tracking || '');
+    formData.append('courier_receipt', courierFile.value);
+
+    await applicantApi.submitCourierDetails(formData);
+    toast.success('Courier details submitted successfully.');
+    selectedApp.value = null;
+    applicationStore.fetchOfficialApplications();
+  } catch (e) {
+    toast.error(e.response?.data?.message || 'Failed to submit courier details.');
+  } finally {
+    courierSubmitting.value = false;
+  }
 }
 
 onMounted(() => {

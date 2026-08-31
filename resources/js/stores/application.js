@@ -7,6 +7,7 @@ export const useApplicationStore = defineStore('application', () => {
     const studentApplications = ref([]);
     const stats = ref({ successful: 0, pending: 0, failed: 0 });
     const destinations = ref([]);
+    const pricing = ref([]);
     const loading = ref(false);
 
     async function fetchOfficialApplications() {
@@ -41,7 +42,18 @@ export const useApplicationStore = defineStore('application', () => {
 
     async function fetchDestinations() {
         const { data } = await applicantApi.getDestinations();
-        destinations.value = data.data ?? data;
+        const result = data.data ?? data;
+        if (result.destinations) {
+            destinations.value = result.destinations;
+            pricing.value = result.pricing || [];
+        } else {
+            destinations.value = result;
+        }
+    }
+
+    function getTypeAmount(type) {
+        const item = pricing.value.find(p => p.type === type);
+        return item ? Number(item.amount) : 0;
     }
 
     async function submitApplication(formData) {
@@ -59,12 +71,14 @@ export const useApplicationStore = defineStore('application', () => {
         studentApplications,
         stats,
         destinations,
+        pricing,
         loading,
         fetchOfficialApplications,
         fetchStudentApplications,
         fetchStats,
         checkAvailability,
         fetchDestinations,
+        getTypeAmount,
         submitApplication,
         editApplication,
     };

@@ -9,10 +9,12 @@ use Illuminate\Support\Facades\DB;
 class TranscriptService
 {
     protected StudentDataService $studentData;
+    protected SignatoryService $signatoryService;
 
-    public function __construct(StudentDataService $studentData)
+    public function __construct(StudentDataService $studentData, SignatoryService $signatoryService)
     {
         $this->studentData = $studentData;
+        $this->signatoryService = $signatoryService;
     }
 
     public function generateTranscriptData(string $matricNumber, string $transcriptType, string $recipient = ''): array
@@ -98,7 +100,7 @@ class TranscriptService
                 $qualification = $this->getQualification($student, $progName, $fac);
                 $response .= $this->buildAcademicSummary($student, $qualification, $cgpa, $progName, $transcriptType, $date);
             } else {
-                $response .= '<div class="footer_4">Any alteration renders this transcript invalid<br>Generated on ' . $date . '<br></div></div>';
+                $response .= '<div class="footer_4">Any alteration renders this transcript invalid<br>Generated on ' . $date . '</div></div>';
             }
         }
 
@@ -193,16 +195,16 @@ class TranscriptService
         $progUpper = strtoupper($progName);
         $progFormatted = $this->studentData->findAndReplaceString($progName);
 
-        if (str_ends_with($facUpper, 'SCIENCES') && $progUpper === 'NURSING SCIENCE') {
-            return 'Bachelor of Nursing Science';
-        }
-        if (str_ends_with($facUpper, 'SCIENCES') && $progUpper === 'PHYSIOTHERAPY') {
-            return 'Bachelor of Physiotherapy';
-        }
-        if ($progUpper === 'ARCHITECTURE') {
+        if (str_ends_with($facUpper, 'SCIENCE') || str_ends_with($facUpper, 'SCIENCES')) {
+            if ($progUpper === 'NURSING SCIENCE') {
+                return 'Bachelor of Nursing Science';
+            }
+            if ($progUpper === 'PHYSIOTHERAPY') {
+                return 'Bachelor of Physiotherapy';
+            }
             return "Bachelor of Science in {$progFormatted}";
         }
-        if (str_ends_with($facUpper, 'SCIENCES')) {
+        if ($progUpper === 'ARCHITECTURE') {
             return "Bachelor of Science in {$progFormatted}";
         }
         if (str_contains($facUpper, 'LAW')) {
@@ -219,29 +221,30 @@ class TranscriptService
     {
         $transType = strtoupper($type) === 'OFFICIAL' ? 'Official Transcript' : "Student's Proof of Result";
         $recipientName = strtoupper($type) === 'OFFICIAL' ? $recipient : ($student->SURNAME . ' ' . $student->FIRSTNAME);
+        $logoPath = public_path('assets/images/run_logo_big.png');
 
         return '<div class="page">
             <div class="header">
-                <img src="' . public_path('assets/images/run_logo_big.png') . '" class="logo"/>
+                <img src="' . $logoPath . '" class="logo"/>
                 <h1>REDEEMER\'S UNIVERSITY</h1>
                 <h5>P.M.B. 230, Ede, Osun State, Nigeria</h5>
-                <h5>Tel: +234 902 859 5221, Website: run.edu.ng, Email: transcripts@run.edu.ng</h5><br>
+                <h5>Tel: +234 902 859 5221 &nbsp;&middot;&nbsp; Website: run.edu.ng &nbsp;&middot;&nbsp; Email: transcripts@run.edu.ng</h5>
                 <h2>' . $transType . '</h2>
-                <h5 id="recipient_h">Intended Recipient: ' . $recipientName . '</h5>
+                <p id="recipient_h">Intended Recipient: ' . e($recipientName) . '</p>
                 <h6>Page ' . $pageNo . ' of pageno</h6>
             </div>
-            <div class="golden_streak"></div>
+            <div class="gold-accent"></div>
             <div class="header2">
                 <table>
                     <tr>
-                        <td>Name: <strong>' . $student->SURNAME . ' ' . $student->FIRSTNAME . '</strong></td>
+                        <td>Name: <strong>' . e($student->SURNAME . ' ' . $student->FIRSTNAME) . '</strong></td>
                         <td></td>
-                        <td>Matriculation Number: <strong>' . $matno . '</strong></td>
+                        <td>Matriculation Number: <strong>' . e($matno) . '</strong></td>
                     </tr>
                     <tr>
-                        <td>Faculty: <strong>' . $fac . '</strong></td>
-                        <td>Department: <strong>' . $dept . '</strong></td>
-                        <td>Programme: <strong>' . $progName . '</strong></td>
+                        <td>Faculty: <strong>' . e($fac) . '</strong></td>
+                        <td>Department: <strong>' . e($dept) . '</strong></td>
+                        <td>Programme: <strong>' . e($progName) . '</strong></td>
                     </tr>
                 </table>
             </div>';
@@ -250,15 +253,15 @@ class TranscriptService
     protected function openSemesterTable(string $session, int $semester): string
     {
         return '<table class="result_table">
-            <caption>Session: ' . $session . ', Semester: ' . $this->formatSemester($semester) . '</caption>
+            <tr><td colspan="7" class="semester-label">' . e($session) . ' &mdash; ' . $this->formatSemester($semester) . ' Semester</td></tr>
             <tr>
                 <th>Course Code</th>
                 <th>Course Title</th>
                 <th>Status</th>
-                <th>Unit</th>
-                <th>Score</th>
-                <th>Grade</th>
-                <th>Grade Point</th>
+                <th align="center">Unit</th>
+                <th align="center">Score</th>
+                <th align="center">Grade</th>
+                <th align="center">Grade Pt.</th>
             </tr>';
     }
 
@@ -267,15 +270,15 @@ class TranscriptService
         return '</table>
             <table class="result_table2">
                 <tr>
-                    <td><strong>Semester</strong></td>
-                    <td>TU: <strong>' . $sumUnit . '</strong></td>
-                    <td>TGP: <strong>' . $sumPointUnit . '</strong></td>
-                    <td>GPA: <strong>' . number_format($gpa, 2, '.', '') . '</strong></td>
+                    <td style="width:25%;"><strong>Semester</strong></td>
+                    <td style="width:25%;">TU: <strong>' . number_format($sumUnit, 0) . '</strong></td>
+                    <td style="width:25%;">TGP: <strong>' . number_format($sumPointUnit, 0) . '</strong></td>
+                    <td style="width:25%;">GPA: <strong>' . number_format($gpa, 2, '.', '') . '</strong></td>
                 </tr>
                 <tr>
                     <td><strong>Cumulative</strong></td>
-                    <td>CTU: <strong>' . $cummUnit . '</strong></td>
-                    <td>CTGP: <strong>' . $cummPointUnit . '</strong></td>
+                    <td>CTU: <strong>' . number_format($cummUnit, 0) . '</strong></td>
+                    <td>CTGP: <strong>' . number_format($cummPointUnit, 0) . '</strong></td>
                     <td>CGPA: <strong>' . number_format($cgpa, 2, '.', '') . '</strong></td>
                 </tr>
             </table>';
@@ -283,48 +286,54 @@ class TranscriptService
 
     protected function buildAcademicSummary(Student $student, string $qualification, float $cgpa, string $progName, string $type, string $date): string
     {
-        $response = '<br><hr style="border-top: 1px dotted black;">
+        $response = '<div class="summary-divider"></div>
             <table class="result_table2">
                 <caption>Overall Academic Summary</caption>
                 <tr>
-                    <td><strong>Status</strong></td>
-                    <td>' . ($student->status ?? $student->STATUS ?? '') . '</td>
+                    <td style="width:40%;"><strong>Status</strong></td>
+                    <td>' . e($student->status ?? $student->STATUS ?? '') . '</td>
                 </tr>
                 <tr>
                     <td><strong>Qualification Obtained</strong></td>
-                    <td>' . $qualification . '</td>
+                    <td>' . e($qualification) . '</td>
                 </tr>';
 
         if (strtoupper($student->status ?? $student->STATUS ?? '') === 'GRADUATED') {
             $response .= '<tr>
                 <td><strong>Class of Degree</strong></td>
-                <td>' . $this->classOfDegree($cgpa, $progName) . '</td>
+                <td>' . e($this->classOfDegree($cgpa, $progName)) . '</td>
             </tr>';
         }
 
         $response .= '</table>
             <table class="result_table2">
-                <caption>Key</caption>
-                <tr><td>A => 100 - 70 => 5</td><td>4.50 - 5.00 => Excellent</td><td>TU: Total Units</td></tr>
-                <tr><td>B => 69 - 60 => 4</td><td>3.50 - 4.49 => Very Good</td><td>TGP: Total Grade Point</td></tr>
-                <tr><td>C => 59 - 50 => 3</td><td>2.50 - 3.49 => Good</td><td>GPA: Grade Point Average</td></tr>
-                <tr><td>D => 49 - 45 => 2</td><td>1.50 - 2.49 => Average</td><td>CTU: Cumulative Total Units</td></tr>
-                <tr><td>E => 44 - 40 => 1</td><td>1.00 - 1.49 => Fair</td><td>CTGP: Cumulative Total Grade Point</td></tr>
-                <tr><td>F => 39 - 0 => 0</td><td>0.00 - 0.99 => Poor</td><td>CGPA: Cumulative Grade Point Average</td></tr>
+                <caption>Grading Key</caption>
+                <tr><td style="width:33%;">A =&gt; 70 &ndash; 100 =&gt; 5</td><td style="width:33%;">4.50 &ndash; 5.00: Excellent</td><td style="width:34%;">TU: Total Units</td></tr>
+                <tr><td>B =&gt; 60 &ndash; 69 =&gt; 4</td><td>3.50 &ndash; 4.49: Very Good</td><td>TGP: Total Grade Point</td></tr>
+                <tr><td>C =&gt; 50 &ndash; 59 =&gt; 3</td><td>2.50 &ndash; 3.49: Good</td><td>GPA: Grade Point Average</td></tr>
+                <tr><td>D =&gt; 45 &ndash; 49 =&gt; 2</td><td>1.50 &ndash; 2.49: Average</td><td>CTU: Cumulative Total Units</td></tr>
+                <tr><td>E =&gt; 40 &ndash; 44 =&gt; 1</td><td>1.00 &ndash; 1.49: Fair</td><td>CTGP: Cumulative Total Grade Pt.</td></tr>
+                <tr><td>F =&gt; 0 &ndash; 39 =&gt; 0</td><td>0.00 &ndash; 0.99: Poor</td><td>CGPA: Cumulative GPA</td></tr>
             </table>';
 
         if (strtoupper($type) === 'OFFICIAL') {
-            $response .= '<div class="footer_">
-                ________________________________<br>
-                S. A. Ogunlade<br>
-                Deputy Registrar, Academic Affairs Division<br>
-                For: Registrar
-            </div>';
+            $sig = $this->signatoryService->getSignatory('transcript');
+
+            $response .= '<div class="footer_">';
+            if (!empty($sig['signature_path'])) {
+                $response .= '<img src="' . e($sig['signature_path']) . '" style="height: 45px; margin-bottom: 4px;"><br>';
+            } else {
+                $response .= '________________________________<br>';
+            }
+            $response .= e($sig['name']) . '<br>'
+                . e($sig['title']) . '<br>'
+                . 'For: ' . e($sig['for'])
+                . '</div>';
         }
 
         $response .= '<div class="footer_4">
             Any alteration renders this transcript invalid<br>
-            Generated on ' . $date . '<br>
+            Generated on ' . $date . '
         </div></div>';
 
         return $response;

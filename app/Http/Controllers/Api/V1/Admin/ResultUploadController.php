@@ -11,20 +11,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-/**
- * @OA\Tag(
- *     name="Result Upload",
- *     description="Upload and manage student academic results"
- * )
- *
- * @OA\SecurityScheme(
- *     securityScheme="sanctum",
- *     type="http",
- *     scheme="bearer",
- *     bearerFormat="JWT",
- *     description="Enter your Sanctum token"
- * )
- */
 class ResultUploadController extends Controller
 {
     public function __construct(protected ResultUploadService $service) {}
@@ -286,6 +272,196 @@ class ResultUploadController extends Controller
             'status' => 'success',
             'message' => 'Matric number updated successfully.',
             'data' => $result,
+        ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/admin/results/update-flag-waver",
+     *     operationId="updateFlagWaver",
+     *     tags={"Result Upload"},
+     *     summary="Update flag_waver on registration records",
+     *     description="Set or unset the flag_waver field on registrations. Flagged records are excluded from GPA/CGPA computation and transcripts.",
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"updates"},
+     *             @OA\Property(
+     *                 property="updates",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     required={"matric_number","session_id","flag_waver"},
+     *                     @OA\Property(property="matric_number", type="string", example="RUN/NSC/19/8022"),
+     *                     @OA\Property(property="session_id", type="string", example="2021/2022"),
+     *                     @OA\Property(property="semester", type="string", example="1", description="Optional — omit to flag all semesters"),
+     *                     @OA\Property(property="course_code", type="string", example="NSC 301", description="Optional — omit to flag all courses"),
+     *                     @OA\Property(property="flag_waver", type="boolean", example=true),
+     *                 ),
+     *             ),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Flag waver updated",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string"),
+     *             @OA\Property(property="data", type="object"),
+     *         ),
+     *     ),
+     *     @OA\Response(response=422, description="Validation error"),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     * )
+     */
+    public function updateFlagWaver(Request $request): JsonResponse
+    {
+        $request->validate([
+            'updates' => 'required|array|min:1',
+            'updates.*.matric_number' => 'required|string|max:25',
+            'updates.*.session_id' => 'required|string|max:20',
+            'updates.*.semester' => 'nullable|string|max:5',
+            'updates.*.course_code' => 'nullable|string|max:30',
+            'updates.*.flag_waver' => 'required|boolean',
+        ]);
+
+        try {
+            $result = $this->service->updateFlagWaver($request->input('updates'));
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Updated {$result['updated']} registration(s).",
+                'data' => $result,
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Flag waver update failed', ['error' => $e->getMessage()]);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Flag waver update failed.',
+            ], 500);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/v1/admin/results/validate",
+     *     operationId="validateResults",
+     *     tags={"Result Upload"},
+     *     summary="Validate matric numbers and course codes before uploading",
+     *     description="Checks which matric numbers and course codes exist on the portal. Does not write any data.",
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"session","semester","matric_numbers","course_codes"},
+     *             @OA\Property(property="session", type="string", example="2024/2025"),
+     *             @OA\Property(property="semester", type="integer", example=1),
+     *             @OA\Property(property="matric_numbers", type="array", @OA\Items(type="string")),
+     *             @OA\Property(property="course_codes", type="array", @OA\Items(type="string")),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Validation results",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="missing_matric_numbers", type="array", @OA\Items(type="string")),
+     *             @OA\Property(property="missing_course_codes", type="array", @OA\Items(type="string")),
+     *             @OA\Property(property="errors", type="array", @OA\Items(type="string")),
+     *         ),
+     *     ),
+     *     @OA\Response(response=422, description="Validation error"),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     * )
+     */
+    public function validateUpload(Request $request): JsonResponse
+    {
+        $request->validate([
+            'session' => 'required|string',
+            'semester' => 'required',
+            'matric_numbers' => 'required|array',
+            'course_codes' => 'required|array',
+        ]);
+
+        $matricNumbers = $request->input('matric_numbers', []);
+        $courseCodes = $request->input('course_codes', []);
+
+        $existingMatrics = collect($matricNumbers)->chunk(500)->flatMap(function ($chunk) {
+            return \App\Models\Student::whereIn('matric_number', $chunk->values()->all())
+                ->pluck('matric_number');
+        })->map(fn($m) => strtoupper($m))->toArray();
+
+        $existingCourses = collect($courseCodes)->chunk(500)->flatMap(function ($chunk) {
+            return \App\Models\Course::whereIn('course_code', $chunk->values()->all())
+                ->pluck('course_code');
+        })->map(fn($c) => strtoupper($c))->toArray();
+
+        $missingMatrics = array_values(array_diff(
+            array_map('strtoupper', $matricNumbers),
+            $existingMatrics
+        ));
+
+        $missingCourses = array_values(array_diff(
+            array_map('strtoupper', $courseCodes),
+            $existingCourses
+        ));
+
+        return response()->json([
+            'missing_matric_numbers' => $missingMatrics,
+            'missing_course_codes' => $missingCourses,
+            'errors' => [],
+        ]);
+    }
+
+    public function importCourses(Request $request): JsonResponse
+    {
+        $request->validate([
+            'courses' => 'required|array|min:1',
+            'courses.*.course_code' => 'required|string|max:45',
+        ]);
+
+        $courses = $request->input('courses', []);
+        $created = 0;
+        $updated = 0;
+        $skipped = [];
+
+        foreach ($courses as $index => $courseData) {
+            try {
+                $courseCode = strtoupper(trim($courseData['course_code']));
+                $existing = \App\Models\Course::where('course_code', $courseCode)->first();
+
+                $fillData = [
+                    'course_code' => $courseCode,
+                    'course_title' => $courseData['course_title'] ?? null,
+                    'unit' => $courseData['unit'] ?? null,
+                    'unit_id' => $courseData['unit_id'] ?? null,
+                ];
+
+                if ($existing) {
+                    $existing->update(array_filter($fillData, fn($v) => $v !== null));
+                    $updated++;
+                } else {
+                    \App\Models\Course::create($fillData);
+                    $created++;
+                }
+            } catch (\Throwable $e) {
+                $skipped[] = [
+                    'index' => $index,
+                    'course_code' => $courseData['course_code'] ?? 'unknown',
+                    'reason' => $e->getMessage(),
+                ];
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Courses imported successfully.',
+            'data' => [
+                'created' => $created,
+                'updated' => $updated,
+                'total_processed' => $created + $updated,
+                'skipped_count' => count($skipped),
+                'skipped' => $skipped,
+            ],
         ]);
     }
 

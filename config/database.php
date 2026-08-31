@@ -37,11 +37,11 @@ return [
         
         'external_db' => [
         'driver' => 'mysql',
-        'host' => env('EXTERNAL_DB_HOST', '162.214.155.50'),
+        'host' => env('EXTERNAL_DB_HOST', '127.0.0.1'),
         'port' => env('EXTERNAL_DB_PORT', '3306'),
-        'database' => env('EXTERNAL_DB_DATABASE', 'runedu_studportal'),
-        'username' => env('EXTERNAL_DB_USERNAME', 'runedu_studport'),
-        'password' => env('EXTERNAL_DB_PASSWORD', 'mrsirl123!'),
+        'database' => env('EXTERNAL_DB_DATABASE', ''),
+        'username' => env('EXTERNAL_DB_USERNAME', ''),
+        'password' => env('EXTERNAL_DB_PASSWORD', ''),
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
         'prefix' => '',

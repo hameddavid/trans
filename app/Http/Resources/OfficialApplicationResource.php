@@ -38,6 +38,13 @@ class OfficialApplicationResource extends JsonResource
             'approved_by' => $this->approved_by,
             'approved_at' => $this->approved_at?->format('m/d/Y'),
             'created_at' => $this->created_at?->format('m/d/Y'),
+            'courier_company' => $this->courier_company,
+            'courier_contact' => $this->courier_contact,
+            'courier_tracking' => $this->courier_tracking,
+            'courier_receipt_path' => $this->courier_receipt_path,
+            'courier_status' => $this->courier_status,
+            'courier_notes' => $this->courier_notes,
+            'courier_submitted_at' => $this->courier_submitted_at,
             'applicant' => new ApplicantResource($this->whenLoaded('applicant')),
         ];
     }

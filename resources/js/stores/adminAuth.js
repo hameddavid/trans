@@ -8,7 +8,8 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
 
     const isAuthenticated = computed(() => !!token.value);
     const isRecommender = computed(() => user.value?.role === '200');
-    const isApprover = computed(() => user.value?.role === '300');
+    const isApprover = computed(() => user.value?.role === '300' || user.value?.role === '400');
+    const isSuperAdmin = computed(() => user.value?.role === '400');
     const fullName = computed(() => {
         if (!user.value) return '';
         return `${user.value.title ?? ''} ${user.value.surname ?? ''} ${user.value.firstname ?? ''}`.trim();
@@ -24,9 +25,6 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
 
     async function register(payload) {
         const { data } = await adminApi.register(payload);
-        token.value = data.token;
-        user.value = data.admin ?? data.user;
-        localStorage.setItem('admin_token', data.token);
         return data;
     }
 
@@ -57,6 +55,7 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
         isAuthenticated,
         isRecommender,
         isApprover,
+        isSuperAdmin,
         fullName,
         login,
         register,

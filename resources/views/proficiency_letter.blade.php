@@ -1,119 +1,148 @@
 <!DOCTYPE HTML>
-
 <html>
-    <head>
-        <style type="text/css">
-            html {
-            margin:0;
-            padding:0; 
-            }
-            @page {
-                size: A4;
-                margin-top:0.5cm;
-                margin-bottom:0;
-                margin-left:0;
-                margin-right:0;
-                padding: 0;
-            }
-            
-            .bodyBody {
-                /* 
-                background-image: url('/www/wwwroot/trans/public/assets/images/original.jpg');
-                 */
-                background-image: url("https://records.run.edu.ng/assets/images/original.png");
-                background-size: contain;
-                background-repeat: no-repeat;
-                font-family: Arial;
-                font-size: 11px;
-
-            }
-            .divHeader {
-                text-align: right;
-                border: 1px solid;
-            }
-            .divReturnAddress {
-                text-align: left;
-                float: right;
-            }
-            .divSubject {
-                clear: both;
-                font-weight: bold;
-                padding-top: 80px;
-            }
-            .divAdios {
-                float: left;
-                padding-top: 50px;
-            }
-            .main{
-                margin: 20% auto;
-                padding-top: 5px;
-                padding-right: 30px; 
-                padding-bottom: 15px; 
-                padding-left: 30px; 
-            }
-        </style>
-    </head>
-    <body class="bodyBody">
-            <div class="main"> 
-            <div class="divSubject">
-<pre>
-{{date("F j, Y")}}  
- 
-RUN/REG/Attestation/15/Vol.1/00{{$data->id}}                                                                                                    
-
-TO WHOM IT MAY CONCERN
-</pre>
+<head>
+    <style type="text/css">
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 12px;
+            color: #1a1a1a;
+            line-height: 1.6;
+            background-image: url("{{ public_path('assets/images/original.png') }}");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        .content {
+            margin: 0;
+            padding: 200px 55px 50px 55px;
+        }
+        .meta-block {
+            margin-bottom: 8px;
+            font-size: 11.5px;
+            line-height: 1.7;
+        }
+        .meta-date {
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .meta-ref {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            color: #555;
+        }
+        .addressed-to {
+            font-weight: bold;
+            font-size: 12px;
+            margin-top: 15px;
+            text-transform: uppercase;
+        }
+        .salutation {
+            margin-bottom: 5px;
+        }
+        .subject-line {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            text-decoration: underline;
+            text-transform: uppercase;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+        .body-text {
+            text-align: justify;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+        .closing {
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+        .signatory {
+            margin-top: 35px;
+            line-height: 1.5;
+        }
+        .sign-line {
+            width: 180px;
+            border-top: 1px solid #333;
+            margin-bottom: 4px;
+        }
+        .sign-name {
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .sign-title {
+            font-size: 11px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="meta-block">
+            <span class="meta-date">{{ date("F j, Y") }}</span><br>
+            <span class="meta-ref">RUN/REG/Attestation/15/Vol.1/00{{ $data->id }}</span>
         </div>
 
+        <p class="addressed-to">To Whom It May Concern</p>
 
-        <div class="divContents" align="justify">
-            <p>
-                Dear Sir,
-            </p>
-            <h5>
-                <u>LETTER OF ATTESTATION<br>
-                    LANGUAGE OF INSTRUCTION/PROFICIENCY IN ENGLISH                    
-                </u>
-            </h5>
-            
-            <p>
-                <p>@if(strtoupper($data->sex) == 'M') {{'Mr.'}}
-                    @elseif(strtoupper($data->sex) == 'F') {{'Miss'}}
-                    @else <b>{{''}}</b>
-                    @endif
-                <b>{{ strtoupper($data->surname)}}</b> {{' '. ucwords(strtolower($data->firstname))}} (Matric. No. {{$data->matric_number}}) 
-                was a student in the Department of {{ucwords(strtolower($data->dept))}} ({{ucwords(strtolower($data->prog_name))}} Programme)
-                 in the Faculty of {{ucwords(strtolower($data->fac))}}, Redeemer’s University.</p>
+        <p class="salutation">Dear Sir/Madam,</p>
 
-                <p>
-                @if(strtoupper($data->sex) == 'M') {{'His'}}
-                @elseif(strtoupper($data->sex) == 'F') {{'Her'}}
-                @else <b>{{''}}</b>
-                @endif
-                 Cumulative Grade Point Average (CGPA) at the end of a {{$data->years_spent.'-year(s)'}}
-                 {{ucwords(strtolower($data->qualification))}} degree programme, 
-                 in the {{$data->last_session_in_sch}} 
-                academic session, in {{ucwords(strtolower($data->prog_name))}} was {{$data->cgpa}} – {{ucwords(strtolower($data->class_of_degree))}}. 
-                    <br><br></p>
-
-                <p>Kindly note that English is the medium of communication in Nigerian institutions. You may also wish to note that in Redeemer’s University, all lectures, examinations, tests,
-                    Seminars, presentations, and all kinds of student assessments are conducted in English.</p>
-
-                <p>Please accord  @if(strtoupper($data->sex) == 'M') {{'his'}}
-                @elseif(strtoupper($data->sex) == 'F') {{'her'}}
-                @else <b>{{''}}</b>
-                @endif the necessary assistance.</p>
-
-                Yours faithfully,
-
-            </p>
+        <div class="subject-line">
+            Letter of Attestation<br>
+            Language of Instruction / Proficiency in English
         </div>
 
-        <div class="divAdios">
-            ADETUTU ADEWOLE<br>
-            Administrative Officer, Academic Affairs<br>
-            For:  REGISTRAR
+        <p class="body-text">
+            @if(strtoupper($data->sex) == 'M') Mr.
+            @elseif(strtoupper($data->sex) == 'F') Miss
+            @endif
+            <strong>{{ strtoupper($data->surname) }}</strong> {{ ucwords(strtolower($data->firstname)) }}
+            (Matric. No. {{ $data->matric_number }}) was a student in the Department of
+            {{ ucwords(strtolower($data->dept)) }} ({{ ucwords(strtolower($data->prog_name)) }} Programme)
+            in the Faculty of {{ ucwords(strtolower($data->fac)) }}, Redeemer's University.
+        </p>
+
+        <p class="body-text">
+            @if(strtoupper($data->sex) == 'M') His
+            @elseif(strtoupper($data->sex) == 'F') Her
+            @endif
+            Cumulative Grade Point Average (CGPA) at the end of a {{ $data->years_spent }}-year(s)
+            {{ ucwords(strtolower($data->qualification)) }} degree programme,
+            in the {{ $data->last_session_in_sch }} academic session,
+            in {{ ucwords(strtolower($data->prog_name)) }} was {{ $data->cgpa }}
+            &ndash; {{ ucwords(strtolower($data->class_of_degree)) }}.
+        </p>
+
+        <p class="body-text">
+            Kindly note that English is the medium of communication in Nigerian institutions.
+            You may also wish to note that in Redeemer's University, all lectures, examinations, tests,
+            seminars, presentations, and all kinds of student assessments are conducted in English.
+        </p>
+
+        <p class="body-text">
+            Please accord
+            @if(strtoupper($data->sex) == 'M') him
+            @elseif(strtoupper($data->sex) == 'F') her
+            @endif
+            the necessary assistance.
+        </p>
+
+        <p class="closing">Yours faithfully,</p>
+
+        <div class="signatory">
+            <div class="sign-line"></div>
+            @if(!empty($signatory['signature_path']))
+                <img src="{{ $signatory['signature_path'] }}" style="height: 45px; margin-bottom: 4px;">
+            @endif
+            <span class="sign-name">{{ $signatory['name'] }}</span><br>
+            <span class="sign-title">{{ $signatory['title'] }}</span><br>
+            <span class="sign-title">For: {{ $signatory['for'] }}</span>
         </div>
-            </div>
-    </body>
+    </div>
+</body>
 </html>

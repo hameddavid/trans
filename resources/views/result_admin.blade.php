@@ -2,277 +2,196 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-  <style>
-      @font-face{
-	font-family: Quicksand;
-	src: url(../fonts/Quicksand-Regular.otf);
-}
-
-@font-face{
-	font-family: Quicksand;
-	font-weight: bold;
-	src: url(../fonts/Quicksand-Bold.otf);
-}
-
-body, html {
-	width: 100%;
-	height: auto;
-	background-color: #ffffff;
-	padding: 0;
-	margin: 0;
-	font-family: Georgia;
-}
-
-@media screen{
-	.print_footer {
-		display: none;
-	}
-}
-
-@media print {
-    .page {
-		page-break-after: always;
-	}
-	.print_footer {
-		position: fixed;
-		bottom: 0;
-		font-size: 11px;
-		text-align: center;
-		width: 100%;
-		font-family: Quicksand;
-		font-weight: bold;
-	}
-}
-
-.page {
-	width: 100%;
-	page-break-after: always;
-}
-
-.header{
-	text-align: center;
-	border-bottom: 1px solid #000000;
-	font-family: Arial;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	width: 100%;
-	background-color: #ffffff;
-	color: #000000;
-	margin-bottom: 0;
-}
-
-.golden_streak{
-	margin-top: 0;
-	width: 100%;
-	height: 10px;
-	/* background-color: #977b1f;
-	background: -webkit-linear-gradient(left, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39);
-	background: -o-linear-gradient(right, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39);
-	background: -moz-linear-gradient(bright, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39);
-	background: linear-gradient(to right, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39);*/
-}
-
-.header2{
-	border-bottom: 1px solid #000000;
-	width: 100%;
-	padding: 0;
-}
-
-.header2 table{
-	width: 90%;
-	margin-left: 5%;
-	margin-right: 5%;
-	font-family: Quicksand;
-	font-size: 10px;
-}
-
-.header h1, .header h2, .header h3, .header h4, .header h5, .header h6{
-	padding: 0;
-	margin: 0;
-}
-
-.header br{
-	line-height: 70%;
-}
-
-.header h1{
-	color: #000000;
-	font-size: 25px;
-}
-
-.header h2{
-	color: #000000;
-	font-size: 20px;
-}
-
-.header h5{
-	font-style: italic;
-	font-size: 12px;
-}
-
-.header h6{
-	font-style: italic;
-	font-size: 9px;
-}
-
-#recipient_h{
-	font-family: Quicksand;
-}
-
-.logo{
-	float: left;
-	height: 120px;
-	margin-left: 5%;
-	margin-top: -3px;
-}
-/* .logo2{
-	float: right;
-	height: 120px;
-	margin-left: 5%;
-	margin-top: -3px;
-} */
-
-.result_table {
-	border-collapse: collapse;
-	width: 90%;
-	margin-left: 5%;
-	margin-right: 5%;
-	font-size: 10px;
-	font-family: Georgia;
-	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
-	background-repeat:no-repeat;
-	background-size: cover; 
-	object-fit: none;  
-	object-position: right top;  */
-}
-
-.result_table2 {
-	border-collapse: collapse;
-	width: 90%;
-	margin-left: 5%;
-	margin-right: 5%;
-	font-family: Quicksand;
-	font-size: 10px;
-	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
-	background-repeat:no-repeat;
-	background-size: cover; 
-	object-fit: none;  
-	object-position: right top;  */
-}
-
-.result_table th, .result_table td {
-	padding: 2px 2px 2px 2px;
-	font-weight: normal;
-	border: 1px solid #e5e5e5;
-}
-
-.result_table2 td {
-	padding: 0px 0px 0px 0px;
-	font-weight: normal;
-	border: 1px solid #e5e5e5;
-}
-
-.result_table th{
-	font-family: Arial;
-	padding: 5px 5px 5px 5px;
-	font-weight: bold;
-}
-
-caption{
-	text-align: left;
-	font-family: Arial;
-	font-size: 10px;
-	padding-top: 18px;
-	font-weight: bold;
-}
-
-.footer_{
-	width: 90%;
-	margin-left: 5%;
-	font-family: Georgia;
-	font-size: 12px;
-	font-style: italic;
-	margin-top: 25px;
-	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
-	background-repeat:no-repeat;
-	background-size: cover; 
-	object-fit: none;  
-	object-position: right top;  */
-}
-
-.footer_2{
-	width: 90%;
-	margin-left: 5%;
-	font-family: Arial;
-	font-size: 10px;
-	font-weight: bold;
-	margin-top: 50px;
-	text-align: center;
-	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
-	background-repeat:no-repeat;
-	background-size: cover; 
-	object-fit: none;  
-	object-position: right top;  */
-}
-
-.footer_3{
-	width: 90%;
-	margin-left: 5%;
-	font-family: Georgia;
-	font-size: 12px;
-	font-style: italic;
-	margin-top: 40px;
-	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
-	background-repeat:no-repeat;
-	background-size: cover; 
-	object-fit: none;  
-	object-position: right top;  */
-}
-
-.footer_4{
-	font-size: 12px;
-	font-family: Georgia;
-	font-style: italic;
-	padding: 35px;
-	text-align: center;
-	position: absolute;
-	right: 0;
-	left: 0;
-	bottom: 0;
-}
-
-#gold_div{
-	height: 20px;
-	width: 100%;
-	background-color: #977b1f; /* For browsers that do not support gradients */
-	background: -webkit-linear-gradient(left, #977b1f, #b99f39, #f4ec70); /* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(right, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39); /* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(bright, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39); /* For Firefox 3.6 to 15 */
-	background: linear-gradient(to right, #977b1f, #b99f39, #f4ec70, #977b1f, #b99f39); /* Standard syntax */
-	padding: 0;
-	margin: 0;
-}
-
-p{
-	margin-top: 20px;
-}
-/* background-image: repeating-radial-gradient(red, yellow 10%, blue 20%); */
-.page{
-	/* background-image: url("/www/wwwroot/trans/public/assets/images/metal_logo.png");
-	background-repeat:no-repeat;
-	background-size: cover; 
-	object-fit: none;  
-	object-position: right top;  */
-}
-
-
-
-  </style>
+    <title>Transcript</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0.8cm 0.5cm 0.5cm 0.5cm;
+        }
+        body, html {
+            width: 100%;
+            height: auto;
+            background-color: #ffffff;
+            padding: 0;
+            margin: 0;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 10px;
+            color: #1a1a1a;
+        }
+        body {
+            background-image: url("{{ public_path('assets/images/metal_logo.png') }}");
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .page {
+            width: 100%;
+            page-break-after: always;
+        }
+        .header {
+            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 8px 0 10px 0;
+            width: 100%;
+            border-bottom: 2px solid #1a3a6b;
+            margin-bottom: 0;
+        }
+        .header h1, .header h2, .header h3, .header h4, .header h5, .header h6, .header p {
+            padding: 0;
+            margin: 0;
+        }
+        .header h1 {
+            font-size: 22px;
+            color: #1a3a6b;
+            letter-spacing: 0.5px;
+        }
+        .header h2 {
+            font-size: 16px;
+            color: #1a3a6b;
+            margin-top: 2px;
+        }
+        .header h5 {
+            font-style: italic;
+            font-size: 10px;
+            color: #444;
+            font-weight: normal;
+        }
+        .header h6 {
+            font-style: italic;
+            font-size: 8px;
+            color: #777;
+            font-weight: normal;
+            margin-top: 3px;
+        }
+        #recipient_h {
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 4px;
+        }
+        .logo {
+            float: left;
+            height: 90px;
+            margin-left: 5%;
+            margin-top: 0;
+        }
+        .gold-accent {
+            width: 100%;
+            height: 3px;
+            background-color: #977b1f;
+            margin-bottom: 0;
+        }
+        .header2 {
+            border-bottom: 1px solid #999;
+            width: 100%;
+            padding: 6px 0;
+        }
+        .header2 table {
+            width: 90%;
+            margin-left: 5%;
+            margin-right: 5%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+        }
+        .header2 td {
+            padding: 2px 0;
+        }
+        .result_table {
+            border-collapse: collapse;
+            width: 90%;
+            margin-left: 5%;
+            margin-right: 5%;
+            font-size: 10px;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+        .result_table th, .result_table td {
+            padding: 3px 5px;
+            font-weight: normal;
+            border: 1px solid #ccc;
+        }
+        .result_table th {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            font-size: 9px;
+            background-color: #f0f3f7;
+            color: #1a3a6b;
+            padding: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .result_table2 {
+            border-collapse: collapse;
+            width: 90%;
+            margin-left: 5%;
+            margin-right: 5%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+        }
+        .result_table2 td {
+            padding: 3px 5px;
+            font-weight: normal;
+            border: 1px solid #ddd;
+        }
+        .result_table2 caption {
+            text-align: left;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            padding-top: 12px;
+            font-weight: bold;
+            color: #1a3a6b;
+        }
+        caption {
+            text-align: left;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            padding-top: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+        .semester-label {
+            border: none !important;
+            padding: 14px 5px 4px 0 !important;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        .summary-divider {
+            border-top: 1px dotted #999;
+            margin: 8px 5% 0 5%;
+        }
+        .footer_ {
+            width: 90%;
+            margin-left: 5%;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 11px;
+            font-style: italic;
+            margin-top: 20px;
+        }
+        .footer_3 {
+            width: 90%;
+            margin-left: 5%;
+            font-family: Georgia, 'Times New Roman', serif;
+            font-size: 11px;
+            font-style: italic;
+            margin-top: 30px;
+        }
+        .footer_4 {
+            font-size: 9px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            color: #888;
+            padding: 20px 5%;
+            border-top: 1px solid #ddd;
+            margin-top: 25px;
+        }
+        @media print {
+            .page {
+                page-break-after: always;
+            }
+        }
+    </style>
 </head>
-<body style="background-image: url('{{ public_path('assets/images/metal_logo.png') }}'); background-repeat: no-repeat; background-size: cover; object-fit: none; object-position: right top;">
-	{!! $data1 !!}
+<body>
+    {!! $data1 !!}
 </body>
 </html>

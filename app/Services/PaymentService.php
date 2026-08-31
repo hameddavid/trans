@@ -6,6 +6,8 @@ use App\Models\Payment;
 use App\Models\Payment4Degree;
 use App\Models\Applicant;
 use App\Enums\TranscriptDestination;
+use App\Enums\TranscriptType;
+use App\Models\PaymentItem;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 
@@ -16,25 +18,34 @@ class PaymentService
         $table = $mode === 'degree' ? 'degree_verification_payment_transaction' : 'payment_transaction';
         $userCol = $mode === 'degree' ? 'institution_email' : 'user_id';
 
-        $data = DB::table($table)->where([
+        $baseQuery = DB::table($table)->where([
             $userCol => $userId,
             'destination' => $destination,
             'gateway' => $gateway,
-            'status_code' => '025',
-            'status_msg' => 'pending',
         ]);
 
         if ($mode === 'transcript') {
-            $data = $data->where('matric_number', $matno);
+            $baseQuery = $baseQuery->where('matric_number', $matno);
         }
 
-        $pending = $data->first();
+        $pending = (clone $baseQuery)->where(['status_code' => '025', 'status_msg' => 'pending'])->first();
 
         if ($pending) {
             return [
                 'has_pending' => true,
                 'rrr' => $pending->rrr,
                 'order_id' => $pending->trans_ref,
+            ];
+        }
+
+        $unused = (clone $baseQuery)->where(['status_code' => '00', 'status_msg' => 'success'])->whereNull('app_id')->first();
+
+        if ($unused) {
+            return [
+                'has_pending' => true,
+                'is_paid' => true,
+                'rrr' => $unused->rrr,
+                'order_id' => $unused->trans_ref,
             ];
         }
 
@@ -72,8 +83,14 @@ class PaymentService
         return $model;
     }
 
-    public function getGatewayConfig(string $destination, string $gateway = 'REMITA', string $mode = 'transcript'): array
+    public function getGatewayConfig(string $destination, string $gateway = 'INTERSWITCH', string $mode = 'transcript'): array
     {
+        $orderID = $this->generateTransactionId();
+
+        if (strtoupper($gateway) === 'INTERSWITCH') {
+            return $this->getInterswitchConfig($destination, $orderID, $mode);
+        }
+
         $merchantId = config('remita.merchant_id');
         $apiKey = config('remita.api_key');
 
@@ -81,11 +98,117 @@ class PaymentService
         $serviceTypeId = $destEnum ? $destEnum->serviceTypeId() : config('remita.service_types.soft');
 
         return [
+            'gateway' => 'REMITA',
             'serviceTypeID' => $serviceTypeId,
             'merchantId' => $merchantId,
             'apiKey' => $apiKey,
-            'orderID' => $this->generateTransactionId(),
+            'orderID' => $orderID,
         ];
+    }
+
+    public function getInterswitchConfig(string $destination, string $orderID, string $mode = 'transcript'): array
+    {
+        $merchantCode = config('interswitch.merchant_code');
+        $destKey = strtolower($destination);
+        $payItemId = config("interswitch.pay_item_ids.{$destKey}") ?: config('interswitch.pay_item_id');
+
+        return [
+            'gateway' => 'INTERSWITCH',
+            'merchantCode' => $merchantCode,
+            'payItemId' => $payItemId,
+            'currencyCode' => config('interswitch.currency_code', '566'),
+            'paymentUrl' => config('interswitch.payment_url'),
+            'redirectUrl' => config('interswitch.redirect_url'),
+            'orderID' => $orderID,
+        ];
+    }
+
+    public function generateInterswitchHash(string $transRef, string $amount): string
+    {
+        $merchantCode = config('interswitch.merchant_code');
+        $payItemId = config('interswitch.pay_item_id');
+        $redirectUrl = config('interswitch.redirect_url');
+        $macKey = config('interswitch.mac_key');
+
+        return hash('sha512', $transRef . $merchantCode . $payItemId . $redirectUrl . $amount . $macKey);
+    }
+
+    public function generateInterswitchPaymentData(array $config, string $amount, Applicant $applicant): array
+    {
+        $transRef = $config['orderID'];
+        $amountInKobo = (string) ((int) $amount * 100);
+
+        $macKey = config('interswitch.mac_key');
+        $hash = hash('sha512', $transRef . $config['merchantCode'] . $config['payItemId'] . $config['redirectUrl'] . $amountInKobo . $macKey);
+
+        return [
+            'merchant_code' => $config['merchantCode'],
+            'pay_item_id' => $config['payItemId'],
+            'txn_ref' => $transRef,
+            'amount' => $amountInKobo,
+            'currency' => $config['currencyCode'],
+            'site_redirect_url' => $config['redirectUrl'],
+            'cust_name' => "{$applicant->surname} {$applicant->firstname}",
+            'cust_email' => $applicant->email,
+            'cust_id' => $applicant->matric_number,
+            'pay_item_name' => 'Transcript Request Payment',
+            'hash' => $hash,
+            'payment_url' => $config['paymentUrl'],
+            'mode' => config('interswitch.mode', 'LIVE'),
+        ];
+    }
+
+    public function verifyInterswitchTransaction(string $transRef, string $amount): array
+    {
+        $merchantCode = config('interswitch.merchant_code');
+        $amountInKobo = (string) ((int) $amount * 100);
+        $hash = $this->generateInterswitchHash($transRef, $amountInKobo);
+
+        $client = new Client();
+        $response = $client->request('GET', config('interswitch.query_url'), [
+            'query' => [
+                'merchantcode' => $merchantCode,
+                'transactionreference' => $transRef,
+                'amount' => $amountInKobo,
+            ],
+            'headers' => [
+                'Hash' => $hash,
+            ],
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+        $responseCode = $data['ResponseCode'] ?? '';
+
+        if ($responseCode === '00') {
+            $this->updatePaymentByTransRef($transRef, $data['PaymentReference'] ?? $transRef);
+            return ['success' => true, 'data' => $data];
+        }
+
+        return ['success' => false, 'pending' => true, 'data' => $data];
+    }
+
+    public function updatePaymentByTransRef(string $transRef, string $transactionId, string $mode = 'transcript'): array
+    {
+        $model = $mode === 'degree' ? Payment4Degree::class : Payment::class;
+        $payment = $model::where('trans_ref', $transRef)->first();
+
+        if (!$payment) {
+            throw new \RuntimeException('No matching transaction reference found.');
+        }
+
+        if ($payment->status_code === '00' && $payment->status_msg === 'success') {
+            return ['already_updated' => true];
+        }
+
+        if ($payment->status_code === '025') {
+            $payment->p_gateway_transaction_id = $transactionId;
+            $payment->status_code = '00';
+            $payment->status_msg = 'success';
+            $payment->save();
+            return ['success' => true];
+        }
+
+        return ['already_updated' => true];
     }
 
     public function generateRRR(array $config, string $amount, Applicant $applicant): array
@@ -152,7 +275,7 @@ class PaymentService
             return ['already_updated' => true];
         }
 
-        if ($payment->status_code === '025' && $payment->status_msg === 'pending') {
+        if ($payment->status_code === '025') {
             $payment->p_gateway_transaction_id = $transactionId;
             $payment->status_code = '00';
             $payment->status_msg = 'success';
@@ -182,53 +305,96 @@ class PaymentService
 
     public function processRemitaBankPayment(string $rawContent, string $mode = 'transcript'): array
     {
-        $data = $rawContent;
+        $json = $rawContent;
+        if (str_starts_with($json, 'jsonp')) {
+            $json = substr($json, strpos($json, '(') + 1, -1);
+        }
 
-        $getRRR = stristr($data, 'rrr');
-        $findComma = strpos($getRRR, ',');
-        $rrrString = substr($getRRR, 0, $findComma);
-        $rrrParts = explode('"', $rrrString);
-        $rrrValue = $rrrParts[2] ?? '';
+        $data = json_decode($json, true);
+        if (!$data) {
+            throw new \RuntimeException('Invalid Remita bank payment payload.');
+        }
 
-        $td = stristr($data, 'transactiondate');
-        $tdComma = strpos($td, ',');
-        $tdFinal = substr($td, 0, $tdComma);
-        $tdParts = explode('"', $tdFinal);
-        $tdValue = $tdParts[2] ?? '';
+        $rrrValue = $data['rrr'] ?? $data['RRR'] ?? '';
+        $tdValue = $data['transactiondate'] ?? $data['transactionDate'] ?? '';
 
-        $transactionId = "REMITABANK@{$tdValue}";
-        return $this->updatePayment($rrrValue, $transactionId, $mode);
+        if (!$rrrValue) {
+            throw new \RuntimeException('No RRR found in Remita bank payment payload.');
+        }
+
+        return $this->reQueryTransaction($rrrValue, $mode);
     }
 
     public function generateTransactionId(): string
     {
-        srand(time());
-        $txId = rand(0, 9)
-            . rand(0, 9)
-            . str_pad(idate('d'), 2, '0', STR_PAD_LEFT)
-            . rand(0, 9)
-            . str_pad(idate('H'), 2, '0', STR_PAD_LEFT)
-            . rand(0, 9)
-            . str_pad(idate('m'), 2, '0', STR_PAD_LEFT)
-            . rand(0, 9)
-            . str_pad(idate('s'), 2, '0', STR_PAD_LEFT);
-
-        return '14-' . $txId;
+        return '14-' . date('YmdHis') . strtoupper(\Illuminate\Support\Str::random(8));
     }
 
-    public function confirmAmount(string $amount, string $destination): bool
+    public function confirmAmount(string $amount, string $type): bool
     {
-        $destEnum = TranscriptDestination::tryFrom($destination);
-        if (!$destEnum) return false;
-        return (int) $amount === $destEnum->amount();
+        $typeEnum = TranscriptType::tryFrom($type);
+        if (!$typeEnum) return false;
+        return (int) $amount === $typeEnum->amount();
     }
 
     public function getDestinationsAndAmounts(): array
     {
-        return array_map(fn($dest) => [
+        $destinations = array_map(fn($dest) => [
             'id' => $dest->value,
             'name' => $dest->label(),
-            'amount' => (string) $dest->amount(),
         ], array_values(TranscriptDestination::transcriptDestinations()));
+
+        $pricing = array_map(fn($type) => [
+            'type' => $type->value,
+            'label' => $type->label(),
+            'amount' => (string) $type->amount(),
+        ], TranscriptType::cases());
+
+        return [
+            'destinations' => $destinations,
+            'pricing' => $pricing,
+        ];
+    }
+
+    public function verifyInterswitchWebhookSignature(string $payload, string $signature): bool
+    {
+        $secret = config('interswitch.webhook_secret');
+        if (!$secret || !$signature) {
+            return false;
+        }
+        $expected = hash_hmac('sha512', $payload, $secret);
+        return hash_equals($expected, $signature);
+    }
+
+    public function processInterswitchWebhook(array $data): array
+    {
+        $txnRef = $data['txnref'] ?? $data['transactionReference'] ?? $data['trans_ref'] ?? null;
+        if (!$txnRef) {
+            return ['status' => 'error', 'message' => 'No transaction reference in webhook'];
+        }
+
+        $payment = Payment::where('trans_ref', $txnRef)->first()
+            ?? Payment4Degree::where('trans_ref', $txnRef)->first();
+
+        if (!$payment) {
+            return ['status' => 'error', 'message' => 'Transaction not found'];
+        }
+
+        if ($payment->status_code === '00') {
+            return ['status' => 'success', 'message' => 'Already processed'];
+        }
+
+        $mode = $payment instanceof Payment4Degree ? 'degree' : 'transcript';
+        $amount = $payment->amount;
+
+        try {
+            $result = $this->verifyInterswitchTransaction($txnRef, $amount);
+            return $result['success']
+                ? ['status' => 'success', 'message' => 'Payment verified']
+                : ['status' => 'pending', 'message' => 'Payment not confirmed'];
+        } catch (\Exception $e) {
+            \Log::error('Interswitch webhook verification failed', ['txnRef' => $txnRef, 'error' => $e->getMessage()]);
+            return ['status' => 'error', 'message' => 'Verification failed'];
+        }
     }
 }

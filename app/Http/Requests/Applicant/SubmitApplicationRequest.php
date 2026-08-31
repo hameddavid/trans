@@ -18,8 +18,9 @@ class SubmitApplicationRequest extends FormRequest
             $rules['recipient_address'] = 'required|string';
             $rules['destination_id'] = 'required|string';
             $rules['delivery_mode'] = 'required|string';
+            $rules['recipient_email'] = 'nullable|email|required_if:delivery_mode,soft_copy';
             $rules['copies'] = 'sometimes|integer|min:1';
-            $rules['certificate'] = 'nullable|file|max:5120';
+            $rules['certificate'] = 'nullable|file|max:5120|mimes:pdf,jpg,jpeg,png';
         }
 
         return $rules;

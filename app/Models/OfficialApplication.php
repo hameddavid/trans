@@ -24,6 +24,9 @@ class OfficialApplication extends Model
         'class_of_degree', 'transcript_raw', 'recommended_by',
         'recommended_at', 'approved_by', 'approved_at', 'form_fields',
         'edit_token', 'complaint_sent_by', 'complaint_sent_at',
+        'courier_company', 'courier_contact', 'courier_tracking',
+        'courier_receipt_path', 'courier_status', 'courier_notes',
+        'courier_submitted_at',
     ];
 
     protected $casts = [

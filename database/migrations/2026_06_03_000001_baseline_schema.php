@@ -25,6 +25,7 @@ return new class extends Migration
                 $table->string('role')->default('200');
                 $table->string('account_status')->default('active');
                 $table->string('title')->nullable();
+                $table->string('staff_id')->nullable();
                 $table->rememberToken();
                 $table->timestamps();
             });
@@ -85,6 +86,13 @@ return new class extends Migration
                 $table->string('edit_token')->nullable();
                 $table->string('complaint_sent_by')->nullable();
                 $table->timestamp('complaint_sent_at')->nullable();
+                $table->string('courier_company')->nullable();
+                $table->string('courier_contact')->nullable();
+                $table->string('courier_tracking')->nullable();
+                $table->string('courier_receipt_path')->nullable();
+                $table->string('courier_status', 50)->nullable();
+                $table->text('courier_notes')->nullable();
+                $table->timestamp('courier_submitted_at')->nullable();
                 $table->timestamps();
             });
         }
@@ -396,6 +404,40 @@ return new class extends Migration
             });
         }
 
+        if (!Schema::hasTable('payment_items')) {
+            Schema::create('payment_items', function (Blueprint $table) {
+                $table->id();
+                $table->string('slug')->unique();
+                $table->string('label');
+                $table->decimal('amount', 12, 2)->default(0);
+                $table->boolean('is_active')->default(true);
+                $table->timestamps();
+            });
+        }
+
+        if (!Schema::hasTable('app_settings')) {
+            Schema::create('app_settings', function (Blueprint $table) {
+                $table->id();
+                $table->string('key')->unique();
+                $table->text('value')->nullable();
+                $table->string('group')->nullable()->index();
+                $table->timestamps();
+            });
+        }
+
+        if (!Schema::hasTable('admin_access_requests')) {
+            Schema::create('admin_access_requests', function (Blueprint $table) {
+                $table->id();
+                $table->string('email')->unique();
+                $table->string('staff_name')->nullable();
+                $table->string('title')->nullable();
+                $table->string('department')->nullable();
+                $table->string('staff_id')->nullable();
+                $table->string('status')->default('pending');
+                $table->timestamps();
+            });
+        }
+
         if (!Schema::hasTable('ug_course_with_pass_mark')) {
             Schema::create('ug_course_with_pass_mark', function (Blueprint $table) {
                 $table->id();
@@ -418,6 +460,9 @@ return new class extends Migration
         Schema::dropIfExists('degree_verification');
         Schema::dropIfExists('degree_verification_payment_transaction');
         Schema::dropIfExists('payment_transaction');
+        Schema::dropIfExists('admin_access_requests');
+        Schema::dropIfExists('app_settings');
+        Schema::dropIfExists('payment_items');
         Schema::dropIfExists('admin_applications');
         Schema::dropIfExists('student_applications');
         Schema::dropIfExists('official_applications');

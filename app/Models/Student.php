@@ -10,11 +10,20 @@ class Student extends Model
     use HasFactory;
     protected $table = 't_student_test';
 
+    protected $primaryKey = 'ID';
+
     public $timestamps = false;
 
     protected $fillable = [
         'matric_number', 'SURNAME', 'FIRSTNAME',
-        'EMAIL1', 'prog_code', 'status', 'sex', 'session_admitted',
+        'sex', 'BIRTH_DATE', 'ADDRESS', 'LGA',
+        'CURRENT_LEVEL', 'STATE_ORIGIN', 'COUNTRY',
+        'PROGRAMME', 'CITY_RESIDENT', 'STATE_RESIDENT',
+        'MATRIC_DATE', 'GRADUATION_DATE', 'status',
+        'LAST_UPDATED_BY', 'LAST_UPDATE_DATE', 'DELETED',
+        'EMAIL1', 'EMAIL2', 'STUDENT_PHONE', 'PARENT_PHONE',
+        'prog_code', 'PICTURE', 'NOTIFY_SMS',
+        'session_admitted', 'session_graduated',
     ];
 
     public function registrations()

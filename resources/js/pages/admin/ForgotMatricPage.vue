@@ -2,9 +2,15 @@
   <div>
     <h1 class="text-lg font-bold text-gray-900 mb-4">Forgot Matric Number Requests</h1>
 
-    <div class="flex space-x-4 mb-6">
-      <button @click="activeTab = 'pending'" :class="['px-4 py-2 rounded-lg text-sm font-medium', activeTab === 'pending' ? 'bg-run-blue text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200']">Pending</button>
-      <button @click="activeTab = 'treated'" :class="['px-4 py-2 rounded-lg text-sm font-medium', activeTab === 'treated' ? 'bg-run-blue text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200']">Treated</button>
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex space-x-4">
+        <button @click="activeTab = 'pending'" :class="['px-4 py-2 rounded-lg text-sm font-medium', activeTab === 'pending' ? 'bg-run-blue text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200']">Pending</button>
+        <button @click="activeTab = 'treated'" :class="['px-4 py-2 rounded-lg text-sm font-medium', activeTab === 'treated' ? 'bg-run-blue text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200']">Treated</button>
+      </div>
+      <div class="relative w-72">
+        <input v-model="searchQuery" type="text" placeholder="Search by name, email, phone..." class="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-gray-300 focus:ring-run-blue focus:border-run-blue" />
+        <svg class="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+      </div>
     </div>
 
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -98,14 +104,22 @@ const showModal = ref(false)
 const selectedItem = ref(null)
 const treating = ref(false)
 const treatForm = ref({ retrieve_matno: '' })
+const searchQuery = ref('')
 const pag = reactive({ currentPage: 1, lastPage: 1, total: 0, perPage: 15 })
 
 const rowNumber = (index) => (pag.currentPage - 1) * pag.perPage + index + 1
 
 const currentList = computed(() => {
-  return allItems.value.filter(r =>
+  const tabFiltered = allItems.value.filter(r =>
     activeTab.value === 'pending' ? r.status === 'PENDING' : r.status === 'TREATED'
   )
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return tabFiltered
+  return tabFiltered.filter(r => {
+    const haystack = [r.surname, r.firstname, r.othername, r.email, r.phone, r.program, r.matno_found]
+      .filter(Boolean).join(' ').toLowerCase()
+    return haystack.includes(q)
+  })
 })
 
 async function fetchData(page = 1, perPage) {

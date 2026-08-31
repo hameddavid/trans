@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Admin;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class AdminAuthTest extends TestCase
@@ -12,10 +13,23 @@ class AdminAuthTest extends TestCase
 
     public function test_admin_can_login_with_valid_credentials(): void
     {
-        $admin = Admin::factory()->create();
+        $admin = Admin::factory()->create(['email' => 'staff@run.edu.ng']);
+
+        Http::fake([
+            'staff.run.edu.ng/*' => Http::response([
+                'status' => 'ok',
+                'lastname' => $admin->surname,
+                'firstname' => $admin->firstname,
+                'middlename' => '',
+                'title' => 'Mr',
+                'designation' => 'Lecturer',
+                'dept' => 'Computer Science',
+                'userid' => 'STF001',
+            ], 200),
+        ]);
 
         $response = $this->postJson('/api/v1/admin/login', [
-            'email' => $admin->email,
+            'email' => 'staff@run.edu.ng',
             'password' => 'password',
         ]);
 
@@ -27,6 +41,12 @@ class AdminAuthTest extends TestCase
     {
         $admin = Admin::factory()->create();
 
+        Http::fake([
+            'staff.run.edu.ng/*' => Http::response([
+                'status' => 'failed',
+            ], 200),
+        ]);
+
         $response = $this->postJson('/api/v1/admin/login', [
             'email' => $admin->email,
             'password' => 'wrong-password',
@@ -37,43 +57,51 @@ class AdminAuthTest extends TestCase
 
     public function test_inactive_admin_cannot_login(): void
     {
-        $admin = Admin::factory()->inactive()->create();
+        $admin = Admin::factory()->inactive()->create(['email' => 'inactive@run.edu.ng']);
+
+        Http::fake([
+            'staff.run.edu.ng/*' => Http::response([
+                'status' => 'ok',
+                'lastname' => $admin->surname,
+                'firstname' => $admin->firstname,
+                'middlename' => '',
+                'title' => 'Mr',
+                'designation' => 'Lecturer',
+                'dept' => 'Computer Science',
+                'userid' => 'STF002',
+            ], 200),
+        ]);
 
         $response = $this->postJson('/api/v1/admin/login', [
-            'email' => $admin->email,
+            'email' => 'inactive@run.edu.ng',
             'password' => 'password',
         ]);
 
         $response->assertStatus(422);
     }
 
-    public function test_admin_can_register(): void
+    public function test_unregistered_staff_gets_access_request_logged(): void
     {
-        $response = $this->postJson('/api/v1/admin/register', [
-            'surname' => 'Test',
-            'firstname' => 'Admin',
-            'phone' => '08012345678',
-            'email' => 'newadmin@run.edu.ng',
-            'role' => '200',
+        Http::fake([
+            'staff.run.edu.ng/*' => Http::response([
+                'status' => 'ok',
+                'lastname' => 'Doe',
+                'firstname' => 'Jane',
+                'middlename' => '',
+                'title' => 'Mrs',
+                'designation' => 'Lecturer',
+                'dept' => 'Physics',
+                'userid' => 'STF099',
+            ], 200),
         ]);
 
-        $response->assertCreated()
-            ->assertJsonPath('status', 'success');
-
-        $this->assertDatabaseHas('admin', ['email' => 'newadmin@run.edu.ng']);
-    }
-
-    public function test_admin_register_rejects_invalid_role(): void
-    {
-        $response = $this->postJson('/api/v1/admin/register', [
-            'surname' => 'Test',
-            'firstname' => 'Admin',
-            'phone' => '08012345678',
-            'email' => 'bad@run.edu.ng',
-            'role' => '999',
+        $response = $this->postJson('/api/v1/admin/login', [
+            'email' => 'unknown@run.edu.ng',
+            'password' => 'password',
         ]);
 
         $response->assertStatus(422);
+        $this->assertDatabaseHas('admin_access_requests', ['email' => 'unknown@run.edu.ng']);
     }
 
     public function test_admin_can_get_profile(): void
@@ -96,7 +124,7 @@ class AdminAuthTest extends TestCase
         $response->assertUnauthorized();
     }
 
-    public function test_admin_can_reset_password(): void
+    public function test_admin_reset_password_is_disabled(): void
     {
         $admin = Admin::factory()->create();
         $token = $admin->createToken('admin-token')->plainTextToken;
@@ -107,8 +135,8 @@ class AdminAuthTest extends TestCase
             'password_confirmation' => 'newpassword123',
         ], ['Authorization' => "Bearer {$token}"]);
 
-        $response->assertOk()
-            ->assertJsonPath('status', 'success');
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['old_password']);
     }
 
     public function test_admin_can_logout(): void

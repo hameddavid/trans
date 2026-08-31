@@ -14,6 +14,14 @@ use App\Http\Controllers\Api\V1\Admin\ApplicantController;
 use App\Http\Controllers\Api\V1\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Api\V1\Admin\GeneratedTranscriptController;
 use App\Http\Controllers\Api\V1\Admin\ResultUploadController;
+use App\Http\Controllers\Api\V1\Admin\StudentImportController;
+use App\Http\Controllers\Api\V1\Admin\SignatoryController;
+use App\Http\Controllers\Api\V1\Admin\AdminUserController;
+use App\Http\Controllers\Api\V1\Admin\PaymentItemController;
+use App\Http\Controllers\Api\V1\Admin\AppSettingController;
+use App\Http\Controllers\Api\V1\Service\StudentStatusController;
+use App\Http\Controllers\Api\V1\Service\OutstandingController;
+use App\Http\Controllers\Api\V1\Service\OnlineCrudController;
 
 Route::prefix('v1')->group(function () {
 
@@ -25,6 +33,10 @@ Route::prefix('v1')->group(function () {
         Route::get('programme-list', [VerificationController::class, 'listProgrammes']);
         Route::get('destinations', [ApplicantApplicationController::class, 'getDestinationsAndAmounts']);
         Route::post('remita-notify', [ApplicantPaymentController::class, 'remitaNotification']);
+        Route::post('interswitch-callback', [ApplicantPaymentController::class, 'interswitchCallback']);
+        Route::get('transcript-download/{token}/{index}', [VerificationController::class, 'signedDownload'])
+            ->name('transcript.signed-download')
+            ->middleware('signed');
     });
 
     // Applicant auth (no auth required, rate-limited)
@@ -33,7 +45,7 @@ Route::prefix('v1')->group(function () {
         Route::post('login', [ApplicantAuthController::class, 'login']);
         Route::post('forgot-password', [ApplicantAuthController::class, 'forgotPassword'])->middleware('throttle:password-reset');
         Route::post('reset-password-with-token', [ApplicantAuthController::class, 'resetPasswordWithToken'])->middleware('throttle:password-reset');
-        Route::post('forgot-matric', [ApplicantAuthController::class, 'saveForgotMatricNumber']);
+        Route::post('forgot-matric', [ApplicantAuthController::class, 'saveForgotMatricNumber'])->middleware('throttle:forgot-matric');
 
         // Degree payment (institution pays, no applicant auth)
         Route::prefix('degree-payment')->group(function () {
@@ -58,8 +70,9 @@ Route::prefix('v1')->group(function () {
         Route::get('my-payments', [ApplicantApplicationController::class, 'myPayments']);
         Route::get('stats', [ApplicantApplicationController::class, 'stats']);
         Route::post('edit-application', [ApplicantApplicationController::class, 'editApplication']);
-        Route::post('submit-complaint', [ApplicantApplicationController::class, 'submitComplaint']);
+        Route::post('submit-complaint', [ApplicantApplicationController::class, 'submitComplaint'])->middleware('throttle:complaint');
         Route::get('my-complaints', [ApplicantApplicationController::class, 'myComplaints']);
+        Route::post('courier-submission', [ApplicantApplicationController::class, 'submitCourierDetails']);
 
         Route::prefix('payment')->group(function () {
             Route::post('initiate', [ApplicantPaymentController::class, 'initiatePayment']);
@@ -76,7 +89,6 @@ Route::prefix('v1')->group(function () {
     // Admin auth (no auth required, rate-limited)
     Route::prefix('admin')->middleware('throttle:auth')->group(function () {
         Route::post('login', [AdminAuthController::class, 'login']);
-        Route::post('register', [AdminAuthController::class, 'register']);
     });
 
     // Admin authenticated
@@ -107,6 +119,8 @@ Route::prefix('v1')->group(function () {
             Route::post('download-approved', [AdminApplicationController::class, 'downloadApproved']);
             Route::post('submit-admin-app', [AdminApplicationController::class, 'submitAdminApplication']);
             Route::post('download-admin-app', [AdminApplicationController::class, 'downloadAdminApplication']);
+            Route::post('courier-action', [AdminApplicationController::class, 'courierAction']);
+            Route::get('courier-receipt/{id}', [AdminApplicationController::class, 'viewCourierReceipt']);
         });
 
         Route::prefix('degree-verification')->group(function () {
@@ -123,6 +137,7 @@ Route::prefix('v1')->group(function () {
         Route::post('applicants/update', [ApplicantController::class, 'update']);
         Route::get('complaints', [ApplicantController::class, 'complaints']);
         Route::post('complaints/respond', [ApplicantController::class, 'respondToComplaint']);
+        Route::get('complaints/{complaint}/attachment', [ApplicantController::class, 'downloadComplaintAttachment']);
         Route::get('forgot-matric-requests', [ApplicantController::class, 'forgotMatricRequests']);
         Route::post('treat-forgot-matric', [ApplicantController::class, 'treatForgotMatric']);
         Route::get('payments', [AdminPaymentController::class, 'index']);
@@ -130,10 +145,100 @@ Route::prefix('v1')->group(function () {
 
         Route::prefix('results')->group(function () {
             Route::post('upload', [ResultUploadController::class, 'upload']);
+            Route::post('validate', [ResultUploadController::class, 'validateUpload']);
             Route::get('/', [ResultUploadController::class, 'index']);
             Route::get('sessions', [ResultUploadController::class, 'sessions']);
             Route::post('delete', [ResultUploadController::class, 'delete']);
             Route::post('update-matric', [ResultUploadController::class, 'updateMatric']);
+            Route::post('update-flag-waver', [ResultUploadController::class, 'updateFlagWaver']);
+            Route::post('import-courses', [ResultUploadController::class, 'importCourses']);
+        });
+
+        Route::prefix('students')->group(function () {
+            Route::post('import', [StudentImportController::class, 'import']);
+            Route::post('promote', [StudentImportController::class, 'promote']);
+        });
+
+        Route::get('app-settings', [AppSettingController::class, 'index']);
+        Route::post('app-settings', [AppSettingController::class, 'update']);
+
+        Route::prefix('payment-items')->group(function () {
+            Route::get('/', [PaymentItemController::class, 'index']);
+            Route::put('{paymentItem}', [PaymentItemController::class, 'update']);
+        });
+
+        Route::prefix('users')->group(function () {
+            Route::get('/', [AdminUserController::class, 'index']);
+            Route::post('/', [AdminUserController::class, 'store']);
+            Route::post('reset-all', [AdminUserController::class, 'resetAll']);
+            Route::post('bulk-action', [AdminUserController::class, 'bulkAction']);
+            Route::get('access-requests', [AdminUserController::class, 'accessRequests']);
+            Route::post('access-requests/{accessRequest}/approve', [AdminUserController::class, 'approveRequest']);
+            Route::post('access-requests/{accessRequest}/reject', [AdminUserController::class, 'rejectRequest']);
+            Route::post('{admin}/toggle-status', [AdminUserController::class, 'toggleStatus']);
+            Route::post('{admin}/role', [AdminUserController::class, 'updateRole']);
+            Route::delete('{admin}', [AdminUserController::class, 'destroy']);
+        });
+
+        Route::prefix('signatories')->group(function () {
+            Route::get('/', [SignatoryController::class, 'index']);
+            Route::post('/', [SignatoryController::class, 'store']);
+            Route::post('{signatory}/approve', [SignatoryController::class, 'approve']);
+            Route::post('{signatory}/reject', [SignatoryController::class, 'reject']);
+            Route::post('{signatory}/refresh-signature', [SignatoryController::class, 'refreshSignature']);
+            Route::delete('{signatory}', [SignatoryController::class, 'destroy']);
+        });
+    });
+
+    // Service-to-service (API key auth, no user session needed)
+    Route::prefix('service')->middleware('service.api_key')->group(function () {
+        Route::post('students/update-status', [StudentStatusController::class, 'updateStatus']);
+        Route::get('students/outstandings', [OutstandingController::class, 'getOutstandings']);
+
+        // CRUD for managing online tables from local result app
+        Route::prefix('students')->group(function () {
+            Route::get('/', [OnlineCrudController::class, 'listStudents']);
+            Route::get('{id}', [OnlineCrudController::class, 'showStudent']);
+            Route::post('/', [OnlineCrudController::class, 'createStudent']);
+            Route::post('bulk-status', [OnlineCrudController::class, 'bulkUpdateStudentStatus']);
+            Route::put('{id}', [OnlineCrudController::class, 'updateStudent']);
+            Route::delete('{id}', [OnlineCrudController::class, 'deleteStudent']);
+        });
+
+        Route::prefix('registrations')->group(function () {
+            Route::get('/', [OnlineCrudController::class, 'listRegistrations']);
+            Route::get('{id}', [OnlineCrudController::class, 'showRegistration']);
+            Route::post('/', [OnlineCrudController::class, 'createRegistration']);
+            Route::put('{id}', [OnlineCrudController::class, 'updateRegistration']);
+            Route::delete('{id}', [OnlineCrudController::class, 'deleteRegistration']);
+        });
+
+        Route::prefix('courses')->group(function () {
+            Route::get('/', [OnlineCrudController::class, 'listCourses']);
+            Route::post('/', [OnlineCrudController::class, 'createCourse']);
+            Route::put('{id}', [OnlineCrudController::class, 'updateCourse']);
+            Route::delete('{id}', [OnlineCrudController::class, 'deleteCourse']);
+        });
+
+        Route::prefix('departments')->group(function () {
+            Route::get('/', [OnlineCrudController::class, 'listDepartments']);
+            Route::post('/', [OnlineCrudController::class, 'createDepartment']);
+            Route::put('{id}', [OnlineCrudController::class, 'updateDepartment']);
+            Route::delete('{id}', [OnlineCrudController::class, 'deleteDepartment']);
+        });
+
+        Route::prefix('settings')->group(function () {
+            Route::get('/', [OnlineCrudController::class, 'listSettings']);
+            Route::post('/', [OnlineCrudController::class, 'createSetting']);
+            Route::put('{id}', [OnlineCrudController::class, 'updateSetting']);
+            Route::delete('{id}', [OnlineCrudController::class, 'deleteSetting']);
+        });
+
+        Route::prefix('pass-marks')->group(function () {
+            Route::get('/', [OnlineCrudController::class, 'listPassMarks']);
+            Route::post('/', [OnlineCrudController::class, 'createPassMark']);
+            Route::put('{id}', [OnlineCrudController::class, 'updatePassMark']);
+            Route::delete('{id}', [OnlineCrudController::class, 'deletePassMark']);
         });
     });
 });

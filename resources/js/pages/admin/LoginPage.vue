@@ -2,7 +2,7 @@
   <div>
     <div class="text-center mb-6">
       <h2 class="text-xl font-bold text-gray-900">Admin Portal</h2>
-      <p class="mt-1 text-sm text-gray-600">Sign in to the administration panel</p>
+      <p class="mt-1 text-sm text-gray-600">Sign in with your staff portal credentials</p>
     </div>
 
     <form @submit.prevent="handleSubmit" class="space-y-4">
@@ -14,7 +14,7 @@
               type="email"
               required
               autocomplete="email"
-              placeholder="admin@run.edu.ng"
+              placeholder="staff@run.edu.ng"
               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-run-dark focus:border-run-dark outline-none transition"
             />
           </div>
@@ -27,7 +27,7 @@
               type="password"
               required
               autocomplete="current-password"
-              placeholder="Enter your password"
+              placeholder="Staff portal password"
               class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-run-dark focus:border-run-dark outline-none transition"
             />
           </div>
@@ -49,9 +49,8 @@
           </button>
     </form>
 
-    <p class="mt-5 text-center text-sm text-gray-600">
-      Need an admin account?
-      <router-link :to="{ name: 'admin-register' }" class="text-run-dark font-medium hover:underline">Admin Registration</router-link>
+    <p class="mt-5 text-center text-xs text-gray-400">
+      Contact an existing administrator to set up your account.
     </p>
   </div>
 </template>

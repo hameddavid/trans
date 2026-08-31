@@ -22,6 +22,45 @@ class DashboardController extends Controller
             : 'MONTH(created_at)';
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/admin/dashboard",
+     *     operationId="adminDashboard",
+     *     tags={"Admin Dashboard"},
+     *     summary="Get dashboard statistics including services, revenue, charts, and recent activities",
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Dashboard data",
+     *         @OA\JsonContent(type="object",
+     *             @OA\Property(property="services", type="object",
+     *                 @OA\Property(property="officialTranscript", type="object",
+     *                     @OA\Property(property="label", type="string"),
+     *                     @OA\Property(property="total", type="integer"),
+     *                     @OA\Property(property="pending", type="integer"),
+     *                     @OA\Property(property="recommended", type="integer"),
+     *                     @OA\Property(property="approved", type="integer"),
+     *                     @OA\Property(property="failed", type="integer")
+     *                 ),
+     *                 @OA\Property(property="studentCopy", type="object"),
+     *                 @OA\Property(property="proficiency", type="object"),
+     *                 @OA\Property(property="degreeVerification", type="object"),
+     *                 @OA\Property(property="adminGenerated", type="object")
+     *             ),
+     *             @OA\Property(property="revenue", type="object",
+     *                 @OA\Property(property="transcript", type="string"),
+     *                 @OA\Property(property="degree", type="string"),
+     *                 @OA\Property(property="total", type="string")
+     *             ),
+     *             @OA\Property(property="charts", type="object",
+     *                 @OA\Property(property="monthlyLabels", type="array", @OA\Items(type="string")),
+     *                 @OA\Property(property="monthlySeries", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="statusDistribution", type="object")
+     *             ),
+     *             @OA\Property(property="recentActivities", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function index(Request $request)
     {
         $monthExpr = $this->monthExpression();
@@ -158,6 +197,22 @@ class DashboardController extends Controller
         ]);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/admin/transcript-activities",
+     *     operationId="adminTranscriptActivities",
+     *     tags={"Admin Dashboard"},
+     *     summary="Get monthly transcript activity counts (array of 12 integers)",
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Monthly activity counts",
+     *         @OA\JsonContent(type="array",
+     *             @OA\Items(type="integer"),
+     *             example={0, 5, 12, 8, 15, 20, 18, 22, 10, 7, 3, 1}
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function transcriptActivities()
     {
         $monthExpr = $this->monthExpression();
@@ -174,6 +229,24 @@ class DashboardController extends Controller
         return response()->json($data);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/v1/admin/transcript-locations",
+     *     operationId="adminTranscriptLocations",
+     *     tags={"Admin Dashboard"},
+     *     summary="Get transcript destination counts",
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(response=200, description="Destination counts",
+     *         @OA\JsonContent(type="array",
+     *             @OA\Items(type="object",
+     *                 @OA\Property(property="destination", type="string", example="USA"),
+     *                 @OA\Property(property="number", type="integer", example=42)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated")
+     * )
+     */
     public function transcriptLocations()
     {
         $locations = DB::table('official_applications')

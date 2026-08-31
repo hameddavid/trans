@@ -15,7 +15,7 @@ class Admin extends Authenticatable
     protected $table = 'admin';
 
     protected $fillable = [
-        'surname', 'firstname', 'othername', 'phone', 'email',
+        'staff_id', 'surname', 'firstname', 'othername', 'phone', 'email',
         'password', 'role', 'account_status', 'title',
     ];
 
@@ -32,6 +32,11 @@ class Admin extends Authenticatable
 
     public function isApprover(): bool
     {
-        return $this->role === AdminRole::APPROVER;
+        return $this->role === AdminRole::APPROVER || $this->role === AdminRole::SUPER_ADMIN;
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === AdminRole::SUPER_ADMIN;
     }
 }

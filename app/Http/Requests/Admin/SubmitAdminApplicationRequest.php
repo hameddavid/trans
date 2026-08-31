@@ -9,9 +9,9 @@ class SubmitAdminApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'matno' => 'required|string',
+            'matric_number' => 'required|string',
             'transcript_type' => 'required|string|in:OFFICIAL,STUDENT',
-            'recipient' => 'required|string',
+            'recipient' => 'nullable|string',
         ];
     }
 }

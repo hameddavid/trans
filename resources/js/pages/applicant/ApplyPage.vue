@@ -63,6 +63,7 @@
               <option value="">Select type</option>
               <option value="official">Official Transcript</option>
               <option value="student">Student's Copy</option>
+              <option value="proficiency">Proficiency Letter</option>
             </select>
           </div>
 
@@ -137,6 +138,18 @@
                 />
               </div>
 
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Attachment <span class="text-gray-400 font-normal">(optional)</span></label>
+                <input
+                  ref="complaintFileInput"
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                  @change="onComplaintFileChange"
+                  class="w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+                />
+                <p class="mt-1 text-xs text-gray-400">Max 5MB. Accepted: PDF, JPG, PNG, DOC, DOCX</p>
+              </div>
+
               <div v-if="complaintError" class="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">
                 {{ complaintError }}
               </div>
@@ -191,7 +204,7 @@
             >
               <option value="">Select destination</option>
               <option v-for="dest in destinations" :key="dest.id" :value="dest.id">
-                {{ dest.name }} &mdash; &#x20A6;{{ formatAmount(dest.amount) }}
+                {{ dest.name }}
               </option>
             </select>
             <p v-if="validationErrors.destinationId" class="text-red-600 text-xs mt-1">{{ validationErrors.destinationId }}</p>
@@ -211,6 +224,19 @@
               <option value="portal">Portal</option>
             </select>
             <p v-if="validationErrors.deliveryMode" class="text-red-600 text-xs mt-1">{{ validationErrors.deliveryMode }}</p>
+          </div>
+
+          <div v-if="form.deliveryMode === 'soft_copy'">
+            <label for="recipientEmail" class="block text-sm font-medium text-gray-700 mb-1">Recipient Email</label>
+            <input
+              id="recipientEmail"
+              v-model="form.recipientEmail"
+              type="email"
+              placeholder="Email address where transcript will be sent"
+              class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-run-blue focus:border-run-blue"
+            />
+            <p class="text-xs text-gray-400 mt-1">The transcript will be delivered to this email address.</p>
+            <p v-if="validationErrors.recipientEmail" class="text-red-600 text-xs mt-1">{{ validationErrors.recipientEmail }}</p>
           </div>
 
           <div>
@@ -329,17 +355,17 @@
         </div>
 
         <div v-else class="max-w-lg space-y-4">
-          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <p class="text-sm text-blue-800">
-              Your RRR is <span class="font-mono font-bold text-lg">{{ currentRRR }}</span>
+          <div :class="isPaidUnused ? 'bg-green-50 border-green-200' : 'bg-blue-50 border-blue-200'" class="border rounded-lg p-4">
+            <p :class="isPaidUnused ? 'text-green-800' : 'text-blue-800'" class="text-sm">
+              Your transaction reference is <span class="font-mono font-bold text-lg">{{ currentRRR }}</span>
             </p>
-            <p class="text-xs text-blue-600 mt-1">
-              {{ isPendingRRR ? 'You have a pending payment for this destination. Pay or re-query below.' : 'Click the button below to proceed to Remita\'s payment page.' }}
+            <p :class="isPaidUnused ? 'text-green-600' : 'text-blue-600'" class="text-xs mt-1">
+              {{ isPaidUnused ? 'Payment already confirmed! Click "Verify & Submit" below to submit your application.' : isPendingRRR ? 'You have a pending payment for this destination. Pay or re-query below.' : selectedGateway === 'interswitch' ? 'Payment initiated via Interswitch. Verify or re-query below.' : 'Click the button below to proceed to Remita\'s payment page.' }}
             </p>
           </div>
 
           <div class="flex flex-col gap-3">
-            <form ref="remitaForm" :action="paymentUrl" method="POST" target="_blank">
+            <form v-if="selectedGateway === 'remita'" ref="remitaForm" :action="paymentUrl" method="POST" target="_blank">
               <input type="hidden" name="rrr" :value="currentRRR" />
               <input type="hidden" name="merchantId" :value="remitaMerchantId" />
               <input type="hidden" name="hash" :value="remitaHash" />
@@ -410,10 +436,12 @@ import { useToast } from 'vue-toastification';
 import { useAuthStore } from '@/stores/auth';
 import { useApplicationStore } from '@/stores/application';
 import * as applicantApi from '@/api/applicantApi';
+import { useInterswitch } from '@/composables/useInterswitch';
 
 const toast = useToast();
 const authStore = useAuthStore();
 const applicationStore = useApplicationStore();
+const interswitch = useInterswitch();
 
 const steps = ['Check Availability', 'Application Details', 'Payment', 'Confirmation'];
 const currentStep = ref(1);
@@ -428,8 +456,11 @@ const paymentUrl = ref('');
 const remitaMerchantId = ref('');
 const remitaHash = ref('');
 const isPendingRRR = ref(false);
+const isPaidUnused = ref(false);
 const requerying = ref(false);
-const selectedGateway = ref('remita');
+const selectedGateway = ref('interswitch');
+const interswitchTxnRef = ref('');
+const interswitchAmount = ref('');
 const callbackUrl = computed(() => window.location.origin + '/applicant/apply?payment=callback');
 
 const paymentGateways = [
@@ -443,10 +474,9 @@ const paymentGateways = [
   {
     id: 'interswitch',
     name: 'Interswitch',
-    description: 'Coming soon',
+    description: 'Pay via Interswitch',
     iconBg: 'bg-blue-100',
     iconColor: 'text-blue-600',
-    disabled: true,
   },
 ];
 const validationErrors = reactive({});
@@ -454,6 +484,12 @@ const showComplaintModal = ref(false);
 const submittingComplaint = ref(false);
 const complaintError = ref('');
 const complaint = reactive({ subject: '', message: '' });
+const complaintFile = ref(null);
+const complaintFileInput = ref(null);
+
+function onComplaintFileChange(e) {
+  complaintFile.value = e.target.files[0] || null;
+}
 
 const form = reactive({
   matno: authStore.user?.matric_number || '',
@@ -462,6 +498,7 @@ const form = reactive({
   recipientAddress: '',
   destinationId: '',
   deliveryMode: '',
+  recipientEmail: '',
   copies: 1,
   certificate: null,
 });
@@ -474,12 +511,10 @@ const selectedDestination = computed(() => {
 });
 
 const paymentAmount = computed(() => {
-  if (form.applicationType === 'student') {
-    return applicationStore.studentCopyAmount || 12000;
-  }
-  const dest = selectedDestination.value;
-  if (!dest) return 0;
-  return (dest.amount || 0) * form.copies;
+  const typeMap = { official: 'OFFICIAL', student: 'STUDENT', proficiency: 'PROFICIENCY' };
+  const typeKey = typeMap[form.applicationType];
+  if (!typeKey) return 0;
+  return applicationStore.getTypeAmount(typeKey);
 });
 
 function formatAmount(amount) {
@@ -513,16 +548,25 @@ async function submitComplaint() {
   submittingComplaint.value = true;
   complaintError.value = '';
   try {
-    await applicantApi.submitComplaint({
-      subject: complaint.subject,
-      message: complaint.message,
-    });
+    const formData = new FormData();
+    formData.append('subject', complaint.subject);
+    formData.append('message', complaint.message);
+    if (complaintFile.value) {
+      formData.append('attachment', complaintFile.value);
+    }
+    await applicantApi.submitComplaint(formData);
     showComplaintModal.value = false;
     complaint.subject = '';
     complaint.message = '';
+    complaintFile.value = null;
+    if (complaintFileInput.value) complaintFileInput.value.value = '';
     toast.success('Your complaint has been submitted. The admin team will review it shortly.');
   } catch (e) {
-    complaintError.value = e.response?.data?.message || 'Failed to submit complaint. Please try again.';
+    if (e.response?.status === 429) {
+      complaintError.value = 'You have reached the maximum number of complaints allowed per day. Please try again tomorrow.';
+    } else {
+      complaintError.value = e.response?.data?.message || 'Failed to submit complaint. Please try again.';
+    }
   } finally {
     submittingComplaint.value = false;
   }
@@ -557,6 +601,14 @@ function validateStep2() {
     validationErrors.deliveryMode = 'Please select a delivery mode';
     valid = false;
   }
+  if (form.deliveryMode === 'soft_copy' && !form.recipientEmail.trim()) {
+    validationErrors.recipientEmail = 'Recipient email is required for soft copy delivery';
+    valid = false;
+  }
+  if (form.deliveryMode === 'soft_copy' && form.recipientEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.recipientEmail)) {
+    validationErrors.recipientEmail = 'Please enter a valid email address';
+    valid = false;
+  }
   return valid;
 }
 
@@ -581,8 +633,12 @@ function saveFormState() {
     recipientAddress: form.recipientAddress,
     destinationId: form.destinationId,
     deliveryMode: form.deliveryMode,
+    recipientEmail: form.recipientEmail,
     copies: form.copies,
     rrr: currentRRR.value,
+    gateway: selectedGateway.value,
+    interswitchAmount: interswitchAmount.value,
+    isPaidUnused: isPaidUnused.value,
   }));
 }
 
@@ -596,8 +652,12 @@ function restoreFormState() {
     form.recipientAddress = state.recipientAddress || '';
     form.destinationId = state.destinationId || '';
     form.deliveryMode = state.deliveryMode || '';
+    form.recipientEmail = state.recipientEmail || '';
     form.copies = state.copies || 1;
     if (state.rrr) currentRRR.value = state.rrr;
+    if (state.gateway) selectedGateway.value = state.gateway;
+    if (state.interswitchAmount) interswitchAmount.value = state.interswitchAmount;
+    if (state.isPaidUnused) isPaidUnused.value = true;
     return true;
   } catch { return false; }
 }
@@ -617,8 +677,9 @@ async function initiatePayment() {
 
   if (selectedGateway.value === 'remita') {
     await payWithRemita();
+  } else if (selectedGateway.value === 'interswitch') {
+    await payWithInterswitch();
   }
-  // Future gateways: else if (selectedGateway.value === 'interswitch') { ... }
 }
 
 async function payWithRemita() {
@@ -628,7 +689,8 @@ async function payWithRemita() {
     const destination = getDestination();
     const amount = String(paymentAmount.value);
 
-    const { data } = await applicantApi.initiatePayment({ destination, amount });
+    const type = form.applicationType.toUpperCase();
+    const { data } = await applicantApi.initiatePayment({ destination, amount, type });
     const result = data.data ?? data;
 
     currentRRR.value = result.rrr;
@@ -636,6 +698,11 @@ async function payWithRemita() {
     remitaMerchantId.value = result.merchant_id;
     remitaHash.value = result.hash;
     isPendingRRR.value = !!result.is_pending;
+    isPaidUnused.value = !!result.is_paid;
+
+    if (result.is_paid) {
+      toast.success('You have a successful payment that hasn\'t been used yet. Click "Verify & Submit" to submit your application.');
+    }
 
     saveFormState();
   } catch (e) {
@@ -645,15 +712,112 @@ async function payWithRemita() {
   }
 }
 
+async function payWithInterswitch() {
+  error.value = '';
+  processingPayment.value = true;
+  try {
+    const destination = getDestination();
+    const amount = String(paymentAmount.value);
+
+    const type = form.applicationType.toUpperCase();
+    const { data } = await applicantApi.initiatePayment({
+      destination,
+      amount,
+      type,
+      gateway: 'INTERSWITCH',
+    });
+    const result = data.data ?? data;
+
+    interswitchTxnRef.value = result.txn_ref;
+    interswitchAmount.value = amount;
+    currentRRR.value = result.txn_ref;
+    isPendingRRR.value = !!result.is_pending;
+    isPaidUnused.value = !!result.is_paid;
+    saveFormState();
+
+    if (result.is_paid) {
+      toast.success('You have a successful payment that hasn\'t been used yet. Click "Verify & Submit" to submit your application.');
+      return;
+    }
+
+    await interswitch.initiatePayment({
+      merchantCode: result.merchant_code,
+      payItemId: result.pay_item_id,
+      payItemName: result.pay_item_name,
+      txnRef: result.txn_ref,
+      amount: result.amount,
+      currency: result.currency,
+      redirectUrl: result.site_redirect_url,
+      custName: result.cust_name,
+      custEmail: result.cust_email,
+      custId: result.cust_id,
+      mode: result.mode,
+      onComplete: async (response) => {
+        toast.info('Payment completed. Verifying...');
+        try {
+          const { data: verifyData } = await applicantApi.verifyPayment({
+            txn_ref: result.txn_ref,
+            amount,
+            gateway: 'INTERSWITCH',
+          });
+
+          if (verifyData.status === 'success') {
+            toast.success('Payment verified successfully!');
+
+            const formData = new FormData();
+            formData.append('type', form.applicationType);
+            formData.append('rrr', result.txn_ref);
+
+            if (form.applicationType === 'official') {
+              formData.append('recipient_name', form.recipientName);
+              formData.append('recipient_address', form.recipientAddress);
+              formData.append('destination_id', form.destinationId);
+              formData.append('delivery_mode', form.deliveryMode);
+              if (form.deliveryMode === 'soft_copy' && form.recipientEmail) {
+                formData.append('recipient_email', form.recipientEmail);
+              }
+              formData.append('copies', form.copies);
+            }
+
+            if (form.certificate) {
+              formData.append('certificate', form.certificate);
+            }
+
+            const submitResult = await applicationStore.submitApplication(formData);
+            applicationRef.value = submitResult.data?.reference || submitResult.reference || result.txn_ref;
+            clearFormState();
+            currentStep.value = 4;
+          } else {
+            toast.warning('Payment is still pending. You can re-query later.');
+          }
+        } catch (e) {
+          error.value = e.response?.data?.message || 'Payment verification failed. Please re-query.';
+        }
+      },
+      onClose: () => {
+        toast.info('Payment window closed. If you completed payment, click "Re-query Transaction".');
+      },
+    });
+  } catch (e) {
+    error.value = e.response?.data?.message || 'Failed to initiate Interswitch payment. Please try again.';
+  } finally {
+    processingPayment.value = false;
+  }
+}
+
 async function requeryOnly() {
   requerying.value = true;
   try {
-    const { data } = await applicantApi.verifyPayment({ rrr: currentRRR.value });
+    const params = selectedGateway.value === 'interswitch'
+      ? { txn_ref: currentRRR.value, amount: interswitchAmount.value, gateway: 'INTERSWITCH' }
+      : { rrr: currentRRR.value };
+    const { data } = await applicantApi.verifyPayment(params);
     if (data.status === 'success') {
       toast.success('Payment verified successfully! You can now submit your application.');
       isPendingRRR.value = false;
+      isPaidUnused.value = true;
     } else {
-      toast.warning('Payment is still pending. Please complete payment on Remita first.');
+      toast.warning('Payment is still pending. Please complete payment first.');
     }
   } catch (e) {
     toast.error(e.response?.data?.message || 'Failed to verify payment. Try again later.');
@@ -666,10 +830,13 @@ async function verifyAndSubmit() {
   error.value = '';
   verifyingPayment.value = true;
   try {
-    const { data: verifyResult } = await applicantApi.verifyPayment({ rrr: currentRRR.value });
+    const verifyParams = selectedGateway.value === 'interswitch'
+      ? { txn_ref: currentRRR.value, amount: interswitchAmount.value, gateway: 'INTERSWITCH' }
+      : { rrr: currentRRR.value };
+    const { data: verifyResult } = await applicantApi.verifyPayment(verifyParams);
 
     if (verifyResult.status === 'pending') {
-      error.value = 'Payment has not been confirmed yet. Please complete payment on Remita first, then try again.';
+      error.value = 'Payment has not been confirmed yet. Please complete payment first, then try again.';
       return;
     }
 
@@ -682,6 +849,9 @@ async function verifyAndSubmit() {
       formData.append('recipient_address', form.recipientAddress);
       formData.append('destination_id', form.destinationId);
       formData.append('delivery_mode', form.deliveryMode);
+      if (form.deliveryMode === 'soft_copy' && form.recipientEmail) {
+        formData.append('recipient_email', form.recipientEmail);
+      }
       formData.append('copies', form.copies);
     }
 
@@ -705,15 +875,17 @@ onMounted(async () => {
 
   const params = new URLSearchParams(window.location.search);
   const rrrFromUrl = params.get('RRR') || params.get('rrr');
+  const txnRefFromUrl = params.get('txnref') || params.get('txn_ref');
+  const refFromUrl = rrrFromUrl || txnRefFromUrl;
 
-  if (rrrFromUrl) {
+  if (refFromUrl) {
     const restored = restoreFormState();
     if (restored) {
-      currentRRR.value = rrrFromUrl;
+      currentRRR.value = refFromUrl;
       currentStep.value = 3;
 
-      const status = params.get('status') || '';
-      if (status.toLowerCase().includes('successful') || status.toLowerCase().includes('approved')) {
+      const status = params.get('status') || params.get('resp') || '';
+      if (status.toLowerCase().includes('successful') || status.toLowerCase().includes('approved') || status === '00') {
         verifyingPayment.value = true;
         try {
           await verifyAndSubmit();

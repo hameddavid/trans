@@ -13,6 +13,7 @@ class SubmitComplaintRequest extends FormRequest
         return [
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:5000',
+            'attachment' => 'nullable|file|max:5120|mimes:pdf,jpg,jpeg,png,doc,docx',
         ];
     }
 }

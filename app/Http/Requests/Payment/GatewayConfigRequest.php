@@ -10,6 +10,7 @@ class GatewayConfigRequest extends FormRequest
     {
         return [
             'destination' => 'required|string',
+            'gateway' => 'sometimes|string|in:INTERSWITCH,REMITA,interswitch,remita',
         ];
     }
 }

@@ -257,6 +257,59 @@ class ResultUploadService
         }
     }
 
+    public function updateFlagWaver(array $updates): array
+    {
+        $updated = 0;
+        $skipped = [];
+
+        foreach (array_chunk($updates, self::CHUNK_SIZE) as $chunk) {
+            foreach ($chunk as $row) {
+                $matric = $row['matric_number'] ?? '';
+                $sessionId = $row['session_id'] ?? '';
+                $semester = $row['semester'] ?? null;
+                $courseCode = $row['course_code'] ?? null;
+                $flagValue = (bool) ($row['flag_waver'] ?? false);
+
+                if (!$matric || !$sessionId) {
+                    $skipped[] = [
+                        'matric_number' => $matric,
+                        'reason' => 'Missing matric_number or session_id',
+                    ];
+                    continue;
+                }
+
+                $query = DB::table('registrations')
+                    ->where('matric_number', $matric)
+                    ->where('session_id', $sessionId);
+
+                if ($semester !== null && $semester !== '') {
+                    $query->where('semester', $semester);
+                }
+                if ($courseCode !== null && $courseCode !== '') {
+                    $query->where('course_code', $courseCode);
+                }
+
+                $count = $query->update(['flag_waver' => $flagValue]);
+
+                if ($count > 0) {
+                    $updated += $count;
+                } else {
+                    $skipped[] = [
+                        'matric_number' => $matric,
+                        'session_id' => $sessionId,
+                        'reason' => 'No matching registrations found',
+                    ];
+                }
+            }
+        }
+
+        return [
+            'updated' => $updated,
+            'skipped_count' => count($skipped),
+            'skipped' => array_slice($skipped, 0, 50),
+        ];
+    }
+
     public function deleteResult(string $session, int $semester, string $matricNumber, string $courseCode): bool
     {
         return DB::table('registrations')

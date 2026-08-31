@@ -15,25 +15,8 @@ enum TranscriptDestination: string
     case DEGREE = 'DEGREE';
     case SOFT = 'SOFT';
 
-    public function amount(): int
-    {
-        return match($this) {
-            self::WES => 12000,
-            self::NIGERIA => 12000,
-            self::SOFT => 12000,
-            self::AFRICA => 20000,
-            self::AMERICA => 25000,
-            self::ASIA => 25000,
-            self::AUSTRALIA => 25000,
-            self::EUROPE => 25000,
-            self::CANADA => 25000,
-            self::DEGREE => 5000,
-        };
-    }
-
     public function serviceTypeId(): string
     {
-        // TODO: Replace with per-destination service type IDs once Remita activates them
         return config('remita.service_types.wes', '9928138149');
     }
 
@@ -51,12 +34,6 @@ enum TranscriptDestination: string
             self::DEGREE => 'Degree Verification',
             self::SOFT => 'Soft Copy',
         };
-    }
-
-    public function description(): string
-    {
-        $amount = number_format($this->amount());
-        return "{$this->label()} (₦{$amount})";
     }
 
     public static function transcriptDestinations(): array

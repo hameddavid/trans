@@ -83,22 +83,65 @@
             <p class="text-gray-800 bg-gray-50 rounded-lg p-3 whitespace-pre-wrap">{{ selected.message }}</p>
           </div>
 
+          <div v-if="selected.attachment">
+            <p class="text-gray-500 mb-1">Attachment:</p>
+            <button @click="downloadAttachment(selected)" class="inline-flex items-center gap-1.5 text-sm text-run-blue hover:underline font-medium">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+              Download Attachment
+            </button>
+          </div>
+
           <div v-if="selected.status === 'RESOLVED'" class="border-t pt-3 mt-3">
             <p class="text-gray-500 mb-1">Admin Response:</p>
             <p class="text-gray-800 bg-green-50 rounded-lg p-3 whitespace-pre-wrap">{{ selected.admin_response }}</p>
             <p class="text-xs text-gray-400 mt-2">Responded by {{ selected.responded_by }} on {{ formatDate(selected.responded_at) }}</p>
           </div>
 
-          <div v-else class="border-t pt-3 mt-3">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Your Response</label>
-            <textarea
-              v-model="responseText"
-              rows="4"
-              class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-run-blue focus:border-run-blue"
-              placeholder="Type your response to the student..."
-            />
-            <div v-if="responseError" class="mt-2 text-sm text-red-600">{{ responseError }}</div>
-            <div class="flex justify-end gap-3 mt-3">
+          <div v-else class="border-t pt-3 mt-3 space-y-3">
+            <div>
+              <button @click="showEditFields = !showEditFields" class="text-sm font-medium text-run-blue hover:underline flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                {{ showEditFields ? 'Hide' : 'Edit' }} Student Details
+              </button>
+            </div>
+
+            <div v-if="showEditFields" class="bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2">
+              <p class="text-xs text-blue-600 font-medium mb-2">Update student record (changes are optional)</p>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-[11px] font-medium text-gray-600 mb-0.5">Surname</label>
+                  <input v-model="editFields.surname" type="text" class="w-full text-sm rounded-md border-gray-300 focus:ring-run-blue focus:border-run-blue" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-medium text-gray-600 mb-0.5">First Name</label>
+                  <input v-model="editFields.firstname" type="text" class="w-full text-sm rounded-md border-gray-300 focus:ring-run-blue focus:border-run-blue" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-medium text-gray-600 mb-0.5">Email</label>
+                  <input v-model="editFields.email" type="email" class="w-full text-sm rounded-md border-gray-300 focus:ring-run-blue focus:border-run-blue" />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-medium text-gray-600 mb-0.5">Phone</label>
+                  <input v-model="editFields.mobile" type="text" class="w-full text-sm rounded-md border-gray-300 focus:ring-run-blue focus:border-run-blue" />
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-[11px] font-medium text-gray-600 mb-0.5">Matric Number</label>
+                  <input v-model="editFields.matric_number" type="text" class="w-full text-sm rounded-md border-gray-300 focus:ring-run-blue focus:border-run-blue" />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Your Response</label>
+              <textarea
+                v-model="responseText"
+                rows="4"
+                class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-run-blue focus:border-run-blue"
+                placeholder="Type your response to the student..."
+              />
+            </div>
+            <div v-if="responseError" class="text-sm text-red-600">{{ responseError }}</div>
+            <div class="flex justify-end gap-3">
               <button @click="selected = null" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
               <button @click="submitResponse" :disabled="responding || !responseText" class="px-4 py-2 text-sm font-medium text-white bg-run-blue rounded-lg hover:bg-run-blue/90 disabled:opacity-50">
                 {{ responding ? 'Sending...' : 'Send Response' }}
@@ -124,6 +167,8 @@ const selected = ref(null)
 const responseText = ref('')
 const responding = ref(false)
 const responseError = ref('')
+const showEditFields = ref(false)
+const editFields = reactive({ surname: '', firstname: '', email: '', mobile: '', matric_number: '' })
 const pag = reactive({ currentPage: 1, lastPage: 1, total: 0, perPage: 15 })
 
 const rowNumber = (index) => (pag.currentPage - 1) * pag.perPage + index + 1
@@ -137,17 +182,55 @@ function openComplaint(c) {
   selected.value = c
   responseText.value = ''
   responseError.value = ''
+  showEditFields.value = false
+  const a = c.applicant || {}
+  editFields.surname = a.surname || ''
+  editFields.firstname = a.firstname || ''
+  editFields.email = a.email || ''
+  editFields.mobile = a.mobile || ''
+  editFields.matric_number = c.matric_number || ''
+}
+
+async function downloadAttachment(c) {
+  try {
+    const res = await adminApi.downloadComplaintAttachment(c.id)
+    const disposition = res.headers['content-disposition'] || ''
+    const match = disposition.match(/filename="?(.+?)"?$/i)
+    const filename = match ? match[1] : c.attachment.split('/').pop()
+    const url = window.URL.createObjectURL(new Blob([res.data]))
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    window.URL.revokeObjectURL(url)
+    a.remove()
+  } catch (e) {
+    toast.error('Failed to download attachment.')
+  }
 }
 
 async function submitResponse() {
   responding.value = true
   responseError.value = ''
   try {
-    await adminApi.respondToComplaint({ id: selected.value.id, admin_response: responseText.value })
+    const payload = { id: selected.value.id, admin_response: responseText.value }
+    if (showEditFields.value) {
+      const a = selected.value.applicant || {}
+      const changed = {}
+      if (editFields.surname && editFields.surname !== (a.surname || '')) changed.surname = editFields.surname
+      if (editFields.firstname && editFields.firstname !== (a.firstname || '')) changed.firstname = editFields.firstname
+      if (editFields.email && editFields.email !== (a.email || '')) changed.email = editFields.email
+      if (editFields.mobile !== (a.mobile || '')) changed.mobile = editFields.mobile
+      if (editFields.matric_number && editFields.matric_number !== (selected.value.matric_number || '')) changed.matric_number = editFields.matric_number
+      if (Object.keys(changed).length) payload.update_fields = changed
+    }
+    await adminApi.respondToComplaint(payload)
     selected.value.status = 'RESOLVED'
     selected.value.admin_response = responseText.value
     toast.success('Response sent and applicant notified by email.')
     selected.value = null
+    await fetchData(pag.currentPage)
   } catch (e) {
     responseError.value = e.response?.data?.message || 'Failed to send response.'
   } finally {

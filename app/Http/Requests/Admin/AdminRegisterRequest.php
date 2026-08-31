@@ -9,13 +9,8 @@ class AdminRegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'surname' => 'required|string',
-            'firstname' => 'required|string',
-            'othername' => 'sometimes|string',
-            'phone' => 'required|string',
             'email' => 'required|email|unique:admin,email',
-            'title' => 'sometimes|string',
-            'role' => 'required|string|in:200,300',
+            'role' => 'required|string|in:200,300,400',
         ];
     }
 }

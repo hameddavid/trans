@@ -28,6 +28,11 @@ class Kernel extends ConsoleKernel
             ->everyMinute()
             ->withoutOverlapping()
             ->runInBackground();
+
+        $schedule->command('transcripts:cleanup')
+            ->daily()
+            ->at('02:00')
+            ->withoutOverlapping();
     }
 
     /**

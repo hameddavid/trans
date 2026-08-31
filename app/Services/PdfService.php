@@ -7,10 +7,13 @@ use PDF;
 
 class PdfService
 {
+    public function __construct(protected SignatoryService $signatoryService) {}
+
     public function generateCoverLetter(object $application, string $deliveryMode = 'hard'): string
     {
         $view = strtoupper($deliveryMode) === 'SOFT' ? 'cover_letter_soft' : 'cover_letter';
-        $pdf = PDF::loadView($view, ['data' => $application]);
+        $signatory = $this->signatoryService->getSignatory('cover_letter');
+        $pdf = PDF::loadView($view, ['data' => $application, 'signatory' => $signatory]);
         $path = $application->used_token . '_cover.pdf';
         File::put($path, $pdf->output());
         return $path;
@@ -47,7 +50,8 @@ class PdfService
 
     public function generateAdminCoverLetter(object $application, object $student, int $appId): string
     {
-        $pdf = PDF::loadView('cover_letter_admin', ['data1' => $application, 'data2' => $student]);
+        $signatory = $this->signatoryService->getSignatory('cover_letter');
+        $pdf = PDF::loadView('cover_letter_admin', ['data1' => $application, 'data2' => $student, 'signatory' => $signatory]);
         $filename = "{$student->SURNAME}_{$student->FIRSTNAME}@{$appId}_cover.pdf";
         $path = storage_path("app/{$filename}");
         File::put($path, $pdf->output());
@@ -56,7 +60,8 @@ class PdfService
 
     public function generateProficiencyLetter(object $application): string
     {
-        $pdf = PDF::loadView('proficiency_letter', ['data' => $application]);
+        $signatory = $this->signatoryService->getSignatory('proficiency');
+        $pdf = PDF::loadView('proficiency_letter', ['data' => $application, 'signatory' => $signatory]);
         $path = $application->file_path . '.pdf';
         File::put($path, $pdf->output());
         return $path;
@@ -64,7 +69,8 @@ class PdfService
 
     public function generateVerificationDocument(object $verification): string
     {
-        $pdf = PDF::loadView('verification', ['data' => $verification]);
+        $signatory = $this->signatoryService->getSignatory('cover_letter');
+        $pdf = PDF::loadView('verification', ['data' => $verification, 'signatory' => $signatory]);
         $path = $verification->id . '.pdf';
         File::put($path, $pdf->output());
         return $path;

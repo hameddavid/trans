@@ -47,6 +47,9 @@
           <SidebarLink :to="{ name: 'admin-payments' }" label="Payments" :icon="CogIcon" @click="sidebarOpen = false" />
           <SidebarLink :to="{ name: 'admin-generated-transcripts' }" label="Generated Transcripts" :icon="CogIcon" @click="sidebarOpen = false" />
           <SidebarLink :to="{ name: 'admin-forgot-matric' }" label="Forgot Matric" :icon="CogIcon" @click="sidebarOpen = false" />
+          <SidebarLink :to="{ name: 'admin-signatories' }" label="Signatories" :icon="PencilSquareIcon" @click="sidebarOpen = false" />
+          <SidebarLink v-if="adminAuthStore.isSuperAdmin" :to="{ name: 'admin-users' }" label="Admin Users" :icon="UsersIcon" @click="sidebarOpen = false" />
+          <SidebarLink v-if="adminAuthStore.isApprover || adminAuthStore.isSuperAdmin" :to="{ name: 'admin-pricing' }" label="Pricing" :icon="CurrencyDollarIcon" @click="sidebarOpen = false" />
         </SidebarGroup>
 
         <SidebarLink :to="{ name: 'admin-generate-transcript' }" label="Generate Transcript" :icon="DocumentArrowDownIcon" @click="sidebarOpen = false" />
@@ -75,7 +78,7 @@
         <div class="flex items-center space-x-2">
           <span class="text-xs text-gray-600 hidden sm:inline">{{ adminAuthStore.fullName || 'Admin' }}</span>
           <span class="text-[10px] bg-run-blue/10 text-run-blue px-1.5 py-0.5 rounded-full font-medium">
-            {{ adminAuthStore.isApprover ? 'Approver' : adminAuthStore.isRecommender ? 'Recommender' : 'Admin' }}
+            {{ adminAuthStore.isSuperAdmin ? 'Super Admin' : adminAuthStore.isApprover ? 'Approver' : adminAuthStore.isRecommender ? 'Recommender' : 'Admin' }}
           </span>
           <button
             @click="handleLogout"
@@ -109,6 +112,9 @@ import {
   DocumentArrowDownIcon,
   ArrowLeftOnRectangleIcon,
   ExclamationTriangleIcon,
+  PencilSquareIcon,
+  UsersIcon,
+  CurrencyDollarIcon,
   Bars3Icon,
 } from '@heroicons/vue/24/outline';
 import SidebarLink from '@/components/admin/SidebarLink.vue';

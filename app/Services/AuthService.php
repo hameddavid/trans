@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Models\Admin;
+use App\Models\AdminAccessRequest;
 use App\Models\Applicant;
 use App\Models\ForgotMatno;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -64,34 +66,104 @@ class AuthService
 
     public function loginAdmin(string $email, string $password): array
     {
+        $staffData = $this->authenticateViaStaffPortal($email, $password);
+
         $admin = Admin::where('email', $email)->first();
-        if (!$admin || !Hash::check($password, $admin->password)) {
-            throw ValidationException::withMessages(['email' => 'Invalid email or password.']);
+
+        if (!$admin) {
+            AdminAccessRequest::updateOrCreate(
+                ['email' => $email],
+                [
+                    'staff_name' => trim(($staffData['title'] ?? '') . ' ' . ($staffData['firstname'] ?? '') . ' ' . ($staffData['lastname'] ?? '')),
+                    'title' => $staffData['designation'] ?? '',
+                    'department' => $staffData['dept'] ?? '',
+                    'staff_id' => $staffData['userid'] ?? null,
+                    'status' => 'pending',
+                ]
+            );
+
+            throw ValidationException::withMessages([
+                'email' => 'Your access request has been sent to the administrator for approval.',
+            ]);
         }
 
         if ($admin->account_status !== 'ACTIVE') {
             throw ValidationException::withMessages(['email' => 'Account is not active.']);
         }
 
+        $admin->update([
+            'surname' => $staffData['lastname'] ?? $admin->surname,
+            'firstname' => $staffData['firstname'] ?? $admin->firstname,
+            'othername' => $staffData['middlename'] ?? $admin->othername,
+            'title' => $staffData['title'] ?? $admin->title,
+            'staff_id' => $staffData['userid'] ?? $admin->staff_id,
+        ]);
+
         $token = $admin->createToken('admin-token')->plainTextToken;
 
         return [
             'token' => $token,
-            'admin' => $admin,
+            'admin' => $admin->fresh(),
         ];
+    }
+
+    protected function authenticateViaStaffPortal(string $email, string $password): array
+    {
+        try {
+            $response = Http::withoutVerifying()
+                ->timeout(15)
+                ->acceptJson()
+                ->post('https://staff.run.edu.ng/apis/staff/authenticate_staff', [
+                    'email' => $email,
+                    'password' => $password,
+                ]);
+        } catch (\Exception $e) {
+            \Log::error('Staff portal authentication failed', ['error' => $e->getMessage()]);
+            throw ValidationException::withMessages([
+                'email' => 'Unable to reach the staff portal. Please try again later.',
+            ]);
+        }
+
+        if (!$response->successful() || ($response->json('status') ?? '') !== 'ok') {
+            throw ValidationException::withMessages(['email' => 'Invalid email or password.']);
+        }
+
+        return $response->json();
+    }
+
+    public function fetchStaffByEmail(string $email): ?array
+    {
+        try {
+            $response = Http::withoutVerifying()
+                ->timeout(10)
+                ->get('https://staff.run.edu.ng/apis/staff/get_staff_given_email', [
+                    'staff_email' => $email,
+                ]);
+
+            if ($response->successful() && ($response->json('status') ?? '') === 'ok') {
+                return $response->json();
+            }
+        } catch (\Exception $e) {
+            \Log::error('Staff portal lookup failed', ['email' => $email, 'error' => $e->getMessage()]);
+        }
+
+        return null;
     }
 
     public function registerAdmin(array $data): Admin
     {
+        $staffData = $this->fetchStaffByEmail($data['email']);
+
         return Admin::create([
-            'surname' => $data['surname'],
-            'firstname' => $data['firstname'],
-            'othername' => $data['othername'] ?? '',
-            'phone' => $data['phone'],
+            'surname' => $staffData['lastname'] ?? $data['surname'] ?? '',
+            'firstname' => $staffData['firstname'] ?? $data['firstname'] ?? '',
+            'othername' => $staffData['middlename'] ?? $data['othername'] ?? '',
+            'phone' => $data['phone'] ?? '',
             'email' => $data['email'],
-            'title' => $data['title'] ?? '',
+            'title' => $staffData['title'] ?? $data['title'] ?? '',
+            'staff_id' => $staffData['userid'] ?? null,
             'role' => $data['role'],
-            'password' => Hash::make($data['password'] ?? 'default123'),
+            'password' => Hash::make(Str::random(32)),
             'account_status' => 'ACTIVE',
         ]);
     }
@@ -107,11 +179,9 @@ class AuthService
 
     public function resetAdminPassword(Admin $admin, string $oldPassword, string $newPassword): void
     {
-        if (!Hash::check($oldPassword, $admin->password)) {
-            throw ValidationException::withMessages(['old_password' => 'Current password is incorrect.']);
-        }
-
-        $admin->update(['password' => Hash::make($newPassword)]);
+        throw ValidationException::withMessages([
+            'old_password' => 'Password changes are managed through the staff portal (staff.run.edu.ng).',
+        ]);
     }
 
     public function forgotApplicantPassword(string $email): void
@@ -160,7 +230,9 @@ class AuthService
 
     public function saveForgotMatricNumber(array $data): ForgotMatno
     {
-        $student = Student::where('matric_number', 'LIKE', "%{$data['surname']}%")->first();
+        $student = Student::where('SURNAME', $data['surname'])
+            ->where('FIRSTNAME', $data['firstname'])
+            ->first();
 
         $record = ForgotMatno::updateOrCreate(
             ['email' => $data['email']],

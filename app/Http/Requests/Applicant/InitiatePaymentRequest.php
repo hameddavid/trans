@@ -13,6 +13,8 @@ class InitiatePaymentRequest extends FormRequest
         return [
             'destination' => 'required|string',
             'amount' => 'required|numeric|min:0',
+            'type' => 'sometimes|string|in:OFFICIAL,STUDENT,PROFICIENCY,official,student,proficiency',
+            'gateway' => 'sometimes|string|in:INTERSWITCH,REMITA,interswitch,remita',
         ];
     }
 }

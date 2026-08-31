@@ -19,7 +19,10 @@ export const getMyApplications = () => api.get('/applicant/my-official-applicati
 export const getMyStudentApplications = () => api.get('/applicant/my-student-applications');
 export const getStats = () => api.get('/applicant/stats');
 export const editApplication = (data) => api.post('/applicant/edit-application', data);
-export const submitComplaint = (data) => api.post('/applicant/submit-complaint', data);
+export const submitComplaint = (data) =>
+    api.post('/applicant/submit-complaint', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
 export const getMyComplaints = () => api.get('/applicant/my-complaints');
 
 export const initiatePayment = (data) => api.post('/applicant/payment/initiate', data);
@@ -40,5 +43,10 @@ export const degreePay = {
     requery: (data) => api.post('/applicant/degree-payment/re-query', data),
     remitaBank: (data) => api.post('/applicant/degree-payment/remita-bank-callback', data),
 };
+
+export const submitCourierDetails = (formData) =>
+    api.post('/applicant/courier-submission', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
 
 export const submitDegreeVerification = (data) => api.post('/public/degree-verification', data);

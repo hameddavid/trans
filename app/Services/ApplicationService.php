@@ -262,23 +262,25 @@ class ApplicationService
 
     public function submitAdminApplication(Admin $admin, array $data): AdminApplication
     {
-        $student = Student::where('matric_number', $data['matno'])->firstOrFail();
-        $transcriptData = $this->transcriptService->generateTranscriptData($data['matno'], $data['transcript_type'], $data['recipient']);
+        $matno = $data['matric_number'] ?? $data['matno'];
+        $student = Student::where('matric_number', $matno)->firstOrFail();
+        $recipient = $data['recipient'] ?? '';
+        $transcriptData = $this->transcriptService->generateTranscriptData($matno, $data['transcript_type'], $recipient);
         $type = strtoupper($data['transcript_type']);
 
-        $conditions = ['matric_number' => $data['matno']];
+        $conditions = ['matric_number' => $matno];
         if ($type === 'OFFICIAL') {
-            $conditions['recipient'] = $data['recipient'];
+            $conditions['recipient'] = $recipient;
         }
 
         $app = AdminApplication::updateOrCreate($conditions, [
-            'matric_number' => $data['matno'],
+            'matric_number' => $matno,
             'admin_id' => $admin->id,
             'delivery_mode' => 'soft',
             'transcript_type' => $type,
             'address' => $student->EMAIL1 ?? $student->matric_number,
             'destination' => $type,
-            'recipient' => $data['recipient'],
+            'recipient' => $recipient,
             'app_status' => 'PENDING',
             'graduation_year' => $data['graduation_year'] ?? '',
             'grad_status' => $data['gradstat'] ?? '',
@@ -351,22 +353,35 @@ class ApplicationService
         $this->pdfService->generateCoverLetter($app, $app->delivery_mode);
         $this->pdfService->generateTranscriptWithToken($app->transcript_raw, $app->used_token, $app->delivery_mode);
 
-        if ($mode === 'SOFT') {
+        if ($mode === 'SOFT' || $mode === 'SOFT_COPY') {
             $sent = $this->notificationService->sendTranscriptDelivery($app);
             if (!$sent) throw new \RuntimeException('Failed to send transcript delivery email.');
+
+            if (!empty($app->official_email_4_soft) && $app->official_email_4_soft !== $app->email) {
+                $recipientApp = clone $app;
+                $recipientApp->email = $app->official_email_4_soft;
+                $this->notificationService->sendTranscriptDelivery($recipientApp);
+            }
         }
 
-        OfficialApplication::where('application_id', $id)->update([
+        $updateData = [
             'app_status' => ApplicationStatus::APPROVED,
             'approved_by' => $admin->email,
             'approved_at' => now()->format('F j, Y, g:i a'),
-        ]);
+        ];
 
-        if ($mode === 'SOFT') {
-            $this->pdfService->cleanupFiles([
-                $app->used_token . '_cover.pdf',
-                $app->used_token . '.pdf',
-            ]);
+        if ($mode !== 'SOFT' && $mode !== 'SOFT_COPY') {
+            $updateData['courier_status'] = 'pending';
+        }
+
+        OfficialApplication::where('application_id', $id)->update($updateData);
+
+        if ($mode !== 'SOFT' && $mode !== 'SOFT_COPY') {
+            try {
+                $this->notificationService->sendCourierNotification($app);
+            } catch (\Exception $e) {
+                \Log::warning('Courier notification failed', ['id' => $id, 'error' => $e->getMessage()]);
+            }
         }
     }
 
@@ -387,8 +402,6 @@ class ApplicationService
             'approved_by' => $admin->email,
             'approved_at' => now()->format('F j, Y, g:i a'),
         ]);
-
-        $this->pdfService->cleanupFiles([$app->address . '.pdf']);
     }
 
     protected function approveProficiencyApplication(Admin $admin, string $id): void
@@ -398,13 +411,11 @@ class ApplicationService
             ->select('student_applications.*', 'student_applications.address AS file_path', 'applicants.surname', 'applicants.firstname', 'applicants.email', 'applicants.sex')
             ->firstOrFail();
 
-        $msg = "Kindly find attached, Proficiency for {$app->surname} {$app->firstname} with matric number {$app->matric_number}";
-        $attachments = [];
-        if (file_exists($app->file_path . '.pdf')) {
-            $attachments[] = $app->file_path . '.pdf';
-        }
+        $portalUrl = config('app.url');
+        $msg = "Your Proficiency Letter for {$app->surname} {$app->firstname} with matric number {$app->matric_number} is ready.";
+        $msg .= "<br><br>Please login to your account on the <a href=\"{$portalUrl}/applicant/login\">Transcript Portal</a> to download your proficiency letter.";
 
-        $sent = $this->notificationService->notifyApplicant($app, "REDEEMER'S UNIVERSITY PROFICIENCY LETTER DELIVERY", $msg, $attachments);
+        $sent = $this->notificationService->notifyApplicant($app, "REDEEMER'S UNIVERSITY PROFICIENCY LETTER DELIVERY", $msg);
         if (!$sent) throw new \RuntimeException('Failed to send proficiency delivery email.');
 
         StudentApplication::where('id', $id)->update([
@@ -412,7 +423,5 @@ class ApplicationService
             'approved_by' => $admin->email,
             'approved_at' => now()->format('F j, Y, g:i a'),
         ]);
-
-        $this->pdfService->cleanupFiles([$app->address . '.pdf']);
     }
 }

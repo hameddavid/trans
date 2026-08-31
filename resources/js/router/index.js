@@ -64,14 +64,6 @@ const routes = [
       { path: '', name: 'admin-login', component: () => import('@/pages/admin/LoginPage.vue') },
     ],
   },
-  {
-    path: '/toptop/register',
-    component: () => import('@/layouts/AuthLayout.vue'),
-    meta: { guestOnly: true, guard: 'admin' },
-    children: [
-      { path: '', name: 'admin-register', component: () => import('@/pages/admin/RegisterPage.vue') },
-    ],
-  },
 
   // Applicant authenticated
   {
@@ -115,6 +107,9 @@ const routes = [
       { path: 'generated-transcripts', name: 'admin-generated-transcripts', component: () => import('@/pages/admin/GeneratedTranscriptsPage.vue'), meta: { title: 'Generated Transcripts' } },
       { path: 'forgot-matric', name: 'admin-forgot-matric', component: () => import('@/pages/admin/ForgotMatricPage.vue'), meta: { title: 'Forgot Matric' } },
       { path: 'generate-transcript', name: 'admin-generate-transcript', component: () => import('@/pages/admin/GenerateTranscriptPage.vue'), meta: { title: 'Generate Transcript' } },
+      { path: 'signatories', name: 'admin-signatories', component: () => import('@/pages/admin/SignatoriesPage.vue'), meta: { title: 'Signatories' } },
+      { path: 'users', name: 'admin-users', component: () => import('@/pages/admin/AdminUsersPage.vue'), meta: { title: 'Admin Users' } },
+      { path: 'pricing', name: 'admin-pricing', component: () => import('@/pages/admin/PricingPage.vue'), meta: { title: 'Payment Pricing' } },
       { path: 'settings', name: 'admin-settings', component: () => import('@/pages/admin/SettingsPage.vue'), meta: { title: 'Settings' } },
     ],
   },
